@@ -25,14 +25,14 @@ altTextServer("ons_cases_modal",
 
 
 
-altTextServer("wastewater_modal",
-              title = "Seven day average trend in wastewater COVID-19",
-              content = tags$ul(tags$li("This is a plot showing the running average trend in wastewater COVID-19."),
-                                tags$li("The x axis shows date of sample, starting from 28 May 2020."),
-                                tags$li("The y axis shows the wastewater viral level in million gene copies per person per day."),
-                                tags$li("There is one trace which shows the 7 day average of the watewater viral level."),
-                                tags$li("There have been peaks throughout the pandemic, notably in",
-                                        "Sep 2021, Dec 2021, Mar 2022 and Jun 2022")))
+# altTextServer("wastewater_modal",
+#               title = "Seven day average trend in wastewater COVID-19",
+#               content = tags$ul(tags$li("This is a plot showing the running average trend in wastewater COVID-19."),
+#                                 tags$li("The x axis shows date of sample, starting from 28 May 2020."),
+#                                 tags$li("The y axis shows the wastewater viral level in million gene copies per person per day."),
+#                                 tags$li("There is one trace which shows the 7 day average of the watewater viral level."),
+#                                 tags$li("There have been peaks throughout the pandemic, notably in",
+#                                         "Sep 2021, Dec 2021, Mar 2022 and Jun 2022")))
 
 altTextServer("reported_cases_modal",
               title = "Reported COVID-19 cases",
@@ -69,17 +69,17 @@ output$ons_cases_plot <- renderPlotly({
 })
 
 
-output$wastewater_plot <- renderPlotly({
-  Wastewater %>%
-    make_wastewater_plot()
-
-})
-
-output$wastewater_table <- renderDataTable({
-  Wastewater %>%
-    mutate(Date = convert_opendata_date(Date)) %>%
-           #WastewaterSevenDayAverageMgc = round_half_up(WastewaterSevenDayAverageMgc, 1)) %>%
-    dplyr::rename('7 day average (Mgc/p/d)' = WastewaterSevenDayAverageMgc) %>%
-    arrange(desc(Date)) %>%
-    make_table(add_separator_cols_2dp = 2, order_by_firstcol = "desc")
-})
+# output$wastewater_plot <- renderPlotly({
+#   Wastewater %>%
+#     make_wastewater_plot()
+# 
+# })
+# 
+# output$wastewater_table <- renderDataTable({
+#   Wastewater %>%
+#     mutate(Date = convert_opendata_date(Date)) %>%
+#            #WastewaterSevenDayAverageMgc = round_half_up(WastewaterSevenDayAverageMgc, 1)) %>%
+#     dplyr::rename('7 day average (Mgc/p/d)' = WastewaterSevenDayAverageMgc) %>%
+#     arrange(desc(Date)) %>%
+#     make_table(add_separator_cols_2dp = 2, order_by_firstcol = "desc")
+# })
