@@ -412,7 +412,7 @@ tagList(h1("Metadata"),
                                      area and finally reported as million gene copies per person per day (Mgc/p/d)."),
                                    p(strong("Source: Wastewater data analyses for COVID-19 are produced by PHS Wastewater Analysis Group for the Wastewater Monitoring Programme 
                                             in Scotland, which is operated by Scottish Government in partnership with Scottish Water and NHS Lothian")),
-                                   p(strong("This text was last updated on Thursday 31st October 2024.")),
+                                   p(strong("This text was last updated on Thursday 31 October 2024.")),
                                    br()
                                    
                    ),
