@@ -3,7 +3,8 @@
 
 ##### Hospital Admissions
 
-adm_path <- "/conf/PHSCOVID19_Analysis/RAPID Reporting/Daily_extracts"
+adm_path <- "/PHI_conf/RAPID_Pathogen_Reporting/"
+
 
 i_adm <- read_csv_with_options(glue("{adm_path}/Proxy provisional figures/{report_date}_12_Admissions_proxy.csv"))
 
