@@ -13,54 +13,49 @@ tagList(
            # linebreaks(1)
            ),
 
-
-
-  fluidRow(width = 12,
-           tagList(h2("Seven day average trend in wastewater COVID-19"),
-                   h4(glue("Wastewater data analysis will be paused until the end of October as the responsibility of laboratory ",
-                           "COVID-19 water samples testing transfers from Scottish Environment Protection Agency (SEPA) to NHS Lothian.")),
-                   tags$div(class = "headline",
-                            h3(glue("Figure from week ending {Wastewater %>% tail(1) %>%
-                .$Date %>% convert_opendata_date() %>% format('%d %b %y')}")),
-                valueBox(value = {Wastewater %>% tail(1) %>%
-                    .$WastewaterSevenDayAverageMgc %>%
-                    signif(3) %>%
-                    paste("Mgc/p/d")},
-                    subtitle = "COVID-19 wastewater level",
-                    color = "navy",
-                    icon = icon_no_warning_fn("faucet-drip")),
-                # This text is hidden by css but helps pad the box at the bottom
-                h6("hidden text for padding page"))),
-           linebreaks(1)),
-
-
-  fluidRow(
-    tabBox(width = NULL,
-           type = "pills",
-           tabPanel("Plot",
-                    tagList(linebreaks(1),
-                            altTextUI("wastewater_modal"),
-                            withNavySpinner(plotlyOutput("wastewater_plot")),
-                            fluidRow(column(
-                              width=12, linebreaks(5),
-                              p("Wastewater data analyses for COVID-19 are produced by",
-                                "PHS Wastewater Analysis Group for the Wastewater Monitoring Programme in Scotland,",
-                                "which is operated by Scottish Government in partnership with",
-                                "Scottish Water and the Scottish Environment Protection Agency."),
-
-                            )))),
-           tabPanel("Data",
-                    tagList(linebreaks(1),
-                            withNavySpinner(dataTableOutput("wastewater_table"))
-                    ) # tagList
-           ) # tabPanel
-
-    ) # tabBox
-  ), # fluidRow
-
-  fluidRow(
-    width = 12, br()),
-
+#   fluidRow(width = 12,
+#            tagList(h2("Seven day average trend in wastewater COVID-19"),
+#                    tags$div(class = "headline",
+#                             h3(glue("Figure from week ending {Wastewater %>% tail(1) %>%
+#                 .$Date %>% convert_opendata_date() %>% format('%d %b %y')}")),
+#                 valueBox(value = {Wastewater %>% tail(1) %>%
+#                     .$WastewaterSevenDayAverageMgc %>%
+#                     signif(3) %>%
+#                     paste("Mgc/p/d")},
+#                     subtitle = "COVID-19 wastewater level",
+#                     color = "navy",
+#                     icon = icon_no_warning_fn("faucet-drip")),
+#                 # This text is hidden by css but helps pad the box at the bottom
+#                 h6("hidden text for padding page"))),
+#            linebreaks(1)),
+# 
+# 
+#   fluidRow(
+#     tabBox(width = NULL,
+#            type = "pills",
+#            tabPanel("Plot",
+#                     tagList(linebreaks(1),
+#                             altTextUI("wastewater_modal"),
+#                             withNavySpinner(plotlyOutput("wastewater_plot")),
+#                             fluidRow(column(
+#                               width=12, linebreaks(5),
+#                               p("Wastewater data analyses for COVID-19 are produced by",
+#                                 "PHS Wastewater Analysis Group for the Wastewater Monitoring Programme in Scotland,",
+#                                 "which is operated by Scottish Government in partnership with",
+#                                 "Scottish Water and the Scottish Environment Protection Agency."),
+# 
+#                             )))),
+#            tabPanel("Data",
+#                     tagList(linebreaks(1),
+#                             withNavySpinner(dataTableOutput("wastewater_table"))
+#                     ) # tagList
+#            ) # tabPanel
+# 
+#     ) # tabBox
+#   ), # fluidRow
+# 
+#   fluidRow(
+#     width = 12, br()),
 
   fluidRow(width = 12,
            tagList(h2("Reported COVID-19 cases"),

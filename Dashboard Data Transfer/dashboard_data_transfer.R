@@ -155,7 +155,14 @@ source("Transfer Scripts/transfer_los.R")
 #source("Transfer Scripts/transfer_carehomes.R")
 
 #### Wastewater
-source("Transfer Scripts/transfer_wastewater.R")
+#source("Transfer Scripts/transfer_wastewater.R")
+
+# Covid WW National
+source("Transfer Scripts/transfer_covid_wastewater_national.R")
+# Covid WW HB
+source("Transfer Scripts/transfer_covid_wastewater_hb.R")
+# Covid WW LA
+source("Transfer Scripts/transfer_covid_wastewater_ca.R")
 
 #### Occupancy
 source("Transfer Scripts/transfer_occupancy.R")
