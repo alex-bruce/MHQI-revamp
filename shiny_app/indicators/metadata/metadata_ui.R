@@ -11,36 +11,6 @@ tagList(h1("Metadata"),
                                    # Infection Levels ----
                                    h4("Infection Levels"),
 
-                                   # Estimated infections ----
-                                   h4("Estimated infections (winter covid infection survey)"),
-                                   p("The Office for National Statistics (ONS) publish results from the Winter COVID-19 Infection Survey which aims to estimate how many
-                                     people test positive for COVID-19 infection at a given point. The ONS survey results are Scotland’s current best understanding of
-                                     community population prevalence."),
-                                   p("The Winter COVID-19 Infection Study (WCIS) runs from November 2023 to March
-                                      2024, involving up to 200,000 participants across Scotland and England submitting
-                                      results from 32,000 lateral flow tests carried out each week. More information on this
-                                      study can be found at",
-                                     tags$a("Winter Coronavirus (COVID-19) Infection Study",
-                                            href="https://www.ons.gov.uk/surveys/informationforhouseholdsandindividuals/householdandindividualsurveys/wintercoronaviruscovid19infectionstudy"),
-                                     "."),
-                                   p("Further SARS-CoV-2 prevalence results are available in the UKHSA report on Winter
-                                      CIS, which can be found on their website",
-                                     tags$a("UKHSA Winter Coronavirus Infection Study",
-                                            href="https://www.gov.uk/government/statistics/winter-coronavirus-covid-19-infection-study-estimates-of-epidemiological-characteristics-england-and-scotland-2023-to-2024"),
-                                     "."),
-                                   p("The full publication for the Winter CIS results, including unweighted positivity figure as
-                                      well as further measures on age groups, sex, symptoms and self-reported health
-                                      outcomes, can be found on the ONS website",
-                                     tags$a("Winter Coronavirus Infection Study",
-                                            href="https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/conditionsanddiseases/datasets/wintercoronaviruscovid19infectionstudyenglandandscotland"),
-                                     "."),
-                                   p(strong("Source: The Office for National Statistics (ONS)")),
-                                   p("Please note, a",strong("confidence interval"), "gives an indication of the degree of uncertainty of an estimate, showing the precision of a sample estimate.
-                                     The 95% confidence intervals are calculated so that if we repeated the study many times, 95% of the time the true unknown value would lie between
-                                     the lower and upper confidence limits. A wider interval indicates more uncertainty in the estimate. Overlapping confidence intervals indicate that
-                                     there may not be a true difference between two estimates."),
-                                   br(),
-
                                    # # Wastewater ----
                                    # h4("Wastewater"),
                                    # p("In June 2020, Scottish Government, in partnership with Scottish Environment Protection Agency (SEPA), established a national Wastewater
@@ -61,7 +31,16 @@ tagList(h1("Metadata"),
 
                                    # Reported cases ----
                                    h4("Reported cases"),
-                                   p("Reported cases include both polymerase chain reaction (PCR) and lateral flow device (LFD) positive test results."),
+                                   #p("Reported cases include both polymerase chain reaction (PCR) and lateral flow device (LFD) positive test results."),
+                                   p("All case counts include cases diagnosed by PCR, LFD, or both (LFD included from 05 January 2022). A positive case includes
+                                     both new infections and possible reinfections. Possible reinfections are defined as individuals who tests positive by PCR
+                                     (polymerase chain reaction) or LFD (lateral flow device), 90 or more clear days after their last positive test.
+                                     More information is available on the PHS website",
+                                   tags$a("here.",
+                                          href="https://publichealthscotland.scot/news/2022/february/covid-19-reporting-to-include-further-data-on-reinfections/"),
+                                   ),
+                                   
+                                   
                                    p("There have been changes in testing practices in ",
                                      tags$a("May", href="https://www.gov.scot/publications/test-protect-transition-plan/?msclkid=69623e15ba4711ecb8a394934cbaa327"),
                                      " (end of universal testing) and ",
@@ -179,9 +158,38 @@ tagList(h1("Metadata"),
                                    br(),
 
                                    # Archive ----
-                                   h4("Archive"),
+                                    h4("Archive"),
+                                   # Estimated infections winter CIS ----
+                                   h4("Winter covid infection survey (November 2023 to March 2024)"),
+                                   p("The Office for National Statistics (ONS) publish results from the Winter COVID-19 Infection Survey which aims to estimate how many
+                                     people test positive for COVID-19 infection at a given point. The ONS survey results are Scotland’s current best understanding of
+                                     community population prevalence."),
+                                   p("The Winter COVID-19 Infection Study (WCIS) runs from November 2023 to March
+                                      2024, involving up to 200,000 participants across Scotland and England submitting
+                                      results from 32,000 lateral flow tests carried out each week. More information on this
+                                      study can be found at",
+                                     tags$a("Winter Coronavirus (COVID-19) Infection Study",
+                                            href="https://www.ons.gov.uk/surveys/informationforhouseholdsandindividuals/householdandindividualsurveys/wintercoronaviruscovid19infectionstudy"),
+                                     "."),
+                                   p("Further SARS-CoV-2 prevalence results are available in the UKHSA report on Winter
+                                      CIS, which can be found on their website",
+                                     tags$a("UKHSA Winter Coronavirus Infection Study",
+                                            href="https://www.gov.uk/government/statistics/winter-coronavirus-covid-19-infection-study-estimates-of-epidemiological-characteristics-england-and-scotland-2023-to-2024"),
+                                     "."),
+                                   p("The full publication for the Winter CIS results, including unweighted positivity figure as
+                                      well as further measures on age groups, sex, symptoms and self-reported health
+                                      outcomes, can be found on the ONS website",
+                                     tags$a("Winter Coronavirus Infection Study",
+                                            href="https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/conditionsanddiseases/datasets/wintercoronaviruscovid19infectionstudyenglandandscotland"),
+                                     "."),
+                                   p(strong("Source: The Office for National Statistics (ONS)")),
+                                   p("Please note, a",strong("confidence interval"), "gives an indication of the degree of uncertainty of an estimate, showing the precision of a sample estimate.
+                                     The 95% confidence intervals are calculated so that if we repeated the study many times, 95% of the time the true unknown value would lie between
+                                     the lower and upper confidence limits. A wider interval indicates more uncertainty in the estimate. Overlapping confidence intervals indicate that
+                                     there may not be a true difference between two estimates."),
+                                   br(),
                                    # Estimated infections ----
-                                   h4("Estimated infections"),
+                                   h4("Covid infection survey (November 2020 to March 2023)"),
                                    p("The Office for National Statistics (ONS) publish results from the COVID-19 Infection Survey which aims to estimate how many
                                      people test positive for COVID-19 infection at a given point. The ONS survey results are Scotland’s current best understanding of
                                      community population prevalence."),
@@ -201,30 +209,30 @@ tagList(h1("Metadata"),
 
                                    # ICU admissions ----
                                    h4("ICU admissions"),
-                                   p("COVID-19 varies in severity from very mild symptoms through to those requiring hospital admission and the most ill who require
-                                     intensive care treatment and supported ventilation in an Intensive Care Unit (ICU). Monitoring the admission frequency to
-                                     critical care units in Scotland (ICU) is therefore an important measure of the severity of COVID-19."),
-                                   p("COVID-19 related ICU admissions have been identified as the following: A patient who has tested positive for COVID at any
-                                     time in the 21 days prior to admission to ICU, or who has tested positive from the date of admission up to and
-                                     including the date of ICU discharge. "),
+                                    p("COVID-19 varies in severity from very mild symptoms through to those requiring hospital admission and the most ill who require
+                                      intensive care treatment and supported ventilation in an Intensive Care Unit (ICU). Monitoring the admission frequency to
+                                      critical care units in Scotland (ICU) is therefore an important measure of the severity of COVID-19."),
+                                    p("COVID-19 related ICU admissions have been identified as the following: A patient who has tested positive for COVID at any
+                                      time in the 21 days prior to admission to ICU, or who has tested positive from the date of admission up to and
+                                      including the date of ICU discharge. "),
                                    p("Includes any patient admitted to ICU with:"),
-
-                                   tags$li("a valid linkage to laboratory data ", strong("AND")),
-                                   tags$li("with laboratory confirmation for COVID-19 during the 21 days before the date of ICU admission ", strong("OR")),
-                                   tags$li("with laboratory confirmation for COVID-19 during their ICU stay, from the date of ICU admission up to and
-                                           including the date of ICU discharge."),
-                                   p(strong("Source: Scottish Intensive Care Society Audit Group (SICSAG)")),
-                                   br(),
-                                   p("Please note:"),
-                                   tags$li("SICSAG data are stored in a dynamic database and subject to ongoing validations, so data may change weekly."),
-                                   tags$li("Counts do not include any COVID-19 suspected cases who have not yet been lab confirmed. Therefore, there may
-                                           be a lag for recent days where patients may still be awaiting the results of COVID-19 tests."),
-                                   tags$li("Data excludes any patient under the age 15."),
-                                   tags$li("Individual patients are identified using their CHI number as recorded within the ICU admissions system.
-                                           There may be a very small number of patients where CHI was not recorded, for whom linkage to ECOSS for
-                                           COVID-19 status may not have been possible."),
-                                   tags$li("On 30 October 2020, Public Health Scotland became aware of an ongoing issue when linking ICU data to
-                                           laboratory data for COVID-19 test results. Any COVID-19 positive patients with a missing a
+                                   # 
+                                    tags$li("a valid linkage to laboratory data ", strong("AND")),
+                                    tags$li("with laboratory confirmation for COVID-19 during the 21 days before the date of ICU admission ", strong("OR")),
+                                    tags$li("with laboratory confirmation for COVID-19 during their ICU stay, from the date of ICU admission up to and
+                                            including the date of ICU discharge."),
+                                    p(strong("Source: Scottish Intensive Care Society Audit Group (SICSAG)")),
+                                    br(),
+                                    p("Please note:"),
+                                    tags$li("SICSAG data are stored in a dynamic database and subject to ongoing validations, so data may change weekly."),
+                                    tags$li("Counts do not include any COVID-19 suspected cases who have not yet been lab confirmed. Therefore, there may
+                                            be a lag for recent days where patients may still be awaiting the results of COVID-19 tests."),
+                                    tags$li("Data excludes any patient under the age 15."),
+                                    tags$li("Individual patients are identified using their CHI number as recorded within the ICU admissions system.
+                                            There may be a very small number of patients where CHI was not recorded, for whom linkage to ECOSS for
+                                            COVID-19 status may not have been possible."),
+                                    tags$li("On 30 October 2020, Public Health Scotland became aware of an ongoing issue when linking ICU data to
+                                            laboratory data for COVID-19 test results. Any COVID-19 positive patients with a missing a
                                            CHI number that had a first positive test in the community are unable to be linked to ICU data.
                                            As a result, the COVID-19 positive ICU patients could be underreported by up to 10%."),
                                    br(),
@@ -427,7 +435,8 @@ tagList(h1("Metadata"),
                              including information regarding time of call, geographical location, caller demographics, and call reason."),
                              p("The proportion of NHS24 calls for respiratory symptoms is calculated through identifying calls with the following call reasons:
                              ‘cough’, ‘colds and flu’, ‘difficulty breathing’, and ‘fever’.
-                             Call reason is a free-text field, that is screened for key words used to identify syndromes"),
+                             Call reason is a free-text field, that is screened for key words used to identify syndromes. 
+                             Caller age provides information on the age breakdown of different symptoms."),
                              p(strong("Source: NHS24")),
                              br(),
 
@@ -439,7 +448,13 @@ tagList(h1("Metadata"),
                             The way in which this influenza data is captured has changed over the years, but the common method of presentation has remained constant
                             and has been to express GP consultations as a rate per hundred thousand population.
                             Consultation rates are monitored on a Scotland-wide level, with additional breakdowns by age group and by Health Board."),
-                            p("Typically, around 923 practices (98% of all practices in Scotland) routinely report to PHS."),
+                            p("Typically, around 96% of all practices in Scotland routinely report to PHS."),
+                            p("From week 35 2017, practices changed to submission of consultation data on a weekly basis. 
+                              The extract is automatically generated in each practice based on the previous week’s consultations for ILI and ARI.
+                              Consultations for ILI and acute respiratory infection (ARI) are identified by searching for ILI or ARI specific Read codes, generated by,
+                              and stored in the practice software system. "),
+                            p("Practices in Scotland use one of two GP software systems, EMIS or Cegedim (formerly known as INPS). It is recognised that the quality of coding between practices
+                              and software systems varies and that this contributes to differences in consultation rates between practices. "),
                             p(strong("Source: GP consultations for influenza-like illness (ILI)")),
                             br()
                             ),
@@ -449,16 +464,17 @@ tagList(h1("Metadata"),
                    bsCollapsePanel("Community Acute Respiratory Infection (CARI) surveillance",
 
                                    # CARI ----
-                                   #h4("Swab positivity (community surveillance)"),
-                                   p("CARI surveillance is a sentinel community surveillance programme for a range of respiratory pathogens: COVID-19, ",
-                                     "influenza A and B, RSV, adenovirus, seasonal coronavirus (non-COVID-19), human metapneumovirus, rhinovirus, parainfluenza and ",
-                                     "mycoplasma pneumoniae. The programme is open to GP practices across all NHS Boards in Scotland. To become a sentinel site, ",
+                                   #h4("Test positivity (community surveillance)"),
+                                   p("CARI surveillance is a sentinel community surveillance programme for a range of respiratory pathogens:", 
+                                     "SARS-CoV-2, influenza A and B, RSV, adenovirus, coronavirus (non-SARS CoV-2), human metapneumovirus, rhinovirus, parainfluenza and Mycoplasma pneumoniae. 
+                                     The programme is open to GP practices across all NHS Boards in Scotland. To become a sentinel site, ",
                                      "GP practices voluntarily opt into the CARI programme. Patients in the community who consult a sentinel GP practice with respiratory ",
-                                     "symptoms and who meet the case definition for acute respiratory infection (ARI) are recruited, consented, and swabbed for the CARI ",
-                                     "programme."),
-                                   p("Data are reported by week of swab for recruited individuals for whom test result data are available. Data are derived from samples ",
-                                     "tested up to the current reporting week, and any retrospective numbers are updated in the next weekly report. The CARI surveillance ",
-                                     "programme detects community transmission of specific pathogens."),
+                                     "symptoms and who meet the case definition for acute respiratory infection (ARI) are recruited, consented, and tested for the CARI ",
+                                     "programme. Clinicians also complete a symptoms checklist."),
+                                   p("The case definition is: sudden onset of symptoms; at least one of the following four respiratory symptoms: cough, 
+                                     sore throat, shortness of breath, coryza; and a clinician's judgement that the illness is due to an infection."),
+                                   p("Data are reported by week of test for recruited individuals for whom test result data are available. Data are derived from samples ",
+                                     "tested up to the current reporting week, and any retrospective numbers are updated in the next weekly report. "),
                              p(strong("Source: Community Acute Respiratory Infection (CARI) sentinel practices")),
                              br()
                              ),
@@ -521,8 +537,12 @@ tagList(h1("Metadata"),
                     A key assumption of this model is that the pathogen being observed must follow a distinct seasonal pattern of incidence."),
                    p("NHS24, GP ILI consultations, influenza, RSV, seasonal coronavirus (non-SARS-CoV-2) and Euromomo (mortality) thresholds are calculated using the MEM methodology.
                     This methodology was adopted by the UK, the European Centre for Disease Prevention and Control (ECDC) and World Health Organisation (WHO) to define influenza activity levels."),
-                   br(),
-
+                  
+                  p("For further information on MEM, including the methodology, please visit:", 
+                    tags$a("Influenza surveilance: determining the epidemic threshold  for influenza by using the Moving Epidemic Method (MEM), Montenegro, 2010/11 to 2017/18 influenza seasons - PMC (nih.gov)",
+                           href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6440585/#:~:text=The%20Moving%20Epidemic%20Method%20(MEM),-The%20main%20purpose&text=The%20epidemic%20threshold%20is%20calculated,CI)%20at%20several%20given%20levels.")
+                    ),
+                  br(),
                    #Provisional figures ----
                    h4("Provisional figures"),
                    p("Hospital admissions for the most recent week may be incomplete for some Boards and should be treated as provisional and interpreted with caution.
@@ -555,10 +575,11 @@ tagList(h1("Metadata"),
                   p("This is the numbers for the previous 7 days added together and then divided by 7. This helps to smooth out any short term fluctuations."),
                   br(),
 
-                  #Swab positivity ----
-                  h4("Swab positivity"),
-                  p("Swab positivity is the percentage of positive laboratory results among a defined number of ",
-                    "laboratory tested samples, i.e. number of positives divided by total number of laboratory tests done."),
+                  #Test positivity ----
+                  h4("Test positivity"),
+                  p("Proportion of positive laboratory results among a defined number of laboratory tested samples, i.e. number of positives divided
+                    by total number of laboratory tests done. Virological data is dynamic, therefore, the test positivity will change retrospectively
+                    week to week as more data becomes available."),
                   br()
 
                    ))
