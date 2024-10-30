@@ -13,6 +13,7 @@ tagList(
              "Covid-19, when it became the country’s first pathogen-specific surveillance system of ",
              "this kind. Data is available at National, NHS Health Board and Local Authority areas ",
              "based on location of Wastewater Treatment Works (WWTW). "),
+           p(strong("Due to the dynamic nature of the data, reported figures may be subject to change in future releases.")),
            linebreaks(1)),
 
   fluidRow(width = 12,
