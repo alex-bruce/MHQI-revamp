@@ -22,7 +22,7 @@
 ##### lookups and values #######################################
 
 # enter latest population year
-pop_year= 2021 # use to filter through entire script, only need to update 1 line when Pop ESt files updated
+pop_year= 2022 # use to filter through entire script, only need to update 1 line when Pop ESt files updated
 
 # GPD base look_path
 gpd_base_path<-"/conf/linkage/output/lookups/Unicode/"
@@ -36,9 +36,10 @@ spd_simd_lookup <- read_rds(glue(gpd_base_path,"Deprivation/postcode_2024_2_simd
 
 ######### simd population lookup #####
 
-base_datazone_population <-  read_rds(glue(gpd_base_path,"Populations/Estimates/DataZone2011_pop_est_5year_agegroups_2011_2021.rds"))
+base_datazone_population <-  read_rds(glue(gpd_base_path,"Populations/Estimates/DataZone2011_pop_est_5year_agegroups_2011_2022.rds"))
 
 # Breaking down the population of each health board by SIMD quintile.
+
 pop_simd_hb <- base_datazone_population %>% 
   filter(year == pop_year)  %>% 
   rename(simd= simd2020v2_sc_quintile,
@@ -90,32 +91,6 @@ df_simd <- expand.grid(Date=unique(Dates$SpecimenDate) , simd=unique(SIMD$SIMD),
   mutate(location_code="Scotland", simd=as.character(simd))
 
 rm(Dates, SIMD, df_unassinged) # remove building blocks
-
-
-
-#### Functions ###########################################
-
-# od_suppress_value <- function(data, col_name) {
-#   
-#   needs_suppressed = data[[col_name]] == "" | (data[[col_name]]<5)
-#   
-#   data %>% 
-#     mutate(data[col_name] == if_else(
-#       needs_suprressed, 0, data[col_name]
-#     ))
-#   
-# }
-# 
-# od_qualifiers <- function(data, col_name, symbol) {
-#   
-#   needs_symbol = data[[col_name]] == "" | is.na(data[[col_name]])
-#   
-#   data %>% 
-#     mutate("{col_name}QF" := if_else(
-#       needs_symbol, symbol, ""
-#     ))
-#   
-# }
 
 
 #### Cases ##############################
@@ -192,7 +167,8 @@ write_csv(g_simd_weekly_cases_od, glue(od_folder, "weekly_cases_simd_{od_report_
 
 
 rm(df_simd, g_daily_geog_simd_cases, i_combined_pcr_lfd_tests,
-   g_simd_weekly_cases_od,g_simd_scotland_daily_cases, simd_populations)
+   g_simd_weekly_cases_od,g_simd_scotland_daily_cases, simd_populations,
+   pop_year,gpd_base_path )
 
 ##### End of script #######################################
 
