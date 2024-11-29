@@ -126,13 +126,13 @@ tagList(
                                                       label = "Select a season",
                                                       choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
                                                           .$Season %>% unique()},
-                                                      selected = "2022/23")
+                                                      selected = "2024/25")
                                 ),
                                 column(4, pickerInput("respiratory_date",
                                                       label = "Select date",
-                                                      choices = {Respiratory_AllData %>% filter(Season == "2022/23") %>%
+                                                      choices = {Respiratory_AllData %>% filter(Season == "2024/25") %>%
                                                           .$Date %>% unique() %>% as.Date() %>% format("%d %b %y")},
-                                                      selected = {Respiratory_AllData %>% filter(Season == "2022/23") %>%
+                                                      selected = {Respiratory_AllData %>% filter(Season == "2024/25") %>%
                                                           .$Date %>% max() %>% as.Date() %>% format("%d %b %y")})
                                 ),
                                 column(4, pickerInput("respiratory_select_age_sex_breakdown",
