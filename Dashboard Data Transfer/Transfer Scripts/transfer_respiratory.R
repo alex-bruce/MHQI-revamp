@@ -453,6 +453,75 @@ write_csv(case_rates_sex, glue(od_folder, "Respiratory_Sex_{od_report_date}.csv"
 write_csv(case_rates_age_sex , glue(od_folder, "Respiratory_Age_Sex_{od_report_date}.csv"))
 
 
+##################################################
+#### dev season cumulative rates by  age/sex ####
+
+# season_scotland_rates = scotland_agg %>%
+#   select(Season=season, Organism= organism, Count=count, Population=pop, FluOrNonFlu=flu_nonflu) %>%
+#   group_by(Season, Organism, Population,  FluOrNonFlu) %>%
+#  summarise(Season_count=sum(Count)) %>%
+#   mutate( Sex="All",
+#          AgeGroup="All Ages") %>% 
+#   ungroup()
+# #Season_rate=round(Season_count/Population*100000,0),
+# 
+#  season_agegp_rates= case_rates_age_template %>%
+#    full_join(agegp_agg) %>%
+#    mutate(rate = ifelse(is.na(rate), 0, rate)) %>%
+#    mutate(WeekEnding = as.Date(date),
+#           WeekBeginning = as.Date(date) - 6,
+#           AgeGroup = factor(agegp, levels = c("<1", "1-4", "5-14", "15-44", 
+#                                               "45-64", "65-74", "75+")),
+#                     Pathogen = recode(pathogen, 
+#                             "fluaorb" = "Influenza - Type A or B",
+#                             "h1n1" = "Influenza - Type A(H1N1)pdm09",
+#                             "typea" = "Influenza - Type A (any subtype)",
+#                             "typeah3" = "Influenza - Type A(H3)",
+#                             "typeb" = "Influenza - Type B",
+#                             "unknowna" = "Influenza - Type A (not subtyped)",
+#                             "adeno" = "Adenovirus",
+#                             "coron" = "Seasonal coronavirus (Non-SARS-CoV-2)",
+#                             "hmpv" = "Human metapneumovirus",
+#                             "mpn" = "Mycoplasma pneumoniae",
+#                             "para" = "Parainfluenza virus",
+#                             "rhino" = "Rhinovirus",
+#                             "rsv" = "Respiratory syncytial virus")) %>%
+#    select(Season=season, Organism= Pathogen,AgeGroup, Count=count, Population=pop, FluOrNonFlu=flu_nonflu) %>%
+#    arrange(Season, AgeGroup, Organism)%>%
+#   group_by(Season, Organism,AgeGroup, Population, FluOrNonFlu) %>%
+#   summarise(Season_count=sum(Count)) %>% 
+#    ungroup() %>% 
+#   mutate(Sex="All" )
+# #
+# season_age_sex_rates = g_resp_data %>%
+#   filter(!is.na(AgeGroup)& !is.na(Sex)) %>%
+#   group_by(Season, Organism, AgeGroup, Sex, Population, FluOrNonFlu )  %>%
+#     summarise(Season_count=sum(Count)) %>%
+#   ungroup() %>%  
+#   rbind(season_scotland_rates, season_agegp_rates) %>%
+#   mutate(  Season_rate=round(Season_count/Population*100000,0)) %>%
+#    mutate(AgeGroup = recode(AgeGroup,
+#                         "<1" = "< 1 years",
+#                         "1-4" = "1-4 years",
+#                         "5-14" = "5-14 years",
+#                         "15-44" = "15-44 years",
+#                         "45-64" = "45-64 years",
+#                         "65-74" = "65-74 years",
+#                         "75+" = "75+ years")) %>%
+#   mutate(AgeGroup = factor(AgeGroup, levels = c("< 1 years", "1-4 years", "5-14 years", "15-44 years",
+#                                                 "45-64 years", "65-74 years", "75+ years", "All Ages")),
+#          Sex = factor(Sex, levels = c("F", "M", "All"))) %>%
+#   arrange(Season, Organism, AgeGroup  ,Sex         )
+# 
+# season_flu_age_sex_rates = season_age_sex_rates%>%
+#   filter(FluOrNonFlu=="flu") %>%
+#   filter(Organism=="Influenza - Type A or B")
+# 
+# 
+# write_csv(season_flu_age_sex_rates, glue(output_folder, "Seasonal_AgeSex_Flu_Rates.csv"))
+
+
+### end dev #####
 # remove all data
 rm(i_respiratory_scotland_agg, i_respiratory_agegp_agg,
    i_respiratory_agegp_sex_agg, i_respiratory_sex_agg, i_respiratory_hb_agg)
@@ -472,10 +541,12 @@ rm(hb_checks_this_week, agegp_checks_this_week, sex_checks_this_week, agegp_sex_
    scotland_colnames_match,
    hb_colnames_match,
    sex_colnames_match,
-   agegp_colnames_match,
+   agegp_colnames_match,# 19 warnings in the remove
    agegp_sex_colnames_match)
 rm(g_resp_data, g_resp_summary, g_resp_summary_totals)
 rm(cases_scotland, case_rates_scotland, case_rates_hb, case_rates_age,
-   case_rates_sex, case_rates_age_sex)
+   case_rates_sex, case_rates_age_sex) #object 'case_rates_age_sex' not found
 rm(cases_scotland_template, case_rates_hb_template, case_rates_sex_template,
    case_rates_age_template, case_rates_age_sex_template)
+rm(df1,df2, df3, df4)
+rm(season_age_sex_rates, season_agegp_rates, season_scotland_rates, season_flu_age_sex_rates)
