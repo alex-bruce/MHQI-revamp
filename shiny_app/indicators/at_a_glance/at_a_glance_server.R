@@ -90,6 +90,7 @@ covid_cases_intro <- Cases_Weekly %>%
   mutate(Pathogen = "COVID-19")
 
 flu_cases_intro <- Respiratory_AllData %>%
+  arrange(Date) %>% 
   filter(FluOrNonFlu == "flu") %>%
   filter(Organism == "Influenza - Type A or B") %>%
   filter(BreakDown == "Scotland") %>%
@@ -104,6 +105,7 @@ flu_cases_intro <- Respiratory_AllData %>%
   mutate(Pathogen = "Influenza")
 
 nonflu_cases_intro <- Respiratory_AllData %>%
+  arrange(Date) %>% 
   filter(FluOrNonFlu == "nonflu") %>%
   filter(Organism != "Total") %>%
   filter(BreakDown == "Scotland") %>%
