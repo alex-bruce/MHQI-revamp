@@ -652,73 +652,20 @@ write_csv(case_rates_hb_mem, glue(output_folder, "Respiratory_Pathogens_MEM_HB.c
 write_csv(case_rates_age_mem, glue(output_folder, "Respiratory_Pathogens_MEM_Age.csv"))
 
 
-#### dev season cumulative rates by  age/sex ####
-
-# season_scotland_rates = scotland_agg %>% 
-#   select(Season=season, Organism= organism, Count=count, Population=pop, FluOrNonFlu=flu_nonflu) %>% 
-#   group_by(Season, Organism, Population,  FluOrNonFlu) %>% 
-#  summarise(Season_count=sum(Count)) %>% 
-#   mutate(Season_rate=round(Season_count/Population*100000,2),
-#          Sex="All",
-#          AgeGroup="All Ages")
-# 
-# season_agegp_rates= agegp_agg %>% 
-#   select(Season=season, Organism= organism,AgeGroup=agegp, Count=count, Population=pop, FluOrNonFlu=flu_nonflu) %>% 
-#   group_by(Season, Organism,AgeGroup, Population, FluOrNonFlu) %>% 
-#   summarise(Season_count=sum(Count)) %>% 
-#   mutate( Season_rate=round(Season_count/Population*100000,2),
-#          Sex="All"
-#          )
-# 
-# season_age_sex_rates = g_resp_data %>% 
-#   filter(!is.na(AgeGroup)& !is.na(Sex)) %>% 
-#   group_by(Season, Organism, AgeGroup, Sex, Population, FluOrNonFlu )  %>% 
-#     summarise(Season_count=sum(Count)) %>% 
-#   mutate(  Season_rate=round(Season_count/Population*100000,2)) %>% 
-#   rbind(season_scotland_rates, season_agegp_rates) %>% 
-#   mutate(AgeGroup = recode(AgeGroup,
-#                         "<1" = "< 1 years",
-#                         "1-4" = "1-4 years",
-#                         "5-14" = "5-14 years",
-#                         "15-44" = "15-44 years",
-#                         "45-64" = "45-64 years",
-#                         "65-74" = "65-74 years",
-#                         "75+" = "75+ years")) %>% 
-#   mutate(AgeGroup = factor(AgeGroup, levels = c("< 1 years", "1-4 years", "5-14 years", "15-44 years",
-#                                                 "45-64 years", "65-74 years", "75+ years", "All Ages")),
-#          Sex = factor(Sex, levels = c("F", "M", "All"))) %>%
-#   arrange(Season, Organism, AgeGroup  ,Sex         )
-# 
-# season_flu_age_sex_rates = season_age_sex_rates%>% 
-#   filter(FluOrNonFlu=="flu") %>% 
-#   filter(Organism=="Influenza - Type A or B")
 
 # remove all data
 rm(i_respiratory_scotland_agg, i_respiratory_agegp_agg,
    i_respiratory_agegp_sex_agg, i_respiratory_sex_agg, i_respiratory_hb_agg)
 rm(scotland_agg, hb_agg, sex_agg, agegp_agg, agegp_sex_agg, scotland_non_flu_total,
-   agegp_non_flu_total,
-   sex_non_flu_total,
-   agegp_sex_non_flu_total,
-   hb_non_flu_total,
-   scotland_flu_total,
-   agegp_flu_total,
-   sex_flu_total,
-   agegp_sex_flu_total,
+   agegp_non_flu_total,  sex_non_flu_total,  agegp_sex_non_flu_total, hb_non_flu_total,
+   scotland_flu_total,  agegp_flu_total, sex_flu_total, agegp_sex_flu_total,
    hb_flu_total)
-rm(hb_checks_this_week, agegp_checks_this_week, sex_checks_this_week, agegp_sex_checks_this_week,
-   scotland_checks_prev_week, hb_checks_prev_week, agegp_checks_prev_week, sex_checks_prev_week, agegp_sex_checks_prev_week,
-   scotland_colnames, hb_colnames, sex_colnames, agegp_colnames, agegp_sex_colnames,
-   scotland_colnames_match,
-   hb_colnames_match,
-   sex_colnames_match,
-   agegp_colnames_match,
-   agegp_sex_colnames_match)
 rm(g_resp_data, g_resp_summary, g_resp_summary_totals)
 rm(cases_scotland, case_rates_scotland, case_rates_hb, case_rates_age,
    case_rates_sex, case_rates_age_sex)
 rm(cases_scotland_template, case_rates_hb_template, case_rates_sex_template,
    case_rates_age_template, case_rates_age_sex_template)
 rm(case_rates_scotland_mem, case_rates_hb_mem, case_rates_age_mem)
+rm(df1,df2, df3, df4, df5, temp_data)
 
 

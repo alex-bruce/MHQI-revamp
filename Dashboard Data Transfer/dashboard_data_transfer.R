@@ -168,6 +168,7 @@ source("Transfer Scripts/transfer_covid_wastewater_ca.R")
 source("Transfer Scripts/transfer_occupancy.R")
 
 #### Respiratory
+# STILL USING THE "NEW" PREFIX WHEN UPLOADING FILES. TO BE UPDATED ONCE CHECKS COMPLETE
 source("Transfer Scripts/transfer_respiratory.R")
 
 #### Respiratory Pathogens - MEM

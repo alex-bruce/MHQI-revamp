@@ -1,10 +1,5 @@
-
 # Dashboard data transfer for Admissions
 # Sourced from ../dashboard_data_transfer.R
-
-#Seasons to include
-resp_seasons_to_include <- c("2016/17", "2017/18", "2018/19", "2019/20", "2020/21",
-                             "2021/22", "2022/23", "2023/24", "2024/25")
 
 ##### Respiratory
 get_resp_year <- function(w, s){
@@ -21,68 +16,10 @@ for (filename in filenames){
   assign(glue("i_respiratory_{filename}_agg"),
          read_csv_with_options(
            match_base_filename(
-             glue("{input_data}/NEW_{filename}_agg.csv")
+             glue("{input_data}/{filename}_agg.csv")
+             )
            )
          )
-  )
-}
-
-## Getting respiratory data
-for (filename in filenames){
-
-  temp_data <- base::get(glue("i_respiratory_{filename}_agg"))
-
-  # Remove parainfluenza subtypes
-  temp_data <- temp_data %>%
-    filter(!pathogen %in% c("Parainfluenza (Type Not Known)", "Parainfluenza Type 1", "Parainfluenza Type 2",
-                            "Parainfluenza Type 3", "Parainfluenza Type 4"))
-
-  # Recode pathogen names
-  temp_data <- temp_data %>%
-    mutate(pathogen = recode(pathogen,
-                             "Adenovirus" = "adeno",
-                             "Seasonal coronavirus" = "coron",
-                             "Parainfluenza (Any Type)" = "para",
-                             "Rhinovirus" = "rhino",
-                             "RSV" = "rsv",
-                             "Mycoplasma pneumoniae" = "mpn",
-                             "HMPV" = "hmpv",
-                             "Influenza (A or B)" = "fluaorb",
-                             "Influenza A (Any Subtype)" = "typea",
-                             "Influenza A (Subtype Not Known)" = "unknowna",
-                             "Influenza B" = "typeb",
-                             "Influenza A(H3)" = "typeah3",
-                             "Influenza A(H1N1)pdm09" = "h1n1"))
-
-  if(filename %in% c("agegp", "agegp_sex")){
-
-    # Recode age
-    temp_data <- temp_data %>%
-      mutate(agegp = recode(agegp,
-                            "gunder1" = "<1",
-                            "g1to4" = "1-4",
-                            "g5to14" = "5-14",
-                            "g15to44" = "15-44",
-                            "g45to64" = "45-64",
-                            "g65to74" = "65-74",
-                            "g75plus" = "75+"))
-
-  }
-
-  if(filename == "agegp_sex"){
-
-    # Recode season
-    temp_data <- temp_data %>%
-      mutate(season = paste0(substr(season,1,5), substr(season,8,9)))
-
-  }
-
-  # Only keep data in seasons we want to include in dashboard
-  temp_data <- temp_data %>%
-    filter(season %in% resp_seasons_to_include)
-
-  assign(glue("i_respiratory_{filename}_agg"), temp_data)
-
 }
 
 ##  create dictionaries so we can make new column names with meaningful data for user
@@ -124,12 +61,11 @@ for(filename in filenames) {
   df1 <- base::get(glue("i_respiratory_{filename}_agg")) %>%
     mutate(year = get_resp_year(week, season),
            date = ISOweek2date(paste0(year, "-W",
-                                      str_pad(as.character(week), width = 2,
-                                              side = "left", pad = "0"), "-7"))) %>%
+                               str_pad(as.character(week), width = 2,
+                                       side = "left", pad = "0"), "-7"))) %>%
     mutate(flu_nonflu = case_when(pathogen %in% flu ~ "flu",
                                   pathogen %in% nonflu ~ "nonflu",
-                                  TRUE ~ NA_character_)) %>%
-    clean_names()
+                                  TRUE ~ NA_character_))
 
   if(filename == "scotland"){
 
@@ -151,7 +87,6 @@ for(filename in filenames) {
     df1 %<>% mutate(agegp = ifelse(agegp == "01-Apr", "1-4",
                                    ifelse(agegp == "May-14", "5-14", agegp)),
                     scotland_by_organism_age_flag = 1,
-                    organism = recode(pathogen, !!!organism, .default = NA_character_),
                     breakdown = agegp)
 
   } else if (filename == "sex") {
@@ -164,9 +99,9 @@ for(filename in filenames) {
 
     df1 %<>% mutate(organism_by_hb_flag = 1,
                     organism = recode(pathogen, !!!organism, .default = NA_character_),
-                    HealthboardCode = recode(health_board, !!!healthboards, .default = NA_character_),
+                    HealthboardCode = recode(HealthBoard, !!!healthboards, .default = NA_character_),
                     breakdown = HealthboardCode) %>%
-      filter(!is.na(health_board))
+      filter(!is.na(HealthBoard))
 
   }
 
@@ -174,7 +109,8 @@ for(filename in filenames) {
 
   # 2. scotland flu and non-flu totals
   df2 <- df1 %>%
-    filter(!pathogen %in% c("h1n1", "typea", "typeah3", "typeb", "unknowna")) %>%
+    filter(!pathogen %in% c("typea", "typeb", "h1n1",
+                            "typeah3", "unknowna")) %>%
     group_by(season, week, weekord, date, pop, measure, breakdown, flu_nonflu) %>%
     summarise(count = sum(count)) %>%
     mutate(rate = round_half_up((count/pop)*100000, 2),
@@ -217,25 +153,6 @@ for(filename in filenames) {
   assign(glue("{filename}_flu_total"), df3)
   assign(glue("{filename}_non_flu_total"), df4)
 
-  if (filename == "agegp_sex") {
-
-    df5 <- df2 %>%
-      filter(flu_nonflu == "flu") %>%
-      group_by(season, pop, measure, breakdown, flu_nonflu, pathogen, organism, agegp, sex) %>%
-      summarise(date = max(date),
-                count = sum(count)) %>%
-      ungroup() %>%
-      mutate(rate = round_half_up((count/pop)*100000, 2),
-             countQF = "d",
-             rateQF = "d",
-             pathogen = "Season Total",
-             organism = "Season Total",
-             scotland_by_age_sex_season_flag = 1)
-
-    assign(glue("{filename}_flu_season_total"), df5)
-
-  }
-
 }
 
 g_resp_data <- bind_rows(
@@ -253,12 +170,11 @@ g_resp_data <- bind_rows(
   agegp_flu_total,
   sex_flu_total,
   agegp_sex_flu_total,
-  hb_flu_total,
-  agegp_sex_flu_season_total) %>%
+  hb_flu_total) %>%
   mutate(count = as.numeric(count),
          agegp = factor(agegp,
                         levels = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+"))
-  ) %>%
+        ) %>%
   dplyr::rename(Season = season,
                 Pathogen = pathogen,
                 Week = week,
@@ -281,7 +197,7 @@ g_resp_data <- bind_rows(
   select(Season, Date, Week, Year, Weekord, Measure, FluOrNonFlu, Organism, BreakDown, Healthboard, AgeGroup, Sex, Count, CountQF, Rate, RateQF,
          Population,Pathogen, HealthboardCode, total_number_flag, scotland_by_age_flag, scotland_by_sex_flag, scotland_by_age_sex_flag, hb_flag,
          scotland_by_organism_flag, scotland_by_organism_age_sex_flag, scotland_by_organism_age_flag, scotland_by_organism_sex_flag,
-         organism_by_hb_flag, scotland_by_age_sex_season_flag)
+         organism_by_hb_flag)
 
 #### Create Summary Table
 sequence = c("PreviousWeek", "PreviousWeek", "ThisWeek", "ThisWeek")
@@ -293,7 +209,7 @@ g_resp_summary_totals <- g_resp_data %>%
   tail(4) %>%
   mutate(Breakdown = "Scotland Total") %>%
   bind_cols(., sequence) %>%
-  rename(ReportingWeek = "...32") %>%
+  rename(ReportingWeek = "...31") %>%
   select(ReportingWeek, Date, Count, CountQF, Rate, RateQF, Breakdown, FluOrNonFlu) %>%
   pivot_wider(., names_from = c("ReportingWeek"), values_from = c("Count", "Date", "Rate")) %>%
   dplyr::rename(CountPreviousWeek = Count_PreviousWeek,
@@ -360,38 +276,38 @@ write_csv(g_resp_summary, glue(output_folder, "Respiratory_Summary.csv"))
 
 ### Create additional outputs for data download section ###
 
-# Function that creates template with all possible
+# Function that creates template with all possible 
 # combinations of supplied variables
 create_template <- function(data, template_variables){
-
+  
   for(i in 1:length(template_variables)){
-
+    
     # Create empty list
     empty_list <- list()
-
+    
     # Get unique values of variable
     df <- data %>%
       select(template_variables[i]) %>%
       unique()
-
+    
     # Turn to vector and sort
     vec <- sort(df[[template_variables[i]]])
-
+    
     # Add to list
     if(i == 1){
       vecs <- c(empty_list, list(vec))
     } else{
       vecs <- c(vecs, list(vec))
     }
-
+    
   }
-
+  
   # Create template
-  template <- expand.grid(vecs)
-
+  template <- expand.grid(vecs) 
+  
   # Update variable names
   colnames(template) <- template_variables
-
+  
   # Tidy up template
   template <- template %>%
     arrange(across(everything()))
@@ -462,10 +378,10 @@ case_rates_age <- case_rates_age_template %>%
   mutate(rate = ifelse(is.na(rate), 0, rate)) %>%
   mutate(WeekEnding = as.Date(date),
          WeekBeginning = as.Date(date) - 6,
-         AgeGroup = factor(agegp, levels = c("<1", "1-4", "5-14", "15-44",
+         AgeGroup = factor(agegp, levels = c("<1", "1-4", "5-14", "15-44", 
                                              "45-64", "65-74", "75+")),
          RatePer100000 = rate,
-         Pathogen = recode(pathogen,
+         Pathogen = recode(pathogen, 
                            "fluaorb" = "Influenza - Type A or B",
                            "h1n1" = "Influenza - Type A(H1N1)pdm09",
                            "typea" = "Influenza - Type A (any subtype)",
@@ -509,7 +425,7 @@ case_rates_age_sex <- case_rates_age_sex_template %>%
   mutate(rate = ifelse(is.na(rate), 0, rate)) %>%
   mutate(WeekEnding = as.Date(date),
          WeekBeginning = as.Date(date) - 6,
-         AgeGroup = factor(agegp, levels = c("<1", "1-4", "5-14", "15-44",
+         AgeGroup = factor(agegp, levels = c("<1", "1-4", "5-14", "15-44", 
                                              "45-64", "65-74", "75+")),
          Sex = recode(sex, "F" = "Female", "M" = "Male"),
          RatePer100000 = rate,
@@ -537,256 +453,32 @@ write_csv(case_rates_sex, glue(od_folder, "Respiratory_Sex_{od_report_date}.csv"
 write_csv(case_rates_age_sex , glue(od_folder, "Respiratory_Age_Sex_{od_report_date}.csv"))
 
 
-### Create MEM files ###
-
-# Weekly case rates and MEM by pathogen in Scotland
-case_rates_scotland_mem <- cases_scotland_template %>%
-  full_join(scotland_agg) %>%
-  filter(!is.na(activity_level)) %>%
-  mutate(rate = ifelse(is.na(rate), 0, rate)) %>%
-  mutate(WeekEnding = as.Date(date),
-         WeekBeginning = as.Date(date) - 6,
-         Season = season,
-         Year = year,
-         ISOWeek = week,
-         Weekord = weekord,
-         ActivityLevel = activity_level,
-         LowThreshold = low_threshold,
-         MediumThreshold = moderate_threshold,
-         HighThreshold = high_threshold,
-         ExtraordinaryThreshold = extraordinary_threshold,
-         RatePer100000 = rate,
-         Pathogen = organism) %>%
-  mutate(Season = paste0(substr(Season, 1, 5), "20", substr(Season, 6, 7))) %>%
-  mutate(Pathogen = recode(Pathogen,
-                           "Human metapneumovirus" = "Human Metapneumovirus",
-                           "Influenza - Type A or B" = "Influenza",
-                           "Mycoplasma pneumoniae" = "Mycoplasma Pneumoniae",
-                           "Respiratory syncytial virus" = "Respiratory Syncytial Virus",
-                           "Parainfluenza virus" = "Parainfluenza Virus",
-                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus")) %>%
-  select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, Pathogen, RatePer100000,
-         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
-  arrange(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, Pathogen)
-
-# Weekly case rates and MEM by pathogen and HB
-case_rates_hb_mem <- case_rates_hb_template %>%
-  full_join(hb_agg) %>%
-  filter(!is.na(activity_level)) %>%
-  mutate(rate = ifelse(is.na(rate), 0, rate)) %>%
-  mutate(WeekEnding = as.Date(date),
-         WeekBeginning = as.Date(date) - 6,
-         HBCode = health_board,
-         HB = HealthboardCode,
-         HBName = paste0("NHS ", phsmethods::match_area(HealthboardCode)),
-         Season = season,
-         Year = year,
-         ISOWeek = week,
-         Weekord = weekord,
-         ActivityLevel = activity_level,
-         LowThreshold = low_threshold,
-         MediumThreshold = moderate_threshold,
-         HighThreshold = high_threshold,
-         ExtraordinaryThreshold = extraordinary_threshold,
-         RatePer100000 = rate,
-         Pathogen = organism) %>%
-  mutate(Season = paste0(substr(Season, 1, 5), "20", substr(Season, 6, 7))) %>%
-  mutate(Pathogen = recode(Pathogen,
-                           "Human metapneumovirus" = "Human Metapneumovirus",
-                           "Influenza - Type A or B" = "Influenza",
-                           "Mycoplasma pneumoniae" = "Mycoplasma Pneumoniae",
-                           "Respiratory syncytial virus" = "Respiratory Syncytial Virus",
-                           "Parainfluenza virus" = "Parainfluenza Virus",
-                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus")) %>%
-  select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, HBCode, HB, HBName, Pathogen, RatePer100000,
-         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
-  arrange(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, HBCode, HB, HBName, Pathogen)
-
-
-# Weekly case rates and MEM by pathogen and age
-case_rates_age_mem <- case_rates_age_template %>%
-  full_join(agegp_agg) %>%
-  filter(!is.na(activity_level)) %>%
-  mutate(rate = ifelse(is.na(rate), 0, rate)) %>%
-  mutate(agegp = recode(agegp,
-                        "<1" = "< 1 years",
-                        "1-4" = "1-4 years",
-                        "5-14" = "5-14 years",
-                        "15-44" = "15-44 years",
-                        "45-64" = "45-64 years",
-                        "65-74" = "65-74 years",
-                        "75+" = "75+ years")) %>%
-  mutate(WeekEnding = as.Date(date),
-         WeekBeginning = as.Date(date) - 6,
-         AgeGroup = agegp,
-         Season = season,
-         Year = year,
-         ISOWeek = week,
-         Weekord = weekord,
-         ActivityLevel = activity_level,
-         LowThreshold = low_threshold,
-         MediumThreshold = moderate_threshold,
-         HighThreshold = high_threshold,
-         ExtraordinaryThreshold = extraordinary_threshold,
-         RatePer100000 = rate,
-         Pathogen = organism) %>%
-  mutate(Season = paste0(substr(Season, 1, 5), "20", substr(Season, 6, 7))) %>%
-  mutate(Pathogen = recode(Pathogen,
-                           "Human metapneumovirus" = "Human Metapneumovirus",
-                           "Influenza - Type A or B" = "Influenza",
-                           "Mycoplasma pneumoniae" = "Mycoplasma Pneumoniae",
-                           "Respiratory syncytial virus" = "Respiratory Syncytial Virus",
-                           "Parainfluenza virus" = "Parainfluenza Virus",
-                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus")) %>%
-  select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, AgeGroup, Pathogen, RatePer100000,
-         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
-  bind_rows(case_rates_scotland_mem) %>%
-  mutate(AgeGroup = ifelse(is.na(AgeGroup), "All Ages", AgeGroup)) %>%
-  mutate(AgeGroup = factor(AgeGroup, levels = c("< 1 years", "1-4 years", "5-14 years", "15-44 years",
-                                                "45-64 years", "65-74 years", "75+ years", "All Ages"))) %>%
-  arrange(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, AgeGroup, Pathogen)
-
-# Output
-write_csv(case_rates_scotland_mem, glue(output_folder, "Respiratory_Pathogens_MEM_Scot.csv"))
-write_csv(case_rates_hb_mem, glue(output_folder, "Respiratory_Pathogens_MEM_HB.csv"))
-write_csv(case_rates_age_mem, glue(output_folder, "Respiratory_Pathogens_MEM_Age.csv"))
-
-
-#### dev season cumulative rates by  age/sex ####
-#case numbers and rates for last 2 weeks, for use in at-a-glance
-# cases_scotland_2wks <- cases_scotland_template %>%
-#   full_join(scotland_agg) %>%
-#   mutate(fluaorb_filter=case_when( flu_nonflu=="nonflu"~1,
-#                                    pathogen=="fluaorb"~1,
-#                                    TRUE~0)) %>%
-#   filter( date==od_sunday|  date==od_sunday_minus_7 ) %>%
-#   filter(fluaorb_filter==1) %>%
-#   mutate(WeekEnding = as.Date(date),
-#          WeekBeginning = as.Date(date) - 6,
-#          WeekEnding = gsub("-", "", as.character(WeekEnding)),
-#          WeekBeginning = gsub("-", "", as.character(WeekBeginning)),
-#          WeekEnding = as.numeric(as.character(WeekEnding)),
-#          WeekBeginning = as.numeric(as.character(WeekBeginning)))  %>%
-#   select(Season=season, WeekBeginning, WeekEnding, Pathogen=organism,
-#          Count=count, RatePer100000 = rate)
-# 
-# write_csv(cases_scotland_2wks, glue(output_folder, "Two_Wks_Pathogen_Counts_Rates.csv"))
-#  rm(cases_scotland_2wks)
-# 
-#  season_dates<- cases_scotland_template %>%
-#    full_join(scotland_agg) %>% 
-#    group_by(season, date) %>% 
-#    unique() %>% 
-#    mutate(WeekEnding = as.Date(date),
-#           WeekEnding = gsub("-", "", as.character(WeekEnding)),
-#           WeekEnding = as.numeric(as.character(WeekEnding))) %>% 
-#    group_by(season) %>% 
-#    summarise(SeasonStart=min(WeekEnding),
-#              SeasonEnd= max(WeekEnding))
-#  
-# # season cases by pathogen in Scotland
-# season_cases_scotland <- cases_scotland_template %>%
-#   full_join(scotland_agg) %>%
-#   filter(!is.na(count)) %>%
-#   group_by(season, organism,  pop, flu_nonflu) %>%
-#   summarise(SeasonCount=sum(count)) %>%
-#   ungroup()%>%
-#   mutate( Sex="All",
-#           AgeGroup="All Ages")
-# 
-# # season cases by pathogen and age in Scotland
-# season_cases_age <- case_rates_age_template %>%
-#   full_join(agegp_agg) %>%
-#   filter(!is.na(count)) %>% 
-#   mutate( AgeGroup = factor(agegp, levels = c("<1", "1-4", "5-14", "15-44", 
-#                                               "45-64", "65-74", "75+")),
-#           organism = recode(pathogen, 
-#                             "fluaorb" = "Influenza - Type A or B",
-#                             "h1n1" = "Influenza - Type A(H1N1)pdm09",
-#                             "typea" = "Influenza - Type A (any subtype)",
-#                             "typeah3" = "Influenza - Type A(H3)",
-#                             "typeb" = "Influenza - Type B",
-#                             "unknowna" = "Influenza - Type A (not subtyped)",
-#                             "adeno" = "Adenovirus",
-#                             "coron" = "Seasonal coronavirus (Non-SARS-CoV-2)",
-#                             "hmpv" = "Human metapneumovirus",
-#                             "mpn" = "Mycoplasma pneumoniae",
-#                             "para" = "Parainfluenza virus",
-#                             "rhino" = "Rhinovirus",
-#                             "rsv" = "Respiratory syncytial virus"),
-#           AgeGroup = paste0(AgeGroup, " years")) %>% 
-#   group_by(season, organism, pop, AgeGroup, flu_nonflu) %>%
-#   summarise(SeasonCount=sum(count)) %>% 
-#   ungroup() %>% 
-#   mutate(Sex="All")
-# 
-# #season cases by pathogen and sex in Scotland
-# season_cases_sex <- case_rates_sex_template %>%
-#   full_join(sex_agg) %>%
-#   filter(!is.na(count)) %>%
-#   mutate(Sex = recode(sex, "F" = "Female", "M" = "Male"))%>%
-#   group_by(season, organism, pop, Sex, flu_nonflu) %>%
-#   summarise(SeasonCount=sum(count)) %>%
-#   ungroup() %>%
-#   mutate(AgeGroup="All Ages")
-# 
-# # season cases by pathogen, age, and sex in Scotland
-# season_cases_age_sex <- case_rates_age_sex_template %>%
-#   full_join(agegp_sex_agg) %>%
-#   filter(!is.na(count)) %>%
-#    mutate(AgeGroup = factor(agegp, levels = c("<1", "1-4", "5-14", "15-44",
-#                                              "45-64", "65-74", "75+")),
-#          Sex = recode(sex, "F" = "Female", "M" = "Male")) %>%
-#   group_by(season, organism, pop, Sex, AgeGroup, flu_nonflu) %>%
-#   summarise(SeasonCount=sum(count)) %>%
-#   ungroup()
-# 
-# # combined case numbers by Pathogen, age and sex.
-# # Plus normalised rates for each cohort
-# season_age_sex_rates = rbind(season_cases_scotland, season_cases_age,
-#                              season_cases_sex, season_cases_age_sex)  %>%
-#   filter(!is.na(AgeGroup)& !is.na(Sex)) %>%  
-#   left_join(season_dates, by="season") %>% 
-#   mutate(  SeasonRate=round(SeasonCount/pop*100000,1)) %>%
-#    mutate(AgeGroup = recode(AgeGroup,
-#                         "<1" = "< 1 years",
-#                         "1-4" = "1-4 years",
-#                         "5-14" = "5-14 years",
-#                         "15-44" = "15-44 years",
-#                         "45-64" = "45-64 years",
-#                         "65-74" = "65-74 years",
-#                         "75+" = "75+ years"),
-#          Sex = factor(Sex, levels = c("Female", "Male", "All"))) %>%
-#   select(Season=season,SeasonStart, SeasonEnd, Pathogen=organism,Sex, AgeGroup,
-#          SeasonCount, Population=pop, SeasonRate, FluOrNonFlu=flu_nonflu )%>%
-#   arrange(Season, Pathogen, AgeGroup  ,Sex  )
-# 
-# 
-# # influenza seasonal age/sex counts and rates
-# season_flu_age_sex_rates = season_age_sex_rates%>%
-#   filter(FluOrNonFlu=="flu") %>%
-#   filter(Pathogen=="Influenza - Type A or B")
-# 
-# write_csv(season_flu_age_sex_rates, glue(output_folder, "Seasonal_AgeSex_Flu_Rates.csv"))
-
-# rm(season_age_sex_rates, season_cases_scotland, season_cases_age,
-#    season_cases_sex, season_cases_age_sex, season_flu_age_sex_rates, agegp_sex_flu_season_total, season_dates)
-
-#### end of dev sections ####
 
 # remove all data
 rm(i_respiratory_scotland_agg, i_respiratory_agegp_agg,
    i_respiratory_agegp_sex_agg, i_respiratory_sex_agg, i_respiratory_hb_agg)
 rm(scotland_agg, hb_agg, sex_agg, agegp_agg, agegp_sex_agg, scotland_non_flu_total,
-   agegp_non_flu_total,  sex_non_flu_total,  agegp_sex_non_flu_total, hb_non_flu_total,
-   scotland_flu_total,  agegp_flu_total, sex_flu_total, agegp_sex_flu_total,
+   agegp_non_flu_total,
+   sex_non_flu_total,
+   agegp_sex_non_flu_total,
+   hb_non_flu_total,
+   scotland_flu_total,
+   agegp_flu_total,
+   sex_flu_total,
+   agegp_sex_flu_total,
    hb_flu_total)
+rm(hb_checks_this_week, agegp_checks_this_week, sex_checks_this_week, agegp_sex_checks_this_week,
+   scotland_checks_prev_week, hb_checks_prev_week, agegp_checks_prev_week, sex_checks_prev_week, agegp_sex_checks_prev_week,
+   scotland_colnames, hb_colnames, sex_colnames, agegp_colnames, agegp_sex_colnames,
+   scotland_colnames_match,
+   hb_colnames_match,
+   sex_colnames_match,
+   agegp_colnames_match,# 19 warnings in the remove
+   agegp_sex_colnames_match)
 rm(g_resp_data, g_resp_summary, g_resp_summary_totals)
 rm(cases_scotland, case_rates_scotland, case_rates_hb, case_rates_age,
-   case_rates_sex, case_rates_age_sex)
+   case_rates_sex, case_rates_age_sex) #object 'case_rates_age_sex' not found
 rm(cases_scotland_template, case_rates_hb_template, case_rates_sex_template,
    case_rates_age_template, case_rates_age_sex_template)
-rm(case_rates_scotland_mem, case_rates_hb_mem, case_rates_age_mem)
-rm(df1,df2, df3, df4, df5, temp_data)
-
-
+rm(df1,df2, df3, df4)
+rm(season_age_sex_rates, season_agegp_rates, season_scotland_rates, season_flu_age_sex_rates)
