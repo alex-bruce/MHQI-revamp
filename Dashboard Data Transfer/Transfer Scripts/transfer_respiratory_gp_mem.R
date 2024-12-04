@@ -28,7 +28,7 @@ get_resp_year <- function(w, s){
 }
 
 filenames1 <- c("GPILI")
-filenames2 <- c("scotland", "hb", "agegp")
+filenames2 <- c("scotland", "agegp")
 
 ## Getting respiratory data
 for (filename1 in filenames1){
@@ -134,14 +134,14 @@ for (filename1 in filenames1){
 # Order datasets
 respiratory_GPILI_MEM_scotland <- respiratory_GPILI_MEM_scotland %>%
   arrange(WeekBeginning)
-respiratory_GPILI_MEM_hb <- respiratory_GPILI_MEM_hb %>%
-  arrange(WeekBeginning, HBName)
+#respiratory_GPILI_MEM_hb <- respiratory_GPILI_MEM_hb %>%
+#  arrange(WeekBeginning, HBName)
 respiratory_GPILI_MEM_agegp <- respiratory_GPILI_MEM_agegp %>%
   arrange(WeekBeginning, AgeGroup)
 
 # Output
 write_csv(respiratory_GPILI_MEM_scotland, glue(output_folder, "Respiratory_GPILI_MEM_Scot.csv"))
-write_csv(respiratory_GPILI_MEM_hb, glue(output_folder, "Respiratory_GPILI_MEM_HB.csv"))
+#write_csv(respiratory_GPILI_MEM_hb, glue(output_folder, "Respiratory_GPILI_MEM_HB.csv"))
 write_csv(respiratory_GPILI_MEM_agegp, glue(output_folder, "Respiratory_GPILI_MEM_Age.csv"))
 
 
