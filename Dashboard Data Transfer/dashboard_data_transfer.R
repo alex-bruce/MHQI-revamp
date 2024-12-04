@@ -172,7 +172,7 @@ source("Transfer Scripts/transfer_occupancy.R")
 source("Transfer Scripts/transfer_respiratory.R")
 
 #### Respiratory Pathogens - MEM
-source("Transfer Scripts/transfer_respiratory_pathogens_mem.R")
+#source("Transfer Scripts/transfer_respiratory_pathogens_mem.R")
 
 
 #### Respiratory - Euromomo
