@@ -21,7 +21,7 @@ for (filename in filenames){
   assign(glue("i_respiratory_{filename}_agg"),
          read_csv_with_options(
            match_base_filename(
-             glue("{input_data}/NEW_{filename}_agg.csv")
+             glue("{input_data}/{filename}_agg.csv")
            )
          )
   )
