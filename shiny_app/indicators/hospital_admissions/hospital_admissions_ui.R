@@ -149,7 +149,7 @@ tagList(
                                                                label = "Select year",
                                                                choices = unique(sort((Length_of_Stay %>%
                                                                                         mutate(Year = substring(AdmissionWeekEnding,1,4)))$Year,decreasing = T)),
-                                                               selected = "2024"),
+                                                               selected = "2025"),
                                                    altTextUI("hospital_admissions_los_modal"),
                                                     withNavySpinner(
                                                       plotlyOutput("hospital_admissions_los_plot")

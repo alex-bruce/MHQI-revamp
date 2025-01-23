@@ -207,34 +207,55 @@ output$influenza_mem_age_plot <- renderPlotly({
 
 ### Age and sex plot ###
 
+# altTextServer("influenza_age_sex",
+#               title = glue("Influenza cases by age and/or sex in Scotland"),
+#               content = tags$ul(
+#                 tags$li(glue("This is a plot of the total influenza cases in Scotland.")),
+#                 tags$li("The information is displayed for a selected season and week."),
+#                 tags$li("One of three different plots is displayed depending on the breakdown",
+#                         "selected: either Age; Sex; or Age + Sex."),
+#                 tags$li("All three plots show rate per 100,000 people on the y axis."),
+#                 tags$li("For the x axis the first plot shows age group, the second shows",
+#                         "sex, and the third shows age group and sex."),
+#                 tags$li("The first plot (Age) is a bubble plot. This is a scatter plot",
+#                         "where both the position and the area of the circle correspond",
+#                         "to the rate per 100,000 people."),
+#                 tags$li("The second and third plots are bar charts where the left hand column",
+#                         "corresponds to female (F) and the right hand column to male (M).")
+#                 # tags$li("The youngest and oldest groups have the highest rates of illness.")
+#               )
+# )
+
 altTextServer("influenza_age_sex",
               title = glue("Influenza cases by age and/or sex in Scotland"),
               content = tags$ul(
-                tags$li(glue("This is a plot of the total influenza cases in Scotland.")),
-                tags$li("The information is displayed for a selected season and week."),
-                tags$li("One of three different plots is displayed depending on the breakdown",
-                        "selected: either Age; Sex; or Age + Sex."),
-                tags$li("All three plots show rate per 100,000 people on the y axis."),
-                tags$li("For the x axis the first plot shows age group, the second shows",
-                        "sex, and the third shows age group and sex."),
-                tags$li("The first plot (Age) is a bubble plot. This is a scatter plot",
-                        "where both the position and the area of the circle correspond",
-                        "to the rate per 100,000 people."),
-                tags$li("The second and third plots are bar charts where the left hand column",
-                        "corresponds to female (F) and the right hand column to male (M).")
+                tags$li(glue("This is a pyramid plot of rate per 100,000 people of influenza cases in Scotland by age and sex.")),
+                tags$li("The information is displayed for a selected season."),
+                tags$li("The y axis shows the age group. The left side of the y axis corresponds to females (F) and the right side to males (M)."),
+                tags$li("For the x axis the plot shows rate per 100,000 people.")
                 # tags$li("The youngest and oldest groups have the highest rates of illness.")
               )
 )
 
 # plot that shows the breakdown by age/sex/age and sex
-output$influenza_age_sex_plot = renderPlotly({
+# output$influenza_age_sex_plot = renderPlotly({
+#
+#   Respiratory_AllData %>%
+#     filter(FluOrNonFlu == "flu") %>%
+#     filter_by_sex_age(., season = input$respiratory_season,
+#                       date = {input$respiratory_date %>% as.Date(format="%d %b %y")},
+#                       breakdown = input$respiratory_select_age_sex_breakdown) %>%
+#     make_age_sex_plot(., breakdown = input$respiratory_select_age_sex_breakdown)
+#
+# })
 
+# pyramid plot that shows the breakdown by age and sex
+output$influenza_age_sex_pyramid_plot = renderPlotly({
   Respiratory_AllData %>%
-    filter(FluOrNonFlu == "flu") %>%
-    filter_by_sex_age(., season = input$respiratory_season,
-                      date = {input$respiratory_date %>% as.Date(format="%d %b %y")},
-                      breakdown = input$respiratory_select_age_sex_breakdown) %>%
-    make_age_sex_plot(., breakdown = input$respiratory_select_age_sex_breakdown)
+    filter(scotland_by_age_sex_season_flag == 1,
+           # scotland_by_age_sex_flag == 1,
+           Season == input$respiratory_season) %>%
+    make_age_sex_pyramid_plot()
 
 })
 
@@ -278,6 +299,28 @@ output$influenza_age_sex_table = renderDataTable({
     arrange(desc(`Week ending`), `Age group`, Sex) %>%
     make_table(add_separator_cols_1dp = c(5),
                filter_cols = c(1,3,4))
+
+})
+
+# Flu by age/sex/age and sex
+output$influenza_age_sex_pyramid_table = renderDataTable({
+
+  flu_age_sex_pyramid_table <- Respiratory_AllData %>%
+    filter(FluOrNonFlu == "flu") %>%
+    filter(scotland_by_age_sex_season_flag == 1) %>%
+    select(Season, AgeGroup, Sex, Rate) %>%
+    mutate(Season = factor(Season)) %>%
+    arrange(desc(Season), AgeGroup, Sex) %>%
+    dplyr::rename("Season" = "Season",
+                  "Age group" = "AgeGroup",
+                  "Rate per 100,000" = "Rate") %>%
+    mutate(Sex = factor(Sex, levels = c("All", "F", "M")),
+           `Age group` = factor(`Age group`, levels =
+                                  c("All", "<1", "1-4", "5-14",
+                                    "15-44", "45-64", "65-74", "75+"))) %>%
+    arrange(desc(`Season`), `Age group`, Sex) %>%
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(1,2,3))
 
 })
 
