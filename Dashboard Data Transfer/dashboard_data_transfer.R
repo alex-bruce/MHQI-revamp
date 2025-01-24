@@ -8,7 +8,7 @@ if(is.na(utils::packageDate("pacman"))) install.packages("pacman")
 if (!pacman::p_isinstalled("friendlyloader")){pacman::p_install_gh("RosalynLP/friendlyloader")}
 
 pacman::p_load(dplyr, magrittr, glue, openxlsx, lubridate, ISOweek,
-               janitor, stringr, data.table, stats, zoo, tidyr, readxl, readr, friendlyloader)
+               janitor, stringr, data.table, stats, zoo, tidyr, readxl, readr, friendlyloader, phsopendata)
 
 # Setting permisisons for files outputted
 Sys.umask("006")
@@ -163,6 +163,8 @@ source("Transfer Scripts/transfer_covid_wastewater_national.R")
 source("Transfer Scripts/transfer_covid_wastewater_hb.R")
 # Covid WW LA
 source("Transfer Scripts/transfer_covid_wastewater_ca.R")
+# Covid WW IND
+source("Transfer Scripts/transfer_covid_wasterwater_ind.R")
 
 #### Occupancy
 source("Transfer Scripts/transfer_occupancy.R")

@@ -16,7 +16,28 @@ ca_cov <- i_councilarea %>%
 g_councilarea <- ca_avg %>% 
   left_join(ca_cov)
 
+g_councilarea_od <- g_councilarea %>%
+  rename(WeekStartDate = Start,
+         WeekEndDate = End,
+         LocalAuthority = council_area,
+         Average = average,
+         Coverage = coverage)%>%
+  mutate(
+    Average = ifelse(is.na(Average), "", Average),
+    Coverage = ifelse(is.na(Coverage), "", Coverage),
+    AverageQF = if_else(Average == "", ":", ""),
+    CoverageQF = if_else(Coverage == "", ":", "")
+  ) %>%
+  select(WeekStartDate, WeekEndDate, LocalAuthority, 
+         Average, 
+         !!if(any(.$AverageQF != "")) "AverageQF" else NULL, 
+         Coverage, 
+         !!if(any(.$CoverageQF != "")) "CoverageQF" else NULL)
+
+write_csv(g_councilarea_od,
+          glue(od_folder, "COVID_Wastewater_CA_{od_report_date}.csv"),na = "")
+
 write_csv(g_councilarea,
           glue(output_folder, "COVID_Wastewater_CA_table.csv"))
 
-rm(i_councilarea, g_councilarea, ca_avg, ca_cov)
+rm(i_councilarea, g_councilarea, ca_avg, ca_cov, g_councilarea_od)
