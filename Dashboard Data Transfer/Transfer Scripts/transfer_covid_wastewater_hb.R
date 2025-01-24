@@ -55,4 +55,4 @@ write_csv(g_healthboard_od,
 write_csv(g_healthboard,
           glue(output_folder, "COVID_Wastewater_HB_table.csv"))
 
-rm(i_healthboard, g_healthboard, hb_avg, hb_cov, g_healthboard_od)
+rm(i_healthboard, g_healthboard, hb_avg, hb_cov, g_healthboard_od, hb2019_id, hb_code)
