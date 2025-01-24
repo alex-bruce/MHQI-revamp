@@ -164,7 +164,7 @@ source("Transfer Scripts/transfer_covid_wastewater_hb.R")
 # Covid WW LA
 source("Transfer Scripts/transfer_covid_wastewater_ca.R")
 # Covid WW IND
-source("Transfer Scripts/transfer_covid_wasterwater_ind.R")
+source("Transfer Scripts/transfer_covid_wastewater_ind.R")
 
 #### Occupancy
 source("Transfer Scripts/transfer_occupancy.R")

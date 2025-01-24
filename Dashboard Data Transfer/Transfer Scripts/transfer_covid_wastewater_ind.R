@@ -16,7 +16,7 @@ ind_avg <- i_individualsite %>%
   )%>%
   mutate(individual_site = gsub(" Avg", "", individual_site))
 
-ind_cov <- i_individualarea %>%
+ind_cov <- i_individualsite %>%
   select(1:2, all_of(cov_cols)) %>%
   pivot_longer(
     cols = all_of(cov_cols), 
