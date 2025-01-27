@@ -16,28 +16,34 @@ ca_cov <- i_councilarea %>%
 g_councilarea <- ca_avg %>% 
   left_join(ca_cov)
 
-g_councilarea_od <- g_councilarea %>%
-  rename(WeekStartDate = Start,
-         WeekEndDate = End,
-         LocalAuthority = council_area,
-         Average = average,
-         Coverage = coverage)%>%
-  mutate(
-    Average = ifelse(is.na(Average), "", Average),
-    Coverage = ifelse(is.na(Coverage), "", Coverage),
-    AverageQF = if_else(Average == "", ":", ""),
-    CoverageQF = if_else(Coverage == "", ":", "")
-  ) %>%
-  select(WeekStartDate, WeekEndDate, LocalAuthority, 
-         Average, 
-         !!if(any(.$AverageQF != "")) "AverageQF" else NULL, 
-         Coverage, 
-         !!if(any(.$CoverageQF != "")) "CoverageQF" else NULL)
-
-write_csv(g_councilarea_od,
-          glue(od_folder, "COVID_Wastewater_CA_{od_report_date}.csv"),na = "")
 
 write_csv(g_councilarea,
           glue(output_folder, "COVID_Wastewater_CA_table.csv"))
 
-rm(i_councilarea, g_councilarea, ca_avg, ca_cov, g_councilarea_od)
+# open data section
+
+ca2019_id<-"967937c4-8d67-4f39-974f-fd58c4acfda5"
+
+ca_code <- get_resource(res_id = ca2019_id) %>%
+  as_tibble() %>%
+  clean_names() %>%
+  filter(is.na(ca_date_archived)& is.na(hb_date_archived)) %>%
+  select(council_area= ca_name, LocalAuthority=ca)
+
+g_councilarea_od  <- g_councilarea %>%
+  left_join(ca_code, by = "council_area") %>%
+  mutate(Average=round_half_up(average,2),
+         PercentCoverage= round_half_up(coverage*100,0)) %>% 
+  od_qualifiers(., "Average",":") %>%   
+  mutate(WeekStartDate = as.Date(Start)) %>% 
+  mutate(WeekStartDate = format(strptime(WeekStartDate, format = "%Y-%m-%d"), "%Y%m%d")) %>% 
+  mutate(WeekEndDate = as.Date(End)) %>% 
+  mutate(WeekEndDate  = format(strptime(WeekEndDate , format = "%Y-%m-%d"), "%Y%m%d")) %>% 
+  select(WeekStartDate, WeekEndDate, LocalAuthority, 
+         Average, AverageQF, PercentCoverage)
+
+write_csv(g_councilarea_od,
+          glue(od_folder, "covid19_wastewater_LA_{od_report_date}.csv"),na = "")
+
+
+rm(i_councilarea, g_councilarea, ca_avg, ca_cov, g_councilarea_od, ca2019_id)

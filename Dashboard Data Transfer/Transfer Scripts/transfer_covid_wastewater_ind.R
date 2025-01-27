@@ -28,27 +28,22 @@ ind_cov <- i_individualsite %>%
 g_individualsite <- ind_avg %>%
   left_join(ind_cov, by = c("Start", "End", "individual_site"))
 
+# open data section
 
 g_individualsite_od <- g_individualsite %>%
-  rename(WeekStartDate = Start,
-         WeekEndDate = End,
-         WastewaterTreatmentWork = individual_site,
-         Average = average,
-         Coverage = coverage)%>%
-  mutate(
-    Average = ifelse(is.na(Average), "", Average),
-    Coverage = ifelse(is.na(Coverage), "", Coverage),
-    AverageQF = if_else(Average == "", ":", ""),
-    CoverageQF = if_else(Coverage == "", ":", "")
-  ) %>%
-  select(WeekStartDate, WeekEndDate, WastewaterTreatmentWork, 
-         Average, 
-         !!if(any(.$AverageQF != "")) "AverageQF" else NULL, 
-         Coverage, 
-         !!if(any(.$CoverageQF != "")) "CoverageQF" else NULL)
+  mutate(Average=round_half_up(average,2),
+         PercentCoverage= round_half_up(coverage*100,0)) %>% 
+  od_qualifiers(., "Average",":") %>%   
+  mutate(WeekStartDate = as.Date(Start)) %>% 
+  mutate(WeekStartDate = format(strptime(WeekStartDate, format = "%Y-%m-%d"), "%Y%m%d")) %>% 
+  mutate(WeekEndDate = as.Date(End)) %>% 
+  mutate(WeekEndDate  = format(strptime(WeekEndDate , format = "%Y-%m-%d"), "%Y%m%d")) %>% 
+  select(WeekStartDate, WeekEndDate,  WastewaterTreatmentWork=individual_site,
+         Average, AverageQF, PercentCoverage)
+  
 
 write_csv(g_individualsite_od,
-          glue(od_folder, "COVID_Wastewater_IND_table_{od_report_date}.csv"),na = "")
+          glue(od_folder, "covid19_wastewater_IND_{od_report_date}.csv"),na = "")
 
 
 rm(i_individualsite, avg_cols, cov_cols, ind_cov, ind_avg, g_individualsite, g_individualsite_od)

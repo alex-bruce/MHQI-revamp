@@ -121,6 +121,15 @@ for (file_name in files_to_move) {
   }
 }
 
+#add qf column to inputed column that meets a null criteria
+
+od_qualifiers <- function(data, col_name, symbol) {
+  needs_symbol = data[[col_name]] == "" | is.na(data[[col_name]])
+  data %>%
+    mutate("{col_name}QF" := if_else(needs_symbol, symbol, ""))
+}
+
+
 #####################
 ##### Cases
 source("Transfer Scripts/transfer_cases.R")

@@ -17,6 +17,11 @@ hb_cov <- i_healthboard %>%
 g_healthboard <- hb_avg %>% 
   left_join(hb_cov)
 
+write_csv(g_healthboard,
+          glue(output_folder, "COVID_Wastewater_HB_table.csv"))
+
+## Open Data section
+
 sites <- c("28Sites","AllSites")
 
 hb2019_id<-"652ff726-e676-4a20-abda-435b98dd7bdc"
@@ -25,34 +30,25 @@ hb_code <- get_resource(res_id = hb2019_id) %>%
   as_tibble() %>%
   clean_names() %>%
   filter(is.na(hb_date_archived)) %>%
-  select(HealthBoardName=hb_name, HealthBoard=hb)
+  select(hb_name, HealthBoard=hb)
 
 g_healthboard_od <- g_healthboard %>%
   filter(health_board != sites) %>%
-  rename(
-    WeekStartDate = Start,
-    WeekEndDate = End,
-    HealthBoard = health_board,
-    Average = average,
-    Coverage = coverage
-  ) %>%
-  left_join(hb_code, by = c("HealthBoard" = "HealthBoardName")) %>%
-  mutate(
-    Average = ifelse(is.na(Average), "", Average),
-    Coverage = ifelse(is.na(Coverage), "", Coverage),
-    AverageQF = if_else(Average == "", ":", ""),
-    CoverageQF = if_else(Coverage == "", ":", "")
-  ) %>%
-  select(WeekStartDate, WeekEndDate, HealthBoard = HealthBoard.y, 
-         Average, 
-         !!if(any(.$AverageQF != "")) "AverageQF" else NULL, 
-         Coverage, 
-         !!if(any(.$CoverageQF != "")) "CoverageQF" else NULL)
+  rename( hb_name = health_board ) %>%
+  left_join(hb_code, by = "hb_name") %>%
+  mutate(Average=round_half_up(average,2),
+         PercentCoverage= round_half_up(coverage*100,0)) %>% 
+  od_qualifiers(., "Average",":") %>%   #od_qualifiers(., "coverage",":") %>%  #not needed
+  mutate(WeekStartDate = as.Date(Start)) %>% 
+  mutate(WeekStartDate = format(strptime(WeekStartDate, format = "%Y-%m-%d"), "%Y%m%d")) %>% 
+  mutate(WeekEndDate = as.Date(End)) %>% 
+  mutate(WeekEndDate  = format(strptime(WeekEndDate , format = "%Y-%m-%d"), "%Y%m%d")) %>% 
+  select(WeekStartDate, WeekEndDate, HealthBoard, 
+         Average, AverageQF, PercentCoverage)
 
 write_csv(g_healthboard_od,
-          glue(od_folder, "COVID_Wastewater_HB_{od_report_date}.csv"),na = "")
+          glue(od_folder, "covid19_wastewater_HB_{od_report_date}.csv"),na = "")
 
-write_csv(g_healthboard,
-          glue(output_folder, "COVID_Wastewater_HB_table.csv"))
 
-rm(i_healthboard, g_healthboard, hb_avg, hb_cov, g_healthboard_od, hb2019_id, hb_code)
+rm(i_healthboard, g_healthboard, hb_avg, hb_cov, g_healthboard_od, 
+   sites, hb2019_id, hb_code)

@@ -9,13 +9,13 @@ g_national <- i_national %>%
   mutate(Date = format(as.Date(Date), "%Y%m%d"),
          average = round_half_up(average,2))
 
-#Inputted country code column and moved it over for readability
+# Inputted country code column and moved it over for readability
 g_national_od <- g_national %>%
-  rename(`7DayEnding` = Date,
-         WastewaterRNA = average)
+  mutate(Geography= "S92000003") %>% 
+  select(SevenDayEnding = Date,Geography, WastewaterRNA = average)
 
 write_csv(g_national_od,
-          glue(od_folder, "COVID_Wastewater_National_{od_report_date}.csv"),na = "")
+          glue(od_folder, "covid19_wastewater_scotland_{od_report_date}.csv"),na = "")
 
 write_csv(g_national,
           glue(output_folder, "COVID_Wastewater_National_table.csv"))
