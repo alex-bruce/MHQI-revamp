@@ -86,26 +86,33 @@ tagList(
     linebreaks(1)
   ), # fluidRow
 
-  fluidRow(width = 12,
-           tagList(h2("RSV incidence rate per 100,000 population by NHS Health Board"))),
+fluidRow(width = 12,
+         tagList(h2("RSV incidence rate per 100,000 population by NHS Health Board"))),
 
-  fluidRow(
-    tabBox(width = NULL,
-           type = "pills",
-           tabPanel("Plot",
-                    tagList(linebreaks(1),
-                            altTextUI("rsv_mem_hb_modal"),
-                            withNavySpinner(plotlyOutput("rsv_mem_hb_plot")),
-                    )),
-           tabPanel("Data",
-                    tagList(linebreaks(1),
-                            withNavySpinner(dataTableOutput("rsv_mem_hb_table"))
-                    ) # tagList
-           ) # tabPanel
+fluidRow(
+  p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
+    "impact of different testing practices by board on incidence rates and implications for smaller board areas ",
+    "specifically as they relate to the calculation of activity threshold levels."),
+  linebreaks(1)
+),
 
-    ), # tabBox
-    linebreaks(1)
-  ), # fluidRow
+  # fluidRow(
+  #   tabBox(width = NULL,
+  #          type = "pills",
+  #          tabPanel("Plot",
+  #                   tagList(linebreaks(1),
+  #                           altTextUI("rsv_mem_hb_modal"),
+  #                           withNavySpinner(plotlyOutput("rsv_mem_hb_plot")),
+  #                   )),
+  #          tabPanel("Data",
+  #                   tagList(linebreaks(1),
+  #                           withNavySpinner(dataTableOutput("rsv_mem_hb_table"))
+  #                   ) # tagList
+  #          ) # tabPanel
+  # 
+  #   ), # tabBox
+  #   linebreaks(1)
+  # ), # fluidRow
 
 
   fluidRow(width = 12,

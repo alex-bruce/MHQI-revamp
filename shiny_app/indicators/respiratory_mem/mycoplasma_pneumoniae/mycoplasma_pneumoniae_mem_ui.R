@@ -38,23 +38,29 @@ tagList(
            tagList(h2("Mycoplasma pneumoniae incidence rate per 100,000 population by NHS Health Board"))),
   
   fluidRow(
-    tabBox(width = NULL,
-           type = "pills",
-           tabPanel("Plot",
-                    tagList(linebreaks(1),
-                            altTextUI("mycoplasma_pneumoniae_mem_hb_modal"),
-                            withNavySpinner(plotlyOutput("mycoplasma_pneumoniae_mem_hb_plot")),
-                    )),
-           tabPanel("Data",
-                    tagList(linebreaks(1),
-                            withNavySpinner(dataTableOutput("mycoplasma_pneumoniae_mem_hb_table"))
-                    ) # tagList
-           ) # tabPanel
-           
-    ), # tabBox
+    p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
+      "impact of different testing practices by board on incidence rates and implications for smaller board areas ",
+      "specifically as they relate to the calculation of activity threshold levels."),
     linebreaks(1)
-  ), # fluidRow
-  
+  ),
+  # fluidRow(
+  #   tabBox(width = NULL,
+  #          type = "pills",
+  #          tabPanel("Plot",
+  #                   tagList(linebreaks(1),
+  #                           altTextUI("mycoplasma_pneumoniae_mem_hb_modal"),
+  #                           withNavySpinner(plotlyOutput("mycoplasma_pneumoniae_mem_hb_plot")),
+  #                   )),
+  #          tabPanel("Data",
+  #                   tagList(linebreaks(1),
+  #                           withNavySpinner(dataTableOutput("mycoplasma_pneumoniae_mem_hb_table"))
+  #                   ) # tagList
+  #          ) # tabPanel
+  #          
+  #   ), # tabBox
+  #   linebreaks(1)
+  # ), # fluidRow
+  # 
   
   fluidRow(width = 12,
            tagList(h2("Mycoplasma pneumoniae incidence rate per 100,000 population by age group"))),

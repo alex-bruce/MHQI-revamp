@@ -24,11 +24,13 @@ write_csv(g_councilarea,
 
 ca2019_id<-"967937c4-8d67-4f39-974f-fd58c4acfda5"
 
+# CA2019 codes will be referred to as LA to be consistent with the wastewater 
+#report and dashboard
 ca_code <- get_resource(res_id = ca2019_id) %>%
   as_tibble() %>%
   clean_names() %>%
   filter(is.na(ca_date_archived)& is.na(hb_date_archived)) %>%
-  select(council_area= ca_name, LocalAuthority=ca)
+  select(council_area= ca_name, LA=ca)
 
 g_councilarea_od  <- g_councilarea %>%
   left_join(ca_code, by = "council_area") %>%
@@ -39,8 +41,7 @@ g_councilarea_od  <- g_councilarea %>%
   mutate(WeekStartDate = format(strptime(WeekStartDate, format = "%Y-%m-%d"), "%Y%m%d")) %>% 
   mutate(WeekEndDate = as.Date(End)) %>% 
   mutate(WeekEndDate  = format(strptime(WeekEndDate , format = "%Y-%m-%d"), "%Y%m%d")) %>% 
-  select(WeekStartDate, WeekEndDate, LocalAuthority, 
-         Average, AverageQF, PercentCoverage)
+  select(WeekStartDate, WeekEndDate, LA,  Average, AverageQF, PercentCoverage)
 
 write_csv(g_councilarea_od,
           glue(od_folder, "covid19_wastewater_LA_{od_report_date}.csv"),na = "")

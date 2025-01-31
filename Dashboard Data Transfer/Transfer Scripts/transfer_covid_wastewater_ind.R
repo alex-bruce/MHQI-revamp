@@ -43,7 +43,7 @@ g_individualsite_od <- g_individualsite %>%
   
 
 write_csv(g_individualsite_od,
-          glue(od_folder, "covid19_wastewater_IND_{od_report_date}.csv"),na = "")
+          glue(od_folder, "covid19_wastewater_wwtw_{od_report_date}.csv"),na = "")
 
 
 rm(i_individualsite, avg_cols, cov_cols, ind_cov, ind_avg, g_individualsite, g_individualsite_od)

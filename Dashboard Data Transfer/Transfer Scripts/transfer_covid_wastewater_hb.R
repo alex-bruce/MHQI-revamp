@@ -30,7 +30,7 @@ hb_code <- get_resource(res_id = hb2019_id) %>%
   as_tibble() %>%
   clean_names() %>%
   filter(is.na(hb_date_archived)) %>%
-  select(hb_name, HealthBoard=hb)
+  select(hb_name, HB=hb)
 
 g_healthboard_od <- g_healthboard %>%
   filter(health_board != sites) %>%
@@ -43,8 +43,7 @@ g_healthboard_od <- g_healthboard %>%
   mutate(WeekStartDate = format(strptime(WeekStartDate, format = "%Y-%m-%d"), "%Y%m%d")) %>% 
   mutate(WeekEndDate = as.Date(End)) %>% 
   mutate(WeekEndDate  = format(strptime(WeekEndDate , format = "%Y-%m-%d"), "%Y%m%d")) %>% 
-  select(WeekStartDate, WeekEndDate, HealthBoard, 
-         Average, AverageQF, PercentCoverage)
+  select(WeekStartDate, WeekEndDate, HB, Average, AverageQF, PercentCoverage)
 
 write_csv(g_healthboard_od,
           glue(od_folder, "covid19_wastewater_HB_{od_report_date}.csv"),na = "")
