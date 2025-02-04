@@ -32,7 +32,6 @@ Dates <- data.frame(WeekEnding=seq(as.Date("2020-03-01"), as.Date(od_date-1), "w
 ##To install phsopendata:
 ## install.packages('phsopendata', type = 'source')
 
-library(phsopendata)
 hb2019_id<-"652ff726-e676-4a20-abda-435b98dd7bdc"
 
 hb_code <- get_resource(res_id = hb2019_id) %>%

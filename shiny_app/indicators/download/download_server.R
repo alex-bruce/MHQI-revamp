@@ -47,7 +47,7 @@ vaccines_download_choices <- list(
 )
 respiratory_download_choices <- list(
   "Weekly number of cases by pathogen and flu type in Scotland" = "Respiratory_Scot",
-  "Weekly rate per 100,000 by pathogen, flu type and NHS Health Board" = "Respiratory_HB",
+ # "Weekly rate per 100,000 by pathogen, flu type and NHS Health Board" = "Respiratory_HB",
   "Weekly rate per 100,000 by pathogen, flu type and age group" = "Respiratory_Age",
   "Weekly rate per 100,000 by pathogen, flu type and sex" = "Respiratory_Sex",
   "Weekly rate per 100,000 by pathogen, flu type, age group and sex" = "Respiratory_Age_Sex"

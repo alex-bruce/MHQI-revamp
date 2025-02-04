@@ -20,4 +20,34 @@ g_healthboard <- hb_avg %>%
 write_csv(g_healthboard,
           glue(output_folder, "COVID_Wastewater_HB_table.csv"))
 
-rm(i_healthboard, g_healthboard, hb_avg, hb_cov)
+## Open Data section
+
+sites <- c("28Sites","AllSites")
+
+hb2019_id<-"652ff726-e676-4a20-abda-435b98dd7bdc"
+
+hb_code <- get_resource(res_id = hb2019_id) %>%
+  as_tibble() %>%
+  clean_names() %>%
+  filter(is.na(hb_date_archived)) %>%
+  select(hb_name, HB=hb)
+
+g_healthboard_od <- g_healthboard %>%
+  filter(health_board != sites) %>%
+  rename( hb_name = health_board ) %>%
+  left_join(hb_code, by = "hb_name") %>%
+  mutate(Average=round_half_up(average,2),
+         PercentCoverage= round_half_up(coverage*100,0)) %>% 
+  od_qualifiers(., "Average",":") %>%   #od_qualifiers(., "coverage",":") %>%  #not needed
+  mutate(WeekStartDate = as.Date(Start)) %>% 
+  mutate(WeekStartDate = format(strptime(WeekStartDate, format = "%Y-%m-%d"), "%Y%m%d")) %>% 
+  mutate(WeekEndDate = as.Date(End)) %>% 
+  mutate(WeekEndDate  = format(strptime(WeekEndDate , format = "%Y-%m-%d"), "%Y%m%d")) %>% 
+  select(WeekStartDate, WeekEndDate, HB, Average, AverageQF, PercentCoverage)
+
+write_csv(g_healthboard_od,
+          glue(od_folder, "covid19_wastewater_HB_{od_report_date}.csv"),na = "")
+
+
+rm(i_healthboard, g_healthboard, hb_avg, hb_cov, g_healthboard_od, 
+   sites, hb2019_id, hb_code)

@@ -8,7 +8,7 @@ if(is.na(utils::packageDate("pacman"))) install.packages("pacman")
 if (!pacman::p_isinstalled("friendlyloader")){pacman::p_install_gh("RosalynLP/friendlyloader")}
 
 pacman::p_load(dplyr, magrittr, glue, openxlsx, lubridate, ISOweek,
-               janitor, stringr, data.table, stats, zoo, tidyr, readxl, readr, friendlyloader)
+               janitor, stringr, data.table, stats, zoo, tidyr, readxl, readr, friendlyloader, phsopendata)
 
 # Setting permisisons for files outputted
 Sys.umask("006")
@@ -121,6 +121,15 @@ for (file_name in files_to_move) {
   }
 }
 
+#add qf column to inputed column that meets a null criteria
+
+od_qualifiers <- function(data, col_name, symbol) {
+  needs_symbol = data[[col_name]] == "" | is.na(data[[col_name]])
+  data %>%
+    mutate("{col_name}QF" := if_else(needs_symbol, symbol, ""))
+}
+
+
 #####################
 ##### Cases
 source("Transfer Scripts/transfer_cases.R")
@@ -163,6 +172,8 @@ source("Transfer Scripts/transfer_covid_wastewater_national.R")
 source("Transfer Scripts/transfer_covid_wastewater_hb.R")
 # Covid WW LA
 source("Transfer Scripts/transfer_covid_wastewater_ca.R")
+# Covid WW IND
+source("Transfer Scripts/transfer_covid_wastewater_ind.R")
 
 #### Occupancy
 source("Transfer Scripts/transfer_occupancy.R")
