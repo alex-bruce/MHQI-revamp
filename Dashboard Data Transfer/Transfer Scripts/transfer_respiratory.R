@@ -531,7 +531,7 @@ write_csv(case_rates_age_sex , glue(output_folder, "Respiratory_Age_Sex.csv"))
 
 # Output to new output_folder Open Data subfolder with datestamp
 write_csv(cases_scotland, glue(od_folder, "Respiratory_Scot_{od_report_date}.csv"))
-write_csv(case_rates_hb, glue(od_folder, "Respiratory_HB_{od_report_date}.csv"))
+# write_csv(case_rates_hb, glue(od_folder, "Respiratory_HB_{od_report_date}.csv"))
 write_csv(case_rates_age, glue(od_folder, "Respiratory_Age_{od_report_date}.csv"))
 write_csv(case_rates_sex, glue(od_folder, "Respiratory_Sex_{od_report_date}.csv"))
 write_csv(case_rates_age_sex , glue(od_folder, "Respiratory_Age_Sex_{od_report_date}.csv"))
