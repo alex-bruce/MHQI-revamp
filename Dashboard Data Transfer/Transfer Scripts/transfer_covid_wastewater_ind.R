@@ -31,15 +31,15 @@ g_individualsite <- ind_avg %>%
 # open data section
 
 g_individualsite_od <- g_individualsite %>%
-  mutate(Average=round_half_up(average,2),
+  mutate("Average(Mgc)"=round_half_up(average,2),
          PercentCoverage= round_half_up(coverage*100,0)) %>% 
-  od_qualifiers(., "Average",":") %>%   
+  od_qualifiers(., "Average(Mgc)",":") %>%   
   mutate(WeekStartDate = as.Date(Start)) %>% 
   mutate(WeekStartDate = format(strptime(WeekStartDate, format = "%Y-%m-%d"), "%Y%m%d")) %>% 
   mutate(WeekEndDate = as.Date(End)) %>% 
   mutate(WeekEndDate  = format(strptime(WeekEndDate , format = "%Y-%m-%d"), "%Y%m%d")) %>% 
   select(WeekStartDate, WeekEndDate,  WastewaterTreatmentWork=individual_site,
-         Average, AverageQF, PercentCoverage)
+         "Average(Mgc)", "Average(Mgc)QF", PercentCoverage)
   
 
 write_csv(g_individualsite_od,

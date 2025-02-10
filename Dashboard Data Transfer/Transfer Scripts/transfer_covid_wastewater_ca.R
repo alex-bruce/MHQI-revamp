@@ -6,7 +6,8 @@ i_councilarea=  read_csv_with_options(glue(input_data, "CAtable_NHSLothian{repor
 
 ca_avg <- i_councilarea %>% 
   select(1,2,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65) %>% 
-  pivot_longer(cols = c(3:34), names_to = "council_area", values_to = "average") 
+  pivot_longer(cols = c(3:34), names_to = "council_area", values_to = "average") %>% 
+  mutate(council_area = gsub(" Avg", "", council_area))
 
 ca_cov <- i_councilarea %>% 
   select(1,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66) %>% 
@@ -34,14 +35,14 @@ ca_code <- get_resource(res_id = ca2019_id) %>%
 
 g_councilarea_od  <- g_councilarea %>%
   left_join(ca_code, by = "council_area") %>%
-  mutate(Average=round_half_up(average,2),
+  mutate("Average(Mgc)"=round_half_up(average,2),
          PercentCoverage= round_half_up(coverage*100,0)) %>% 
-  od_qualifiers(., "Average",":") %>%   
+  od_qualifiers(., "Average(Mgc)",":") %>%   
   mutate(WeekStartDate = as.Date(Start)) %>% 
   mutate(WeekStartDate = format(strptime(WeekStartDate, format = "%Y-%m-%d"), "%Y%m%d")) %>% 
   mutate(WeekEndDate = as.Date(End)) %>% 
   mutate(WeekEndDate  = format(strptime(WeekEndDate , format = "%Y-%m-%d"), "%Y%m%d")) %>% 
-  select(WeekStartDate, WeekEndDate, LA,  Average, AverageQF, PercentCoverage)
+  select(WeekStartDate, WeekEndDate, LA, "Average(Mgc)", "Average(Mgc)QF", PercentCoverage)
 
 write_csv(g_councilarea_od,
           glue(od_folder, "covid19_wastewater_LA_{od_report_date}.csv"),na = "")
