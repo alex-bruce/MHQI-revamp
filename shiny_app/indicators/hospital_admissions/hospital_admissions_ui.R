@@ -91,25 +91,33 @@ tagList(
                                            )
 
                            ),
-
+                           
                            tagList(h2("Number of acute COVID-19 admissions to hospital by ethnicity"),
-                                   h4(strong("These data will next be updated in December 2024.")),
-                                   tabBox(width = NULL, type = "pills",
-                                          tabPanel("Plot",
-                                                   tagList(
-                                                     linebreaks(1),
-                                                     altTextUI("hospital_admissions_ethnicity_modal"),
-                                                     withNavySpinner(
-                                                       plotlyOutput("hospital_admissions_ethnicity_plot")
-                                                     )
-                                                   )
-                                          ),
-                                          tabPanel("Data",
-                                                   withNavySpinner(
-                                                     dataTableOutput("hospital_admissions_ethnicity_table")
-                                                   )
-                                          ) # tabpanel
-                                   ) # tabbox
+                                   #  temporary caveat for no Ethnicity information
+                                   tagList("Public Health Scotland have paused reporting of  COVID-19 admissions to",
+                                           "hospital broken down by ethnic group",
+                                           " as we undertake developments",
+                                           "to include this analysis for other respiratory pathogens.")
+                           
+
+                           # tagList(h2("Number of acute COVID-19 admissions to hospital by ethnicity"),
+                           #         h4(strong("These data will next be updated in December 2024.")),
+                           #         tabBox(width = NULL, type = "pills",
+                           #                tabPanel("Plot",
+                           #                         tagList(
+                           #                           linebreaks(1),
+                           #                           altTextUI("hospital_admissions_ethnicity_modal"),
+                           #                           withNavySpinner(
+                           #                             plotlyOutput("hospital_admissions_ethnicity_plot")
+                           #                           )
+                           #                         )
+                           #                ),
+                           #                tabPanel("Data",
+                           #                         withNavySpinner(
+                           #                           dataTableOutput("hospital_admissions_ethnicity_table")
+                           #                         )
+                           #                ) # tabpanel
+                           #         ) # tabbox
                            ),
 
                            tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
