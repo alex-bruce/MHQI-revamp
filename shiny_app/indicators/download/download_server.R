@@ -27,7 +27,7 @@ cases_download_choices <- list(
 hospital_admissions_download_choices <- list(
   "Weekly COVID-19 hospital admissions" = "Admissions_Weekly",
   "Weekly COVID-19 hospital admissions by age group" = "Admissions_AgeBD",
-  "Length of stay of COVID-19 hospital admissions" = "Length_of_Stay",
+#  "Length of stay of COVID-19 hospital admissions" = "Length_of_Stay",
   #"Daily COVID-19 admissions to ICU" = "ICU",
   #"Weekly COVID-19 admissions to ICU" = "ICU_weekly",
   "Quarterly COVID-19 hospital admissions by ethnicity" = "Ethnicity",
@@ -47,7 +47,7 @@ vaccines_download_choices <- list(
 )
 respiratory_download_choices <- list(
   "Weekly number of cases by pathogen and flu type in Scotland" = "Respiratory_Scot",
- # "Weekly rate per 100,000 by pathogen, flu type and NHS Health Board" = "Respiratory_HB",
+  "Weekly rate per 100,000 by pathogen, flu type and NHS Health Board" = "Respiratory_HB",
   "Weekly rate per 100,000 by pathogen, flu type and age group" = "Respiratory_Age",
   "Weekly rate per 100,000 by pathogen, flu type and sex" = "Respiratory_Sex",
   "Weekly rate per 100,000 by pathogen, flu type, age group and sex" = "Respiratory_Age_Sex"
