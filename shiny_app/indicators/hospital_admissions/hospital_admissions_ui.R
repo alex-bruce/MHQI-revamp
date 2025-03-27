@@ -119,70 +119,56 @@ tagList(
                            #                ) # tabpanel
                            #         ) # tabbox
                            ),
-
+##### LOS section
                            tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
-                                   #  temporary caveat for no LOS information
-                                   tagList("Public Health Scotland have paused reporting of the Length",
-                                           "of Stay of acute COVID-19 hospital admissions as we undertake developments",
-                                           "to include this analysis for other respiratory pathogens.")
-                                   
-                                   
-                                  # tags$div(class = "headline",
-                                   #          h3(glue("Median length of stay of acute COVID-19 hospital admissions for 4 week period {los_date_start %>% format('%d %b %y')} to {los_date_end%>% format('%d %b %y')} ")),
-                                   # 
-                                   #          valueBox(value = glue("{Length_of_Stay_Median %>% filter(AgeGroup == 'All Ages') %>%
-                                   #              .$MedianLengthOfStay %>%round_half_up(1)} days"),
-                                   #                   subtitle = glue("All ages"),
-                                   #                   color = "navy",
-                                   #                   icon = icon_no_warning_fn("clock")),
-                                   #          valueBox(value = glue("{los_median_min$MedianLengthOfStay %>% round_half_up(1)} days"),
-                                   #              subtitle = glue("Shortest median stay ({los_median_min$AgeGroup})"),
-                                   #              color = "navy",
-                                   #              icon = icon_no_warning_fn("clock")),
-                                   #          valueBox(value = glue("{los_median_max$MedianLengthOfStay %>% round_half_up(1)} days"),
-                                   #              subtitle = glue("Longest median stay ({los_median_max$AgeGroup})"),
-                                   #              color = "navy",
-                                   #              icon = icon_no_warning_fn("clock")),
-                                   #          # This text is hidden by css but helps pad the box at the bottom
-                                   #          h6("hidden text for padding page"))
+                                   tags$div(class = "headline",
+                                            h3(glue("Median length of stay of acute COVID-19 hospital admissions for 4 week period {los_date_start %>% format('%d %b %y')} to {los_date_end%>% format('%d %b %y')} ")),
+                                            valueBox(value = glue("{
+                                                                 Length_of_Stay_Median %>% 
+                                                                 filter(AgeGroup == 'All Ages') %>% 
+                                                                 filter(Pathogen =='cov') %>%
+                                                                 .$MedianLengthOfStay %>% round_half_up(1)} days"),
+                                                     subtitle = glue("All ages"),
+                                                     color = "navy",
+                                                     icon = icon_no_warning_fn("clock")),# valuebox
+                                            valueBox(value = glue("{cov_los_median_min$MedianLengthOfStay %>%
+                                                                  round_half_up(1)} days"),
+                                                     subtitle = glue("Shortest median stay ({cov_los_median_min$AgeGroup})"),
+                                                     color = "navy",
+                                                     icon = icon_no_warning_fn("clock")),# value box
+                                            valueBox(value = glue("{cov_los_median_max$MedianLengthOfStay %>%
+                                                                  round_half_up(1)} days"),
+                                                     subtitle = glue("Longest median stay ({cov_los_median_max$AgeGroup})"),
+                                                     color = "navy",
+                                                     icon = icon_no_warning_fn("clock")),
+                                           # This text is hidden by css but helps pad the box at the bottom
+                                           h6("hidden text for padding page"))
                                    ),
-                           br(),
-
-                           # tabBox(width = NULL, type = "pills",
-                           #        tabPanel("Plot",
-                           #                 tagList(h5("Use the drop-down menu to select an age group of interest."),
-                           # 
-                           #                         h5("Please note that in cases where there are no hospital admissions, there will be a gap in the chart."),
-                           #                          pickerInput(inputId = "los_age",
-                           #                               label = "Select Age Group",
-                           #                               choices = {Length_of_Stay %>%
-                           #                                   arrange(AgeGroup) %>%
-                           #                                   .$AgeGroup %>%
-                           #                                   unique()},
-                           #                               selected = "All Ages"),
-                           #                         pickerInput(inputId = "year",
-                           #                                     label = "Select year",
-                           #                                     choices = unique(sort((Length_of_Stay %>%
-                           #                                                              mutate(Year = substring(AdmissionWeekEnding,1,4)))$Year,decreasing = T)),
-                           #                                     selected = "2025"),
-                           #                         altTextUI("hospital_admissions_los_modal"),
-                           #                          withNavySpinner(
-                           #                            plotlyOutput("hospital_admissions_los_plot")
-                           #                            ),
-                           #                         linebreaks(3))),
-                           #        tabPanel("Data",
-                           #                 tagList(
-                           #                   withNavySpinner(
-                           #                     dataTableOutput("hospital_admissions_los_table"))
-                           #                  )
-                           #                 )
-                           # )
-
-                           ),
+                           br(), 
+                           tabBox( width = NULL, type = "pills",
+                                   tabPanel("Plot",
+                                            tagList(uiOutput("cov_los_title")),
+                                            tagList(h5("Use the drop-down menu to select a season."),
+                                                   pickerInput(inputId = "los_season_cov",
+                                                               label = "Select season",
+                                                               choices = admission_seasons,
+                                                               selected = "2024/2025"),
+                                                   altTextUI("cov_los_modal"),
+                                                   withNavySpinner( plotlyOutput("cov_los_plot")),
+                                                   #linebreaks(1)
+                                                   )), #taglist
+                                  tabPanel("Data",
+                                           tagList(linebreaks(1),
+                                                   withNavySpinner(dataTableOutput("cov_los_table")) )
+                                  ) # tabPanel
+                                  )#tabbox
+### end LOS section
+                           )#tabbox
+                           ), #fluid row
 
 
-  ),
+
   # Padding out the bottom of the page
   fluidRow(height="200px", width=12, linebreaks(5))
 
-)
+)#taglist

@@ -13,6 +13,21 @@ altTextServer("rsv_admissions_modal",
                                 tags$li("The y axis shows the number of hospital admissions."),
                                 tags$li("There is a trace for each of the following season from 2017/2018 to 2022/2023")))
 
+altTextServer("rsv_los_modal",
+              title = "Length of stay of acute RSV hospital admissions",
+              content = tags$ul(
+                tags$li("This is a plot of the distribution of lengths of stay in hospital",
+                        "for acute RSV hospital admissions by respiratory season."),
+                tags$li("There is a drop down above the chart which allows you to select",
+                        "the respiratory season for plotting. The default is the current season."),
+                tags$li("The legend shows five categories for length of stay: 1 day or less;",
+                        "2-3 days, 4-5 days, 6-7 days, 8+ days. See the metadata tab for further detail."),
+                tags$li("The x axis shows a break down of admissions by age groups: 0-17, 18-64, 65-74, 75+ and finally by All ages."),
+                tags$li("The y axis is the percentage of admissions in a given age group category."),
+                tags$li("The plot is a stacked bar chart, where the",
+                        "sections of vertical bars correspond to different length of stay categories.",
+                        "The bar sections are ordered from smallest length of stay to largest",
+                        "length of stay from bottom to top.") ))
 
 
 # RSV admissions table
@@ -66,4 +81,31 @@ output$rsv_admissions_hb_table <- renderDataTable({
 
 
 
+### LENGTH OF STAY ### ----
+
+# los plot reactive title
+output$rsv_los_title <- renderUI({h3(glue("RSV length of stay by age group in Season ",
+                                          input$los_season_flu))})
+
+# Plot
+output$rsv_los_plot<- renderPlotly({
+  rsv_los_weekly_plot<-Length_of_Stay_Season %>%
+    filter(admission_type == "rsv") %>% 
+    filter(Season == input$los_season_rsv) %>%
+    make_hospital_admissions_los_plot() #function in "/...../indicators/hospital_admissions/hospital_admissions_functions.R"
+})
+# Table
+output$rsv_los_table <- renderDataTable({
+  rsv_los_weekly_table<- Length_of_Stay_Weekly %>% 
+    filter(admission_type == "rsv") %>% 
+    filter(Season == input$los_season_rsv) %>%
+    mutate(`Length of stay` = factor(LengthOfStay,
+                                     levels = c("1 day or less",
+                                                "2-3 days", "4-5 days",
+                                                "6-7 days", "8+ days"))) %>% 
+    select(Season,
+           'Week ending' = AdmissionWeekEnding, 
+           'Age group' = AgeGroup,
+           'Length of stay',
+           'Percent' = PercentageOfAdmissions) })
 
