@@ -404,3 +404,68 @@ make_icu_admissions_weekly_plot <- function(data){
 
 }
 
+
+##### age sex  admission plot
+# creates a plot looking at age/sex breakdowns in scotland
+make_age_sex_adm_pyramid_plot <- function(data, title = NULL) {
+  data %<>%
+    mutate(Rate = case_when(
+      Sex == "F" ~ -Rate,
+      TRUE ~ Rate)) %>%
+    mutate_if(is.numeric, ~replace_na(., 0)) %>%
+    mutate(AgeGroup = factor(AgeGroup, levels = c("All","Under 18","18-64","65-74","75+")))
+  
+  xaxis_breaks <- pretty(c(-max(data$Rate), 0, max(data$Rate)))
+  yaxis_ticks <- list("All","Under 18","18-64","65-74","75+")
+  yaxis_ticks <- list(categoryorder = "array",
+                      categoryarray = c("All","Under 18","18-64","65-74","75+"))
+  
+  
+  fig = data %>%
+    plot_ly(x= ~Rate,
+            y= ~AgeGroup,
+            color = ~Sex,
+            type = 'bar',
+            textposition = "none",
+            text = ~paste0("<b>Season</b>: ", Season, "\n",
+                           "<b>Sex</b>: ", Sex, "\n",
+                           "<b>Age group</b>: ", AgeGroup, "\n",
+                           "<b>Rate per 100,000</b>: ", format(abs(Rate), big.mark=",")),
+            hovertemplate = "%{text}",
+            colors = phs_colours(c("phs-purple", "phs-magenta"))) %>%
+    layout(
+      xaxis = list(
+        tickvals = xaxis_breaks,
+        ticktext = abs(xaxis_breaks),
+        title = "Rate per 100,000",
+        showline = TRUE,
+        linecolor = 'black',
+        range = c(-max(data$Rate), max(data$Rate))
+      ),
+      yaxis = list(yaxis_ticks
+                   #tickmode = "array",
+                   #title = "Age Group",
+                   #tickvals = yaxis_ticks,
+                   #ticktext= yaxis_ticks,
+                   #showline = TRUE,
+                   #linecolor = 'black',
+                   #range = levels(factor(data$AgeGroup))
+      ),
+      legend = list(title = ""),
+      margin = list(b = 100),
+      paper_bgcolor = phs_colours("phs-liberty-10"),
+      plot_bgcolor = phs_colours("phs-liberty-10"),
+      title = title,
+      barmode = 'overlay')
+  #layout(yaxis = list(#title = "AgeGroup",
+  #showline = FALSE,
+  #fixedrange=TRUE,
+  #range = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")))
+  #showlegend = T)
+  # xaxis = list(title = "Rate per 100,000"),
+  #title = title,
+  
+  fig <- fig %>%
+    config(displaylogo = F, displayModeBar = TRUE, modeBarButtonsToRemove = bttn_remove)
+  return(fig)
+}

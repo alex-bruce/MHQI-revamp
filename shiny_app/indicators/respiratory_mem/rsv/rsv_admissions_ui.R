@@ -88,6 +88,34 @@ fluidRow(width=12,
          fluidRow(
            width=12, linebreaks(1))
 ),
+# pyramid sections 
+fluidRow(  
+  
+  tagList(uiOutput("rsv_adm_pyr_title"),
+          tabBox(width = NULL,
+                 type = "pills",
+                 tabPanel("Plot",
+                          tagList(
+                            linebreaks(1),
+                            fluidRow( column(4, pickerInput("rsv_age_sex_adm_season",
+                                                            label = "Select a season",
+                                                            choices = {Admissions_AgeSex_Season %>% 
+                                                                filter(Pathogen == "rsv") %>%
+                                                                .$Season %>% unique()},
+                                                            selected = "2024-2025")
+                            )
+                            ),
+                            altTextUI("rsv_adm_age_sex"),
+                            withNavySpinner(plotlyOutput("rsv_adm_age_sex_pyramid_plot"))
+                          ) # tagList
+                 ), # tabPanel
+                 tabPanel("Data",
+                          withNavySpinner(dataTableOutput("rsv_adm_age_sex_pyramid_table")))
+          ) # tabbox
+  ), # tagList
+  linebreaks(1)
+),
+
 ##### LOS section
 tagList(h2("Length of stay of acute RSV hospital admissions"),
         tags$div(class = "headline",

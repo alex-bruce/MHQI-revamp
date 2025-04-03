@@ -91,6 +91,37 @@ fluidRow(width=12,
          fluidRow(
            width=12, linebreaks(1))
 ),
+
+# pyramid sections 
+
+fluidRow(  
+
+  tagList(uiOutput("flu_adm_pyr_title"),
+          #tagList(h2(glue("Acute influenza admissions by age and sex in Scotland")),
+          tabBox(width = NULL,
+                 type = "pills",
+                 tabPanel("Plot",
+                          tagList(
+                            linebreaks(1),
+                            fluidRow( column(4, pickerInput("flu_age_sex_adm_season",
+                                                            label = "Select a season",
+                                                            choices = {Admissions_AgeSex_Season %>% 
+                                                                filter(Pathogen == "flu") %>%
+                                                                .$Season %>% unique()},
+                                                            selected = "2024-2025")
+                              )
+                            ),
+                            altTextUI("flu_adm_age_sex"),
+                            withNavySpinner(plotlyOutput("flu_adm_age_sex_pyramid_plot"))
+                            ) # tagList
+                 ), # tabPanel
+                 tabPanel("Data",
+                          withNavySpinner(dataTableOutput("flu_adm_age_sex_pyramid_table")))
+          ) # tabbox
+  ), # tagList
+  linebreaks(1),
+),
+
 ##### LOS section
 tagList(h2("Length of stay of acute Influenza hospital admissions"),
         tags$div(class = "headline",

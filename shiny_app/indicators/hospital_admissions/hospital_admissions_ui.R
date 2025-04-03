@@ -91,34 +91,35 @@ tagList(
                                            )
 
                            ),
-                           
                            tagList(h2("Number of acute COVID-19 admissions to hospital by ethnicity"),
                                    #  temporary caveat for no Ethnicity information
                                    tagList("Public Health Scotland have paused reporting of  COVID-19 admissions to",
                                            "hospital broken down by ethnic group",
                                            " as we undertake developments",
-                                           "to include this analysis for other respiratory pathogens.")
-                           
-
-                           # tagList(h2("Number of acute COVID-19 admissions to hospital by ethnicity"),
-                           #         h4(strong("These data will next be updated in December 2024.")),
-                           #         tabBox(width = NULL, type = "pills",
-                           #                tabPanel("Plot",
-                           #                         tagList(
-                           #                           linebreaks(1),
-                           #                           altTextUI("hospital_admissions_ethnicity_modal"),
-                           #                           withNavySpinner(
-                           #                             plotlyOutput("hospital_admissions_ethnicity_plot")
-                           #                           )
-                           #                         )
-                           #                ),
-                           #                tabPanel("Data",
-                           #                         withNavySpinner(
-                           #                           dataTableOutput("hospital_admissions_ethnicity_table")
-                           #                         )
-                           #                ) # tabpanel
-                           #         ) # tabbox
-                           ),
+                                           "to include this analysis for other respiratory pathogens.")),
+           
+           
+           #tagList(h2(glue("Acute COVID-19 cases by age and sex in Scotland")),
+           tagList(uiOutput("cov_adm_pyr_title")),
+           tabBox(width = NULL,
+                  type = "pills",
+                  tabPanel("Plot",
+                           tagList(linebreaks(1),
+                                   fluidRow(column(4, pickerInput("cov_age_sex_adm_season",
+                                                                  label = "Select a season",
+                                                                  choices = {Admissions_AgeSex_Season %>% 
+                                                                      filter(Pathogen == "cov") %>%
+                                                                      .$Season %>% unique()},
+                                                                  selected = "2024-2025")  )),#tfluidrow
+                                                             altTextUI("covid_adm_age_sex"),
+                                   withNavySpinner(plotlyOutput("covid_adm_age_sex_pyramid_plot"))
+                                                           ) # tagList
+                                                  ), # tabPanel
+                  tabPanel("Data",
+                           withNavySpinner(dataTableOutput("covid_adm_age_sex_pyramid_table"))) #tabpanel
+                         ), # tabbox
+                                   #), #age/sex 
+                          # ),
 ##### LOS section
                            tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
                                    tags$div(class = "headline",

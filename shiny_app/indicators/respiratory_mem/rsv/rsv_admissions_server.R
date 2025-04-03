@@ -3,8 +3,6 @@ metadataButtonServer(id="respiratory_rsv_admissions",
                      parent = session)
 
 
-
-
 altTextServer("rsv_admissions_modal",
               title = "RSV hospital admissions in Scotland",
               content = tags$ul(tags$li("This is a plot showing the number of RSV hospital admissions in Scotland."),
@@ -12,6 +10,24 @@ altTextServer("rsv_admissions_modal",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the number of hospital admissions."),
                                 tags$li("There is a trace for each of the following season from 2017/2018 to 2022/2023")))
+
+
+altTextServer("rsv_adm_age_sex",
+              title = glue("Acute RSV admissions by age and sex in Scotland"),
+              content = tags$ul(
+                tags$li(glue("This is a pyramid plot of rate per 100,000 people of RSV cases in Scotland by age and sex.")),
+                tags$li("The information is displayed for a selected season."),
+                tags$li("Weekly rate data for age and sex on a weekly basis are available in ",
+                        "the PHS Open Data platform ",
+                        tags$a(href="https://www.opendata.nhs.scot/dataset/viral-respiratory-diseases-including-influenza-and-covid-19-data-in-scotland",
+                               "Viral Respiratory Diseases (Including Influenza and COVID-19) Data in Scotland page (external website).",
+                               target="_blank")),
+                tags$li("The y axis shows the age group. The left side of the y axis corresponds to females (F) and the right side to males (M)."),
+                tags$li("For the x axis the plot shows rate per 100,000 people.")
+                # tags$li("The youngest and oldest groups have the highest rates of illness.")
+              )
+)
+
 
 altTextServer("rsv_los_modal",
               title = "Length of stay of acute RSV hospital admissions",
@@ -79,9 +95,48 @@ output$rsv_admissions_hb_table <- renderDataTable({
     make_summary_table(maxrows = 16)
 })
 
+#---------------------##
+### RSV adm pyramid ####
+#----------------------#
+
+output$rsv_adm_pyr_title <- renderUI({h3(glue("Acute RSV hospital admissions by age and sex in Scotland; ",
+                                              input$rsv_age_sex_adm_season))})
 
 
+# pyramid plot that shows the breakdown by age and sex
+output$rsv_adm_age_sex_pyramid_plot = renderPlotly({
+  Admissions_AgeSex_Season %>%
+    filter(Pathogen == "rsv",
+           Sex %in% c("M", "F"),
+           Season == input$rsv_age_sex_adm_season) %>%
+    make_age_sex_adm_pyramid_plot # hospital_admissions_functions
+  
+})
+
+
+output$rsv_adm_age_sex_pyramid_table = renderDataTable({
+  
+  rsv_adm_age_sex_pyramid_table <- Admissions_AgeSex_Season %>%
+    filter(Pathogen  == "rsv",
+           Season == input$rsv_age_sex_adm_season) %>%
+    select(Season, AgeGroup, Sex, Rate) %>%
+    mutate(Season = factor(Season)) %>%
+    arrange(desc(Season), AgeGroup, Sex) %>%
+    dplyr::rename("Season" = "Season",
+                  "Age group" = "AgeGroup",
+                  "Rate per 100,000" = "Rate") %>%
+    mutate(Sex = factor(Sex, levels = c("All", "F", "M")),
+           `Age group` = factor(`Age group`, levels =
+                                  c("All","Under 18","18-64","65-74","75+"))) %>%
+    arrange(desc(`Season`), `Age group`, Sex) %>%
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(1,2,3))
+  
+})
+
+#--------------------------#
 ### LENGTH OF STAY ### ----
+#-------------------------#
 
 # los plot reactive title
 output$rsv_los_title <- renderUI({h3(glue("RSV length of stay by age group in Season ",

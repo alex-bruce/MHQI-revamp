@@ -19,6 +19,17 @@ i_chiadm %<>% filter(admission_date <= (report_date - 3))
 i_adm %<>% filter(admission_date <= (report_date - 3))
 
 
+# i_age_sex_weekly <- read_csv_with_options(glue(input_data, "/age_sex_weekly_adm_all paths_TEST.csv"))
+# 
+# 
+# i_age_sex_season <- read_csv_with_options(glue(input_data, "/age_sex_season_adm_all paths_TEST.csv"))
+
+i_age_sex_weekly <- read_csv_with_options(glue(input_data, "/age_sex_weekly_adm_all paths_v2_TEST.csv"))
+
+
+i_age_sex_season <- read_csv_with_options(glue(input_data, "/age_sex_season_adm_all paths_v2_TEST.csv"))
+
+
 ### a) Admissions
 
 g_adm <- i_adm
@@ -341,6 +352,47 @@ rm(g_adm_hb)
 
 rm(i_rsv_hb_admissions, g_rsv_adm_scot, g_rsv_adm_hb,
    three_sunday_dates, HealthBoardName, hb_last_three_weeks, g_adm_hb_3weeks, g_adm_hb_3weeks_full)
+
+
+###### Create admissions age/sex for covid, flu and rsv ######
+
+# g_age_sex_season <- i_age_sex_season %>%
+#   dplyr::rename(AgeGroup = age_band,
+#                 Sex = sex,
+#                 Pathogen = admission_type,
+#                 Count = season_count,
+#                 Population = population,
+#                 Rate = rate) %>%
+#   mutate(Sex = recode(Sex,
+#                       "all_sex" = "All")) %>%
+#   mutate(AgeGroup = recode(AgeGroup,
+#                            "all_ages" = "All"))
+# 
+# 
+# g_age_sex_weekly <- i_age_sex_weekly %>%
+#   dplyr::rename(WeekEnding = week_ending,
+#                 Pathogen = admission_type,
+#                 AgeGroup = age_band,
+#                 Sex = sex,
+#                 Count = count,
+#                 WeekStart = week_start,
+#                 Week = week,
+#                 Population = population,
+#                 Rate = rate) %>%
+#   mutate(Sex = recode(Sex,
+#                       "all_sex" = "All")) %>%
+#   mutate(AgeGroup = recode(AgeGroup,
+#                            "all_ages" = "All"))
+
+
+g_age_sex_season <- i_age_sex_season 
+
+g_age_sex_weekly <- i_age_sex_weekly
+
+write.csv(g_age_sex_season, glue(output_folder, "Admissions_AgeSex_Season.csv"), row.names = FALSE)
+write.csv(g_age_sex_weekly, glue(output_folder, "Admissions_AgeSex_Weekly.csv"), row.names = FALSE)
+
+
 
 
 
