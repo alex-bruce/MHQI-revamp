@@ -163,12 +163,12 @@ make_respiratory_trend_over_time_plot <- function(data, y_axis_title) {
                            "<b>", legend_title_name, "</b>: ", Organism, "\n",
                            "<b>", y_axis_title, "</b>: ", format(y_axis, big.mark=",")),
             hovertemplate = "%{text}",
-            type="scatter",
+            type="bar",
             mode="lines",
-            linetypes = linestyles,
             colors = colours
             ) %>%
-    layout(yaxis = yaxis_plots,
+    layout(barmode = "stack",
+           yaxis = yaxis_plots,
            xaxis = xaxis_plots,
            legend=list(title=list(text=paste0('<b>', legend_title_name, '</b>'))),
            paper_bgcolor = phs_colours("phs-liberty-10"),

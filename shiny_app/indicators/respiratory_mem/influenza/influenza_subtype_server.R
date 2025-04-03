@@ -6,16 +6,16 @@ metadataButtonServer(id="respiratory_influenza_subtype",
 
 # Alt text ----
 altTextServer("respiratory_over_time_modal",
-              title = glue("Influenza cases over time by subtype"),
+              title = glue("Influenza cases by subtype"),
               content = tags$ul(
-                tags$li(glue("This is a plot of the influenza cases in a given NHS health board",
-                             " over time.")),
-                tags$li("The cases are presented as a rate, i.e. the number of people with",
-                        glue("influenza for every 100,000 people in that NHS health board.")),
+                tags$li(glue("This is a stacked bar chart plot of influenza cases",
+                             " by subtype within a given NHS Health Board",
+                             " for a selected respiratory season.")),
+                tags$li(glue("The cases are presented as a rate, i.e. the number of people with ",
+                        "influenza for every 100,000 people in that NHS Health Board.")),
                 tags$li("For Scotland there is an option to view the absolute number of cases."),
-                tags$li("The x axis is the date, commencing 02 Oct 2016."),
+                tags$li("The x axis is the week-ending date, commencing at the start of the selected respiratory season."),     
                 tags$li("The y axis is either the rate of cases or the number of cases."),
-                tags$li(glue("There is a trace for each subtype of influenza."))
                 #tags$li("The trend is that each winter there is a peak in cases.")
               )
 )
@@ -78,16 +78,18 @@ output$respiratory_over_time_plot <- renderPlotly({
     filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
     filter(FluOrNonFlu == "flu") %>%
     filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>%
+    filter(Season== input$respiratory_select_season) %>% 
     select_y_axis(., yaxis = input$respiratory_y_axis_plots) %>%
     arrange(Date) %>%
-    make_respiratory_trend_over_time_plot(., y_axis_title = input$respiratory_y_axis_plots)
+    make_respiratory_trend_over_time_plot(., y_axis_title = input$respiratory_y_axis_plots) # respiratory functions
 
 
 })
 
 
 output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases over time by subtype in ",
-                                                        input$respiratory_select_healthboard))})
+                                                        input$respiratory_select_healthboard, " in Season ",
+                                                        input$respiratory_select_season))})
 
 # plot showing the number/rate of flu cases by season. Can filter by organism selected by the user
 output$respiratory_by_season_plot = renderPlotly({
@@ -97,7 +99,7 @@ output$respiratory_by_season_plot = renderPlotly({
     select_y_axis(., yaxis = input$respiratory_y_axis_plots) %>%
     filter_by_organism(., organism = input$respiratory_select_subtype,
                        healthboard = input$respiratory_select_healthboard) %>%
-    make_respiratory_trend_by_season_plot_function(., y_axis_title = input$respiratory_y_axis_plots)
+    make_respiratory_trend_by_season_plot_function(., y_axis_title = input$respiratory_y_axis_plots)# respiratory functions
 
 })
 
