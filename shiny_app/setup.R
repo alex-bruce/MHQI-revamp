@@ -108,40 +108,40 @@ occupancy_headlines <- get_threeweek_occupancy_figures(df = occupancy_headlines,
 adm_hb_dates <- c(Admissions_HB %>% tail(1) %>% .$WeekEnding, Admissions_HB %>% tail(1) %>% .$WeekEnding%>% {.-7}, Admissions_HB %>% tail(1) %>% .$WeekEnding%>% {.-14})
 
 ##### LOS
-los_date_end <- Admissions %>% tail(1) %>% .$AdmissionDate %>% convert_opendata_date() %>% {.-7}
-
-los_date_start <- los_date_end-28
-
-los_median_max <- Length_of_Stay_Median %>%
-  filter(MedianLengthOfStay == max(MedianLengthOfStay))
-
-los_median_min <- Length_of_Stay_Median %>%
-  filter(MedianLengthOfStay == min(MedianLengthOfStay))
-
-cov_los_median_max <- Length_of_Stay_Median %>%
-  filter(Pathogen =="cov") %>% 
-  filter(MedianLengthOfStay == max(MedianLengthOfStay))
-
-cov_los_median_min <- Length_of_Stay_Median %>%
-  filter(Pathogen =="cov") %>% 
-  filter(MedianLengthOfStay ==min(MedianLengthOfStay) )
-
-flu_los_median_max <- Length_of_Stay_Median %>%
-  filter(Pathogen =="flu") %>% 
-  filter(MedianLengthOfStay == max(MedianLengthOfStay))
-
-flu_los_median_min <- Length_of_Stay_Median %>%
-  filter(Pathogen =="flu") %>% 
-  filter(MedianLengthOfStay ==min(MedianLengthOfStay) )
-
-rsv_los_median_max <- Length_of_Stay_Median %>%
-  filter(Pathogen =="rsv") %>% 
-  filter(MedianLengthOfStay == max(MedianLengthOfStay)) %>% 
-  tail(1)
-
-rsv_los_median_min <- Length_of_Stay_Median %>%
-  filter(Pathogen =="rsv") %>% 
-  filter(MedianLengthOfStay ==min(MedianLengthOfStay) )
+# los_date_end <- Admissions %>% tail(1) %>% .$AdmissionDate %>% convert_opendata_date() %>% {.-7}
+# 
+# los_date_start <- los_date_end-28
+# 
+# los_median_max <- Length_of_Stay_Median %>%
+#   filter(MedianLengthOfStay == max(MedianLengthOfStay))
+# 
+# los_median_min <- Length_of_Stay_Median %>%
+#   filter(MedianLengthOfStay == min(MedianLengthOfStay))
+# 
+# cov_los_median_max <- Length_of_Stay_Median %>%
+#   filter(Pathogen =="cov") %>% 
+#   filter(MedianLengthOfStay == max(MedianLengthOfStay))
+# 
+# cov_los_median_min <- Length_of_Stay_Median %>%
+#   filter(Pathogen =="cov") %>% 
+#   filter(MedianLengthOfStay ==min(MedianLengthOfStay) )
+# 
+# flu_los_median_max <- Length_of_Stay_Median %>%
+#   filter(Pathogen =="flu") %>% 
+#   filter(MedianLengthOfStay == max(MedianLengthOfStay))
+# 
+# flu_los_median_min <- Length_of_Stay_Median %>%
+#   filter(Pathogen =="flu") %>% 
+#   filter(MedianLengthOfStay ==min(MedianLengthOfStay) )
+# 
+# rsv_los_median_max <- Length_of_Stay_Median %>%
+#   filter(Pathogen =="rsv") %>% 
+#   filter(MedianLengthOfStay == max(MedianLengthOfStay)) %>% 
+#   tail(1)
+# 
+# rsv_los_median_min <- Length_of_Stay_Median %>%
+#   filter(Pathogen =="rsv") %>% 
+#   filter(MedianLengthOfStay ==min(MedianLengthOfStay) )
 
 ######
 

@@ -11,6 +11,8 @@ altTextServer("respiratory_over_time_modal",
                 tags$li(glue("This is a stacked bar chart plot of influenza cases",
                              " by subtype within a given NHS Health Board",
                              " for a selected respiratory season.")),
+                tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
+                        "Week 40 is typically the start of October and when the winter respiratory season starts."),
                 tags$li(glue("The cases are presented as a rate, i.e. the number of people with ",
                         "influenza for every 100,000 people in that NHS Health Board.")),
                 tags$li("For Scotland there is an option to view the absolute number of cases."),
@@ -77,13 +79,14 @@ output$respiratory_over_time_plot <- renderPlotly({
   Respiratory_AllData %>%
     filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
     filter(FluOrNonFlu == "flu") %>%
-    filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>%
+    filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)" & Organism!= "Influenza - Type A or B") %>%
     filter(Season== input$respiratory_select_season) %>% 
+    group_by(Date) %>% 
+    mutate(total_cases  = sum(Count)) %>% 
+    ungroup() %>% 
     select_y_axis(., yaxis = input$respiratory_y_axis_plots) %>%
     arrange(Date) %>%
     make_respiratory_trend_over_time_plot(., y_axis_title = input$respiratory_y_axis_plots) # respiratory functions
-
-
 })
 
 
@@ -119,7 +122,7 @@ output$respiratory_over_time_table <- renderDataTable ({
       filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
       filter(FluOrNonFlu == "flu") %>%
       filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>%
-      select(Date, Organism, Count, Rate) %>%
+      select(Date, Organism, Count, Rate) %>%#g
       # Re make this as a factor to remove unused levels
       mutate(Organism = factor(Organism)) %>%
       arrange(desc(Date), Organism) %>%

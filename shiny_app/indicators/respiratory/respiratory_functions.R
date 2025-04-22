@@ -136,12 +136,10 @@ make_respiratory_trend_over_time_plot <- function(data, y_axis_title) {
     }
 
     # Define custom order for "Organism" levels (makes legend same order as dropdowns in other charts)
-  subtype_order <- c("Influenza - Type A or B",
-                    "Influenza - Type B",
-                    "Influenza - Type A (not subtyped)",
-                    "Influenza - Type A(H3)",
-                    "Influenza - Type A(H1N1)pdm09",
-                    "Influenza - Type A (any subtype)")
+  subtype_order <- c(
+    #"Influenza - Type A or B",
+    "Influenza - Type B", "Influenza - Type A (not subtyped)","Influenza - Type A(H3)",
+    "Influenza - Type A(H1N1)pdm09",  "Influenza - Type A (any subtype)")
 
   # Reorder the levels of "Organism" in descending order
   data$Organism <- factor(data$Organism, levels = subtype_order)
@@ -161,7 +159,8 @@ make_respiratory_trend_over_time_plot <- function(data, y_axis_title) {
             text = ~paste0("<b>Week ending</b>: ", format(Date, "%d %b %y"), "\n",
                            "<b>Health board</b>: ", get_hb_name(HealthboardCode), "\n",
                            "<b>", legend_title_name, "</b>: ", Organism, "\n",
-                           "<b>", y_axis_title, "</b>: ", format(y_axis, big.mark=",")),
+                           "<b>", y_axis_title, "</b>: ", format(y_axis, big.mark=","),
+                           "<b>Total number of cases </b>: ", total_cases, "\n"),
             hovertemplate = "%{text}",
             type="bar",
             mode="lines",

@@ -60,7 +60,7 @@ tagList(
                       ) # pickerInput
                       ), # column
            column(4, pickerInput("respiratory_select_season",
-                                 label = "Select season",
+                                 label = "Select a season",
                                  choices = all_seasons, # found in setup
                                  selected = c("2024/25"))# pickerInput
            ), # column
