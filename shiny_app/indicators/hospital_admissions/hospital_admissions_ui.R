@@ -97,7 +97,7 @@ tagList(
                                            "hospital broken down by ethnic group",
                                            " as we undertake developments",
                                            "to include this analysis for other respiratory pathogens.")),
-           
+##### age/sex admissions pyramid        
            
            # #tagList(h2(glue("Acute COVID-19 cases by age and sex in Scotland")),
            # tagList(uiOutput("cov_adm_pyr_title")),
@@ -121,11 +121,12 @@ tagList(
            #                         #), #age/sex 
            #                # ),
 ##### LOS section
+tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
+        #  temporary caveat for no LOS information
+        tagList("Public Health Scotland have paused reporting of the Length",
+                "of Stay of acute COVID-19 hospital admissions as we undertake developments",
+                "to include this analysis for other respiratory pathogens.")),
 
-#  temporary caveat for no LOS information
-tagList("Public Health Scotland have paused reporting of the Length",
-        "of Stay of acute COVID-19 hospital admissions as we undertake developments",
-        "to include this analysis for other respiratory pathogens."),
 
                            # tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
                            #         tags$div(class = "headline",

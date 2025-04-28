@@ -148,7 +148,7 @@ source("Transfer Scripts/transfer_ethnicity.R")
 source("Transfer Scripts/transfer_admissions.R")
 
 ##### Length of Stay
-source("Transfer Scripts/transfer_los.R")
+#source("Transfer Scripts/transfer_los.R")
 
 ##### Vaccine Wastage
 # source("Transfer Scripts/transfer_vacc_wastage.R")

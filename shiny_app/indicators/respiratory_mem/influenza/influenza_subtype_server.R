@@ -77,7 +77,7 @@ output$respiratory_headline_figures_healthboard_count <- renderValueBox ({
 output$respiratory_over_time_plot <- renderPlotly({
 
   Respiratory_AllData %>%
-    filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
+    filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>% # respiratory functions
     filter(FluOrNonFlu == "flu") %>%
     filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)" & Organism!= "Influenza - Type A or B") %>%
     filter(Season== input$respiratory_select_season) %>% 
