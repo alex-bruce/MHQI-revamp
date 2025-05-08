@@ -1,12 +1,7 @@
 ##### Length of Stay data transfer
-
-
-# i_los <- read_csv_with_options(glue(input_data, "{format(report_date -2,'%Y-%m-%d')}_LOS Table Dashboard.csv"))
-# i_los_median <- read_csv_with_options(glue(input_data, "los_mean_4weeks.csv"))
-
 i_los_weekly <- read_csv_with_options(glue(input_data, "los_weekly.csv"))
 i_los_season <- read_csv_with_options(glue(input_data, "los_season.csv"))
-i_los_median <- read_csv_with_options(glue(input_data, "los_mean_4weeks_TEST.csv"))
+
 
 #  los by week ending 
 g_los_weekly <- i_los_weekly %>%
@@ -33,20 +28,4 @@ g_los_season <- i_los_season %>%
 
 write.csv(g_los_season, glue(output_folder, "Length_of_Stay_Season.csv"), row.names=FALSE)
 
-
-# last 4 weekly stats
-g_los_median <- i_los_median %>%
-  mutate(AgeGroupQF = ifelse(AgeGroup == "All Ages", "d", ""),
-         Pathogen = case_when(admission_type == "adm_flu" ~ "flu",
-                              admission_type == "adm_rsv" ~ "rsv", 
-                              admission_type == "cov_adm" ~ "cov"),
-         CaseDefinition= case_when(Pathogen =="cov"~ "COVID-19",
-                                   Pathogen == "flu"~ "Influenza",
-                                   Pathogen == "rsv"~"RSV")         ) %>%
-  select(Pathogen,CaseDefinition, AgeGroup, AgeGroupQF, 
-         MeanLengthOfStay = mean_los, MedianLengthOfStay = median_los)
-
-write.csv(g_los_median, glue(output_folder, "Length_of_Stay_Median.csv"), row.names=FALSE)
-
-
-rm(i_los_weekly, g_los_weekly, i_los_median, g_los_median, g_los_season, i_los_season)
+rm(i_los_weekly, g_los_weekly,g_los_season, i_los_season)

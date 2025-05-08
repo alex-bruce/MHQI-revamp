@@ -189,7 +189,9 @@ make_hospital_admissions_los_plot <- function(data){
     layout(barmode = "stack",
            yaxis = yaxis_plots,
            xaxis = xaxis_plots,
-           legend = list(xanchor = "center", yanchor = "top", x = 0.5, y = -0.6, orientation = 'h', traceorder = 'normal'),
+           legend = list(xanchor = "center", yanchor = "top",
+                         x = 0.5, y = -0.6, 
+                         orientation = 'h', traceorder = 'normal'),
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
     # leaving only save plot button

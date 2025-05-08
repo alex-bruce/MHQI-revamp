@@ -36,7 +36,6 @@ tagList(
                                       withNavySpinner(valueBoxOutput("respiratory_headline_figures_healthboard_count", width = NULL))
                                     ) # tagList
                              ), # column
-
                              # This text is hidden by css but helps pad the box at the bottom
                              h6("hidden text for padding page")
                     ) # headline
@@ -47,39 +46,32 @@ tagList(
 
   fluidRow(width = 12,
            tagList(h2("Trends of influenza cases in Scotland"))),
-
-
-
-  # select healthboard and rate/number for plots and data
+  
   fluidRow(width = 12,
-           column(4, pickerInput("respiratory_select_healthboard",
-                                            label = "Select geography (Scotland/NHS Health Board)",
-                                            choices = c("Scotland", {Respiratory_AllData %>%
-                                                filter(!is.na(HealthboardCode)) %>%
-                                                .$HealthboardCode %>% unique() %>% get_hb_name() %>% .[.!="NHS Scotland"]})
-                      ) # pickerInput
-                      ), # column
-           column(4, pickerInput("respiratory_select_season",
-                                 label = "Select a season",
-                                 choices = all_seasons, # found in setup
-                                 selected = c("2024/25"))# pickerInput
-           ), # column
-           column(4, pickerInput("respiratory_y_axis_plots",
-                                 label =     "Select number or rate",
-                                 choices = c("Number of cases", "Rate per 100,000"),
-                                 selected = "Number of cases") # pickerInput
-           ) # column              
-  ), #fluidrow
-
-
-  fluidRow(width = 12,
-           tagList(uiOutput("respiratory_over_time_title"),#h3(glue("Influenza cases over time by subtype")),
-
+           tagList(uiOutput("respiratory_over_time_title"),
                    tabBox(width = NULL,
                           type = "pills",
                           tabPanel("Plot",
                                    tagList(
                                      linebreaks(1),
+                                     fluidRow(column(4, pickerInput("respiratory_select_healthboard",
+                                                                    label = "Select a NHS Health Board",
+                                                                    choices = c("Scotland", {Respiratory_AllData %>%
+                                                                        filter(!is.na(HealthboardCode)) %>%
+                                                                        .$HealthboardCode %>% 
+                                                                        unique() %>%
+                                                                        get_hb_name() %>% 
+                                                                        .[.!="NHS Scotland"]}) ) # pickerInput
+                                                                                        ), # column
+                                              column(4, pickerInput("respiratory_select_season",
+                                                                    label = "Select a season",
+                                                                    choices = all_seasons, # found in setup
+                                                                    selected = c("2024/25"))), # column
+                                                     column(4, pickerInput("respiratory_y_axis_plots",
+                                                                           label =     "Select number or rate",
+                                                                           choices = c("Number of cases", "Rate per 100,000"),
+                                                                           selected = "Number of cases") )
+                                              ), #filters fluid row
                                      altTextUI("respiratory_over_time_modal"),
                                      withNavySpinner(plotlyOutput("respiratory_over_time_plot")))),
                           tabPanel("Data",
@@ -92,8 +84,7 @@ tagList(
            linebreaks(2)),
 
   fluidRow(width = 12,
-           tagList(uiOutput("respiratory_by_season_title"),#h3(glue("Influenza cases over time by season")),
-
+           tagList(uiOutput("respiratory_by_season_title"),
                    tabBox(width = NULL,
                           type = "pills",
                           tabPanel("Plot",

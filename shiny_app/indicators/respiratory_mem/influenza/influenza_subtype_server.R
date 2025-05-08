@@ -90,7 +90,7 @@ output$respiratory_over_time_plot <- renderPlotly({
 })
 
 
-output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases over time by subtype in ",
+output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases by subtype in ",
                                                         input$respiratory_select_healthboard, " in Season ",
                                                         input$respiratory_select_season))})
 
