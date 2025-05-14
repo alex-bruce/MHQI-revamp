@@ -260,7 +260,7 @@ output$influenza_age_sex_pyramid_plot = renderPlotly({
     filter(scotland_by_age_sex_season_flag == 1,
            # scotland_by_age_sex_flag == 1,
            Season == input$respiratory_season) %>%
-    make_age_sex_pyramid_plot()
+    make_age_sex_pyramid_plot()#respiratory functions
 
 })
 

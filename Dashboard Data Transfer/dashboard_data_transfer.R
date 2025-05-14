@@ -139,7 +139,7 @@ source("Transfer Scripts/transfer_cases.R")
 
 ##### Ethnicity
 # Updated quarterly
-source("Transfer Scripts/transfer_ethnicity.R")
+#source("Transfer Scripts/transfer_ethnicity.R")
 
 ##### ICU
 # source("Transfer Scripts/transfer_icu.R")
@@ -148,7 +148,7 @@ source("Transfer Scripts/transfer_ethnicity.R")
 source("Transfer Scripts/transfer_admissions.R")
 
 ##### Length of Stay
-source("Transfer Scripts/transfer_los.R")
+# source("Transfer Scripts/transfer_los.R")
 
 ##### Vaccine Wastage
 # source("Transfer Scripts/transfer_vacc_wastage.R")
@@ -157,7 +157,7 @@ source("Transfer Scripts/transfer_los.R")
 # source("Transfer Scripts/transfer_ons.R")
 
 ##### Winter CIS (Bi-weekly)
- source("Transfer Scripts/transfer_winter_cis.R")
+# source("Transfer Scripts/transfer_winter_cis.R")
 
 #### Care Homes ( first part not working, moved time series to separate script)
 # archived until further notice

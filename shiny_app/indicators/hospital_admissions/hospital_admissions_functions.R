@@ -140,7 +140,7 @@ make_hospital_admissions_simd_plot <- function(data){
                                      '<b>SIMD quintile</b>: %{text}<br>',
                                      '<b>Number of admissions</b>: %{y}')
     ) %>%
-    layout(margin = list(b = 100, t = 5),
+    layout(margin = list(b = 50, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
            legend = list(xanchor = "center", yanchor = "top", x = 0.5, y = -0.6, orientation = 'h'),
            paper_bgcolor = phs_colours("phs-liberty-10"),
@@ -154,62 +154,113 @@ make_hospital_admissions_simd_plot <- function(data){
 }
 
 # Hospital Admissions LOS plot
+
 make_hospital_admissions_los_plot <- function(data){
-  
   table <- data %>%
-    arrange(desc(AdmissionWeekEnding)) %>%
-    mutate(AdmissionWeekEnding = convert_opendata_date(AdmissionWeekEnding),
-           Percent = ProportionOfAdmissions*100) %>%
-    mutate(Year = substring(AdmissionWeekEnding,1,4)) %>% 
-    select(AdmissionWeekEnding, AgeGroup, LengthOfStay, Percent,Year) %>%
-    dplyr::rename(`Week Ending` = AdmissionWeekEnding,
-                  `Age Group` = AgeGroup,
-                  `Length of Stay` = LengthOfStay)
-  
-  table = table %>%
-    filter(`Age Group` == input$los_age ) %>% 
-    filter(`Year` == input$year) %>%
-    mutate(`Length of Stay` = factor(`Length of Stay`,
+    # mutate(Percent = ProportionOfAdmission*100) %>%
+    select(Pathogen, AgeGroup, LengthOfStay, PercentageOfAdmissions, Season) %>%
+    # dplyr::rename(`Age group` = AgeGroup,
+    #               `Length of stay` = LengthOfStay) %>% 
+    #filter(`Season` == input$season) %>%
+    mutate(LengthOfStay = factor(LengthOfStay,
                                      levels = c("1 day or less",
                                                 "2-3 days", "4-5 days",
                                                 "6-7 days", "8+ days")))
-
-  tooltip_trend <- paste0("Week ending: ", format(table$`Week Ending`, "%d %b %y"), "<br>",
-                        "Length of stay: ", table$`Length of Stay`, "<br>",
-                        "Percent: ", round(table$Percent, 1), "%")
-
-  xaxis_plots[["title"]] <- 'Admission date by week ending'
+  
+  tooltip_trend <- paste0("Season: ", table$Season, "<br>",
+                          "Age group: ", table$AgeGroup, "<br>",
+                          "Length of stay: ", table$LengthOfStay, "<br>",
+                          "Percent: ",table$PercentageOfAdmissions, "%")
+  
+  xaxis_plots[["title"]] <- 'Age group'
   yaxis_plots[["title"]] <- 'Percentage of admissions'
   yaxis_plots[["ticksuffix"]] <- "%"
-
-  # Adding slider
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
-  yaxis_plots[["fixedrange"]] <- FALSE
-
+ 
   p <- table %>%
-    plot_ly(x = ~`Week Ending`,
-            y = ~Percent,
-            color = ~`Length of Stay`,
+    plot_ly(x = ~AgeGroup,
+            y = ~PercentageOfAdmissions,
+            color = ~LengthOfStay,
             type = 'bar',
             colors = paste(phs_palettes$`main-blues`),
             text = tooltip_trend,
             hoverinfo = "text",
-            marker = list(line = list(width=.5,
-                                      color = 'rgb(0,0,0)'))
-          ) %>%
+            marker = list(line = list(width=.5, color = 'rgb(0,0,0)'))
+    ) %>%
     layout(barmode = "stack",
            yaxis = yaxis_plots,
            xaxis = xaxis_plots,
-           legend = list(xanchor = "center", yanchor = "top", x = 0.5, y = -0.6, orientation = 'h', traceorder = 'normal'),
+           legend = list(xanchor = "center", yanchor = "top",
+                         x = 0.5, y = -0.6, 
+                         orientation = 'h', traceorder = 'normal'),
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
     # leaving only save plot button
     config(displaylogo = F, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove )
-
-  return(p)
-
+   # return(p)
+  
 }
+
+
+
+
+
+# make_hospital_admissions_los_plot <- function(data){
+#   
+#   table <- data %>%
+#     arrange(desc(AdmissionWeekEnding)) %>%
+#     mutate(AdmissionWeekEnding = convert_opendata_date(AdmissionWeekEnding),
+#            Percent = ProportionOfAdmissions*100) %>%
+#     mutate(Year = substring(AdmissionWeekEnding,1,4)) %>% 
+#     select(AdmissionWeekEnding, Pathogen, AgeGroup, LengthOfStay, Percent,Year, Season) %>%
+#     dplyr::rename(`Week Ending` = AdmissionWeekEnding,
+#                   `Age Group` = AgeGroup,
+#                   `Length of Stay` = LengthOfStay)
+#   
+#   table = table %>%
+#     filter(`Age Group` == input$los_age ) %>% 
+#     filter(`Year` == input$year) %>%
+#     mutate(`Length of Stay` = factor(`Length of Stay`,
+#                                      levels = c("1 day or less",
+#                                                 "2-3 days", "4-5 days",
+#                                                 "6-7 days", "8+ days")))
+# 
+#   tooltip_trend <- paste0("Week ending: ", format(table$`Week Ending`, "%d %b %y"), "<br>",
+#                         "Length of stay: ", table$`Length of Stay`, "<br>",
+#                         "Percent: ", round(table$Percent, 1), "%")
+# 
+#   xaxis_plots[["title"]] <- 'Admission date by week ending'
+#   yaxis_plots[["title"]] <- 'Percentage of admissions'
+#   yaxis_plots[["ticksuffix"]] <- "%"
+# 
+#   # Adding slider
+#   xaxis_plots[["rangeslider"]] <- list(type = "date")
+#   yaxis_plots[["fixedrange"]] <- FALSE
+# 
+#   p <- table %>%
+#     plot_ly(x = ~`Week Ending`,
+#             y = ~Percent,
+#             color = ~`Length of Stay`,
+#             type = 'bar',
+#             colors = paste(phs_palettes$`main-blues`),
+#             text = tooltip_trend,
+#             hoverinfo = "text",
+#             marker = list(line = list(width=.5,
+#                                       color = 'rgb(0,0,0)'))
+#           ) %>%
+#     layout(barmode = "stack",
+#            yaxis = yaxis_plots,
+#            xaxis = xaxis_plots,
+#            legend = list(xanchor = "center", yanchor = "top", x = 0.5, y = -0.6, orientation = 'h', traceorder = 'normal'),
+#            paper_bgcolor = phs_colours("phs-liberty-10"),
+#            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+#     # leaving only save plot button
+#     config(displaylogo = F, displayModeBar = TRUE,
+#            modeBarButtonsToRemove = bttn_remove )
+# 
+#   return(p)
+# 
+# }
 
 
 ########################################
@@ -355,3 +406,68 @@ make_icu_admissions_weekly_plot <- function(data){
 
 }
 
+
+##### age sex  admission plot
+# creates a plot looking at age/sex breakdowns in scotland
+make_age_sex_adm_pyramid_plot <- function(data, title = NULL) {
+  data %<>%
+    mutate(Rate = case_when(
+      Sex == "F" ~ -Rate,
+      TRUE ~ Rate)) %>%
+    mutate_if(is.numeric, ~replace_na(., 0)) %>%
+    mutate(AgeGroup = factor(AgeGroup, levels = c("All","Under 18","18-64","65-74","75+")))
+  
+  xaxis_breaks <- pretty(c(-max(data$Rate), 0, max(data$Rate)))
+  yaxis_ticks <- list("All","Under 18","18-64","65-74","75+")
+  yaxis_ticks <- list(categoryorder = "array",
+                      categoryarray = c("All","Under 18","18-64","65-74","75+"))
+  
+  
+  fig = data %>%
+    plot_ly(x= ~Rate,
+            y= ~AgeGroup,
+            color = ~Sex,
+            type = 'bar',
+            textposition = "none",
+            text = ~paste0("<b>Season</b>: ", Season, "\n",
+                           "<b>Sex</b>: ", Sex, "\n",
+                           "<b>Age group</b>: ", AgeGroup, "\n",
+                           "<b>Rate per 100,000</b>: ", format(abs(Rate), big.mark=",")),
+            hovertemplate = "%{text}",
+            colors = phs_colours(c("phs-purple", "phs-magenta"))) %>%
+    layout(
+      xaxis = list(
+        tickvals = xaxis_breaks,
+        ticktext = abs(xaxis_breaks),
+        title = "Rate per 100,000",
+        showline = TRUE,
+        linecolor = 'black',
+        range = c(-max(data$Rate), max(data$Rate))
+      ),
+      yaxis = list(yaxis_ticks
+                   #tickmode = "array",
+                   #title = "Age Group",
+                   #tickvals = yaxis_ticks,
+                   #ticktext= yaxis_ticks,
+                   #showline = TRUE,
+                   #linecolor = 'black',
+                   #range = levels(factor(data$AgeGroup))
+      ),
+      legend = list(title = ""),
+      margin = list(b = 100),
+      paper_bgcolor = phs_colours("phs-liberty-10"),
+      plot_bgcolor = phs_colours("phs-liberty-10"),
+      title = title,
+      barmode = 'overlay')
+  #layout(yaxis = list(#title = "AgeGroup",
+  #showline = FALSE,
+  #fixedrange=TRUE,
+  #range = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")))
+  #showlegend = T)
+  # xaxis = list(title = "Rate per 100,000"),
+  #title = title,
+  
+  fig <- fig %>%
+    config(displaylogo = F, displayModeBar = TRUE, modeBarButtonsToRemove = bttn_remove)
+  return(fig)
+}

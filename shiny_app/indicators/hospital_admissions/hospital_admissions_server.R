@@ -58,27 +58,22 @@ altTextServer("hospital_admissions_simd_modal",
               )
 )
 
-altTextServer("hospital_admissions_los_modal",
+altTextServer("cov_los_modal",
               title = "Length of stay of acute COVID-19 hospital admissions",
               content = tags$ul(
                 tags$li("This is a plot of the distribution of lengths of stay in hospital",
-                        "for acute COVID-19 hospital admissions."),
+                        "for acute COVID-19 hospital admissions by respiratory season."),
                 tags$li("There is a drop down above the chart which allows you to select",
-                        "an age group for plotting. The default is all ages."),
-                tags$li("There is a drop down above the chart which allows you to select",
-                        "the year for plotting. The default is 2025."),
+                        "the respiratory season for plotting. The default is the current season."),
                 tags$li("The legend shows five categories for length of stay: 1 day or less;",
                         "2-3 days, 4-5 days, 6-7 days, 8+ days. See the metadata tab for further detail."),
-                tags$li("The x axis is the hospital admission date by week ending."),
-                tags$li("The y axis is the percentage of admissions in a given length of stay category."),
-                tags$li("The plot is a stacked bar chart for each week ending, where the",
+                tags$li("The x axis shows a break down of admissions by age groups: 0-17, 18-64, 65-74, 75+ and finally by All ages."),
+                tags$li("The y axis is the percentage of admissions in a given age group category."),
+                tags$li("The plot is a stacked bar chart, where the",
                         "sections of vertical bars correspond to different length of stay categories.",
                         "The bar sections are ordered from smallest length of stay to largest",
-                        "length of stay from bottom to top."),
-                tags$li("Please note that in cases where there are no hospital admissions there",
-                        "will be a gap in the chart.")
-              )
-)
+                        "length of stay from bottom to top.") ))
+
 
 altTextServer("hospital_admissions_ethnicity_modal",
               title = "COVID-19 admissions to hospital by ethnicity",
@@ -109,6 +104,24 @@ altTextServer("icu_admissions_modal",
                         "in ICU admissions over time.")
               )
 )
+
+
+altTextServer("covid_adm_age_sex",
+             title = glue("Acute COVID-19 cases by age and sex in Scotland"),
+             content = tags$ul(
+               tags$li(glue("This is a pyramid plot of rate per 100,000 people of acute COVID-19 hospital admissions in Scotland by age and sex.")),
+               tags$li("The information is displayed for a selected season."),
+               tags$li("Weekly rate data for age and sex on a weekly basis are available in ",
+                       "the PHS Open Data platform ",
+                       tags$a(href="https://www.opendata.nhs.scot/dataset/viral-respiratory-diseases-including-influenza-and-covid-19-data-in-scotland",
+                              "Viral Respiratory Diseases (Including Influenza and COVID-19) Data in Scotland page (external website).",
+                              target="_blank")),
+               tags$li("The y axis shows the age group. The left side of the y axis corresponds to females (F) and the right side to males (M)."),
+               tags$li("For the x axis the plot shows rate per 100,000 people.")
+               # tags$li("The youngest and oldest groups have the highest rates of illness.")
+             )
+)
+
 
 ### WEEKLY ADMISSIONS-Scotland ### ----
 
@@ -200,35 +213,33 @@ output$hospital_admissions_hb_table <- renderDataTable({
 
 ### LENGTH OF STAY ### ----
 
-# Table
-output$hospital_admissions_los_table <- renderDataTable({
-  Length_of_Stay %>%
-    mutate(Year = substring(AdmissionWeekEnding,1,4)) %>%
-    arrange(desc(AdmissionWeekEnding)) %>%
-    mutate(AdmissionWeekEnding = convert_opendata_date(AdmissionWeekEnding),
-           AgeGroup = factor(AgeGroup),
-           LengthOfStay = factor(LengthOfStay),
-           ProportionOfAdmissions = ProportionOfAdmissions*100) %>%
-    select(AdmissionWeekEnding, AgeGroup, LengthOfStay, ProportionOfAdmissions, Year) %>%
-    filter(Year==input$year) %>%
-    dplyr::rename(`Week ending` = AdmissionWeekEnding,
-                  `Age group` = AgeGroup,
-                  `Length of stay` = LengthOfStay,
-                  `Percentage of age group in length of stay category` = ProportionOfAdmissions) %>%
-    make_table(add_percentage_cols = c(4),
-               maxrows = 15,
-               filter_cols = c(2,3))
-})
-
+# los plot reactive title
+output$cov_los_title <- renderUI({h3(glue("COVID-19 length of stay by age group in Season ",
+                                                        input$los_season_cov))})
+# 
+# output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases over time by subtype in ",
+#                                                         input$respiratory_select_healthboard))})
 
 
 # Plot
-output$hospital_admissions_los_plot<- renderPlotly({
-  Length_of_Stay %>%
-    mutate(Year = substring(AdmissionWeekEnding,1,4)) %>%
+output$cov_los_plot<- renderPlotly({
+  cov_los_weekly_plot <- Length_of_Stay_Season %>%
+    filter(admission_type == "cov") %>% 
+    filter(Season == input$los_season_cov) %>%
     make_hospital_admissions_los_plot()
 
 })
+# Table
+output$cov_los_table <- renderDataTable({
+  cov_los_weekly_table <-Length_of_Stay_Season %>% 
+    filter(admission_type == "cov") %>% 
+    filter(Season == input$los_season_cov) %>%
+    mutate(`Length of stay` = factor(LengthOfStay,
+                                     levels = c("1 day or less",
+                                                "2-3 days", "4-5 days",
+                                                "6-7 days", "8+ days"))) %>% 
+    select(Season, 'Age group' = AgeGroup,'Length of stay',
+           'Percent' = PercentageOfAdmissions) })
 
 
 ######################
@@ -339,3 +350,44 @@ output$hospital_admissions_ethnicity_perc_plot <- renderPlotly({
     make_hospital_admissions_ethnicity_perc_plot()
 
 })
+
+
+
+#------------------------#
+#### Hosp adm pyramid ####
+#------------------------#
+
+# output$cov_adm_pyr_title <- renderUI({h3(glue("Acute COVID-19 hospital admissions by age and sex in Scotland; ",
+#                                           input$cov_age_sex_adm_season))})
+# 
+# 
+# # pyramid plot that shows the breakdown by age and sex
+# output$covid_adm_age_sex_pyramid_plot = renderPlotly({
+#   Admissions_AgeSex_Season %>%
+#     filter(Pathogen == "cov",
+#            Sex %in% c("M", "F"),
+#            Season == input$cov_age_sex_adm_season) %>%
+#     make_age_sex_adm_pyramid_plot # hospital_admissions_functions
+#   
+# })
+
+
+# output$covid_adm_age_sex_pyramid_table = renderDataTable({
+#   
+#   covid_adm_sex_pyramid_table <- Admissions_AgeSex_Season %>%
+#     filter(Pathogen == "cov",
+#            Season == input$cov_age_sex_adm_season) %>%
+#     select(Season, AgeGroup, Sex, Rate) %>%
+#     mutate(Season = factor(Season)) %>%
+#     arrange(desc(Season), AgeGroup, Sex) %>%
+#     dplyr::rename("Season" = "Season",
+#                   "Age group" = "AgeGroup",
+#                   "Rate per 100,000" = "Rate") %>%
+#     mutate(Sex = factor(Sex, levels = c("All", "F", "M")),
+#            `Age group` = factor(`Age group`, levels =
+#                                   c("All","Under 18","18-64","65-74","75+"))) %>%
+#     arrange(desc(`Season`), `Age group`, Sex) %>%
+#     make_table(add_separator_cols_1dp = c(4),
+#                filter_cols = c(1,2,3))
+#   
+# })

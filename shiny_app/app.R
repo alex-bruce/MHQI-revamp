@@ -303,7 +303,7 @@ ui <- fluidPage(
                icon = icon_no_warning_fn("virus"),
                value = "wastewater",
                navlistPanel(widths = c(2,10), id = "wastewater_panel", #icon = icon_no_warning_fn("spa")
-                            
+
                             tabPanel(title = "National",
                                      value = "wastewater_national",
                                      column(12, source(file.path("indicators/wastewater/national/national_ui.R"), local = TRUE)$value)),
@@ -438,7 +438,7 @@ server <- function(input, output, session) {
   source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_cari_server.R"), local = TRUE)$value
-  #source(file.path("indicators/respiratory_mem/other_pathogens/other_pathogens_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/other_pathogens/other_pathogens_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_mem_server.R"), local = TRUE)$value
@@ -450,10 +450,10 @@ server <- function(input, output, session) {
   source(file.path("indicators/syndromic_surveillance/nhs24/nhs24_server.R"), local = TRUE)$value
   source(file.path("indicators/syndromic_surveillance/gp/gp_server.R"), local = TRUE)$value
   
-  source(file.path("indicators/wastewater/national/national_server.R"), local = TRUE)$value
-  source(file.path("indicators/wastewater/health_board/hb_server.R"), local = TRUE)$value
-  source(file.path("indicators/wastewater/local_authority/la_server.R"), local = TRUE)$value
-  #source(file.path("indicators/wastewater/spatial_maps/maps_server.R"), local = TRUE)$value
+ source(file.path("indicators/wastewater/national/national_server.R"), local = TRUE)$value
+ source(file.path("indicators/wastewater/health_board/hb_server.R"), local = TRUE)$value
+ source(file.path("indicators/wastewater/local_authority/la_server.R"), local = TRUE)$value
+ #source(file.path("indicators/wastewater/spatial_maps/maps_server.R"), local = TRUE)$value
   
   auto_invalidate <- reactiveTimer(10000)
   observe({

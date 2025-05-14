@@ -129,31 +129,33 @@ make_respiratory_trend_over_time_plot <- function(data, y_axis_title) {
 
     } else {
     #flu
-    colours <- c(phs_colours(c("phs-purple", "phs-teal", "phs-green", "phs-rust")), "black")
-    linestyles <- c("solid", "solid", "solid", "dash", "dot")
-
+    colours <- c(phs_colours(c("phs-purple","phs-magenta","phs-green" , "phs-blue-80"  )), "black")
     legend_title_name <- "Subtype"
     }
 
-    # Define custom order for "Organism" levels (makes legend same order as dropdowns in other charts)
-  subtype_order <- c("Influenza - Type A or B",
-                    "Influenza - Type B",
-                    "Influenza - Type A (not subtyped)",
-                    "Influenza - Type A(H3)",
-                    "Influenza - Type A(H1N1)pdm09",
-                    "Influenza - Type A (any subtype)")
+      # Define custom order for "Organism" levels (makes legend same order as dropdowns in other charts)
+
+  subtype_order <- c(
+    "Influenza - Type B", "Influenza - Type A (not subtyped)","Influenza - Type A(H3)",
+    "Influenza - Type A(H1N1)pdm09",
+    "Influenza - Type A (any subtype)"
+    )
 
   # Reorder the levels of "Organism" in descending order
   data$Organism <- factor(data$Organism, levels = subtype_order)
+  
+  week_order <- c(seq(40, 52, 1), seq(1, 39, 1)) # put weeks in correct order for season
 
-  xaxis_plots[["title"]] <- "Week ending"
+  xaxis_plots[["title"]] <- "ISO week"
   yaxis_plots[["title"]] <- y_axis_title
 
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
   fig = data %>%
-    plot_ly(x = ~Date,
+    arrange(Season, Weekord) %>%
+    mutate(Week = as.character(Week),
+           Week = factor(Week, levels = week_order)) %>% 
+    plot_ly(x = ~Week,
             y = ~y_axis,
             color = ~Organism,
             linetype = ~Organism,
@@ -163,14 +165,15 @@ make_respiratory_trend_over_time_plot <- function(data, y_axis_title) {
                            "<b>", legend_title_name, "</b>: ", Organism, "\n",
                            "<b>", y_axis_title, "</b>: ", format(y_axis, big.mark=",")),
             hovertemplate = "%{text}",
-            type="scatter",
-            mode="lines",
-            linetypes = linestyles,
+            type="bar",
+          #  mode="lines",
             colors = colours
             ) %>%
-    layout(yaxis = yaxis_plots,
+    layout(barmode = "stack",
+           yaxis = yaxis_plots,
            xaxis = xaxis_plots,
-           legend=list(title=list(text=paste0('<b>', legend_title_name, '</b>'))),
+           legend=list(title=list(text=paste0('<b>', legend_title_name, '</b>')),
+                       xanchor = "center",  x = 0.5, y = -0.2, orientation = 'h'),
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
     config(displaylogo = FALSE, displayModeBar = TRUE,
@@ -183,7 +186,6 @@ make_respiratory_trend_over_time_plot <- function(data, y_axis_title) {
 make_respiratory_trend_by_season_plot_function <- function(data, y_axis_title) {
 
   # put weeks in correct order for season
-
   week_order <- c(seq(40, 52, 1), seq(1, 39, 1))
 
   data = data %>%

@@ -6,16 +6,17 @@ metadataButtonServer(id="respiratory_influenza_subtype",
 
 # Alt text ----
 altTextServer("respiratory_over_time_modal",
-              title = glue("Influenza cases over time by subtype"),
+              title = glue("Influenza cases by subtype"),
               content = tags$ul(
-                tags$li(glue("This is a plot of the influenza cases in a given NHS health board",
-                             " over time.")),
-                tags$li("The cases are presented as a rate, i.e. the number of people with",
-                        glue("influenza for every 100,000 people in that NHS health board.")),
+                tags$li(glue("This is a stacked bar chart plot of influenza cases",
+                             " by subtype within a given NHS Health Board",
+                             " for a selected respiratory season.")),
+                tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
+                        "Week 40 is typically the start of October and when the winter respiratory season starts."),
+                tags$li(glue("The cases are presented as a rate, i.e. the number of people with ",
+                        "influenza for every 100,000 people in that NHS Health Board.")),
                 tags$li("For Scotland there is an option to view the absolute number of cases."),
-                tags$li("The x axis is the date, commencing 02 Oct 2016."),
                 tags$li("The y axis is either the rate of cases or the number of cases."),
-                tags$li(glue("There is a trace for each subtype of influenza."))
                 #tags$li("The trend is that each winter there is a peak in cases.")
               )
 )
@@ -75,19 +76,22 @@ output$respiratory_headline_figures_healthboard_count <- renderValueBox ({
 output$respiratory_over_time_plot <- renderPlotly({
 
   Respiratory_AllData %>%
-    filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
+    filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>% # respiratory functions
     filter(FluOrNonFlu == "flu") %>%
-    filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>%
+    filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)" & Organism!= "Influenza - Type A or B") %>%
+    filter(Season== input$respiratory_select_season) %>% 
+    group_by(Date) %>% 
+    mutate(total_cases  = sum(Count)) %>% 
+    ungroup() %>% 
     select_y_axis(., yaxis = input$respiratory_y_axis_plots) %>%
     arrange(Date) %>%
-    make_respiratory_trend_over_time_plot(., y_axis_title = input$respiratory_y_axis_plots)
-
-
+    make_respiratory_trend_over_time_plot(., y_axis_title = input$respiratory_y_axis_plots) # respiratory functions
 })
 
 
-output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases over time by subtype in ",
-                                                        input$respiratory_select_healthboard))})
+output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases by subtype in ",
+                                                        input$respiratory_select_healthboard, " in Season ",
+                                                        input$respiratory_select_season))})
 
 # plot showing the number/rate of flu cases by season. Can filter by organism selected by the user
 output$respiratory_by_season_plot = renderPlotly({
@@ -97,7 +101,7 @@ output$respiratory_by_season_plot = renderPlotly({
     select_y_axis(., yaxis = input$respiratory_y_axis_plots) %>%
     filter_by_organism(., organism = input$respiratory_select_subtype,
                        healthboard = input$respiratory_select_healthboard) %>%
-    make_respiratory_trend_by_season_plot_function(., y_axis_title = input$respiratory_y_axis_plots)
+    make_respiratory_trend_by_season_plot_function(., y_axis_title = input$respiratory_y_axis_plots)# respiratory functions
 
 })
 
@@ -109,50 +113,50 @@ output$respiratory_by_season_title <- renderUI({h3(glue("Influenza cases over ti
 # Data tables ----
 
 output$respiratory_over_time_table <- renderDataTable ({
-
-
   if(input$respiratory_select_healthboard == "Scotland"){
-
     Respiratory_AllData %>%
-      filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
-      filter(FluOrNonFlu == "flu") %>%
-      filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>%
-      select(Date, Organism, Count, Rate) %>%
-      # Re make this as a factor to remove unused levels
-      mutate(Organism = factor(Organism)) %>%
+      filter(Season == input$respiratory_select_season, 
+             Healthboard == input$respiratory_select_healthboard,
+             FluOrNonFlu == "flu",
+             Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>% 
       arrange(desc(Date), Organism) %>%
-      dplyr::rename("Week ending" = "Date",
-                    !!quo_name(stringr::str_to_title("subtype") ) :="Organism",
-                    "Number of cases" = "Count",
-                    "Rate per 100,000" ="Rate") %>%
-      make_table(add_separator_cols = 3,
-                 filter_cols = 2)
-
+      select(Season, Week,Healthboard, Organism, Count, Rate) %>%
+      mutate(Week = as.character(Week),
+             Week = factor(Week, levels = c(1:53)),
+             Season = factor(Season, levels = unique(Season))) %>%
+      dplyr::rename(`ISO week` = Week,
+                    "NHS Health Board" =Healthboard,
+                    "Number of cases" = Count,
+                    !!quo_name(stringr::str_to_title("subtype") ) := "Organism",
+                    "Rate per 100,000" = Rate) %>%
+      make_table(filter_cols = c(2))
+    
   } else {
-
     Respiratory_AllData %>%
-      filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
-      filter(FluOrNonFlu == "flu") %>%
-      filter(Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>%
-      select(Date, Organism, Rate) %>%
-      # Re make this as a factor to remove unused levels
-      mutate(Organism = factor(Organism)) %>%
+      filter(organism_by_hb_flag == 1) %>% 
+     mutate(Healthboard = get_hb_name(HealthboardCode)) %>% 
+     filter(Season == input$respiratory_select_season, 
+            Healthboard == input$respiratory_select_healthboard,
+            FluOrNonFlu == "flu",
+            Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>% 
       arrange(desc(Date), Organism) %>%
-      dplyr::rename("Week ending" = "Date",
-                    !!quo_name(stringr::str_to_title("subtype") ) :="Organism",
-                    "Rate per 100,000" = "Rate") %>%
-      make_table(add_separator_cols = 3,
-                 filter_cols = 2)
-
+      select(Season, Week,Healthboard, Organism, Rate) %>%
+      mutate(Week = as.character(Week),
+             Week = factor(Week, levels = c(1:53)),
+             Season = factor(Season, levels = unique(Season))) %>%
+      dplyr::rename(`ISO week` = Week,
+                    "NHS Health Board" =Healthboard,
+                    "Rate per 100,000" = Rate,
+                    !!quo_name(stringr::str_to_title("subtype") ) :="Organism") %>%
+      make_table(filter_cols = c(2))
+    
   }
-
 })
 
 # Flu by season table
 output$respiratory_by_season_table <- renderDataTable ({
 
   if(input$respiratory_select_healthboard == "Scotland"){
-
     Respiratory_AllData %>%
       filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
       filter(FluOrNonFlu == "flu") %>%
