@@ -115,7 +115,8 @@ output$respiratory_by_season_title <- renderUI({h3(glue("Influenza cases over ti
 output$respiratory_over_time_table <- renderDataTable ({
   if(input$respiratory_select_healthboard == "Scotland"){
     Respiratory_AllData %>%
-      filter(Healthboard == input$respiratory_select_healthboard,
+      filter(Season == input$respiratory_select_season, 
+             Healthboard == input$respiratory_select_healthboard,
              FluOrNonFlu == "flu",
              Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>% 
       arrange(desc(Date), Organism) %>%
@@ -128,13 +129,14 @@ output$respiratory_over_time_table <- renderDataTable ({
                     "Number of cases" = Count,
                     !!quo_name(stringr::str_to_title("subtype") ) := "Organism",
                     "Rate per 100,000" = Rate) %>%
-      make_table(filter_cols = c(2, 4))
+      make_table(filter_cols = c(2))
     
   } else {
     Respiratory_AllData %>%
       filter(organism_by_hb_flag == 1) %>% 
      mutate(Healthboard = get_hb_name(HealthboardCode)) %>% 
-     filter(Healthboard == input$respiratory_select_healthboard,
+     filter(Season == input$respiratory_select_season, 
+            Healthboard == input$respiratory_select_healthboard,
             FluOrNonFlu == "flu",
             Organism != "Total" & Organism != "Influenza - Type A (any subtype)") %>% 
       arrange(desc(Date), Organism) %>%
@@ -146,7 +148,7 @@ output$respiratory_over_time_table <- renderDataTable ({
                     "NHS Health Board" =Healthboard,
                     "Rate per 100,000" = Rate,
                     !!quo_name(stringr::str_to_title("subtype") ) :="Organism") %>%
-      make_table(filter_cols = c(2, 4))
+      make_table(filter_cols = c(2))
     
   }
 })
