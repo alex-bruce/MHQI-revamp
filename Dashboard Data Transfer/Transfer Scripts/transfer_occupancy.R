@@ -34,12 +34,14 @@ g_occupancy_hospital_healthboard <- i_occupancy$Data %>%
          Date = date,
          HealthBoard = health_board) %>%
   filter(Date >= "2020-09-08" & Date <= report_date-2) %>% # filter to sunday date
-  mutate(HospitalOccupancy = as.numeric(HospitalOccupancy),
+  mutate(HealthBoardQF = "",
+         HospitalOccupancy = as.numeric(HospitalOccupancy),
          #ICUOccupancy28OrLess = as.numeric(ICUOccupancy28OrLess),
          #ICUOccupancy28OrMore = as.numeric(ICUOccupancy28OrMore),
          #Date = as.Date(as.POSIXct(Date-1, 'GMT')),
          Date = format(as.Date(Date-1), "%Y%m%d"), #-1 as number is for "8am yesterday"
-         HealthBoard = str_replace(HealthBoard, "&", "and"))
+         HealthBoard = str_replace(HealthBoard, "&", "and")) %>% 
+  select(Date, HospitalOccupancy, HealthBoard, HealthBoardQF)
 
 
 g_occupancy_hospital_scotland <- g_occupancy_hospital_healthboard %>%
@@ -53,7 +55,9 @@ g_occupancy_hospital_scotland <- g_occupancy_hospital_healthboard %>%
 
 
 ###############
-g_occupancy_hospital <- bind_rows(g_occupancy_hospital_healthboard, g_occupancy_hospital_scotland) %>%
+g_occupancy_hospital <- g_occupancy_hospital_healthboard %>% 
+    filter(Date <= 20250504) %>%  # filter for summer month reporting. Temporary
+  rbind(g_occupancy_hospital_scotland) %>%
   group_by(HealthBoard) %>%
   mutate(SevenDayAverage = round_half_up(zoo::rollmean(HospitalOccupancy, k = 7, fill = NA, align="right"),0),
          SevenDayAverageQF = ifelse(is.na(SevenDayAverage), ":", ""),
@@ -76,9 +80,9 @@ write_csv(g_occupancy_hospital, glue(ukhsa_adm, "Occupancy_Hospital.csv",
                                      na = ""))
 
 
-
-
-g_occupancy_hospital_hb <- bind_rows(g_occupancy_hospital_healthboard, g_occupancy_hospital_scotland) %>%
+g_occupancy_hospital_hb <-g_occupancy_hospital_healthboard %>% 
+  filter(Date <= 20250504) %>% # filter for summer month reporting. Temporary
+  rbind(g_occupancy_hospital_scotland) %>%
   group_by(HealthBoard) %>%
   mutate(SevenDayAverage = round_half_up(zoo::rollmean(HospitalOccupancy, k = 7, fill = NA, align="right"),0),
          SevenDayAverageQF = ifelse(is.na(SevenDayAverage), ":", ""),
@@ -124,6 +128,7 @@ g_weekly_ocupancy_od<-g_occupancy_hospital_hb %>%
   select(-Date, -HealthBoardQF,
          InpatientsAsAtLastSunday= HospitalOccupancy, HospitalOccupancyQF, 
          SevenDayAverage, SevenDayAverageQF, WeekEnding) 
+
 
 
 write_csv(g_weekly_ocupancy_od, glue(output_folder, "weekly_HB_occupancy.csv"),na = "")

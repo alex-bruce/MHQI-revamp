@@ -93,7 +93,7 @@ left_join(i_od_occupancy, by=(c("WeekEnding", "HealthBoardName"))) %>%
          InpatientsSevenDayAverageQF= SevenDayAverageQF)
 
 
-write_csv(g_weekly_healthboard_od, glue(od_folder, "weekly_admissions_occupancy_HB_{od_report_date}.csv"),na = "")
+View(g_weekly_healthboard_od, glue(od_folder, "weekly_admissions_occupancy_HB_{od_report_date}.csv"),na = "")
 
 
 # #### flu and respiratory admissions by HB #####
@@ -125,7 +125,15 @@ g_weekly_resp_hb_od<- df_hb_weekly %>%
          RSVAdmissions,
          RSVAdmissionsQF)
 
-write_csv(g_weekly_resp_hb_od,
+pre_summer_2025<-g_weekly_resp_hb_od %>% 
+  filter(WeekEnding< "20250518")
+summer_2025<-g_weekly_resp_hb_od %>% 
+  filter(WeekEnding>= "20250518" & HealthBoardOfTreatmentQF =="d")
+
+
+g_weekly_resp_hb_od_new <- (rbind(pre_summer_2025, summer_2025))
+
+write_csv(g_weekly_resp_hb_od_new,
           glue(od_folder, "weekly_respiratory_admissions_HB_{od_report_date}.csv"),na = "")
 
 
