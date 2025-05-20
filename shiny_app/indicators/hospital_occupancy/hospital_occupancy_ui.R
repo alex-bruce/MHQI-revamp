@@ -53,13 +53,13 @@ tagList(
 
   ), # fluid row
 
-  tagList(h2("Seven day average of inpatients with COVID-19 in hospital by NHS Health Board of treatment; week ending")),
-
-
-  fluidRow(width=12,
-           box(width = NULL,
-               withNavySpinner(dataTableOutput("hospital_occupancy_hb_table"))),
-  ),
+  # tagList(h2("Seven day average of inpatients with COVID-19 in hospital by NHS Health Board of treatment; week ending")),
+  # 
+  # 
+  # fluidRow(width=12,
+  #          box(width = NULL,
+  #              withNavySpinner(dataTableOutput("hospital_occupancy_hb_table"))),
+  # ),
 
   fluidRow(
     br()),

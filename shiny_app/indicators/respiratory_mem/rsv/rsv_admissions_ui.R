@@ -78,16 +78,16 @@ tagList(
     linebreaks(1)
   ), # fluidRow
 # 
-fluidRow(width = 12,
-         tagList(h2("Number of acute RSV admissions to hospital by NHS Health Board of Treatment; week ending")),
-         linebreaks(1)), #fluidRow
-
-fluidRow(width=12,
-         box(width = NULL,
-             withNavySpinner(dataTableOutput("rsv_admissions_hb_table"))),
-         fluidRow(
-           width=12, linebreaks(1))
-),
+# fluidRow(width = 12,
+#          tagList(h2("Number of acute RSV admissions to hospital by NHS Health Board of Treatment; week ending")),
+#          linebreaks(1)), #fluidRow
+# 
+# fluidRow(width=12,
+#          box(width = NULL,
+#              withNavySpinner(dataTableOutput("rsv_admissions_hb_table"))),
+#          fluidRow(
+#            width=12, linebreaks(1))
+# ),
 # pyramid sections 
 # fluidRow(  
 #   
