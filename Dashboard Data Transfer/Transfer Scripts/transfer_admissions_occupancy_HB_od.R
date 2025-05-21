@@ -95,9 +95,9 @@ left_join(i_od_occupancy, by=(c("WeekEnding", "HealthBoardName"))) %>%
 
 ##### remove qualifiers from summer 2025 data
 
-weekly_pre_summer_2025<-g_weekly_resp_hb_od %>% 
+weekly_pre_summer_2025<-g_weekly_healthboard_od %>% 
   filter(WeekEnding< "20250518")
-weekly_summer_2025<-g_weekly_resp_hb_od %>% 
+weekly_summer_2025<-g_weekly_healthboard_od %>% 
   filter(WeekEnding>= "20250518" & HealthBoardOfTreatmentQF =="d")
 
 
