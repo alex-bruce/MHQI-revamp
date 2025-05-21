@@ -31,9 +31,11 @@ tagList(
                                                actionButton("glossary",
                                                             label = "Go to glossary",
                                                             icon = icon_no_warning_fn("paper-plane")
-                                                            ),
+                                                            )), 
+                                               p("Due to low levels of hospital admissions for COVID-19, Influenza and RSV, Public Heath Scotland will now only be reporting Scotland level figures until October 2025."),
                                                h6("hidden text for padding page")
-                                               )
+                                              
+                                               ,
                                             ),
 
 

@@ -57,6 +57,8 @@ tagList(
                                         label = "Go to glossary",
                                         icon = icon_no_warning_fn("paper-plane")
                                     )),
+p("Due to low levels of hospital admissions for COVID-19, Influenza and RSV, Public Heath Scotland will now only be reporting Scotland level figures until October 2025."),
+
                                                                       # This text is hidden by css but helps pad the box at the bottom
                                      h6("hidden text for padding page")
                             )))), # headline

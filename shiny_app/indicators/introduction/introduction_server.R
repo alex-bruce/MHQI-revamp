@@ -23,9 +23,10 @@ output$introduction_about <- renderUI({
             to severe complications including death."),
           p("This interactive dashboard presents data on viral respiratory diseases in Scotland to support the understanding
             of transmission of infection and NHS service planning and policy."),
-          p("Please note that release of information involving small numbers carries a risk that individuals could be identified.",
+                    p("Please note that release of information involving small numbers carries a risk that individuals could be identified.",
             "We have carefully considered and assessed these risks, taking steps to reduce them as much as possible,",
-            "and balancing them with the need to release useful information."),
+            "and balancing them with the need to release useful information.",
+            "Due to low levels of hospital admissions for COVID-19, Influenza and RSV, Public Heath Scotland will now only be reporting Scotland level figures until October 2025."), 
           p(glue("This dashboard was last updated on {Deployment_Date} to include data up to {data_recent_date}.")),
           br(),
 

@@ -9,7 +9,7 @@ tagList(
 
 #headline values are created in the setup script, occupancy updated to use the weekly HB values, filtered to Scotland
   fluidRow(width = 12,
-           tagList(h2("Number of inpatients with COVID-19 in hospital (seven day average)"),
+           tagList(h2("Number of inpatients with COVID-19 in hospital (seven day average) in Scotland"),
                    tags$div(class = "headline",
                             br(),
 #                            h3(glue("Seven day average hospital occupancy (inpatients) on the Sunday of the latest three weeks available")),
@@ -28,8 +28,12 @@ tagList(
                               color = "navy",
                               icon = icon_no_warning_fn("calendar-week")),
                             h4("*Snapshot as at a Sunday"),
+p("Due to low levels of hospital admissions for COVID-19, Influenza and RSV, Public Heath Scotland will now only be reporting Scotland level figures until October 2025."),
                             # This text is hidden by css but helps pad the box at the bottom
-                            h6("hidden text for padding page"))),
+                            h6("hidden text for padding page")),
+
+),
+
            linebreaks(1)),
 
   fluidRow(
