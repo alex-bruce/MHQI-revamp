@@ -107,7 +107,7 @@ g_flu_adm_scot <- g_flu_adm_hb  %>%
   mutate(HealthBoardOfTreatment = "Scotland")
 
 g_flu_adm_hb %<>%
-  mutate(summer_2025_flag = case_when(WeekEnding > summer_2025 ~"flag",
+  mutate(summer_2025_flag = case_when(WeekEnding >= summer_2025 ~"flag",
                                       TRUE~"")) %>% 
   filter(summer_2025_flag !="flag")  %>%
   select(-summer_2025_flag) %>% 

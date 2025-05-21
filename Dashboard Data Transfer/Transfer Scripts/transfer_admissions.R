@@ -228,7 +228,7 @@ g_adm_hb_scot <- i_chiadm %>%
   select(WeekEnding, HealthBoard, TotalInfections)
 
 g_adm_hb %<>%
-  mutate(summer_2025_flag = case_when(WeekEnding > summer_2025 ~"flag",
+  mutate(summer_2025_flag = case_when(WeekEnding >= summer_2025 ~"flag",
                                       TRUE~"")) %>% 
   filter(summer_2025_flag !="flag")  %>%
   select(-summer_2025_flag) %>% 
