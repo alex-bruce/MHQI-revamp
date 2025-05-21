@@ -56,7 +56,7 @@ g_occupancy_hospital_scotland <- g_occupancy_hospital_healthboard %>%
 
 ###############
 g_occupancy_hospital <- g_occupancy_hospital_healthboard %>% 
-    filter(Date <= 20250504) %>%  # filter for summer month reporting. Temporary
+    filter(Date <= 20250510) %>%  # filter for summer month reporting. Temporary
   rbind(g_occupancy_hospital_scotland) %>%
   group_by(HealthBoard) %>%
   mutate(SevenDayAverage = round_half_up(zoo::rollmean(HospitalOccupancy, k = 7, fill = NA, align="right"),0),
@@ -81,7 +81,7 @@ write_csv(g_occupancy_hospital, glue(ukhsa_adm, "Occupancy_Hospital.csv",
 
 
 g_occupancy_hospital_hb <-g_occupancy_hospital_healthboard %>% 
-  filter(Date <= 20250504) %>% # filter for summer month reporting. Temporary
+  filter(Date <= 20250510) %>% # filter for summer month reporting. Temporary
   rbind(g_occupancy_hospital_scotland) %>%
   group_by(HealthBoard) %>%
   mutate(SevenDayAverage = round_half_up(zoo::rollmean(HospitalOccupancy, k = 7, fill = NA, align="right"),0),

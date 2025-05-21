@@ -197,7 +197,7 @@ g_adm_agegroup  <- i_chiadm %>%
 
 write.csv(g_adm_agegroup, glue(output_folder, "Admissions_AgeGrp.csv"), row.names = FALSE)
 
-rm(g_adm_agegroup, adm_path)
+#rm(g_adm_agegroup, adm_path)
 
 
 g_simd_trend <- i_simd_trend %>%
