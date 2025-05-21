@@ -8,7 +8,7 @@ tagList(
 
   fluidRow(width = 12,
                   tabPanel("Acute hospital admissions",
-                           tagList(h2("Number of acute COVID-19 admissions to hospital"),
+                           tagList(h2("Number of acute COVID-19 admissions to hospital in Scotland"),
                                    tags$div(class = "headline",
                                             linebreaks(1),
                                             #h3("Weekly totals from last three weeks"),
