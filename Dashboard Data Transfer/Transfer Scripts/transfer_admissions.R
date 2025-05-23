@@ -74,74 +74,69 @@ write_csv(g_adm_weekly, glue(output_folder, "Admissions_Weekly.csv"))
 #### b) Admissions_Age_Breakdown ####
 #-----------------------------------#
 # 
-# g_adm_agebd <- i_chiadm %>%
-#   mutate(WeekOfAdmission = ceiling_date(
-#     as.Date(admission_date),unit="week",week_start=7, change_on_boundary=FALSE)
-#   ) %>%
-#   mutate(
-#     AgeYear = as.numeric(age_year),
-#     AgeGroup = case_when(AgeYear < 18 ~ 'Under 18',
-#                          AgeYear < 30 ~ '18-29',
-#                          AgeYear < 40 ~ '30-39',
-#                          AgeYear < 50 ~ '40-49',
-#                          AgeYear < 55 ~ '50-54',
-#                          AgeYear < 60 ~ '55-59',
-#                          AgeYear < 65 ~ '60-64',
-#                          AgeYear < 70 ~ '65-69',
-#                          AgeYear < 75 ~ '70-74',
-#                          AgeYear < 80 ~ '75-79',
-#                          AgeYear < 200 ~ '80+',
-#                          is.na(AgeYear) ~ 'Unknown')) %>%
-#   group_by(WeekOfAdmission, AgeGroup) %>%
-#   summarise(TotalInfections = n()) %>%
-#   ungroup() 
-# 
-# totals <- g_adm_agebd %>%
-#   group_by(WeekOfAdmission) %>%
-#   summarise(TotalInfections = sum(TotalInfections)) %>%
-#   ungroup() %>%
-#   mutate(AgeGroup = "Total")
-# 
-# g_adm_agebd %<>%
-#   #create a summer flag to filter out age breakdown data before joining the total values to the  ag_bd dataframe
-#   mutate(summer_2025_flag = case_when(WeekOfAdmission >= summer_2025 ~"flag",
-#                                       TRUE~"")) %>% 
-#   filter(summer_2025_flag !="flag")  %>%
-#   select(-summer_2025_flag) %>% 
-#   full_join(totals) %>% 
-#   mutate(AgeGroup = factor(AgeGroup,
-#                            levels = c("Under 18", "18-29", "30-39", "40-49", "50-54", "55-59",
-#                                       "60-64", "65-69", "70-74", "75-79", "80+", "Total", "Unknown"))) %>%
-#   arrange(WeekOfAdmission, AgeGroup) %>%
-#   mutate(AgeGroupQF = ifelse(AgeGroup == "Total", "d", "")) %>%
-#   #Apply Suppression - NOTE: setting to -999 temporarily to highlight
-#   mutate(Original = TotalInfections,
-#          TotalInfections =  ifelse(TotalInfections <5, -999, TotalInfections),
-#          TempFlag = ifelse(TotalInfections == -999, 1, 0)) %>%
-#   #Apply Secondary Suppression
-#   group_by(WeekOfAdmission) %>%
-#   mutate(Row = row_number())  %>% 
-#   mutate(TotalInfections = ifelse(
-#          test = (abs(TotalInfections) == min(abs(TotalInfections)) & (sum(TempFlag) == 1)),
-#          yes = -999, no = TotalInfections),
-#          TotalInfectionsQF = ifelse(TotalInfections == -999, "c", ""),
-#          TotalInfections = ifelse(TotalInfections == -999, NA, TotalInfections)) %>%
-#   mutate(WeekOfAdmission = format(WeekOfAdmission, "%Y%m%d")) %>% 
-#     select(WeekOfAdmission, AgeGroup, AgeGroupQF, TotalInfections, TotalInfectionsQF)
-# 
-# 
-# #write.csv(g_adm_agebd, glue(output_folder, "Admissions_AgeBD.csv"), row.names = FALSE)
-# 
-# # Open data Output
-# g_adm_agebd_od<-g_adm_agebd %>%
-#   mutate(Country="S92000003") %>%
-#   select(WeekEnding=WeekOfAdmission,Country, AgeGroup, AgeGroupQF,
-#          Admissions=TotalInfections,
-#          AdmissionsQF=TotalInfectionsQF)
+g_adm_agebd <- i_chiadm %>%
+  mutate(WeekOfAdmission = ceiling_date(
+    as.Date(admission_date),unit="week",week_start=7, change_on_boundary=FALSE)
+  ) %>%
+  mutate(
+    AgeYear = as.numeric(age_year),
+    AgeGroup = case_when(AgeYear < 18 ~ 'Under 18',
+                         AgeYear < 30 ~ '18-29',
+                         AgeYear < 40 ~ '30-39',
+                         AgeYear < 50 ~ '40-49',
+                         AgeYear < 55 ~ '50-54',
+                         AgeYear < 60 ~ '55-59',
+                         AgeYear < 65 ~ '60-64',
+                         AgeYear < 70 ~ '65-69',
+                         AgeYear < 75 ~ '70-74',
+                         AgeYear < 80 ~ '75-79',
+                         AgeYear < 200 ~ '80+',
+                         is.na(AgeYear) ~ 'Unknown')) %>%
+  group_by(WeekOfAdmission, AgeGroup) %>%
+  summarise(TotalInfections = n()) %>%
+  ungroup()
 
-#write_csv(g_adm_agebd_od, glue(od_folder, "weekly_admissions_ageBD_{od_report_date}.csv"),na = "")
+totals <- g_adm_agebd %>%
+  group_by(WeekOfAdmission) %>%
+  summarise(TotalInfections = sum(TotalInfections)) %>%
+  ungroup() %>%
+  mutate(AgeGroup = "Total")
 
-#rm(g_adm_agebd, totals, g_adm_agebd_od)
+g_adm_agebd %<>%
+  full_join(totals) %>%
+  mutate(AgeGroup = factor(AgeGroup,
+                           levels = c("Under 18", "18-29", "30-39", "40-49", "50-54", "55-59",
+                                      "60-64", "65-69", "70-74", "75-79", "80+", "Total", "Unknown"))) %>%
+  arrange(WeekOfAdmission, AgeGroup) %>%
+  mutate(AgeGroupQF = ifelse(AgeGroup == "Total", "d", "")) %>%
+  #Apply Suppression - NOTE: setting to -999 temporarily to highlight
+  mutate(Original = TotalInfections,
+         TotalInfections =  ifelse(TotalInfections <5, -999, TotalInfections),
+         TempFlag = ifelse(TotalInfections == -999, 1, 0)) %>%
+  #Apply Secondary Suppression
+  group_by(WeekOfAdmission) %>%
+  mutate(Row = row_number())  %>%
+  mutate(TotalInfections = ifelse(
+         test = (abs(TotalInfections) == min(abs(TotalInfections)) & (sum(TempFlag) == 1)),
+         yes = -999, no = TotalInfections),
+         TotalInfectionsQF = ifelse(TotalInfections == -999, "c", ""),
+         TotalInfections = ifelse(TotalInfections == -999, NA, TotalInfections)) %>%
+  mutate(WeekOfAdmission = format(WeekOfAdmission, "%Y%m%d")) %>%
+    select(WeekOfAdmission, AgeGroup, AgeGroupQF, TotalInfections, TotalInfectionsQF)
+# 
+
+write.csv(g_adm_agebd, glue(output_folder, "Admissions_AgeBD.csv"), row.names = FALSE)
+
+# Open data Output
+g_adm_agebd_od<-g_adm_agebd %>%
+  mutate(Country="S92000003") %>%
+  select(WeekEnding=WeekOfAdmission,Country, AgeGroup, AgeGroupQF,
+         Admissions=TotalInfections,
+         AdmissionsQF=TotalInfectionsQF)
+
+write_csv(g_adm_agebd_od, glue(od_folder, "weekly_admissions_ageBD_{od_report_date}.csv"),na = "")
+
+rm(g_adm_agebd, totals, g_adm_agebd_od)
 
 #-----------------------------#
 #### c) Admissions_AgeSIMD ####
