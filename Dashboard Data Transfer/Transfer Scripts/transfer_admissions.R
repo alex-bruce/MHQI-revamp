@@ -17,6 +17,7 @@ i_simd_trend <- read_csv_with_options(glue(input_data, "/{format(report_date-2, 
 i_chiadm %<>% filter(admission_date <= (report_date - 3))
 i_adm %<>% filter(admission_date <= (report_date - 3))
 
+
 # age sex input files
 # i_age_sex_weekly <- read_csv_with_options(glue(input_data, "/age_sex_weekly_adm_all paths_v2_TEST.csv"))
 # 
@@ -67,12 +68,12 @@ g_adm_weekly<-g_adm %>%
 
 write_csv(g_adm_weekly, glue(output_folder, "Admissions_Weekly.csv"))
 
-rm(g_adm, g_adm_weekly)
+#rm(g_adm, g_adm_weekly)
 
 #-----------------------------------#
 #### b) Admissions_Age_Breakdown ####
 #-----------------------------------#
-
+# 
 g_adm_agebd <- i_chiadm %>%
   mutate(WeekOfAdmission = ceiling_date(
     as.Date(admission_date),unit="week",week_start=7, change_on_boundary=FALSE)
@@ -114,15 +115,15 @@ g_adm_agebd %<>%
          TempFlag = ifelse(TotalInfections == -999, 1, 0)) %>%
   #Apply Secondary Suppression
   group_by(WeekOfAdmission) %>%
-  mutate(Row = row_number()) %>%
+  mutate(Row = row_number())  %>%
   mutate(TotalInfections = ifelse(
          test = (abs(TotalInfections) == min(abs(TotalInfections)) & (sum(TempFlag) == 1)),
          yes = -999, no = TotalInfections),
          TotalInfectionsQF = ifelse(TotalInfections == -999, "c", ""),
          TotalInfections = ifelse(TotalInfections == -999, NA, TotalInfections)) %>%
   mutate(WeekOfAdmission = format(WeekOfAdmission, "%Y%m%d")) %>%
-  select(WeekOfAdmission, AgeGroup, AgeGroupQF, TotalInfections, TotalInfectionsQF)
-
+    select(WeekOfAdmission, AgeGroup, AgeGroupQF, TotalInfections, TotalInfectionsQF)
+# 
 
 write.csv(g_adm_agebd, glue(output_folder, "Admissions_AgeBD.csv"), row.names = FALSE)
 
@@ -181,13 +182,17 @@ g_adm_agegroup  <- i_chiadm %>%
   mutate(week_ending = ceiling_date(as.Date(admission_date), unit = "week", change_on_boundary = F)) %>%
   group_by(week_ending, custom_age_group_2) %>%
   summarise(number = n()) %>%
+  mutate(summer_2025_flag = case_when(week_ending >= summer_2025 ~"flag", TRUE~"")) %>% 
   dplyr::rename(Age = custom_age_group_2,
                 Date = week_ending,
-                Admissions = number)
+                Admissions = number)  %>% 
+  filter(summer_2025_flag !="flag")  %>%
+  select(-summer_2025_flag) 
+
 
 write.csv(g_adm_agegroup, glue(output_folder, "Admissions_AgeGrp.csv"), row.names = FALSE)
 
-rm(g_adm_agegroup, adm_path)
+#rm(g_adm_agegroup, adm_path)
 
 
 g_simd_trend <- i_simd_trend %>%
@@ -218,6 +223,10 @@ g_adm_hb_scot <- i_chiadm %>%
   select(WeekEnding, HealthBoard, TotalInfections)
 
 g_adm_hb %<>%
+  mutate(summer_2025_flag = case_when(WeekEnding >= summer_2025 ~"flag",
+                                      TRUE~"")) %>% 
+  filter(summer_2025_flag !="flag")  %>%
+  select(-summer_2025_flag) %>% 
   bind_rows(g_adm_hb_scot) %>%
   mutate(HealthBoard = factor(HealthBoard,
                            levels = c("NHS AYRSHIRE & ARRAN", "NHS BORDERS", "NHS DUMFRIES & GALLOWAY", "NHS FIFE", "NHS FORTH VALLEY", "NHS GRAMPIAN",
@@ -251,39 +260,39 @@ write.csv(g_adm_hb, glue(output_folder, "Admissions_HB.csv"), row.names = FALSE)
 
 # create 3 week framework to hang Covid admissions
 
-three_sunday_dates <- data.frame(WeekEnding=seq(as.Date("2018-10-07"), as.Date(od_date-1), "week")) %>%
-  slice_tail(n = 3)
+# three_sunday_dates <- data.frame(WeekEnding=seq(as.Date("2018-10-07"), as.Date(od_date-1), "week")) %>%
+#   slice_tail(n = 3)
+# 
+# HealthBoardName= data.frame(HealthBoardOfTreatment=c("NHS Ayrshire and Arran",  "NHS Borders",
+#                                                      "NHS Dumfries and Galloway","NHS Fife",
+#                                                      "NHS Forth Valley","NHS Grampian",
+#                                                      "NHS Greater Glasgow and Clyde",
+#                                                      "NHS Highland","NHS Lanarkshire",
+#                                                      "NHS Lothian","NHS Orkney","NHS Shetland","NHS Tayside",
+#                                                      "NHS Western Isles","Golden Jubilee National Hospital",
+#                                                      "Scotland" ))
+# 
+# hb_last_three_weeks <- expand.grid(HealthBoardOfTreatment=unique(HealthBoardName$HealthBoardOfTreatment),
+#                                    WeekEnding=unique(three_sunday_dates$WeekEnding),
+#                                    KEEP.OUT.ATTRS = FALSE,
+#                                    stringsAsFactors = FALSE)
+#
+# g_adm_hb_3weeks<-g_adm_hb %>%
+#   filter(WeekEnding>=od_sunday_minus_14) %>%
+#   dplyr::rename(HealthBoardOfTreatment = HealthBoard)
 
-HealthBoardName= data.frame(HealthBoardOfTreatment=c("NHS Ayrshire and Arran",  "NHS Borders",
-                                                     "NHS Dumfries and Galloway","NHS Fife",
-                                                     "NHS Forth Valley","NHS Grampian",
-                                                     "NHS Greater Glasgow and Clyde",
-                                                     "NHS Highland","NHS Lanarkshire",
-                                                     "NHS Lothian","NHS Orkney","NHS Shetland","NHS Tayside",
-                                                     "NHS Western Isles","Golden Jubilee National Hospital",
-                                                     "Scotland" ))
-
-hb_last_three_weeks <- expand.grid(HealthBoardOfTreatment=unique(HealthBoardName$HealthBoardOfTreatment),
-                                   WeekEnding=unique(three_sunday_dates$WeekEnding),
-                                   KEEP.OUT.ATTRS = FALSE,
-                                   stringsAsFactors = FALSE)
-
-g_adm_hb_3weeks<-g_adm_hb %>%
-  filter(WeekEnding>=od_sunday_minus_14) %>%
-  dplyr::rename(HealthBoardOfTreatment = HealthBoard)
-
-
-g_adm_hb_3weeks_full<-hb_last_three_weeks %>%
-  left_join(g_adm_hb_3weeks, by=c("HealthBoardOfTreatment","WeekEnding")) %>%
-  select(WeekEnding, HealthBoardOfTreatment, TotalInfections) %>%
-  mutate(TotalInfections=if_else(is.na(TotalInfections),0,TotalInfections))
-
-write.csv(g_adm_hb_3weeks_full, glue(output_folder, "Admissions_HB_3wks.csv"), row.names = FALSE)
-
-rm(g_adm_hb)
-
-rm(i_rsv_hb_admissions, g_rsv_adm_scot, g_rsv_adm_hb,
-   three_sunday_dates, HealthBoardName, hb_last_three_weeks, g_adm_hb_3weeks, g_adm_hb_3weeks_full)
+#
+# g_adm_hb_3weeks_full<-hb_last_three_weeks %>%
+#   left_join(g_adm_hb_3weeks, by=c("HealthBoardOfTreatment","WeekEnding")) %>%
+#   select(WeekEnding, HealthBoardOfTreatment, TotalInfections) %>%
+#   mutate(TotalInfections=if_else(is.na(TotalInfections),0,TotalInfections))
+#
+# write.csv(g_adm_hb_3weeks_full, glue(output_folder, "Admissions_HB_3wks.csv"), row.names = FALSE)
+#
+# rm(g_adm_hb)
+# 
+# rm(i_rsv_hb_admissions, g_rsv_adm_scot, g_rsv_adm_hb,
+#    three_sunday_dates, HealthBoardName, hb_last_three_weeks, g_adm_hb_3weeks, g_adm_hb_3weeks_full)
 
 #--------------------------------------------------------#
 ###### g) admissions age/sex for covid, flu and rsv ######

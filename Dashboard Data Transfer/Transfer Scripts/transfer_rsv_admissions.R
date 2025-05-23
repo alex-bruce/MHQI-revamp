@@ -77,6 +77,10 @@ g_rsv_adm_scot <- g_rsv_adm_hb  %>%
   mutate(HealthBoardOfTreatment = "Scotland")
 
 g_rsv_adm_hb %<>%
+  mutate(summer_2025_flag = case_when(WeekEnding >= summer_2025 ~"flag",
+                                      TRUE~"")) %>% 
+  filter(summer_2025_flag !="flag")  %>%
+  select(-summer_2025_flag) %>% 
   bind_rows(g_rsv_adm_scot) %>%
   arrange(WeekEnding)
 
@@ -84,42 +88,42 @@ write.csv(g_rsv_adm_hb, glue(output_folder, "RSV_Admissions_HB.csv"), row.names 
 
 
 #  create 3 week framework to hang  admissions ######
-
-three_sunday_dates <- data.frame(WeekEnding=seq(as.Date("2018-10-07"), as.Date(od_date-1), "week")) %>%
- # mutate(WeekEnding= format(strptime(WeekEnding, format = "%Y-%m-%d")) ) %>%
-  slice_tail(n = 3)
-
-HealthBoardName= data.frame(HealthBoardOfTreatment=c("NHS Ayrshire and Arran",  "NHS Borders",
-                                              "NHS Dumfries and Galloway","NHS Fife",
-                                              "NHS Forth Valley","NHS Grampian",
-                                              "NHS Greater Glasgow and Clyde",
-                                              "NHS Highland","NHS Lanarkshire",
-                                              "NHS Lothian","NHS Orkney","NHS Shetland","NHS Tayside",
-                                              "NHS Western Isles","Golden Jubilee National Hospital",
-                                              "Scotland" ))
-
-
-hb_last_three_weeks <- expand.grid(HealthBoardOfTreatment=unique(HealthBoardName$HealthBoardOfTreatment),
-                                   WeekEnding=unique(three_sunday_dates$WeekEnding),
-                                   KEEP.OUT.ATTRS = FALSE,
-                                   stringsAsFactors = FALSE)
-
-g_rsv_adm_hb_3weeks<-g_rsv_adm_hb %>%
-  filter(WeekEnding>=od_sunday_minus_14)
-
-
-g_rsv_adm_hb_3weeks_full<-hb_last_three_weeks %>%
-  left_join(g_rsv_adm_hb_3weeks, by=c("HealthBoardOfTreatment","WeekEnding")) %>%
-  select(WeekEnding, HealthBoardOfTreatment, TotalInfections) %>%
-  mutate(TotalInfections=if_else(is.na(TotalInfections),0,TotalInfections))
-  #arrange(HealthBoardOfTreatment)
-
-
-write.csv(g_rsv_adm_hb_3weeks_full, glue(output_folder, "RSV_Admissions_HB_3wks.csv"), row.names = FALSE)
+# 
+# three_sunday_dates <- data.frame(WeekEnding=seq(as.Date("2018-10-07"), as.Date(od_date-1), "week")) %>%
+#  # mutate(WeekEnding= format(strptime(WeekEnding, format = "%Y-%m-%d")) ) %>%
+#   slice_tail(n = 3)
+# 
+# HealthBoardName= data.frame(HealthBoardOfTreatment=c("NHS Ayrshire and Arran",  "NHS Borders",
+#                                               "NHS Dumfries and Galloway","NHS Fife",
+#                                               "NHS Forth Valley","NHS Grampian",
+#                                               "NHS Greater Glasgow and Clyde",
+#                                               "NHS Highland","NHS Lanarkshire",
+#                                               "NHS Lothian","NHS Orkney","NHS Shetland","NHS Tayside",
+#                                               "NHS Western Isles","Golden Jubilee National Hospital",
+#                                               "Scotland" ))
+# 
+# 
+# hb_last_three_weeks <- expand.grid(HealthBoardOfTreatment=unique(HealthBoardName$HealthBoardOfTreatment),
+#                                    WeekEnding=unique(three_sunday_dates$WeekEnding),
+#                                    KEEP.OUT.ATTRS = FALSE,
+#                                    stringsAsFactors = FALSE)
+# 
+# g_rsv_adm_hb_3weeks<-g_rsv_adm_hb %>%
+#   filter(WeekEnding>=od_sunday_minus_14)
+# 
+# 
+# g_rsv_adm_hb_3weeks_full<-hb_last_three_weeks %>%
+#   left_join(g_rsv_adm_hb_3weeks, by=c("HealthBoardOfTreatment","WeekEnding")) %>%
+#   select(WeekEnding, HealthBoardOfTreatment, TotalInfections) %>%
+#   mutate(TotalInfections=if_else(is.na(TotalInfections),0,TotalInfections))
+#   #arrange(HealthBoardOfTreatment)
 
 
+#write.csv(g_rsv_adm_hb_3weeks_full, glue(output_folder, "RSV_Admissions_HB_3wks.csv"), row.names = FALSE)
 
-rm(i_rsv_hb_admissions, g_rsv_adm_scot, g_rsv_adm_hb , g_rsv_adm_hb_3weeks,
-   g_rsv_adm_hb_3weeks_full, hb_last_three_weeks, HealthBoardName,
-   three_sunday_dates)
+
+
+# rm(i_rsv_hb_admissions, g_rsv_adm_scot, g_rsv_adm_hb , g_rsv_adm_hb_3weeks,
+#    g_rsv_adm_hb_3weeks_full, hb_last_three_weeks, HealthBoardName,
+#    three_sunday_dates)
 
