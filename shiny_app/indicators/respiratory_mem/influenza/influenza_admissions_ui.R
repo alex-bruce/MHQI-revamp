@@ -27,7 +27,7 @@ tagList(
   fluidRow(width = 12,
            tabPanel(stringr::str_to_sentence("influenza"),
                     # headline figures for the week in Scotland
-                    tagList(h2(glue("Number of acute influenza admissions to hospital")),
+                    tagList(h2(glue("Number of acute influenza admissions to hospital in Scotland")),
                             tags$div(class = "headline",
                                      br(),
 #                                     h3(glue("Total number of influenza hospital admissions in Scotland over the last two weeks")),
@@ -57,6 +57,10 @@ tagList(
                                         label = "Go to glossary",
                                         icon = icon_no_warning_fn("paper-plane")
                                     )),
+p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
+  "reporting Scotland level admissions for COVID-19,",
+  "Influenza and RSV, due to low levels of hospital admissions."),
+
                                                                       # This text is hidden by css but helps pad the box at the bottom
                                      h6("hidden text for padding page")
                             )))), # headline
@@ -81,16 +85,16 @@ tagList(
     ), # tabBox
     linebreaks(1)
       ), # fluidRow
-fluidRow(width = 12,
-         tagList(h2("Number of acute influenza admissions to hospital by NHS Health Board of Treatment; week ending")),
-         linebreaks(1)), #fluidRow
-
-fluidRow(width=12,
-         box(width = NULL,
-             withNavySpinner(dataTableOutput("flu_admissions_hb_table"))),
-         fluidRow(
-           width=12, linebreaks(1))
-),
+# fluidRow(width = 12,
+#          tagList(h2("Number of acute influenza admissions to hospital by NHS Health Board of Treatment; week ending")),
+#          linebreaks(1)), #fluidRow
+# 
+# fluidRow(width=12,
+#          box(width = NULL,
+#              withNavySpinner(dataTableOutput("flu_admissions_hb_table"))),
+#          fluidRow(
+#            width=12, linebreaks(1))
+# ),
 
 # pyramid sections 
 # 

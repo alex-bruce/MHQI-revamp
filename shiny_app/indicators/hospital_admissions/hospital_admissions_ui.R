@@ -8,7 +8,7 @@ tagList(
 
   fluidRow(width = 12,
                   tabPanel("Acute hospital admissions",
-                           tagList(h2("Number of acute COVID-19 admissions to hospital"),
+                           tagList(h2("Number of acute COVID-19 admissions to hospital in Scotland"),
                                    tags$div(class = "headline",
                                             linebreaks(1),
                                             #h3("Weekly totals from last three weeks"),
@@ -31,9 +31,13 @@ tagList(
                                                actionButton("glossary",
                                                             label = "Go to glossary",
                                                             icon = icon_no_warning_fn("paper-plane")
-                                                            ),
+                                                            )), 
+                                               p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
+                                                 "reporting Scotland level admissions for COVID-19,",
+                                                 "Influenza and RSV, due to low levels of hospital admissions."),
                                                h6("hidden text for padding page")
-                                               )
+                                              
+                                               ,
                                             ),
 
 
@@ -56,13 +60,13 @@ tagList(
                            ),
 
 
-                                    tagList(h2("Number of acute COVID-19 admissions to hospital by NHS Health Board of treatment; week ending")),
-
-
-                           fluidRow(width=12,
-                                    box(width = NULL,
-                                        withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))),
-                           ),
+                           #          tagList(h2("Number of acute COVID-19 admissions to hospital by NHS Health Board of treatment; week ending")),
+                           # 
+                           # 
+                           # fluidRow(width=12,
+                           #          box(width = NULL,
+                           #              withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))),
+                           # ),
 
                            tagList(h2("Weekly number of acute COVID-19 hospital admissions by deprivation category (SIMD)"))
 
