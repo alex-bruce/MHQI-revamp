@@ -26,7 +26,10 @@ output$introduction_about <- renderUI({
                     p("Please note that release of information involving small numbers carries a risk that individuals could be identified.",
             "We have carefully considered and assessed these risks, taking steps to reduce them as much as possible,",
             "and balancing them with the need to release useful information.",
-            "Due to low levels of hospital admissions for COVID-19, Influenza and RSV, Public Heath Scotland will now only be reporting Scotland level figures until October 2025."), 
+            "Between 22 May and October 2025, Public Health Scotland (PHS) will be reporting",
+            "Scotland level admissions for COVID-19, Influenza and RSV, due to low levels of hospital admissions.", 
+            "This approach aligns to the pre-pandemic reporting schedule for respiratory pathogens, which typically follow a",
+            "seasonal pattern with most cases/admissions occurring between October and April/May."), 
           p(glue("This dashboard was last updated on {Deployment_Date} to include data up to {data_recent_date}.")),
           br(),
 

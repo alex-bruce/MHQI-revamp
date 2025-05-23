@@ -15,14 +15,14 @@ tagList(
            p("Please refer to metadata tab for further information on testing policies."),
            ), #fluidRow
 
-  # fluidRow(width = 12,
-  #          tagList(h2("Number and rate of acute hospital admissions due to COVID-19, influenza and RSV (week ending)")),
-  #          linebreaks(1)), #fluidRow
+  fluidRow(width = 12,
+           tagList(h2("Number and rate of acute hospital admissions due to COVID-19, influenza and RSV (week ending)")),
+           linebreaks(1)), #fluidRow
 
   fluidRow(width=12,
-           # box(width = NULL,
-           #     withNavySpinner(dataTableOutput("hosp_adms_intro_table"))),
-           #linebreaks(1),
+           box(width = NULL,
+               withNavySpinner(dataTableOutput("hosp_adms_intro_table"))),
+           linebreaks(1),
            tagList(h2("Number of acute hospital admissions due to COVID-19, influenza and RSV")),
            linebreaks(1)),
 
