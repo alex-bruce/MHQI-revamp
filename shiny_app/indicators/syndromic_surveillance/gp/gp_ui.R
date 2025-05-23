@@ -9,9 +9,7 @@ tagList(
              "diagnosis is often referred as Influenza-like Illness (ILI) by General Practitioners",
              "(GP). ILI consultation rates are used internationally as a key measure of influenza",
              "activity in the community and is used to gauge the severity of influenza seasons each winter."),
-            p("Note: Due to technical reasons, GP consulatation data presented below only go up to week 19.",
-             "Investigations are currently ongoing into the cause and complete data will be presented in a future publication."),
-#             "More information on the definition of ILI can be found…"),
+            
            linebreaks(1)),
 
   fluidRow(width = 12,
