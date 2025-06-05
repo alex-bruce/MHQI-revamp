@@ -386,6 +386,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
   if(password_protect){
+    test <-  FALSE # set this to TRUE to deploy test version of the app
     source(file.path("password_protect/password_protect_server.R"), local = TRUE)$value
   }
 
