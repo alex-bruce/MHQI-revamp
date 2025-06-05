@@ -19,11 +19,15 @@ password_protect <- function(protect = TRUE){
 
 }
 
-deploy <- function(app_loc, pra = TRUE){
+deploy <- function(app_loc, test = TRUE, pra = TRUE){
 
   #protected <- is_password_protected(app_loc)
+  if(test) {
+    app_name = "phs-respiratory-covid-19-test"
+    password_protect(TRUE)
+  }
 
-  if(pra) {
+  else if(pra) {
     app_name = "phs-respiratory-covid-19-pra"
     password_protect(TRUE)
 
@@ -42,9 +46,14 @@ deploy <- function(app_loc, pra = TRUE){
 
 }
 
-check_logs <- function(app_loc, pra = TRUE){
+check_logs <- function(app_loc, test = TRUE, pra = TRUE){
+  
+  if(test) {
+    app_name = "phs-respiratory-covid-19-test"
+    password_protect(TRUE)
+  }
 
-  if(pra) {
+  else if(pra) {
     app_name = "phs-respiratory-covid-19-pra"
 
   } else {
