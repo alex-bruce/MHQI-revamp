@@ -88,8 +88,8 @@ tagList(h1("Metadata"),
                                    tags$li("Episodes of reinfection were included from 01 March 2022, so care should be taken when interpreting trends over time. For more information, see ",
                                            tags$a("here",
                                                   href = "https://publichealthscotland.scot/news/2022/february/covid-19-reporting-to-include-further-data-on-reinfections/"), "."),
-                                   tags$li("Patients are not included in the analysis if their first positive PCR or LFD test of the episode of infection is after their
-                                           date of discharge from hospital."),
+                                  # tags$li("Patients are not included in the analysis if their first positive PCR or LFD test of the episode of infection is after their
+                                   #        date of discharge from hospital."),
                                    tags$li("People who were admitted for a non-COVID-19 reason, who tested positive upon admission, may be included, as analysis does not take into account
                                            reason for hospitalisation."),
                                    tags$li("An admission is defined as a period of stay in a single hospital. There may be multiple admissions for a single patient
