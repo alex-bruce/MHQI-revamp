@@ -18,7 +18,12 @@ tagList(
              "For more information, please refer to the ",
              actionLink("jump_to_metadata_page", "Metadata"),
              "section."),
-           linebreaks(1)),
+           linebreaks(1),
+           "National Records of Scotland (NRS) also publish weekly information on deaths relating to all ",
+           "causes (",
+           tags$a(href="https://www.nrscotland.gov.uk/publications/deaths-registered-weekly-in-scotland/",
+                  "NRS (external website)", target="_blank"),
+           ")."),
   
   fluidRow(width = 12,
            tagList(h2("Weekly all-cause excess mortality (Euromomo, z-scores)"))),
