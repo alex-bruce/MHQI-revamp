@@ -20,11 +20,12 @@ altTextServer("influenza_cari_age_modal",
 
 # CARI - Overall RSV swabpos table
 output$influenza_cari_table <- renderDataTable({
-  Respiratory_Pathogens_CARI_Scot %>%
-    filter(Pathogen == "Influenza") %>%
+  flu_cari_subtype %>%
+    filter(Pathogen == input$flu_cari_selected_subtype) %>%
     arrange(desc(WeekEnding)) %>%
-    select(WeekEnding, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
+    select(WeekEnding, Pathogen, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
+           `Subtype` = Pathogen,
            `Total Samples` = TotalSamples,
            `Positive Samples` = PositiveSamples,
            `Test Positivity (%)` = SwabPositivity,
@@ -53,8 +54,8 @@ output$influenza_cari_age_table <- renderDataTable({
 
 # CARI - Overall RSV swabpos plot
 output$influenza_cari_plot <- renderPlotly({
-  Respiratory_Pathogens_CARI_Scot %>%
-    filter(Pathogen == "Influenza") %>%
+  flu_cari_subtype %>%
+    filter(Pathogen == input$flu_cari_selected_subtype) %>%
     create_cari_linechart()
   
 })

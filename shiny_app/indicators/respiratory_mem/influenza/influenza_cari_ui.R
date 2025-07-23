@@ -22,6 +22,22 @@ influenza_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
+flu_cari_subtype <- Respiratory_CARI_scotland %>%
+  filter(substr(Pathogen,1,9) %in% "Influenza") %>%
+  mutate(WeekBeginning = as.Date(WeekBeginning),
+         WeekEnding = as.Date(WeekEnding)) %>%
+  mutate(Pathogen = case_when(
+    Pathogen == "Influenza" ~ "Influenza - Type A and B",
+    Pathogen == "Influenza A" ~ "Influenza - Type A",
+    Pathogen == "Influenza B" ~ "Influenza - Type B",
+    Pathogen == "Influenza A (H1N1)" ~ "Influenza - Type A (H1N1)",
+    Pathogen == "Influenza A (H3)" ~ "Influenza - Type A (H3)",
+    Pathogen == "Influenza A (not subtyped)" ~ "Influenza - Type A (not subtyped)"
+  )) %>%
+  mutate(Pathogen = factor(Pathogen, levels = c("Influenza - Type A and B", "Influenza - Type A",
+                                                "Influenza - Type A (H1N1)", "Influenza - Type A (H3)",
+                                                "Influenza - Type A (not subtyped)", "Influenza - Type B")))
+
 tagList(
   
   fluidRow(width = 12,
@@ -60,6 +76,9 @@ tagList(
            tagList(h2("CARI - Test positivity for Influenza"))),
 
   fluidRow(
+    selectInput("flu_cari_selected_subtype", "Select subtype:", 
+                choices = sort(unique(flu_cari_subtype$Pathogen)),
+                selected = sort(unique(flu_cari_subtype$Pathogen))[1]),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
