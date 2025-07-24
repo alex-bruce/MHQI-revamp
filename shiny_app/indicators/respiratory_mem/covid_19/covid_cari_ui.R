@@ -106,13 +106,41 @@ tagList(
     linebreaks(1)
   ), # fluidRow
   
+  # fluidRow(width = 12,
+  #          tagList(h2("CARI - Test positivity for COVID-19 by NHS Health Board"))),
+  # 
+  # fluidRow(
+  #   selectInput("covid_cari_selected_board", "Select NHS Health Board of interest:", 
+  #               choices = sort(unique(covid_cari_hb$HBName)),
+  #               selected = sort(unique(covid_cari_hb$HBName))[1]),
+  #   tabBox(width = NULL,
+  #          type = "pills",
+  #          tabPanel("Plot",
+  #                   tagList(linebreaks(1),
+  #                           altTextUI("covid_cari_hb_modal"),
+  #                           swabposDefinitionUI("cari_covid_hb_swabpos"),
+  #                           ciDefinitionUI("cari_covid_hb_ci"),
+  #                           withNavySpinner(plotlyOutput("covid_cari_hb_plot")),
+  #                   )),
+  #          tabPanel("Data",
+  #                   tagList(linebreaks(1),
+  #                           withNavySpinner(dataTableOutput("covid_cari_hb_table"))
+  #                   ) # tagList
+  #          ) # tabPanel
+  #          
+  #   ), # tabBox
+  #   linebreaks(1)
+  # ), # fluidRow
+  
   fluidRow(width = 12,
            tagList(h2("CARI - Test positivity for COVID-19 by NHS Health Board"))),
   
   fluidRow(
-    selectInput("covid_cari_selected_board", "Select NHS Health Board of interest:", 
+    width = 12,
+    selectInput("covid_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
                 choices = sort(unique(covid_cari_hb$HBName)),
-                selected = sort(unique(covid_cari_hb$HBName))[1]),
+                selected = sort(unique(covid_cari_hb$HBName))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",

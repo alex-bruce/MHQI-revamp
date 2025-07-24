@@ -22,7 +22,7 @@ influenza_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
-flu_cari_subtype <- Respiratory_CARI_scotland %>%
+flu_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
   filter(substr(Pathogen,1,9) %in% "Influenza") %>%
   mutate(WeekBeginning = as.Date(WeekBeginning),
          WeekEnding = as.Date(WeekEnding)) %>%

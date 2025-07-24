@@ -6,7 +6,7 @@ altTextServer("influenza_cari_modal",
               title = "CARI - Test positivity for Influenza",
               content = tags$ul(tags$li("This is a plot showing the test positivity rate of Influenza infection in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
-                                tags$li("The y axis is the test positivity rate."),
+                                tags$li("The y axis is the test positivity rate fpr the selected subtype."),
                                 tags$li("The solid purple line is the specified test positivity rate and the lighter purple area around the line indicates the confidence interval."),
                                 tags$li("The bottom of the light purple shaded area represents the lower confidence interval and the top of the area represents the upper confidence interval.")))
 

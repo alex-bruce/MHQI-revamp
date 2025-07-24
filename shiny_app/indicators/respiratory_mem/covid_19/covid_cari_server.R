@@ -24,7 +24,7 @@ altTextServer("covid_cari_hb_modal",
               content = tags$ul(tags$li("This is a plot showing the test positivity rate of COVID-19 infection by NHS Health Board in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
-                                tags$li("The plot contains a trace showing the test positivity rate for the selected NHS Health Board.")))
+                                tags$li("The plot contains a trace showing the test positivity rate for the selected NHS Health Board(s).")))
 
 
 # CARI - Overall COVID-19 swabpos table
@@ -78,18 +78,43 @@ output$covid_cari_age_plot <- renderPlotly({
   
 })
 
+# # CARI - Overall COVID-19 swabpos plot
+# output$covid_cari_hb_plot <- renderPlotly({
+#   covid_cari_hb %>%
+#     filter(HBName == input$covid_cari_selected_board) %>%
+#     create_cari_linechart()
+#   
+# })
+# 
+# # CARI - COVID-19 swabpos by age table
+# output$covid_cari_hb_table <- renderDataTable({
+#   covid_cari_hb %>%
+#     filter(HBName == input$covid_cari_selected_board) %>%
+#     arrange(desc(WeekEnding)) %>%
+#     select(WeekEnding, HBName, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
+#     rename(`Week Ending` = WeekEnding,
+#            `NHS Health Board`= `HBName`,
+#            `Total Samples` = TotalSamples,
+#            `Positive Samples` = PositiveSamples,
+#            `Test Positivity (%)` = SwabPositivity,
+#            `Lower Confidence Limit (%)` = SwabPositivityLCL,
+#            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
+#     make_table(filter_cols = c(2))
+# })
+
+
 # CARI - Overall COVID-19 swabpos plot
 output$covid_cari_hb_plot <- renderPlotly({
   covid_cari_hb %>%
-    filter(HBName == input$covid_cari_selected_board) %>%
-    create_cari_linechart()
+    filter(HBName %in% input$covid_cari_selected_boards) %>%
+    create_cari_hb_linechart()
   
 })
 
 # CARI - COVID-19 swabpos by age table
 output$covid_cari_hb_table <- renderDataTable({
   covid_cari_hb %>%
-    filter(HBName == input$covid_cari_selected_board) %>%
+    filter(HBName %in% input$covid_cari_selected_boards) %>%
     arrange(desc(WeekEnding)) %>%
     select(WeekEnding, HBName, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
@@ -101,6 +126,7 @@ output$covid_cari_hb_table <- renderDataTable({
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
     make_table(filter_cols = c(2))
 })
+
 
 
 

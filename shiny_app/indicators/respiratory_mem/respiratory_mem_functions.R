@@ -838,3 +838,54 @@ create_cari_age_linechart <- function(data){
   return(p)
   
 }
+
+
+create_cari_hb_linechart <- function(data){
+  
+  yaxis_plots[["title"]] <- "Test positivity (%)"
+  xaxis_plots[["title"]] <- "Week ending"
+  
+  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  
+  # Define a named color vector
+  hb_colours <- c(
+    "NHS Ayrshire & Arran" = "#12436D",
+    "NHS Borders" = "#94AABD",
+    "NHS Dumfries & Galloway" = "#28A197",
+    "NHS Fife" = "#B4DEDB",
+    "NHS Forth Valley" = "#801650",
+    "NHS Grampian" = "#CCA2B9",
+    "NHS Greater Glasgow & Clyde" = "#F46A25",
+    "NHS Highland" = "#FBC3A8",
+    "NHS Lanarkshire" = "#3D3D3D",
+    "NHS Lothian" = "#A8A8A8",
+    "NHS Orkney" = "#3E8ECC",
+    "NHS Shetland" = "#A8CCE8",
+    "NHS Tayside" = "#3F085C",
+    "NHS Western Isles" = "#A285D1"
+  )
+  
+  p <- plot_ly(data) %>%
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~HBName, text=~HBName,
+              type="scatter", mode="lines",
+              color=~HBName,
+              colors=hb_colours,
+              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+                                     '<b>NHS Health Board</b>: %{text}<br>',
+                                     '<b>Test positivity</b>: %{y}')
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
+  
+}
+
