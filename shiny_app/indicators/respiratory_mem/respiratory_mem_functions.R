@@ -1041,7 +1041,7 @@ create_cari_flu_subtype_barchart <- function(data){
   
   xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
-  yaxis_plots[["ticksuffix"]] <- "%"
+  #yaxis_plots[["ticksuffix"]] <- "%"
   
   # Define a named color vector
   flu_subtype_colours <- c(
