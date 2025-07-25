@@ -29,7 +29,7 @@ create_mem_linechart <- function(data,
   data <- data %>%
     rename(Value = value_variable) %>%
     mutate(Value = round_half_up(Value, rate_dp))
-
+  
   # # If seasons not supplied, use two most recent seasons
   # if(is.null(seasons)){
   #   seasons_1 <- data %>%
@@ -45,14 +45,14 @@ create_mem_linechart <- function(data,
   #   seasons <- bind_rows(seasons_2, seasons_1)
   #   seasons <- seasons$Season
   # }
-
+  
   seasons <- data %>%
     select(Season) %>%
     arrange(Season) %>%
     distinct() %>%
     tail(6)
   seasons <- seasons$Season
-
+  
   # Wrangle data
   data = data %>%
     filter(ISOWeek != 53) %>%
@@ -62,36 +62,36 @@ create_mem_linechart <- function(data,
     arrange(Season, Weekord) %>%
     mutate(ISOWeek = as.character(ISOWeek),
            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
-
+  
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
   xaxis_plots[["range"]] <- c(-1,52)
-
+  
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
   yaxis_plots[["tickformat"]] <- ""
-
+  
   xaxis_plots[["showgrid"]] <- FALSE
   yaxis_plots[["showgrid"]] <- FALSE
-
+  
   # Get thresholds
   baseline_max <- unique(data$LowThreshold)
   low_max <- unique(data$MediumThreshold)
   moderate_max <- unique(data$HighThreshold)
   high_max <- unique(data$ExtraordinaryThreshold)
   extraordinary_max <- max(pretty(c(data$Value, 1.1*high_max)), na.rm = T)
-
+  
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$Season,
                             "<br>", "Week number: ", data$ISOWeek,
                             "<br>", "Rate: ", data$Value,
                             "<br>", "Activity level: ", data$ActivityLevel))
-
+  
   # Current season data only
   data_curr_season <- data %>%
     filter(Season %in% seasons[length(seasons)])
-
+  
   # Create plot
   mem_linechart = data %>%
     plot_ly(x = ~ISOWeek,
@@ -166,7 +166,7 @@ create_mem_linechart <- function(data,
                   yref = "y",
                   layer = "below")
            ))
-
+  
   # Add static legend
   mem_linechart <- mem_linechart %>%
     layout(
@@ -183,13 +183,13 @@ create_mem_linechart <- function(data,
           yanchor="bottom"
         )
       )) %>%
-
+    
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
-
+  
   # For first week of new season (week 40), add in a marker
   if(nrow(data_curr_season) == 1){
-
+    
     mem_linechart <- mem_linechart %>%
       add_trace(data = data_curr_season,
                 x = ~ISOWeek,
@@ -203,9 +203,9 @@ create_mem_linechart <- function(data,
                 text = tooltip_trend,
                 hoverinfo = "text")
   }
-
+  
   return(mem_linechart)
-
+  
 }
 
 
@@ -223,7 +223,7 @@ create_mem_heatmap <- function(data = df,
   data <- data %>%
     rename(Breakdown = breakdown_variable,
            Value = value_variable)
-
+  
   # If seasons not supplied, use two most recent seasons
   if(is.null(heatmap_seasons)){
     heatmap_seasons <- data %>%
@@ -233,7 +233,7 @@ create_mem_heatmap <- function(data = df,
       tail(2)
     heatmap_seasons <- heatmap_seasons$Season
   }
-
+  
   # If Age, reverse order
   if(breakdown_variable == "AgeGroup"){
     data <- data %>%
@@ -251,16 +251,16 @@ create_mem_heatmap <- function(data = df,
     }
     breakdown_hover <- "NHS Health Board: "
   }
-
+  
   # Breakdown of data
   data_breakdown <- unique(sort(data$Breakdown))
-
+  
   # Data for previous season
   data_prev_season <- data %>%
     filter(Season == heatmap_seasons[1]) %>%
     mutate(Breakdown = factor(Breakdown)) %>%
     mutate(Value = round_half_up(Value, rate_dp))
-
+  
   # Ensure the correct colours are selected for activity levels in the data
   act_levels_prev_season <- unique(sort(data_prev_season$ActivityLevel))
   act_levels_prev_season_numeric <- as.numeric(act_levels_prev_season)
@@ -269,7 +269,7 @@ create_mem_heatmap <- function(data = df,
   # Update factor levels
   data_prev_season <- data_prev_season %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = act_levels_prev_season))
-
+  
   # Create a heat map using Plotly
   heatmap_prev_season <- plot_ly(
     data = data_prev_season,
@@ -322,9 +322,9 @@ create_mem_heatmap <- function(data = df,
         yanchor = "middle"
       )
     )
-
+  
   if(include_text_annotation){
-
+    
     heatmap_prev_season <- heatmap_prev_season %>%
       layout(
         annotations = list(
@@ -335,15 +335,15 @@ create_mem_heatmap <- function(data = df,
           showarrow = FALSE
         )
       )
-
+    
   }
-
+  
   # Data for current season
   data_curr_season <- data %>%
     filter(Season == heatmap_seasons[2]) %>%
     mutate(Breakdown = factor(Breakdown)) %>%
     mutate(Value = round_half_up(Value, rate_dp))
-
+  
   # Ensure the correct colours are selected for activity levels in the data
   act_levels_curr_season <- unique(sort(data_curr_season$ActivityLevel))
   act_levels_curr_season_numeric <- as.numeric(act_levels_curr_season)
@@ -352,7 +352,7 @@ create_mem_heatmap <- function(data = df,
   # Update factor levels
   data_curr_season <- data_curr_season %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = act_levels_curr_season))
-
+  
   # Create a heat map using Plotly
   heatmap_curr_season <- plot_ly(
     data = data_curr_season,
@@ -406,9 +406,9 @@ create_mem_heatmap <- function(data = df,
         yanchor = "middle"
       )
     )
-
+  
   if(include_text_annotation){
-
+    
     heatmap_curr_season <- heatmap_curr_season %>%
       layout(
         annotations = list(
@@ -419,9 +419,9 @@ create_mem_heatmap <- function(data = df,
           showarrow = FALSE
         )
       )
-
+    
   }
-
+  
   # Add static legend
   heatmap_curr_season <- heatmap_curr_season %>%
     layout(
@@ -438,7 +438,7 @@ create_mem_heatmap <- function(data = df,
           yanchor="bottom"
         )
       ))
-
+  
   # Arrange the heatmaps in a subplot (one above the other)
   subplot_heatmap <- subplot(
     heatmap_prev_season, heatmap_curr_season,
@@ -448,23 +448,23 @@ create_mem_heatmap <- function(data = df,
   ) %>%
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
-
+  
   return(subplot_heatmap)
-
+  
 }
 
 # Create Flu Adms line chart
 create_flu_adms_linechart <- function(data,
-                                 #rate_dp = 2,
-                                 #seasons = NULL,
-                                 value_variable = "Admissions",
-                                 y_axis_title = "Number of hospital admissions") {
-
+                                      #rate_dp = 2,
+                                      #seasons = NULL,
+                                      value_variable = "Admissions",
+                                      y_axis_title = "Number of hospital admissions") {
+  
   # Rename value variable
   data <- data %>%
     rename(Value = value_variable)
-
-
+  
+  
   # Wrangle data
   data = data %>%
     filter(ISOWeek != 53) %>%
@@ -472,32 +472,32 @@ create_flu_adms_linechart <- function(data,
     arrange(Season, Weekord) %>%
     mutate(ISOWeek = as.character(ISOWeek),
            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
-
+  
   # Seasons in data
   seasons <- unique(data$Season)
-
+  
   # Current season data only
   data_curr_season <- data %>%
     filter(Season %in% seasons[length(seasons)])
-
+  
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
   xaxis_plots[["range"]] <- c(-1,52)
-
+  
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
-
+  
   xaxis_plots[["showgrid"]] <- FALSE
   yaxis_plots[["showgrid"]] <- FALSE
-
-
-
+  
+  
+  
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$Season,
                             "<br>", "Week number: ", data$ISOWeek,
                             "<br>", "Number: ", data$Value))
-
+  
   # Create plot
   flu_adms_linechart = data %>%
     plot_ly(x = ~ISOWeek,
@@ -515,15 +515,15 @@ create_flu_adms_linechart <- function(data,
            margin = list(b = 100, t = 5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10")
-           ) %>%
-
-
+    ) %>%
+    
+    
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
-
+  
   # For first week of new season (week 40), add in a marker
   if(nrow(data_curr_season) == 1){
-
+    
     flu_adms_linechart <- flu_adms_linechart %>%
       add_trace(data = data_curr_season,
                 x = ~ISOWeek,
@@ -537,9 +537,9 @@ create_flu_adms_linechart <- function(data,
                 text = tooltip_trend,
                 hoverinfo = "text")
   }
-
+  
   return(flu_adms_linechart)
-
+  
 }
 
 # Create RSV Adms line chart
@@ -548,12 +548,12 @@ create_rsv_adms_linechart <- function(data,
                                       #seasons = NULL,
                                       value_variable = "Admissions",
                                       y_axis_title = "Number of hospital admissions") {
-
+  
   # Rename value variable
   data <- data %>%
     rename(Value = value_variable)
-
-
+  
+  
   # Wrangle data
   data = data %>%
     filter(ISOWeek != 53) %>%
@@ -561,32 +561,32 @@ create_rsv_adms_linechart <- function(data,
     arrange(Season, Weekord) %>%
     mutate(ISOWeek = as.character(ISOWeek),
            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
-
+  
   # Seasons in data
   seasons <- unique(data$Season)
-
+  
   # Current season data only
   data_curr_season <- data %>%
     filter(Season %in% seasons[length(seasons)])
-
+  
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
   xaxis_plots[["range"]] <- c(-1,52)
-
+  
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
-
+  
   xaxis_plots[["showgrid"]] <- FALSE
   yaxis_plots[["showgrid"]] <- FALSE
-
-
-
+  
+  
+  
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$Season,
                             "<br>", "Week number: ", data$ISOWeek,
                             "<br>", "Number: ", data$Value))
-
+  
   # Create plot
   rsv_adms_linechart = data %>%
     plot_ly(x = ~ISOWeek,
@@ -605,14 +605,14 @@ create_rsv_adms_linechart <- function(data,
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10")
     ) %>%
-
-
+    
+    
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
-
+  
   # For first week of new season (week 40), add in a marker
   if(nrow(data_curr_season) == 1){
-
+    
     rsv_adms_linechart <- rsv_adms_linechart %>%
       add_trace(data = data_curr_season,
                 x = ~ISOWeek,
@@ -626,25 +626,25 @@ create_rsv_adms_linechart <- function(data,
                 text = tooltip_trend,
                 hoverinfo = "text")
   }
-
+  
   return(rsv_adms_linechart)
-
+  
 }
 
 
 
 make_adms_summary_plot <- function(data){
-
-data %<>%
-  pivot_wider(names_from = CaseDefinition, values_from = Admissions)
-
+  
+  data %<>%
+    pivot_wider(names_from = CaseDefinition, values_from = Admissions)
+  
   yaxis_plots[["title"]] <- "Reported cases"
   xaxis_plots[["title"]] <- "Week ending"
-
+  
   xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
-
-
+  
+  
   p <- plot_ly(data, x = ~Date,
                textposition = "none",
                text = ~paste0("<b>Season</b>: ", Season, "\n",
@@ -655,39 +655,39 @@ data %<>%
                               "<b>COVID-19</b>: ", `COVID-19`, "\n"),
                hovertemplate = "%{text}",
                height = 500)%>%
-
+    
     add_lines(y = ~Influenza,
               line = list(color = phs_colours("phs-blue"), dash = "dash"),
               name = 'Influenza') %>%
-
+    
     add_lines(y = ~RSV,
               name = 'RSV',
               line = list(color = phs_colours("phs-green"))) %>%
-
+    
     add_lines(y = ~`COVID-19`,
               name = 'Covid-19',
               line = list(color = phs_colours("phs-purple"), dash = "dot")) %>%
-
-
+    
+    
     # Adding vertical lines for notes on chart
     # add_lines_and_notes(dataframe = data,
     #                     ycol = "Influenza",
     #                     xs= c("2023-10-08"),
     #                     notes=c("Season 23/24"),
     #                     colors=c(phs_colours("phs-teal"))) %>%
-
-
+    
+    
     layout(margin = list(b = 80, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
            legend = list(xanchor = "center", x = 0.5, y = -0.5, orientation = 'h'),
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
-
+    
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
-
+  
   return(p)
-
+  
 }
 
 
@@ -840,6 +840,49 @@ create_cari_age_linechart <- function(data){
 }
 
 
+create_cari_age_linechart2 <- function(data){
+  
+  yaxis_plots[["title"]] <- "Test positivity (%)"
+  xaxis_plots[["title"]] <- "Week ending"
+  
+  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  
+  # Define a named color vector
+  age_colours <- c(
+    "0-4 years" = "#12436D",
+    "5-14 years" = "#94AABD",
+    "15-44 years" = "#28A197",
+    "45-64 years" = "#B4DEDB",
+    "65-74 years" = "#801650",
+    "75+ years" = "#CCA2B9"
+  )
+  
+  p <- plot_ly(data) %>%
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~AgeGroup, text=~AgeGroup,
+              type="scatter", mode="lines",
+              color=~AgeGroup,
+              colors=age_colours,
+              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+                                     '<b>Age group</b>: %{text}<br>',
+                                     '<b>Test positivity</b>: %{y}')
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
+  
+}
+
+
+
 create_cari_hb_linechart <- function(data){
   
   yaxis_plots[["title"]] <- "Test positivity (%)"
@@ -868,12 +911,71 @@ create_cari_hb_linechart <- function(data){
   )
   
   p <- plot_ly(data) %>%
-    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~HBName, text=~HBName,
+    # add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~HBName, text=~HBName,
+    #           type="scatter", mode="lines",
+    #           color=~HBName,
+    #           colors=hb_colours,
+    #           hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+    #                                  '<b>NHS Health Board</b>: %{text}<br>',
+    #                                  '<b>Test positivity</b>: %{y}')
+    # ) %>%
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~HBName, #text=~HBName,
               type="scatter", mode="lines",
               color=~HBName,
               colors=hb_colours,
+              text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
+                             "<b>NHS Health Board</b>: ", HBName, "\n",
+                             "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
+                             "<b>Number of samples</b>: ", format(TotalSamples, big.mark=","), "\n",
+                             "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
+                             "<b>95% confidence interval</b>: ", round_half_up(SwabPositivityLCL,1),
+                             "% - ", round_half_up(SwabPositivityUCL,1), "%"),
+              hovertemplate = "%{text}"
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
+  
+}
+
+
+create_cari_pathogen_linechart <- function(data){
+  
+  yaxis_plots[["title"]] <- "Test positivity (%)"
+  xaxis_plots[["title"]] <- "Week ending"
+  
+  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  
+  # Define a named color vector
+  path_colours <- c(
+    "All pathogens" = "#12436D",
+    "COVID-19" = "#94AABD",
+    "Influenza" = "#28A197",
+    "Respiratory Syncytial Virus" = "#B4DEDB",
+    "Adenovirus" = "#801650",
+    "Human Metapneumovirus" = "#CCA2B9",
+    "Mycoplasma Pneumoniae" = "#F46A25",
+    "Parainfluenza Virus" = "#FBC3A8",
+    "Rhinovirus" = "#3D3D3D",
+    "Seasonal Coronavirus (non-COVID-19)" = "#A8A8A8"
+  )
+  
+  p <- plot_ly(data) %>%
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, text=~Pathogen,
+              type="scatter", mode="lines",
+              color=~Pathogen,
+              colors=path_colours,
               hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
-                                     '<b>NHS Health Board</b>: %{text}<br>',
+                                     '<b>Pathogen</b>: %{text}<br>',
                                      '<b>Test positivity</b>: %{y}')
     ) %>%
     layout(margin = list(b = 100, t = 5),
@@ -888,4 +990,93 @@ create_cari_hb_linechart <- function(data){
   return(p)
   
 }
+
+
+create_cari_flu_subtype_linechart <- function(data){
+  
+  yaxis_plots[["title"]] <- "Test positivity (%)"
+  xaxis_plots[["title"]] <- "Week ending"
+  
+  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  
+  # Define a named color vector
+  flu_subtype_colours <- c(
+    "Influenza - Type A and B" = "#12436D",
+    "Influenza - Type A" = "#94AABD",
+    "Influenza - Type A (H1N1)" = "#28A197",
+    "Influenza - Type A (H3)" = "#B4DEDB",
+    "Influenza - Type A (not subtyped)" = "#801650",
+    "Influenza - Type B" = "#CCA2B9"
+  )
+  
+  p <- plot_ly(data) %>%
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, text=~Pathogen,
+              type="scatter", mode="lines",
+              color=~Pathogen,
+              colors=flu_subtype_colours,
+              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+                                     '<b>Pathogen</b>: %{text}<br>',
+                                     '<b>Test positivity</b>: %{y}')
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
+  
+}
+
+
+create_cari_flu_subtype_barchart <- function(data){
+  
+  yaxis_plots[["title"]] <- "Number of positive samples"
+  xaxis_plots[["title"]] <- "Week ending"
+  
+  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  
+  # Define a named color vector
+  flu_subtype_colours <- c(
+    "Influenza - Type A (H1N1)" = "#12436D",
+    "Influenza - Type A (H3)" = "#94AABD",
+    "Influenza - Type A (not subtyped)" = "#28A197",
+    "Influenza - Type B" = "#B4DEDB"
+  )
+  
+  data <- data %>%
+    mutate(Pathogen = factor(Pathogen, levels = rev(sort(unique(data$Pathogen)))))
+  
+  p <- plot_ly(data) %>%
+    add_trace(x = ~WeekEnding, y = ~PositiveSamples, split = ~Pathogen, text=~Pathogen,
+              type="bar",
+              color=~Pathogen,
+              colors=flu_subtype_colours,
+              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+                                     '<b>Subtype</b>: %{text}<br>',
+                                     '<b>Positive samples</b>: %{y}')
+    ) %>%
+    layout(barmode = "stack",
+           margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
+  
+}
+
+
+
 

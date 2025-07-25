@@ -97,6 +97,54 @@ tagList(
     ), # tabBox
     linebreaks(1)
   ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Influenza by subtype"))),
+  
+  fluidRow(
+    selectInput("flu_cari_selected_subtype1", "Select subtype:", 
+                choices = sort(unique(flu_cari_subtype$Pathogen)),
+                selected = sort(unique(flu_cari_subtype$Pathogen))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("influenza_cari_subtype1_modal"),
+                            swabposDefinitionUI("cari_influenza_swabpos"),
+                            ciDefinitionUI("cari_influenza_ci"),
+                            withNavySpinner(plotlyOutput("influenza_cari_subtype1_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("influenza_cari_subtype1_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Number of positive samples by Influenza subtype"))),
+  
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("influenza_cari_subtype2_modal"),
+                            withNavySpinner(plotlyOutput("influenza_cari_subtype2_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("influenza_cari_subtype2_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
 
   fluidRow(width = 12,
            tagList(h2("CARI - Test positivity for Influenza by age group"))),

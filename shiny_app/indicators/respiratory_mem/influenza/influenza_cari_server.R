@@ -6,9 +6,26 @@ altTextServer("influenza_cari_modal",
               title = "CARI - Test positivity for Influenza",
               content = tags$ul(tags$li("This is a plot showing the test positivity rate of Influenza infection in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
-                                tags$li("The y axis is the test positivity rate fpr the selected subtype."),
-                                tags$li("The solid purple line is the specified test positivity rate and the lighter purple area around the line indicates the confidence interval."),
+                                tags$li("The y axis is the test positivity rate."),
+                                tags$li("The solid purple line is the specified test positivity rate for the selected subtype and the lighter purple area around the line indicates the confidence interval."),
                                 tags$li("The bottom of the light purple shaded area represents the lower confidence interval and the top of the area represents the upper confidence interval.")))
+
+altTextServer("influenza_cari_subtype1_modal",
+              title = "CARI - Test positivity for Influenza",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of Influenza infection by subtype in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+                                tags$li("The x axis is the week ending date, starting 09 October 2022."),
+                                tags$li("The y axis is the test positivity rate."),
+                                tags$li("The plot contains a trace showing the test positivity rate for the selected subtype(s)."),
+                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
+
+altTextServer("influenza_cari_subtype2_modal",
+              title = "CARI - Test positivity for Influenza",
+              content = tags$ul(tags$li("This is a plot showing the number of positive samples for each Influenza subtype in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+                                tags$li("The x axis is the week ending date, starting 09 October 2022."),
+                                tags$li("The y axis is the number of positive samples."),
+                                tags$li("The plot contains a stacked bar showing the number of positive samples for each subtype."),
+                                tags$li("Each bar can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
+
 
 altTextServer("influenza_cari_age_modal",
               title = "CARI - Test positivity for Influenza by age group",
@@ -34,6 +51,37 @@ output$influenza_cari_table <- renderDataTable({
     make_table()
 })
 
+# CARI - Overall RSV swabpos table
+output$influenza_cari_subtype1_table <- renderDataTable({
+  flu_cari_subtype %>%
+    filter(Pathogen %in% input$flu_cari_selected_subtype1) %>%
+    arrange(desc(WeekEnding), Pathogen) %>%
+    select(WeekEnding, Pathogen, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
+    rename(`Week Ending` = WeekEnding,
+           `Subtype` = Pathogen,
+           `Total Samples` = TotalSamples,
+           `Positive Samples` = PositiveSamples,
+           `Test Positivity (%)` = SwabPositivity,
+           `Lower Confidence Limit (%)` = SwabPositivityLCL,
+           `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
+    make_table()
+})
+
+# CARI - Overall RSV swabpos table
+output$influenza_cari_subtype2_table <- renderDataTable({
+  flu_cari_subtype %>%
+    filter(Pathogen %in% c("Influenza - Type A (H1N1)", "Influenza - Type A (H3)",
+                           "Influenza - Type A (not subtyped)", "Influenza - Type B")) %>%
+    arrange(desc(WeekEnding), Pathogen) %>%
+    select(WeekEnding, Pathogen, PositiveSamples) %>%
+    rename(`Week Ending` = WeekEnding,
+           `Subtype` = Pathogen,
+           `Positive Samples` = PositiveSamples) %>%
+    make_table()
+})
+
+
+
 # CARI - RSV swabpos by age table
 output$influenza_cari_age_table <- renderDataTable({
   Respiratory_Pathogens_CARI_Age %>%
@@ -57,6 +105,23 @@ output$influenza_cari_plot <- renderPlotly({
   flu_cari_subtype %>%
     filter(Pathogen == input$flu_cari_selected_subtype) %>%
     create_cari_linechart()
+  
+})
+
+# CARI - Overall RSV swabpos plot
+output$influenza_cari_subtype1_plot <- renderPlotly({
+  flu_cari_subtype %>%
+    filter(Pathogen %in% input$flu_cari_selected_subtype1) %>%
+    create_cari_flu_subtype_linechart()
+  
+})
+
+# CARI - Overall RSV swabpos plot
+output$influenza_cari_subtype2_plot <- renderPlotly({
+  flu_cari_subtype %>%
+    filter(Pathogen %in% c("Influenza - Type A (H1N1)", "Influenza - Type A (H3)",
+                           "Influenza - Type A (not subtyped)", "Influenza - Type B")) %>%
+    create_cari_flu_subtype_barchart()
   
 })
 

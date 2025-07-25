@@ -25,11 +25,12 @@ tagList(
   fluidRow(width=12,
            selectInput("cari_selected_pathogen", "Select pathogen:", 
                        choices = sort(unique(cari_at_a_glance$Pathogen)),
-                       selected = sort(unique(cari_at_a_glance$Pathogen))[1]),
+                       selected = sort(unique(cari_at_a_glance$Pathogen))[1],
+                       multiple = TRUE),
            box(width = NULL,
                altTextUI("cari_summary_modal"),
                swabposDefinitionUI("cari_summary_swabpos"),
-               ciDefinitionUI("cari_summary_ci"),
+               #ciDefinitionUI("cari_summary_ci"),
                withNavySpinner(
                  plotlyOutput("cari_intro_plot")),
                fluidRow(

@@ -231,11 +231,10 @@ altTextServer("adms_summary_modal",
 
 altTextServer("cari_summary_modal",
               title = "Test positivity in the CARI sentinel surveillance programme",
-              content = tags$ul(tags$li("This is a plot showing the test positivity rate of all and individual pathogens."),
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of all and individual pathogens in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
-                                tags$li("The y axis is the test positivity rate for the selected pathogen."),
-                                tags$li("The solid purple line is the specified test positivity rate and the lighter purple area around the line indicates the confidence interval."),
-                                tags$li("The bottom of the light purple shaded area represents the lower confidence interval and the top of the area represents the upper confidence interval.")))
+                                tags$li("The y axis is the test positivity rate."),
+                                tags$li("The plot contains a trace showing the test positivity rate for the selected pathogen(s).")))
 
 
 ### Plot -----
@@ -250,8 +249,8 @@ output$hosp_adms_intro_plot <- renderPlotly({
 ### Plot -----
 output$cari_intro_plot <- renderPlotly({
   cari_at_a_glance %>%
-    filter(Pathogen == input$cari_selected_pathogen) %>%
-    create_cari_linechart()
+    filter(Pathogen %in% input$cari_selected_pathogen) %>%
+    create_cari_pathogen_linechart()
   
 })
 

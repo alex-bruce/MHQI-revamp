@@ -26,6 +26,11 @@ covid_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
 covid_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
   filter(Pathogen == 'COVID-19')
 
+# CARI HB data
+covid_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
+  filter(Pathogen == 'COVID-19') %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("0-4 years", "5-14 years", "15-44 years", "45-64 years",
+                                                "65-74 years", "75+ years")))
 
 tagList(
   
@@ -87,6 +92,10 @@ tagList(
            tagList(h2("CARI - Test positivity for COVID-19 by age group"))),
 
   fluidRow(
+    selectInput("covid_cari_selected_age", "Select age group(s) of interest:", 
+                choices = sort(unique(covid_cari_age$AgeGroup)),
+                selected = sort(unique(covid_cari_age$AgeGroup))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
