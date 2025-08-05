@@ -553,7 +553,7 @@ tagList(h1("Metadata"),
 
                    #Rate per 100,000 ----
                    h4("Rate per 100,000"),
-                   p("Number of new laboratory positive test results expressed as a rate per 100,000 Scottish population (using the 2021 NRS mid-year population estimate)."),
+                   p("Number of new laboratory positive test results expressed as a rate per 100,000 Scottish population (using the 2023 NRS mid-year population estimate)."),
                    p("Virological data are dynamic, therefore, the incidence rate will change week to week as more data become available."),
                    br(),
 
