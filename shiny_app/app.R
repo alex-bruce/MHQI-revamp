@@ -132,8 +132,9 @@ ui <- fluidPage(
                                                                                                           "COVID-19.")),
                                      linebreaks(1),
                                      radioGroupButtons("covid19_select", status = "home",
-                                                       choices = c("Infection levels", "Hospital admissions", "Hospital occupancy",
-                                                                   "CARI community surveillance", "Archive"),
+                                                       choices = c("Infection levels", "CARI community surveillance", 
+                                                                   "Hospital admissions", "Hospital occupancy",
+                                                                   "Archive"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.covid19_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/cases/cases_ui.R"), local = TRUE)$value)),
@@ -156,7 +157,8 @@ ui <- fluidPage(
                                        "Influenza can be caught all year round but is more common in the winter months."),
                                      linebreaks(1),
                                      radioGroupButtons("influenza_select", status = "home",
-                                                       choices = c("Infection levels (all Influenza)", "Infection levels (by subtype)", "Hospital admissions", "CARI community surveillance"),
+                                                       choices = c("Infection levels (all Influenza)", "Infection levels (by subtype)", 
+                                                                   "CARI community surveillance", "Hospital admissions"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.influenza_select=='Infection levels (all Influenza)'",
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_mem_ui.R"), local = TRUE)$value)),
@@ -177,7 +179,7 @@ ui <- fluidPage(
                                        "with peaks of activity in the winter months."),
                                      linebreaks(1),
                                      radioGroupButtons("rsv_select", status = "home",
-                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "CARI community surveillance", "Hospital admissions"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.rsv_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_mem_ui.R"), local = TRUE)$value)),
@@ -285,7 +287,14 @@ ui <- fluidPage(
                                                       column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_mem_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.seasonal_coronavirus_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_cari_ui.R"), local = TRUE)$value))
-                                     )
+                                     ),
+                            tabPanel(title = "Co-detections",
+                                     value = "codetections",
+                                     h1("Co-detections"),
+                                     p("ADD TEXT AROUND CO-DETECTIONS HERE"),
+                                     linebreaks(1),
+                                     column(12, source(file.path("indicators/respiratory_mem/codetections/codetections_cari_ui.R"), local = TRUE)$value)
+                            )
                             # tabPanel(title = "Other respiratory pathogens",
                             #          value = "other_pathogens",
                             #          source(file.path("indicators/respiratory_mem/other_pathogens/other_pathogens_mem_ui.R"), local = TRUE)$value)
@@ -444,6 +453,7 @@ server <- function(input, output, session) {
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_cari_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/codetections/codetections_cari_server.R"), local = TRUE)$value
   
 
   source(file.path("indicators/mortality/euromomo/euromomo_server.R"), local = TRUE)$value

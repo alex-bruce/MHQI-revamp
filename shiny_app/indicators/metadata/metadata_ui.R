@@ -399,6 +399,19 @@ tagList(h1("Metadata"),
                    ),
                    
                    
+                   
+                   #### CO-DETECTIONS PANEL ----
+                   bsCollapsePanel("Co-detections",
+                                   
+                                   # Infection Levels ----
+                                   h4("Infection levels"),
+                                   p("ADD CO-DETECTIONS METADATA TEXT."),
+                                   p(strong("Source: Community Acute Respiratory Infection (CARI) sentinel practices")),
+                                   br()
+                                   
+                   ),
+                   
+                   
                    #### WASTEWATER PANEL ----
                    bsCollapsePanel("Wastewater",
                                    

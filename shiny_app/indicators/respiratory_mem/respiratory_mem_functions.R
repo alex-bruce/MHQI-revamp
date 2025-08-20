@@ -957,16 +957,16 @@ create_cari_pathogen_linechart <- function(data){
   
   # Define a named color vector
   path_colours <- c(
-    "All pathogens" = "#12436D",
-    "COVID-19" = "#94AABD",
-    "Influenza" = "#28A197",
-    "Respiratory Syncytial Virus" = "#B4DEDB",
-    "Adenovirus" = "#801650",
-    "Human Metapneumovirus" = "#CCA2B9",
-    "Mycoplasma Pneumoniae" = "#F46A25",
-    "Parainfluenza Virus" = "#FBC3A8",
-    "Rhinovirus" = "#3D3D3D",
-    "Seasonal Coronavirus (non-COVID-19)" = "#A8A8A8"
+    "All pathogens" = "#A8A8A8",
+    "COVID-19" = "#F46A25",
+    "Influenza" = "#801650",
+    "Respiratory Syncytial Virus" = "#28A197",
+    "Adenovirus" = "#12436D",
+    "Human Metapneumovirus" = "#B4DEDB",
+    "Mycoplasma Pneumoniae" = "#3F085C",
+    "Parainfluenza Virus" = "#A285D1",
+    "Rhinovirus" = "#A8CCE8",
+    "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"
   )
   
   p <- plot_ly(data) %>%
@@ -1079,4 +1079,151 @@ create_cari_flu_subtype_barchart <- function(data){
 
 
 
+create_cari_duodetection_chart <- function(data){
+  
+  yaxis_plots[["title"]] <- "Percentage (%)"
+  xaxis_plots[["title"]] <- "Week ending"
+  
+  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  yaxis_plots[["range"]] <- c(0,100)
+  
+  duodetection_colours <- c(
+    "Adenovirus" = "#12436D",
+    "COVID-19" = "#F46A25",
+    "Human Metapneumovirus" = "#B4DEDB",
+    "Influenza A" = "#801650",
+    "Influenza B" = "#CCA2B9",
+    "Mycoplasma Pneumoniae" = "#3F085C",
+    "Parainfluenza Virus" = "#A285D1",
+    "Respiratory Syncytial Virus" = "#28A197",
+    "Rhinovirus" = "#A8CCE8",
+    "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"
+  )
+  
+  c("Adenovirus", "COVID-19", "Human Metapneumovirus", "Influenza A", "Influenza B",
+    "Mycoplasma Pneumoniae", "Parainfluenza Virus", "Respiratory Syncytial Virus",
+    "Rhinovirus", "Seasonal Coronavirus (non-COVID-19)")
+ 
+  # Filter out 0 percentages
+  data <- data %>%
+    mutate(perc_cumulative = ifelse(perc_cumulative == 0, NA, perc_cumulative))
+  
+  # # Create the plot object
+  # p <- plot_ly()
+  # 
+  # # Loop through each pathogen
+  # for (path in unique(data$pathogen)) {
+  #   df_sub <- data %>% filter(pathogen == path)
+  #   
+  #   # Loop through each week
+  #   for (wk in unique(df_sub$WeekEnding)) {
+  #     df_week <- df_sub %>% filter(WeekEnding == wk)
+  #     
+  #     # Only add trace if percentage > 0 for that week
+  #     if (df_week$perc > 0) {
+  #       p <- p %>% add_trace(data = df_week,
+  #                            x = ~WeekEnding,
+  #                            y = ~perc_cumulative,
+  #                            type = 'scatter',
+  #                            mode = 'none',
+  #                            fill = 'tonexty',
+  #                            fillcolor = duodetection_colours[path],
+  #                            line = list(color = duodetection_colours[path]),
+  #                            text = ~paste0(round_half_up(perc, 1), "%"),
+  #                            hovertemplate = paste0(
+  #                              '<b>Week ending</b>: %{x}<br>',
+  #                              '<b>Pathogen</b>: ', path, '<br>',
+  #                              '<b>Percentage</b>: %{text}<extra></extra>'
+  #                            ),
+  #                            name = path,
+  #                            showlegend = FALSE)  # Avoid legend duplication
+  #     }
+  #   }
+  # }
+  # 
+  # # Final layout
+  # p <- p %>% layout(
+  #   margin = list(b = 100, t = 5),
+  #   yaxis = list(title = "Percentage", range = c(0, 100)),
+  #   xaxis = xaxis_plots,
+  #   legend = list(x = 100, y = 0.5),
+  #   paper_bgcolor = phs_colours("phs-liberty-10")
+  # )
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
+
+
+  # Create the plot object
+  p <- plot_ly()
+
+  # Loop through each pathogen to add a trace with solid fill
+  for (path in unique(data$pathogen)) {
+    df_sub <- data %>% filter(pathogen == path)
+    p <- p %>% add_trace(data = df_sub,
+                         x = ~WeekEnding,
+                         y = ~perc_cumulative,
+                         type = 'scatter',
+                         mode = 'none',
+                         fill = 'tonexty',
+                         fillcolor = duodetection_colours[path],  # solid fill
+                         line = list(color = duodetection_colours[path]),  # match line color
+                         text = ~paste0(round_half_up(perc, 1), "%"),
+                         hovertemplate = paste0(
+                           '<b>Week ending</b>: %{x}<br>',
+                           '<b>Pathogen</b>: ', path, '<br>',
+                           '<b>Percentage</b>: %{text}<extra></extra>'
+                         ),
+                         name = path)
+  }
+
+  # Add layout
+  p <- p %>% layout(
+    margin = list(b = 100, t = 5),
+    yaxis = yaxis_plots,
+    xaxis = xaxis_plots,
+    legend = list(x = 100, y = 0.5),
+    paper_bgcolor = phs_colours("phs-liberty-10")
+  )
+  
+
+  # # Assuming df is already sorted and cumulative column is calculated
+  # p <- plot_ly(data, x = ~WeekEnding) %>%
+  #   add_trace(y = ~ perc_cumulative,
+  #             text = ~ paste0(round_half_up(perc, 1), "%"),
+  #             color = ~pathogen,
+  #             colors = duodetection_colours,
+  #             type = 'scatter',
+  #             mode = 'none',
+  #             fill = 'tonexty',
+  #             hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+  #                                    '<b>Pathogen</b>: %{color}<br>',
+  #                                    '<b>Percentage</b>: %{text}')
+  #             # hoverinfo = 'x+y+text',
+  #             # text = ~paste("Pathogen: ", pathogen, "<br>Percentage:", perc)
+  #             ) %>%
+  #   layout(margin = list(b = 100, t = 5),
+  #          yaxis = yaxis_plots, 
+  #          xaxis = xaxis_plots,
+  #          legend = list(x = 100, y = 0.5),
+  #          paper_bgcolor = phs_colours("phs-liberty-10"),
+  #          plot_bgcolor = phs_colours("phs-liberty-10"))
+  
+  return(p)
+
+
+}
