@@ -231,7 +231,7 @@ altTextServer("adms_summary_modal",
 
 altTextServer("cari_summary_modal",
               title = "Test positivity in the CARI sentinel surveillance programme",
-              content = tags$ul(tags$li("This is a plot showing the test positivity rate of all and individual pathogens in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of any and individual pathogens in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
                                 tags$li("The plot contains a trace showing the test positivity rate for the selected pathogen(s).")))

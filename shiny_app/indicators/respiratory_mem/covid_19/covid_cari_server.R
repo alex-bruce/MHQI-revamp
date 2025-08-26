@@ -64,11 +64,10 @@ output$covid_cari_table <- renderDataTable({
 # CARI - COVID-19 swabpos by age table
 output$covid_cari_age_table <- renderDataTable({
   covid_cari_age %>%
+    arrange(desc(WeekEnding), AgeGroup) %>%
     filter(AgeGroup %in% input$covid_cari_selected_age) %>%
-    arrange(desc(WeekEnding)) %>%
     select(WeekEnding, AgeGroup, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
-    # mutate(AgeGroup = factor(AgeGroup, levels = c("0-4 years", "5-14 years", "15-44 years", "45-64 years",
-    #                                               "65-74 years", "75+ years"))) %>%
+    mutate(AgeGroup = factor(AgeGroup)) %>%
     rename(`Week Ending` = WeekEnding,
            `Age Group`= `AgeGroup`,
            `Total Samples` = TotalSamples,
@@ -76,7 +75,7 @@ output$covid_cari_age_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table(filter_cols = c(2))
+    make_table(filter_cols = c(1,2))
 })
 
 
@@ -142,8 +141,9 @@ output$covid_cari_hb_plot <- renderPlotly({
 # CARI - COVID-19 swabpos by age table
 output$covid_cari_hb_table <- renderDataTable({
   covid_cari_hb %>%
+    arrange(desc(WeekEnding), HBName) %>%
     filter(HBName %in% input$covid_cari_selected_boards) %>%
-    arrange(desc(WeekEnding)) %>%
+    mutate(HBName = factor(HBName)) %>%
     select(WeekEnding, HBName, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
            `NHS Health Board`= `HBName`,
@@ -152,7 +152,7 @@ output$covid_cari_hb_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table(filter_cols = c(2))
+    make_table(filter_cols = c(1,2))
 })
 
 

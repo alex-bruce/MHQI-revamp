@@ -99,6 +99,29 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Influenza by age group"))),
+
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("influenza_cari_age_modal"),
+                            swabposDefinitionUI("cari_influenza_age_swabpos"),
+                            ciDefinitionUI("cari_influenza_age_ci"),
+                            withNavySpinner(plotlyOutput("influenza_cari_age_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("influenza_cari_age_table"))
+                    ) # tagList
+           ) # tabPanel
+
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
            tagList(h2("CARI - Test positivity for Influenza by subtype"))),
   
   fluidRow(
@@ -144,28 +167,6 @@ tagList(
            
     ), # tabBox
     linebreaks(1)
-  ), # fluidRow
-
-  fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Influenza by age group"))),
-
-  fluidRow(
-    tabBox(width = NULL,
-           type = "pills",
-           tabPanel("Plot",
-                    tagList(linebreaks(1),
-                            altTextUI("influenza_cari_age_modal"),
-                            swabposDefinitionUI("cari_influenza_age_swabpos"),
-                            ciDefinitionUI("cari_influenza_age_ci"),
-                            withNavySpinner(plotlyOutput("influenza_cari_age_plot")),
-                    )),
-           tabPanel("Data",
-                    tagList(linebreaks(1),
-                            withNavySpinner(dataTableOutput("influenza_cari_age_table"))
-                    ) # tagList
-           ) # tabPanel
-
-    ), # tabBox
-    linebreaks(1)
   ) # fluidRow
+  
 )

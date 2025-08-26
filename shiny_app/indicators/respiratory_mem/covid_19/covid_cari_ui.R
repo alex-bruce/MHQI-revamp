@@ -24,13 +24,21 @@ covid_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
 
 # CARI HB data
 covid_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
-  filter(Pathogen == 'COVID-19')
+  filter(Pathogen == 'COVID-19') %>%
+  filter(HBName != "Scotland") %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
+  #mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
 
 # CARI HB data
 covid_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
   filter(Pathogen == 'COVID-19') %>%
-  mutate(AgeGroup = factor(AgeGroup, levels = c("0-4 years", "5-14 years", "15-44 years", "45-64 years",
-                                                "65-74 years", "75+ years")))
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", "15-44 years", 
+                                                "45-64 years", "65-74 years", "75+ years")))
 
 tagList(
   

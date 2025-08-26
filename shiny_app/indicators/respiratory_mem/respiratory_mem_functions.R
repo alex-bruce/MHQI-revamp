@@ -848,25 +848,42 @@ create_cari_age_linechart2 <- function(data){
   xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
+  # yaxis_plots[["rangemode"]] <- "tozero"
+  # yaxis_plots[["tickmode"]] <- "auto"
+  
   
   # Define a named color vector
   age_colours <- c(
+    "All ages" = "#A8A8A8",
     "0-4 years" = "#12436D",
-    "5-14 years" = "#94AABD",
-    "15-44 years" = "#28A197",
-    "45-64 years" = "#B4DEDB",
-    "65-74 years" = "#801650",
-    "75+ years" = "#CCA2B9"
+    "5-14 years" = "#28A197",
+    "15-44 years" = "#801650",
+    "45-64 years" = "#F46A25",
+    "65-74 years" = "#3F085C",
+    "75+ years" = "#3E8ECC"
   )
   
   p <- plot_ly(data) %>%
-    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~AgeGroup, text=~AgeGroup,
+    # add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~AgeGroup, text=~AgeGroup,
+    #           type="scatter", mode="lines",
+    #           color=~AgeGroup,
+    #           colors=age_colours,
+    #           hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+    #                                  '<b>Age group</b>: %{text}<br>',
+    #                                  '<b>Test positivity</b>: %{y}')
+    # ) %>%
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~AgeGroup, #text=~HBName,
               type="scatter", mode="lines",
               color=~AgeGroup,
               colors=age_colours,
-              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
-                                     '<b>Age group</b>: %{text}<br>',
-                                     '<b>Test positivity</b>: %{y}')
+              text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
+                             "<b>Age group</b>: ", AgeGroup, "\n",
+                             "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
+                             "<b>Number of samples</b>: ", format(TotalSamples, big.mark=","), "\n",
+                             "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
+                             "<b>95% confidence interval</b>: ", round_half_up(SwabPositivityLCL,1),
+                             "% - ", round_half_up(SwabPositivityUCL,1), "%"),
+              hovertemplate = "%{text}"
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
@@ -894,6 +911,7 @@ create_cari_hb_linechart <- function(data){
   
   # Define a named color vector
   hb_colours <- c(
+  # "Scotland" = "black",
     "NHS Ayrshire & Arran" = "#12436D",
     "NHS Borders" = "#94AABD",
     "NHS Dumfries & Galloway" = "#28A197",
@@ -909,6 +927,25 @@ create_cari_hb_linechart <- function(data){
     "NHS Tayside" = "#3F085C",
     "NHS Western Isles" = "#A285D1"
   )
+  
+  # # Define dash styles for each group
+  # hb_dash <- c(
+  #   "Scotland" = "dash",
+  #   "NHS Ayrshire & Arran" = "solid",
+  #   "NHS Borders" = "solid",
+  #   "NHS Dumfries & Galloway" = "solid",
+  #   "NHS Fife" = "solid",
+  #   "NHS Forth Valley" = "solid",
+  #   "NHS Grampian" = "solid",
+  #   "NHS Greater Glasgow & Clyde" = "solid",
+  #   "NHS Highland" = "solid",
+  #   "NHS Lanarkshire" = "solid",
+  #   "NHS Lothian" = "solid",
+  #   "NHS Orkney" = "solid",
+  #   "NHS Shetland" = "solid",
+  #   "NHS Tayside" = "solid",
+  #   "NHS Western Isles" = "solid"
+  # )
   
   p <- plot_ly(data) %>%
     # add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~HBName, text=~HBName,
@@ -957,7 +994,7 @@ create_cari_pathogen_linechart <- function(data){
   
   # Define a named color vector
   path_colours <- c(
-    "All pathogens" = "#A8A8A8",
+    "Any pathogen" = "#A8A8A8",
     "COVID-19" = "#F46A25",
     "Influenza" = "#801650",
     "Respiratory Syncytial Virus" = "#28A197",
@@ -1004,11 +1041,11 @@ create_cari_flu_subtype_linechart <- function(data){
   # Define a named color vector
   flu_subtype_colours <- c(
     "Influenza - Type A and B" = "#12436D",
-    "Influenza - Type A" = "#94AABD",
-    "Influenza - Type A (H1N1)" = "#28A197",
-    "Influenza - Type A (H3)" = "#B4DEDB",
-    "Influenza - Type A (not subtyped)" = "#801650",
-    "Influenza - Type B" = "#CCA2B9"
+    "Influenza - Type A" = "#28A197",
+    "Influenza - Type A (H1N1)" = "#801650",
+    "Influenza - Type A (H3)" = "#F46A25",
+    "Influenza - Type A (not subtyped)" = "#3F085C",
+    "Influenza - Type B" = "#3E8ECC"
   )
   
   p <- plot_ly(data) %>%
@@ -1045,10 +1082,10 @@ create_cari_flu_subtype_barchart <- function(data){
   
   # Define a named color vector
   flu_subtype_colours <- c(
-    "Influenza - Type A (H1N1)" = "#12436D",
-    "Influenza - Type A (H3)" = "#94AABD",
-    "Influenza - Type A (not subtyped)" = "#28A197",
-    "Influenza - Type B" = "#B4DEDB"
+    "Influenza - Type A (H1N1)" = "#801650",
+    "Influenza - Type A (H3)" = "#F46A25",
+    "Influenza - Type A (not subtyped)" = "#3F085C",
+    "Influenza - Type B" = "#3E8ECC"
   )
   
   data <- data %>%
@@ -1081,10 +1118,13 @@ create_cari_flu_subtype_barchart <- function(data){
 
 create_cari_duodetection_chart <- function(data){
   
+  #data <- Respiratory_Pathogens_CARI_duodetections
+  
   yaxis_plots[["title"]] <- "Percentage (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
   xaxis_plots[["rangeslider"]] <- list(type = "date")
+  xaxis_plots[["range"]] <- c(min(data$WeekEnding), max(data$WeekEnding))
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   yaxis_plots[["range"]] <- c(0,100)
@@ -1102,128 +1142,114 @@ create_cari_duodetection_chart <- function(data){
     "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"
   )
   
-  c("Adenovirus", "COVID-19", "Human Metapneumovirus", "Influenza A", "Influenza B",
-    "Mycoplasma Pneumoniae", "Parainfluenza Virus", "Respiratory Syncytial Virus",
-    "Rhinovirus", "Seasonal Coronavirus (non-COVID-19)")
- 
-  # Filter out 0 percentages
   data <- data %>%
-    mutate(perc_cumulative = ifelse(perc_cumulative == 0, NA, perc_cumulative))
+    group_by(WeekEnding) %>%
+    mutate(Bottom = lag(cumsum(perc), default = 0),
+           Top = Bottom + perc) %>%
+    ungroup() %>%
+    mutate(Mid = Bottom+((Top-Bottom)/2))
   
-  # # Create the plot object
-  # p <- plot_ly()
-  # 
-  # # Loop through each pathogen
-  # for (path in unique(data$pathogen)) {
-  #   df_sub <- data %>% filter(pathogen == path)
-  #   
-  #   # Loop through each week
-  #   for (wk in unique(df_sub$WeekEnding)) {
-  #     df_week <- df_sub %>% filter(WeekEnding == wk)
-  #     
-  #     # Only add trace if percentage > 0 for that week
-  #     if (df_week$perc > 0) {
-  #       p <- p %>% add_trace(data = df_week,
-  #                            x = ~WeekEnding,
-  #                            y = ~perc_cumulative,
-  #                            type = 'scatter',
-  #                            mode = 'none',
-  #                            fill = 'tonexty',
-  #                            fillcolor = duodetection_colours[path],
-  #                            line = list(color = duodetection_colours[path]),
-  #                            text = ~paste0(round_half_up(perc, 1), "%"),
-  #                            hovertemplate = paste0(
-  #                              '<b>Week ending</b>: %{x}<br>',
-  #                              '<b>Pathogen</b>: ', path, '<br>',
-  #                              '<b>Percentage</b>: %{text}<extra></extra>'
-  #                            ),
-  #                            name = path,
-  #                            showlegend = FALSE)  # Avoid legend duplication
-  #     }
-  #   }
-  # }
-  # 
-  # # Final layout
-  # p <- p %>% layout(
-  #   margin = list(b = 100, t = 5),
-  #   yaxis = list(title = "Percentage", range = c(0, 100)),
-  #   xaxis = xaxis_plots,
-  #   legend = list(x = 100, y = 0.5),
-  #   paper_bgcolor = phs_colours("phs-liberty-10")
-  # )
+  data <- data %>%
+    mutate(Mid = ifelse(Mid == Top, 0, Mid))
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-
-
   # Create the plot object
   p <- plot_ly()
-
-  # Loop through each pathogen to add a trace with solid fill
-  for (path in unique(data$pathogen)) {
-    df_sub <- data %>% filter(pathogen == path)
-    p <- p %>% add_trace(data = df_sub,
-                         x = ~WeekEnding,
-                         y = ~perc_cumulative,
-                         type = 'scatter',
-                         mode = 'none',
-                         fill = 'tonexty',
-                         fillcolor = duodetection_colours[path],  # solid fill
-                         line = list(color = duodetection_colours[path]),  # match line color
-                         text = ~paste0(round_half_up(perc, 1), "%"),
-                         hovertemplate = paste0(
-                           '<b>Week ending</b>: %{x}<br>',
-                           '<b>Pathogen</b>: ', path, '<br>',
-                           '<b>Percentage</b>: %{text}<extra></extra>'
-                         ),
-                         name = path)
+  
+  # Loop through each pathogen
+  for(path in rev(unique(data$pathogen))) {
+    
+    #print(path)
+    
+    data_sub <- data %>% filter(pathogen == path)
+    
+    x_vals <- c(data_sub$WeekEnding, rev(data_sub$WeekEnding))
+    y_vals <- c(data_sub$Top, rev(data_sub$Bottom))
+    
+    text_vals <- paste0("Week ending:", format(data_sub$WeekEnding, "%d %b %y"),
+                        "<br>Pathogen:", data_sub$pathogen,
+                        "<br>Percentage:", round(data_sub$perc, 1), "%")
+    text_vals <- c(text_vals, rev(text_vals))
+    
+    p <- p %>%       
+      # Invisible markers for better hover
+      add_trace(
+        data = data_sub,
+        x = ~WeekEnding,
+        y = ~Mid,
+        type = 'scatter',
+        mode = 'markers',
+        marker = list(size = 1, color = duodetection_colours[path], opacity = 0),
+        text = paste("Week ending:", format(data_sub$WeekEnding, "%d %b %y"),
+                     "<br>Pathogen:", data_sub$pathogen,
+                     "<br>Percentage:", round(data_sub$perc, 1), "%"),
+        hoverinfo = 'text',
+        showlegend = FALSE
+      ) %>%
+      add_trace(data = data_sub,
+                x = x_vals,
+                y = y_vals,
+                type = 'scatter',
+                mode = 'lines',
+                fill = 'toself',
+                fillcolor = duodetection_colours[path],
+                line = list(color = duodetection_colours[path]),
+                text = text_vals,
+                hoverinfo = 'text',
+               # name = path,
+                line = list(width = 0)) %>%
+      layout(margin = list(b = 100, t = 5),
+             yaxis = yaxis_plots,
+             xaxis = xaxis_plots,
+             legend = list(x = 100, y = 0.5),
+             paper_bgcolor = phs_colours("phs-liberty-10"),
+             plot_bgcolor = phs_colours("phs-liberty-10"))
   }
 
-  # Add layout
-  p <- p %>% layout(
-    margin = list(b = 100, t = 5),
-    yaxis = yaxis_plots,
-    xaxis = xaxis_plots,
-    legend = list(x = 100, y = 0.5),
-    paper_bgcolor = phs_colours("phs-liberty-10")
+    return(p)
+  
+}
+
+
+
+
+create_cari_codetection_age_linechart <- function(data){
+  
+  yaxis_plots[["title"]] <- "Percentage of positive\nsamples (%)"
+  xaxis_plots[["title"]] <- "Four-Week ending"
+  
+  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  
+  # Define a named color vector
+  age_colours <- c(
+    "All ages" = "#A8A8A8",
+    "0-4 years" = "#12436D",
+    "5-14 years" = "#28A197",
+    "15-44 years" = "#801650",
+    "45-64 years" = "#F46A25",
+    "65+ years" = "#A285D1"
   )
   
-
-  # # Assuming df is already sorted and cumulative column is calculated
-  # p <- plot_ly(data, x = ~WeekEnding) %>%
-  #   add_trace(y = ~ perc_cumulative,
-  #             text = ~ paste0(round_half_up(perc, 1), "%"),
-  #             color = ~pathogen,
-  #             colors = duodetection_colours,
-  #             type = 'scatter',
-  #             mode = 'none',
-  #             fill = 'tonexty',
-  #             hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
-  #                                    '<b>Pathogen</b>: %{color}<br>',
-  #                                    '<b>Percentage</b>: %{text}')
-  #             # hoverinfo = 'x+y+text',
-  #             # text = ~paste("Pathogen: ", pathogen, "<br>Percentage:", perc)
-  #             ) %>%
-  #   layout(margin = list(b = 100, t = 5),
-  #          yaxis = yaxis_plots, 
-  #          xaxis = xaxis_plots,
-  #          legend = list(x = 100, y = 0.5),
-  #          paper_bgcolor = phs_colours("phs-liberty-10"),
-  #          plot_bgcolor = phs_colours("phs-liberty-10"))
+  p <- plot_ly(data) %>%
+    add_trace(x = ~FourWeekEnding, y = ~perc, split = ~AgeGroup, text=~AgeGroup,
+              type="scatter", mode="lines",
+              color=~AgeGroup,
+              colors=age_colours,
+              hovertemplate = paste0('<b>Four-Week ending</b>: %{x}<br>',
+                                     '<b>Age group</b>: %{text}<br>',
+                                     '<b>Percentage of positive samples</b>: %{y}')
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
   
   return(p)
-
-
+  
 }
+

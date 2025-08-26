@@ -5,8 +5,8 @@ cari_at_a_glance <- Respiratory_Pathogens_CARI_Scot %>%
   filter(Pathogen %in% c("Adenovirus", "COVID-19", "Human Metapneumovirus", "Influenza",
                          "Mycoplasma Pneumoniae", "Overall Test Positivity", "Parainfluenza Virus",
                          "Respiratory Syncytial Virus", "Rhinovirus", "Seasonal Coronavirus (non-COVID-19)")) %>%
-  mutate(Pathogen = ifelse(Pathogen == "Overall Test Positivity", "All pathogens", as.character(Pathogen))) %>%
-  mutate(Pathogen = factor(Pathogen, levels = c("All pathogens", "COVID-19", "Influenza",
+  mutate(Pathogen = ifelse(Pathogen == "Overall Test Positivity", "Any pathogen", as.character(Pathogen))) %>%
+  mutate(Pathogen = factor(Pathogen, levels = c("Any pathogen", "COVID-19", "Influenza",
                                                 "Respiratory Syncytial Virus", "Adenovirus", "Human Metapneumovirus",
                                                 "Mycoplasma Pneumoniae", "Parainfluenza Virus", "Rhinovirus", 
                                                 "Seasonal Coronavirus (non-COVID-19)")))
@@ -35,7 +35,7 @@ tagList(
            linebreaks(1)), #fluidRow
   
   fluidRow(width=12,
-           selectInput("cari_selected_pathogen", "Select pathogen:", 
+           selectInput("cari_selected_pathogen", "Select pathogen(s):", 
                        choices = sort(unique(cari_at_a_glance$Pathogen)),
                        selected = sort(unique(cari_at_a_glance$Pathogen))[1],
                        multiple = TRUE),
