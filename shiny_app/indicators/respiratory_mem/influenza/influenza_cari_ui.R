@@ -76,9 +76,9 @@ tagList(
            tagList(h2("CARI - Test positivity for Influenza"))),
 
   fluidRow(
-    selectInput("flu_cari_selected_subtype", "Select subtype:", 
-                choices = sort(unique(flu_cari_subtype$Pathogen)),
-                selected = sort(unique(flu_cari_subtype$Pathogen))[1]),
+    # selectInput("flu_cari_selected_subtype", "Select subtype:", 
+    #             choices = sort(unique(flu_cari_subtype$Pathogen)),
+    #             selected = sort(unique(flu_cari_subtype$Pathogen))[1]),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
@@ -125,7 +125,7 @@ tagList(
            tagList(h2("CARI - Test positivity for Influenza by subtype"))),
   
   fluidRow(
-    selectInput("flu_cari_selected_subtype1", "Select subtype:", 
+    selectInput("flu_cari_selected_subtype1", "Select subtype(s):", 
                 choices = sort(unique(flu_cari_subtype$Pathogen)),
                 selected = sort(unique(flu_cari_subtype$Pathogen))[1],
                 multiple = TRUE),
@@ -135,7 +135,7 @@ tagList(
                     tagList(linebreaks(1),
                             altTextUI("influenza_cari_subtype1_modal"),
                             swabposDefinitionUI("cari_influenza_swabpos"),
-                            ciDefinitionUI("cari_influenza_ci"),
+                            #ciDefinitionUI("cari_influenza_ci"),
                             withNavySpinner(plotlyOutput("influenza_cari_subtype1_plot")),
                     )),
            tabPanel("Data",

@@ -883,13 +883,15 @@ create_cari_age_linechart2 <- function(data){
                              "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
                              "<b>95% confidence interval</b>: ", round_half_up(SwabPositivityLCL,1),
                              "% - ", round_half_up(SwabPositivityUCL,1), "%"),
-              hovertemplate = "%{text}"
+              hovertemplate = "%{text}",
+              showlegend = TRUE
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
            legend = list(x = 100, y = 0.5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           showlegend = TRUE) %>%
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
@@ -967,13 +969,15 @@ create_cari_hb_linechart <- function(data){
                              "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
                              "<b>95% confidence interval</b>: ", round_half_up(SwabPositivityLCL,1),
                              "% - ", round_half_up(SwabPositivityUCL,1), "%"),
-              hovertemplate = "%{text}"
+              hovertemplate = "%{text}",
+              showlegend = TRUE
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
            legend = list(x = 100, y = 0.5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           showlegend = TRUE) %>%
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
@@ -1007,19 +1011,30 @@ create_cari_pathogen_linechart <- function(data){
   )
   
   p <- plot_ly(data) %>%
-    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, text=~Pathogen,
+    # add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, text=~Pathogen,
+    #           type="scatter", mode="lines",
+    #           color=~Pathogen,
+    #           colors=path_colours,
+    #           hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+    #                                  '<b>Pathogen</b>: %{text}<br>',
+    #                                  '<b>Test positivity</b>: %{y}')
+    # ) %>%
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, #text=~HBName,
               type="scatter", mode="lines",
               color=~Pathogen,
               colors=path_colours,
-              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
-                                     '<b>Pathogen</b>: %{text}<br>',
-                                     '<b>Test positivity</b>: %{y}')
+              text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
+                             "<b>Pathogen</b>: ", Pathogen, "\n",
+                             "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%"),
+              hovertemplate = "%{text}",
+              showlegend = TRUE
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
            legend = list(x = 100, y = 0.5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           showlegend = TRUE) %>%
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
@@ -1049,19 +1064,25 @@ create_cari_flu_subtype_linechart <- function(data){
   )
   
   p <- plot_ly(data) %>%
-    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, text=~Pathogen,
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, 
               type="scatter", mode="lines",
               color=~Pathogen,
               colors=flu_subtype_colours,
-              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
-                                     '<b>Pathogen</b>: %{text}<br>',
-                                     '<b>Test positivity</b>: %{y}')
+              text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
+                             "<b>Subtype</b>: ", Pathogen, "\n",
+                             "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
+                             "<b>Number of samples</b>: ", format(TotalSamples, big.mark=","), "\n",
+                             "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
+                             "<b>95% confidence interval</b>: ", round_half_up(SwabPositivityLCL,1),
+                             "% - ", round_half_up(SwabPositivityUCL,1), "%"),
+              hovertemplate = "%{text}"
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
            legend = list(x = 100, y = 0.5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           showlegend = TRUE) %>%
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
@@ -1194,8 +1215,8 @@ create_cari_duodetection_chart <- function(data){
                 fillcolor = duodetection_colours[path],
                 line = list(color = duodetection_colours[path]),
                 text = text_vals,
-                hoverinfo = 'text',
-               # name = path,
+                hoverinfo = 'none',
+                name = path,
                 line = list(width = 0)) %>%
       layout(margin = list(b = 100, t = 5),
              yaxis = yaxis_plots,
@@ -1215,7 +1236,7 @@ create_cari_duodetection_chart <- function(data){
 create_cari_codetection_age_linechart <- function(data){
   
   yaxis_plots[["title"]] <- "Percentage of positive\nsamples (%)"
-  xaxis_plots[["title"]] <- "Four-Week ending"
+  xaxis_plots[["title"]] <- "Four-week ending"
   
   xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
@@ -1232,19 +1253,21 @@ create_cari_codetection_age_linechart <- function(data){
   )
   
   p <- plot_ly(data) %>%
-    add_trace(x = ~FourWeekEnding, y = ~perc, split = ~AgeGroup, text=~AgeGroup,
+    add_trace(x = ~FourWeekEnding, y = ~perc, split = ~AgeGroup, 
               type="scatter", mode="lines",
               color=~AgeGroup,
               colors=age_colours,
-              hovertemplate = paste0('<b>Four-Week ending</b>: %{x}<br>',
-                                     '<b>Age group</b>: %{text}<br>',
-                                     '<b>Percentage of positive samples</b>: %{y}')
+              text = paste("Four-week ending:", format(data$FourWeekEnding, "%d %b %y"),
+                           "<br>Age group:", data$AgeGroup,
+                           "<br>Percentage:", round(data$perc, 1), "%"),
+              hoverinfo = 'text'
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
            legend = list(x = 100, y = 0.5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           showlegend = TRUE) %>%
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)

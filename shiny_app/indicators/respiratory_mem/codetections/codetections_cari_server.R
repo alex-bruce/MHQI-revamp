@@ -21,7 +21,9 @@ output$duodetections_cari_table <- renderDataTable({
   Respiratory_Pathogens_CARI_duodetections %>%
     arrange(desc(WeekEnding), desc(pathogen)) %>%
     select(WeekEnding, pathogen, perc) %>%
-    mutate(perc = paste0(round_half_up(perc,1), "%")) %>%
+    mutate(pathogen = as.character(pathogen)) %>%
+    mutate(pathogen = factor(pathogen)) %>%
+    mutate(perc = round_half_up(perc,1)) %>%
     rename(`Week Ending` = WeekEnding,
            `Pathogen` = pathogen,
            `Percentage composition of two-pathogen co-detections (%)` = perc) %>%
@@ -44,13 +46,13 @@ output$codetections_cari_table <- renderDataTable({
                                                   "15-44 years", "45-64 years", "65+ years"))) %>%
     filter(AgeGroup %in% input$codetection_cari_selected_age) %>%
     arrange(desc(FourWeekEnding), AgeGroup) %>%
-    select(FourWeekBeginning, FourWeekEnding, AgeGroup, perc) %>%
-    mutate(perc = paste0(round_half_up(perc,1), "%")) %>%
-    rename(`Four-Week Beginning` = FourWeekBeginning,
-           `Four-Week Ending` = FourWeekEnding,
+    mutate(AgeGroup = factor(AgeGroup)) %>%
+    select(FourWeekEnding, AgeGroup, perc) %>%
+    mutate(perc = round_half_up(perc,1)) %>%
+    rename(`Four-Week Ending` = FourWeekEnding,
            `Age Group` = AgeGroup,
            `Percentage of positive samples (%)` = perc) %>%
-    make_table(filter_cols = c(1,2,3))
+    make_table(filter_cols = c(1,2))
 })
 
 

@@ -7,7 +7,7 @@ altTextServer("influenza_cari_modal",
               content = tags$ul(tags$li("This is a plot showing the test positivity rate of Influenza infection in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
-                                tags$li("The solid purple line is the specified test positivity rate for the selected subtype and the lighter purple area around the line indicates the confidence interval."),
+                                tags$li("The solid purple line is the specified test positivity rate and the lighter purple area around the line indicates the confidence interval."),
                                 tags$li("The bottom of the light purple shaded area represents the lower confidence interval and the top of the area represents the upper confidence interval.")))
 
 altTextServer("influenza_cari_subtype1_modal",
@@ -35,14 +35,13 @@ altTextServer("influenza_cari_age_modal",
                                 tags$li("The plot contains a trace showing the test positivity rate for each of the following age groups: 0-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
-# CARI - Overall RSV swabpos table
+# CARI - Overall Influenza swabpos table
 output$influenza_cari_table <- renderDataTable({
-  flu_cari_subtype %>%
-    filter(Pathogen == input$flu_cari_selected_subtype) %>%
+  Respiratory_Pathogens_CARI_Scot %>%
+    filter(Pathogen == "Influenza") %>%
     arrange(desc(WeekEnding)) %>%
-    select(WeekEnding, Pathogen, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
+    select(WeekEnding, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
-           `Subtype` = Pathogen,
            `Total Samples` = TotalSamples,
            `Positive Samples` = PositiveSamples,
            `Test Positivity (%)` = SwabPositivity,
@@ -51,11 +50,12 @@ output$influenza_cari_table <- renderDataTable({
     make_table()
 })
 
-# CARI - Overall RSV swabpos table
+# CARI - Overall Influenza swabpos table
 output$influenza_cari_subtype1_table <- renderDataTable({
   flu_cari_subtype %>%
     filter(Pathogen %in% input$flu_cari_selected_subtype1) %>%
     arrange(desc(WeekEnding), Pathogen) %>%
+    mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
            `Subtype` = Pathogen,
@@ -64,7 +64,7 @@ output$influenza_cari_subtype1_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table()
+    make_table(filter_cols = c(1,2))
 })
 
 # CARI - Overall RSV swabpos table
@@ -73,11 +73,12 @@ output$influenza_cari_subtype2_table <- renderDataTable({
     filter(Pathogen %in% c("Influenza - Type A (H1N1)", "Influenza - Type A (H3)",
                            "Influenza - Type A (not subtyped)", "Influenza - Type B")) %>%
     arrange(desc(WeekEnding), Pathogen) %>%
+    mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, PositiveSamples) %>%
     rename(`Week Ending` = WeekEnding,
            `Subtype` = Pathogen,
            `Positive Samples` = PositiveSamples) %>%
-    make_table()
+    make_table(filter_cols = c(1,2))
 })
 
 
@@ -102,8 +103,8 @@ output$influenza_cari_age_table <- renderDataTable({
 
 # CARI - Overall RSV swabpos plot
 output$influenza_cari_plot <- renderPlotly({
-  flu_cari_subtype %>%
-    filter(Pathogen == input$flu_cari_selected_subtype) %>%
+  Respiratory_Pathogens_CARI_Scot %>%
+    filter(Pathogen == "Influenza") %>%
     create_cari_linechart()
   
 })
