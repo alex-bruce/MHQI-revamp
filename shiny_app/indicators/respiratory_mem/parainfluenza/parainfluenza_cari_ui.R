@@ -22,6 +22,32 @@ parainfluenza_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
+# CARI HB data
+parainfluenza_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
+  filter(Pathogen == 'Parainfluenza Virus') %>%
+  filter(HBName != "Scotland") %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
+#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+
+# CARI Age data
+parainfluenza_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
+  filter(Pathogen == 'Parainfluenza Virus') %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", "15-44 years", 
+                                                "45-64 years", "65-74 years", "75+ years")))
+
+parainfluenza_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
+  filter(substr(Pathogen,1,19) %in% "Parainfluenza Virus") %>%
+  mutate(WeekBeginning = as.Date(WeekBeginning),
+         WeekEnding = as.Date(WeekEnding)) %>%
+  mutate(Pathogen = factor(Pathogen, levels = c("Parainfluenza Virus", "Parainfluenza Virus 1",
+                                                "Parainfluenza Virus 2", "Parainfluenza Virus 3",
+                                                "Parainfluenza Virus 4")))
+
 
 tagList(
   
@@ -83,13 +109,16 @@ tagList(
            tagList(h2("CARI - Test positivity for Parainfluenza by age group"))),
   
   fluidRow(
+    selectInput("parainfluenza_cari_selected_age", "Select age group(s) of interest:", 
+                choices = sort(unique(parainfluenza_cari_age$AgeGroup)),
+                selected = sort(unique(parainfluenza_cari_age$AgeGroup))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("parainfluenza_cari_age_modal"),
                             swabposDefinitionUI("cari_parainfluenza_age_swabpos"),
-                            ciDefinitionUI("cari_parainfluenza_age_ci"),
                             withNavySpinner(plotlyOutput("parainfluenza_cari_age_plot")),
                     )),
            tabPanel("Data",
@@ -100,5 +129,82 @@ tagList(
            
     ), # tabBox
     linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Parainfluenza by NHS Health Board"))),
+  
+  fluidRow(
+    width = 12,
+    selectInput("parainfluenza_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                choices = sort(unique(parainfluenza_cari_hb$HBName)),
+                selected = sort(unique(parainfluenza_cari_hb$HBName))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("parainfluenza_cari_hb_modal"),
+                            swabposDefinitionUI("cari_parainfluenza_hb_swabpos"),
+                            #ciDefinitionUI("cari_flu_hb_ci"),
+                            withNavySpinner(plotlyOutput("parainfluenza_cari_hb_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("parainfluenza_cari_hb_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Parainfluenza by subtype"))),
+  
+  fluidRow(
+    selectInput("parainfluenza_cari_selected_subtype1", "Select subtype(s):", 
+                choices = sort(unique(parainfluenza_cari_subtype$Pathogen)),
+                selected = sort(unique(parainfluenza_cari_subtype$Pathogen))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("parainfluenza_cari_subtype1_modal"),
+                            swabposDefinitionUI("cari_parainfluenza_swabpos"),
+                            #ciDefinitionUI("cari_seasonal_coronavirus_ci"),
+                            withNavySpinner(plotlyOutput("parainfluenza_cari_subtype1_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("parainfluenza_cari_subtype1_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Number of positive samples by Parainfluenza subtype"))),
+  
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("parainfluenza_cari_subtype2_modal"),
+                            withNavySpinner(plotlyOutput("parainfluenza_cari_subtype2_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("parainfluenza_cari_subtype2_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
   ) # fluidRow
+  
 )

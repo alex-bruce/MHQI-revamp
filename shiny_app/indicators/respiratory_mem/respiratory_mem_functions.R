@@ -1044,7 +1044,99 @@ create_cari_pathogen_linechart <- function(data){
 }
 
 
-create_cari_flu_subtype_linechart <- function(data){
+# create_cari_flu_subtype_linechart <- function(data){
+#   
+#   yaxis_plots[["title"]] <- "Test positivity (%)"
+#   xaxis_plots[["title"]] <- "Week ending"
+#   
+#   xaxis_plots[["rangeslider"]] <- list(type = "date")
+#   yaxis_plots[["fixedrange"]] <- FALSE
+#   yaxis_plots[["ticksuffix"]] <- "%"
+#   
+#   # Define a named color vector
+#   flu_subtype_colours <- c(
+#     "Influenza - Type A and B" = "#12436D",
+#     "Influenza - Type A" = "#28A197",
+#     "Influenza - Type A (H1N1)" = "#801650",
+#     "Influenza - Type A (H3)" = "#F46A25",
+#     "Influenza - Type A (not subtyped)" = "#3F085C",
+#     "Influenza - Type B" = "#3E8ECC"
+#   )
+#   
+#   p <- plot_ly(data) %>%
+#     add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, 
+#               type="scatter", mode="lines",
+#               color=~Pathogen,
+#               colors=flu_subtype_colours,
+#               text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
+#                              "<b>Subtype</b>: ", Pathogen, "\n",
+#                              "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
+#                              "<b>Number of samples</b>: ", format(TotalSamples, big.mark=","), "\n",
+#                              "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
+#                              "<b>95% confidence interval</b>: ", round_half_up(SwabPositivityLCL,1),
+#                              "% - ", round_half_up(SwabPositivityUCL,1), "%"),
+#               hovertemplate = "%{text}"
+#     ) %>%
+#     layout(margin = list(b = 100, t = 5),
+#            yaxis = yaxis_plots, xaxis = xaxis_plots,
+#            legend = list(x = 100, y = 0.5),
+#            paper_bgcolor = phs_colours("phs-liberty-10"),
+#            plot_bgcolor = phs_colours("phs-liberty-10"),
+#            showlegend = TRUE) %>%
+#     
+#     config(displaylogo = FALSE, displayModeBar = TRUE,
+#            modeBarButtonsToRemove = bttn_remove)
+#   
+#   return(p)
+#   
+# }
+# 
+# 
+# create_cari_flu_subtype_barchart <- function(data){
+#   
+#   yaxis_plots[["title"]] <- "Number of positive samples"
+#   xaxis_plots[["title"]] <- "Week ending"
+#   
+#   xaxis_plots[["rangeslider"]] <- list(type = "date")
+#   yaxis_plots[["fixedrange"]] <- FALSE
+#   #yaxis_plots[["ticksuffix"]] <- "%"
+#   
+#   # Define a named color vector
+#   flu_subtype_colours <- c(
+#     "Influenza - Type A (H1N1)" = "#801650",
+#     "Influenza - Type A (H3)" = "#F46A25",
+#     "Influenza - Type A (not subtyped)" = "#3F085C",
+#     "Influenza - Type B" = "#3E8ECC"
+#   )
+#   
+#   data <- data %>%
+#     mutate(Pathogen = factor(Pathogen, levels = rev(sort(unique(data$Pathogen)))))
+#   
+#   p <- plot_ly(data) %>%
+#     add_trace(x = ~WeekEnding, y = ~PositiveSamples, split = ~Pathogen, text=~Pathogen,
+#               type="bar",
+#               color=~Pathogen,
+#               colors=flu_subtype_colours,
+#               hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+#                                      '<b>Subtype</b>: %{text}<br>',
+#                                      '<b>Positive samples</b>: %{y}')
+#     ) %>%
+#     layout(barmode = "stack",
+#            margin = list(b = 100, t = 5),
+#            yaxis = yaxis_plots, xaxis = xaxis_plots,
+#            legend = list(x = 100, y = 0.5),
+#            paper_bgcolor = phs_colours("phs-liberty-10"),
+#            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+#     
+#     config(displaylogo = FALSE, displayModeBar = TRUE,
+#            modeBarButtonsToRemove = bttn_remove)
+#   
+#   return(p)
+#   
+# }
+
+
+create_cari_subtype_linechart <- function(data){
   
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
@@ -1053,21 +1145,32 @@ create_cari_flu_subtype_linechart <- function(data){
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
+  
   # Define a named color vector
-  flu_subtype_colours <- c(
+  subtype_colours <- c(
     "Influenza - Type A and B" = "#12436D",
     "Influenza - Type A" = "#28A197",
     "Influenza - Type A (H1N1)" = "#801650",
     "Influenza - Type A (H3)" = "#F46A25",
     "Influenza - Type A (not subtyped)" = "#3F085C",
-    "Influenza - Type B" = "#3E8ECC"
+    "Influenza - Type B" = "#3E8ECC",
+    "Parainfluenza Virus" = "#12436D",
+    "Parainfluenza Virus 1" = "#28A197",
+    "Parainfluenza Virus 2" = "#801650",
+    "Parainfluenza Virus 3" = "#F46A25",
+    "Parainfluenza Virus 4" = "#3F085C",
+    "Seasonal Coronavirus (non-COVID-19)" = "#12436D",
+    "Seasonal Coronavirus (non-COVID-19) - Type A" = "#28A197",
+    "Seasonal Coronavirus (non-COVID-19) - Type B" = "#801650", 
+    "Seasonal Coronavirus (non-COVID-19) - Type C" = "#F46A25",
+    "Seasonal Coronavirus (non-COVID-19) - Type D" = "#3F085C"
   )
-  
+
   p <- plot_ly(data) %>%
     add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~Pathogen, 
               type="scatter", mode="lines",
               color=~Pathogen,
-              colors=flu_subtype_colours,
+              colors=subtype_colours,
               text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
                              "<b>Subtype</b>: ", Pathogen, "\n",
                              "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
@@ -1092,7 +1195,7 @@ create_cari_flu_subtype_linechart <- function(data){
 }
 
 
-create_cari_flu_subtype_barchart <- function(data){
+create_cari_subtype_barchart <- function(data){
   
   yaxis_plots[["title"]] <- "Number of positive samples"
   xaxis_plots[["title"]] <- "Week ending"
@@ -1100,15 +1203,23 @@ create_cari_flu_subtype_barchart <- function(data){
   xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   #yaxis_plots[["ticksuffix"]] <- "%"
-  
+    
   # Define a named color vector
-  flu_subtype_colours <- c(
+  subtype_colours <- c(
     "Influenza - Type A (H1N1)" = "#801650",
     "Influenza - Type A (H3)" = "#F46A25",
     "Influenza - Type A (not subtyped)" = "#3F085C",
-    "Influenza - Type B" = "#3E8ECC"
+    "Influenza - Type B" = "#3E8ECC",
+    "Parainfluenza Virus 1" = "#28A197",
+    "Parainfluenza Virus 2" = "#801650",
+    "Parainfluenza Virus 3" = "#F46A25",
+    "Parainfluenza Virus 4" = "#3F085C",
+    "Seasonal Coronavirus (non-COVID-19) - Type A" = "#28A197",
+    "Seasonal Coronavirus (non-COVID-19) - Type B" = "#801650", 
+    "Seasonal Coronavirus (non-COVID-19) - Type C" = "#F46A25",
+    "Seasonal Coronavirus (non-COVID-19) - Type D" = "#3F085C"
   )
-  
+
   data <- data %>%
     mutate(Pathogen = factor(Pathogen, levels = rev(sort(unique(data$Pathogen)))))
   
@@ -1116,7 +1227,7 @@ create_cari_flu_subtype_barchart <- function(data){
     add_trace(x = ~WeekEnding, y = ~PositiveSamples, split = ~Pathogen, text=~Pathogen,
               type="bar",
               color=~Pathogen,
-              colors=flu_subtype_colours,
+              colors=subtype_colours,
               hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
                                      '<b>Subtype</b>: %{text}<br>',
                                      '<b>Positive samples</b>: %{y}')
