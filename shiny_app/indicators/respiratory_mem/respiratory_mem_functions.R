@@ -1170,8 +1170,14 @@ create_cari_duodetection_chart <- function(data){
     ungroup() %>%
     mutate(Mid = Bottom+((Top-Bottom)/2))
   
+  factor_levels <- rev(unique(data$pathogen))
+  
   data <- data %>%
-    mutate(Mid = ifelse(Mid == Top, 0, Mid))
+    mutate(pathogen = factor(pathogen, levels = factor_levels)) %>%
+    arrange(WeekEnding, pathogen)
+  
+  # data <- data %>%
+  #   mutate(Mid = ifelse(Mid == Top, 0, Mid))
   
   # Create the plot object
   p <- plot_ly()
@@ -1200,10 +1206,8 @@ create_cari_duodetection_chart <- function(data){
         type = 'scatter',
         mode = 'markers',
         marker = list(size = 1, color = duodetection_colours[path], opacity = 0),
-        text = paste("Week ending:", format(data_sub$WeekEnding, "%d %b %y"),
-                     "<br>Pathogen:", data_sub$pathogen,
-                     "<br>Percentage:", round(data_sub$perc, 1), "%"),
-        hoverinfo = 'text',
+        text = ~paste0(pathogen, ": ", round(perc, 1), "%"),
+        hovertemplate = "%{text}<extra></extra>",
         showlegend = FALSE
       ) %>%
       add_trace(data = data_sub,
@@ -1213,17 +1217,18 @@ create_cari_duodetection_chart <- function(data){
                 mode = 'lines',
                 fill = 'toself',
                 fillcolor = duodetection_colours[path],
-                line = list(color = duodetection_colours[path]),
+                line = list(width = 0,
+                            color = phs_colours("phs-liberty-10")),
                 text = text_vals,
                 hoverinfo = 'none',
-                name = path,
-                line = list(width = 0)) %>%
+                name = path) %>%
       layout(margin = list(b = 100, t = 5),
              yaxis = yaxis_plots,
              xaxis = xaxis_plots,
-             legend = list(x = 100, y = 0.5),
+             legend = list(x = 100, y = 0.5, traceorder = 'reversed'),
              paper_bgcolor = phs_colours("phs-liberty-10"),
-             plot_bgcolor = phs_colours("phs-liberty-10"))
+             plot_bgcolor = phs_colours("phs-liberty-10"),
+             hovermode = 'x')
   }
 
     return(p)
