@@ -1155,15 +1155,15 @@ create_cari_subtype_linechart <- function(data){
     "Influenza - Type A (not subtyped)" = "#3F085C",
     "Influenza - Type B" = "#3E8ECC",
     "Parainfluenza Virus" = "#12436D",
-    "Parainfluenza Virus 1" = "#28A197",
-    "Parainfluenza Virus 2" = "#801650",
-    "Parainfluenza Virus 3" = "#F46A25",
-    "Parainfluenza Virus 4" = "#3F085C",
+    "Parainfluenza Virus - Type 1" = "#28A197",
+    "Parainfluenza Virus - Type 2" = "#801650",
+    "Parainfluenza Virus - Type 3" = "#F46A25",
+    "Parainfluenza Virus - Type 4" = "#3F085C",
     "Seasonal Coronavirus (non-COVID-19)" = "#12436D",
-    "Seasonal Coronavirus (non-COVID-19) - Type A" = "#28A197",
-    "Seasonal Coronavirus (non-COVID-19) - Type B" = "#801650", 
-    "Seasonal Coronavirus (non-COVID-19) - Type C" = "#F46A25",
-    "Seasonal Coronavirus (non-COVID-19) - Type D" = "#3F085C"
+    "Seasonal Coronavirus (non-COVID-19) - 229e" = "#28A197",
+    "Seasonal Coronavirus (non-COVID-19) - OC43" = "#801650", 
+    "Seasonal Coronavirus (non-COVID-19) - NL63" = "#F46A25",
+    "Seasonal Coronavirus (non-COVID-19) - Untyped" = "#3F085C"
   )
 
   p <- plot_ly(data) %>%
@@ -1210,14 +1210,14 @@ create_cari_subtype_barchart <- function(data){
     "Influenza - Type A (H3)" = "#F46A25",
     "Influenza - Type A (not subtyped)" = "#3F085C",
     "Influenza - Type B" = "#3E8ECC",
-    "Parainfluenza Virus 1" = "#28A197",
-    "Parainfluenza Virus 2" = "#801650",
-    "Parainfluenza Virus 3" = "#F46A25",
-    "Parainfluenza Virus 4" = "#3F085C",
-    "Seasonal Coronavirus (non-COVID-19) - Type A" = "#28A197",
-    "Seasonal Coronavirus (non-COVID-19) - Type B" = "#801650", 
-    "Seasonal Coronavirus (non-COVID-19) - Type C" = "#F46A25",
-    "Seasonal Coronavirus (non-COVID-19) - Type D" = "#3F085C"
+    "Parainfluenza Virus - Type 1" = "#28A197",
+    "Parainfluenza Virus - Type 2" = "#801650",
+    "Parainfluenza Virus - Type 3" = "#F46A25",
+    "Parainfluenza Virus - Type 4" = "#3F085C",
+    "Seasonal Coronavirus (non-COVID-19) - 229e" = "#28A197",
+    "Seasonal Coronavirus (non-COVID-19) - OC43" = "#801650", 
+    "Seasonal Coronavirus (non-COVID-19) - NL63" = "#F46A25",
+    "Seasonal Coronavirus (non-COVID-19) - Untyped" = "#3F085C"
   )
 
   data <- data %>%

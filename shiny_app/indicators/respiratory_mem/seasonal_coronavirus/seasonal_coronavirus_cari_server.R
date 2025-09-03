@@ -167,10 +167,10 @@ output$seasonal_coronavirus_cari_subtype1_table <- renderDataTable({
 # CARI - Overall seasonal_coronavirus swabpos table
 output$seasonal_coronavirus_cari_subtype2_table <- renderDataTable({
   seasonal_coronavirus_cari_subtype %>%
-    filter(Pathogen %in% c("Seasonal Coronavirus (non-COVID-19) - Type A",
-                           "Seasonal Coronavirus (non-COVID-19) - Type B", 
-                           "Seasonal Coronavirus (non-COVID-19) - Type C",
-                           "Seasonal Coronavirus (non-COVID-19) - Type D")) %>%
+    filter(Pathogen %in% c("Seasonal Coronavirus (non-COVID-19) - 229e",
+                           "Seasonal Coronavirus (non-COVID-19) - OC43", 
+                           "Seasonal Coronavirus (non-COVID-19) - NL63",
+                           "Seasonal Coronavirus (non-COVID-19) - Untyped")) %>%
     arrange(desc(WeekEnding), Pathogen) %>%
     mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, PositiveSamples) %>%
@@ -193,10 +193,10 @@ output$seasonal_coronavirus_cari_subtype1_plot <- renderPlotly({
 # CARI - Overall RSV swabpos plot
 output$seasonal_coronavirus_cari_subtype2_plot <- renderPlotly({
   seasonal_coronavirus_cari_subtype %>%
-    filter(Pathogen %in% c("Seasonal Coronavirus (non-COVID-19) - Type A",
-                           "Seasonal Coronavirus (non-COVID-19) - Type B", 
-                           "Seasonal Coronavirus (non-COVID-19) - Type C",
-                           "Seasonal Coronavirus (non-COVID-19) - Type D")) %>%
+    filter(Pathogen %in% c("Seasonal Coronavirus (non-COVID-19) - 229e",
+                           "Seasonal Coronavirus (non-COVID-19) - OC43", 
+                           "Seasonal Coronavirus (non-COVID-19) - NL63",
+                           "Seasonal Coronavirus (non-COVID-19) - Untyped")) %>%
     create_cari_subtype_barchart()
   
 })

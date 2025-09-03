@@ -45,10 +45,10 @@ seasonal_coronavirus_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
   mutate(WeekBeginning = as.Date(WeekBeginning),
          WeekEnding = as.Date(WeekEnding)) %>%
   mutate(Pathogen = factor(Pathogen, levels = c("Seasonal Coronavirus (non-COVID-19)", 
-                                                "Seasonal Coronavirus (non-COVID-19) - Type A",
-                                                "Seasonal Coronavirus (non-COVID-19) - Type B", 
-                                                "Seasonal Coronavirus (non-COVID-19) - Type C",
-                                                "Seasonal Coronavirus (non-COVID-19) - Type D")))
+                                                "Seasonal Coronavirus (non-COVID-19) - 229e",
+                                                "Seasonal Coronavirus (non-COVID-19) - OC43", 
+                                                "Seasonal Coronavirus (non-COVID-19) - NL63",
+                                                "Seasonal Coronavirus (non-COVID-19) - Untyped")))
 
 
 tagList(
