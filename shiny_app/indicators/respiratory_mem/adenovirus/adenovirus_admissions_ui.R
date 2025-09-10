@@ -11,6 +11,10 @@ adenovirus_admissions_recent_week <- all_pathogen_admissions %>%
   select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek) %>%
   head(1)
 
+adenovirus_admissions = all_pathogen_admissions %>% 
+  select(Date, Year, ISOWeek, Weekord, Season,
+         Admissions = adeno)
+
 tagList(
   fluidRow(width = 12,
 

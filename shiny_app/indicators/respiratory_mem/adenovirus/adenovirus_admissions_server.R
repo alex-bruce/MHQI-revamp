@@ -12,9 +12,6 @@ altTextServer("adenovirus_admissions_modal",
                                 tags$li("The y axis shows the number of hospital admissions."),
                                 tags$li("There is a trace for each of the following season from 2016/2017 to 2022/2023")))
 
-adenovirus_admissions = all_pathogen_admissions %>% 
-  select(Date, Year, ISOWeek, Weekord, Season,
-         Admissions = adeno)
 
 # Adenovirus admissions table
 output$adenovirus_admissions_table <- renderDataTable({
