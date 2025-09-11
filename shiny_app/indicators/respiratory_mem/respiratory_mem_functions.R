@@ -723,97 +723,35 @@ create_pathogen_adms_linechart <- function(data,
 }
 
 # Create pathogen age Adms line chart
-# create_pathogen_adms_age_linechart <- function(data,
-#                                                #rate_dp = 2,
-#                                                #seasons = NULL,
-#                                                value_variable = "Rate per 100k",
-#                                                y_axis_title = "Rate of hospital admissions per 100k") {
-#   
-#   # Rename value variable
-#   data <- data %>%
-#     rename(Value = value_variable)
-#   
-#   
-#   # Wrangle data
-#   data = data %>%
-#     filter(ISOWeek != 53) %>%
-#     select(Season, ISOWeek, Weekord, Value, age_band) %>%
-#     arrange(Season, Weekord) %>%
-#     mutate(ISOWeek = as.character(ISOWeek),
-#            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
-#   
-#   # Seasons in data
-#   seasons <- unique(data$Season)
-#   
-#   # Current season data only
-#   data_curr_season <- data %>%
-#     filter(Season %in% seasons[length(seasons)])
-#   
-#   xaxis_plots[["title"]] <- "Week number"
-#   xaxis_plots[["dtick"]] <- 2
-#   xaxis_plots[["range"]] <- c(-1,52)
-#   
-#   #xaxis_plots[["rangeslider"]] <- list(type = "date")
-#   yaxis_plots[["fixedrange"]] <- FALSE
-#   yaxis_plots[["title"]] <- y_axis_title
-#   
-#   xaxis_plots[["showgrid"]] <- FALSE
-#   yaxis_plots[["showgrid"]] <- FALSE
-#   
-#   
-#   
-#   #Text for tooltip
-#   tooltip_trend <- c(paste0("Season: ", data$Season,
-#                             "<br>", "Week number: ", data$ISOWeek,
-#                             "<br>", "Rate per 100k: ", data$Value))
-#   
-#   # Create plot
-#   pathogen_adms_age_linechart = data %>%
-#     plot_ly(x = ~ISOWeek,
-#             y = ~Value,
-#             split = ~age_band
-#             textposition = "none",
-#             text = tooltip_trend,
-#             hoverinfo = "text",
-#             color = ~age_band,
-#             colors=phs_colours(c("phs-blue", "phs-rust", "phs-green",
-#                                  "phs-purple", "phs-blue-50", "phs-magenta")),
-#             type="scatter",
-#             mode="lines",
-#             line = list(width = 5)) %>%
-#     layout(yaxis = yaxis_plots,
-#            xaxis = xaxis_plots,
-#            margin = list(b = 100, t = 5),
-#            paper_bgcolor = phs_colours("phs-liberty-10"),
-#            plot_bgcolor = phs_colours("phs-liberty-10")
-#     ) %>%
-#     
-#     
-#     config(displaylogo = FALSE, displayModeBar = TRUE,
-#            modeBarButtonsToRemove = bttn_remove)
-#   
-#   # For first week of new season (week 40), add in a marker
-#   if(nrow(data_curr_season) == 1){
-#     
-#     pathogen_adms_age_linechart <- pathogen_adms_age_linechart %>%
-#       add_trace(data = data_curr_season,
-#                 x = ~ISOWeek,
-#                 y = ~Value,
-#                 split = ~age_band,
-#                 showlegend = F,
-#                 color = ~Season,
-#                 colors = "#FF0000",
-#                 type = "scatter",
-#                 mode = 'markers',
-#                 textposition = "none",
-#                 text = tooltip_trend,
-#                 hoverinfo = "text")
-#   }
-#   
-#   return(pathogen_adms_age_linechart)
-#   
-# }
-
+create_pathogen_adms_age_linechart <- function(data){
+  
+  yaxis_plots[["title"]] <- "Admission rate per 100k"
+  xaxis_plots[["title"]] <- "Week ending"
+  
+  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  
+  
+  p <- plot_ly(data) %>%
+    add_trace(x = ~week_ending, y = ~rate, split = ~age_band, text = ~age_band,
+              type = "scatter", mode = "lines",
+              color = ~age_band,
+              colors = phs_colours(c("phs-blue", "phs-rust", "phs-green",
+                                     "phs-purple", "phs-blue-50", "phs-magenta", "phs-teal")),
+              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+                                     '<b>Age group</b>: %{text}<br>',
+                                     '<b>Admission rate per 100k</b>: %{y}')
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
+}
 
 
 make_adms_summary_plot <- function(data){
