@@ -126,4 +126,3 @@ write.csv(g_rsv_adm_hb, glue(output_folder, "RSV_Admissions_HB.csv"), row.names 
 # rm(i_rsv_hb_admissions, g_rsv_adm_scot, g_rsv_adm_hb , g_rsv_adm_hb_3weeks,
 #    g_rsv_adm_hb_3weeks_full, hb_last_three_weeks, HealthBoardName,
 #    three_sunday_dates)
-

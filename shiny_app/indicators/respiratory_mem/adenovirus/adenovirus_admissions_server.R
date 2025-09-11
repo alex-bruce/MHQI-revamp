@@ -12,6 +12,13 @@ altTextServer("adenovirus_admissions_modal",
                                 tags$li("The y axis shows the number of hospital admissions."),
                                 tags$li("There is a trace for each of the following season from 2016/2017 to 2022/2023")))
 
+altTextServer("adenovirus_admissions_age_modal",
+              title = "Adenovirus hospital admission rate per 100,000 population by age group",
+              content = tags$ul(tags$li("This is a plot showing the rate of adenovirus hospital admission per 100,000 population by age group."),
+                                tags$li("The x axis shows the ISO week of amission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population.")))
+
 
 # Adenovirus admissions table
 output$adenovirus_admissions_table <- renderDataTable({
