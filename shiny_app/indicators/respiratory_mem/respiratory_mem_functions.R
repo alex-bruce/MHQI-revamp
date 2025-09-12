@@ -50,7 +50,7 @@ create_mem_linechart <- function(data,
     select(Season) %>%
     arrange(Season) %>%
     distinct() %>%
-    tail(6)
+    tail(5)
   seasons <- seasons$Season
 
   # Wrangle data
