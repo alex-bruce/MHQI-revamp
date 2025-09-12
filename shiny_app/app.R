@@ -271,10 +271,12 @@ ui <- fluidPage(
                                      #             "Additional information can be found on the PHS page for rhinovirus."),
                                      linebreaks(1),
                                      radioGroupButtons("rhinovirus_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.rhinovirus_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_mem_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.rhinovirus_select=='Hospital admissions'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.rhinovirus_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_cari_ui.R"), local = TRUE)$value))
                                      ),
@@ -287,10 +289,12 @@ ui <- fluidPage(
                                        "Seasonal coronaviruses have an annual seasonality and typically circulate in the winter months."),
                                      linebreaks(1),
                                      radioGroupButtons("seasonal_coronavirus_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.seasonal_coronavirus_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_mem_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.seasonal_coronavirus_select=='Hospital admissions'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.seasonal_coronavirus_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_cari_ui.R"), local = TRUE)$value))
                                      )
@@ -448,12 +452,14 @@ server <- function(input, output, session) {
   source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/other_pathogens/other_pathogens_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_cari_server.R"), local = TRUE)$value
   
 
