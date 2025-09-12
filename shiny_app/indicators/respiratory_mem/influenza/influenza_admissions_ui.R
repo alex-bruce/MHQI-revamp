@@ -85,6 +85,24 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
     ), # tabBox
     linebreaks(1)
       ), # fluidRow
+
+fluidRow(
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  tagList(linebreaks(1),
+                          altTextUI("influenza_admissions_age_modal"),
+                          withNavySpinner(plotlyOutput("influenza_admissions_age_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("influenza_admissions_age_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+), # fluidRow
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute influenza admissions to hospital by NHS Health Board of Treatment; week ending")),
 #          linebreaks(1)), #fluidRow
