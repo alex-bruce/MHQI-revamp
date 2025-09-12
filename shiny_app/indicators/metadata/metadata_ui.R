@@ -314,9 +314,17 @@ tagList(h1("Metadata"),
                                      "relatively resistant to common disinfectants. Adenoviruses do not follow a seasonal",
                                      "pattern and circulate all year round."),# Additional information can be found on the PHS page for adenovirus."),
                                    p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS)")),
-                                   br()
+                                   br(),
 
-                                   ),
+                                   
+                                   # Hospital admissions ----
+                                   h4("Hospital admissions"),
+                                   p("Patients admitted as an emergency to a hospital in Scotland with recently confirmed adenovirus are identified from Rapid Preliminary Inpatient Data (RAPID).
+                                 RAPID is a daily submission of people who have been admitted to hospital in Scotland.
+                                 The case definition includes patients admitted as an emergency to a medical specialty (excluding surgical and mental health specialties,
+                                 and emergency admissions with patient injury codes) who have a positive adenovirus test result, taken within a period of between 14 days before the admission date and 48 hours after the admission date.
+                                 RAPID data is updated on a weekly basis and NHS boards are required to submit information on admissions no later than midday Wednesday. A complete provisional dataset prepared on Tuesday 2pm is used for the analysis in this report."),
+                                   p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS); Rapid and Preliminary Inpatient Data (RAPID)"))),
 
 
                    #### HMPV PANEL ----
@@ -330,10 +338,18 @@ tagList(h1("Metadata"),
                                      "infants and young children. HMPV has distinct annual seasonality, with the highest",
                                      "transmission in the winter months."),# Additional information can be found on the PHS page for human metapneumovirus."),
                                    p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS)")),
-                                   br()
+                                   br(),
+                                   
+                                   # Hospital admissions ----
+                                   h4("Hospital admissions"),
+                                   p("Patients admitted as an emergency to a hospital in Scotland with recently confirmed HMPV are identified from Rapid Preliminary Inpatient Data (RAPID).
+                                 RAPID is a daily submission of people who have been admitted to hospital in Scotland.
+                                 The case definition includes patients admitted as an emergency to a medical specialty (excluding surgical and mental health specialties,
+                                 and emergency admissions with patient injury codes) who have a positive HMPV test result, taken within a period of between 14 days before the admission date and 48 hours after the admission date.
+                                 RAPID data is updated on a weekly basis and NHS boards are required to submit information on admissions no later than midday Wednesday. A complete provisional dataset prepared on Tuesday 2pm is used for the analysis in this report."),
+                                   p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS); Rapid and Preliminary Inpatient Data (RAPID)"))),
 
-                   ),
-
+                   
 
                    #### MYCOPLASMA PNEUMONIAE PANEL ----
                    bsCollapsePanel("Mycoplasma pneumoniae",
@@ -348,9 +364,19 @@ tagList(h1("Metadata"),
                                      "circulates throughout the year."),# Additional information can be found on the ",
                                     # "PHS page for Mycoplasma pneumoniae."),
                                    p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS)")),
-                                   br()
+                                   br(),
+                                   
+                                   
+                                   # Hospital admissions ----
+                                   h4("Hospital admissions"),
+                                   p("Patients admitted as an emergency to a hospital in Scotland with recently confirmed mycoplasma pneumoniae are identified from Rapid Preliminary Inpatient Data (RAPID).
+                                 RAPID is a daily submission of people who have been admitted to hospital in Scotland.
+                                 The case definition includes patients admitted as an emergency to a medical specialty (excluding surgical and mental health specialties,
+                                 and emergency admissions with patient injury codes) who have a positive mycoplasma pneumoniae test result, taken within a period of between 14 days before the admission date and 48 hours after the admission date.
+                                 RAPID data is updated on a weekly basis and NHS boards are required to submit information on admissions no later than midday Wednesday. A complete provisional dataset prepared on Tuesday 2pm is used for the analysis in this report."),
+                                   p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS); Rapid and Preliminary Inpatient Data (RAPID)"))),
 
-                   ),
+                   
 
 
                    #### PARAINFLUENZA PANEL ----
@@ -364,9 +390,19 @@ tagList(h1("Metadata"),
                                      "infants and young children, elderly people and people who are immunocompromised."),
                                      #"Additional information can be found on the PHS page for parainfluenza."),
                                    p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS)")),
-                                   br()
+                                   br(),
+                                   
+                                   # Hospital admissions ----
+                                   h4("Hospital admissions"),
+                                   p("Patients admitted as an emergency to a hospital in Scotland with recently confirmed parainfluenza are identified from Rapid Preliminary Inpatient Data (RAPID).
+                                 RAPID is a daily submission of people who have been admitted to hospital in Scotland.
+                                 The case definition includes patients admitted as an emergency to a medical specialty (excluding surgical and mental health specialties,
+                                 and emergency admissions with patient injury codes) who have a positive parainfluenza test result, taken within a period of between 14 days before the admission date and 48 hours after the admission date.
+                                 RAPID data is updated on a weekly basis and NHS boards are required to submit information on admissions no later than midday Wednesday. A complete provisional dataset prepared on Tuesday 2pm is used for the analysis in this report."),
+                                   p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS); Rapid and Preliminary Inpatient Data (RAPID)"))),
+                   
 
-                   ),
+                   
 
 
                    #### RHINOVIRUS PANEL ----
@@ -380,9 +416,19 @@ tagList(h1("Metadata"),
                                      "or pneumonia. Rhinoviruses circulate year-round, with peaks in autumn and spring."),
                                      #"Additional information can be found on the PHS page for rhinovirus."),
                                    p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS)")),
-                                   br()
+                                   br(),
+                                   
+                                   # Hospital admissions ----
+                                   h4("Hospital admissions"),
+                                   p("Patients admitted as an emergency to a hospital in Scotland with recently confirmed rhinovirus are identified from Rapid Preliminary Inpatient Data (RAPID).
+                                 RAPID is a daily submission of people who have been admitted to hospital in Scotland.
+                                 The case definition includes patients admitted as an emergency to a medical specialty (excluding surgical and mental health specialties,
+                                 and emergency admissions with patient injury codes) who have a positive rhinovirus test result, taken within a period of between 14 days before the admission date and 48 hours after the admission date.
+                                 RAPID data is updated on a weekly basis and NHS boards are required to submit information on admissions no later than midday Wednesday. A complete provisional dataset prepared on Tuesday 2pm is used for the analysis in this report."),
+                                   p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS); Rapid and Preliminary Inpatient Data (RAPID)"))),
+                   
 
-                   ),
+                   
 
 
                    #### SEASONAL CORONAVIRUS PANEL ----
@@ -394,9 +440,18 @@ tagList(h1("Metadata"),
                                      but can cause lower-respiratory tract illnesses such as pneumonia and bronchitis. Infection can occur in people of all ages.
                                      Seasonal coronaviruses have an annual seasonality and typically circulate in the winter months."),
                                    p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS)")),
-                                   br()
+                                   br(),
+                                   
+                                   # Hospital admissions ----
+                                   h4("Hospital admissions"),
+                                   p("Patients admitted as an emergency to a hospital in Scotland with recently confirmed seasonal coronavirus are identified from Rapid Preliminary Inpatient Data (RAPID).
+                                 RAPID is a daily submission of people who have been admitted to hospital in Scotland.
+                                 The case definition includes patients admitted as an emergency to a medical specialty (excluding surgical and mental health specialties,
+                                 and emergency admissions with patient injury codes) who have a positive seasonal coronavirus test result, taken within a period of between 14 days before the admission date and 48 hours after the admission date.
+                                 RAPID data is updated on a weekly basis and NHS boards are required to submit information on admissions no later than midday Wednesday. A complete provisional dataset prepared on Tuesday 2pm is used for the analysis in this report."),
+                                   p(strong("Source: Electronic Communication of Surveillance in Scotland (ECOSS); Rapid and Preliminary Inpatient Data (RAPID)"))),
+                   
 
-                   ),
                    
                    
                    #### WASTEWATER PANEL ----
