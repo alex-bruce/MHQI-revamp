@@ -21,7 +21,7 @@
 #### New population section####
 # retain i_population in the interim, but update cases with this version
 
-pop_year= 2023# use to filter through entire script, only need to update 1 line when Pop Est files updated
+pop_year= 2024# use to filter through entire script, only need to update 1 line when Pop Est files updated
 
 gpd_base_path<-"/conf/linkage/output/lookups/Unicode/"
 
