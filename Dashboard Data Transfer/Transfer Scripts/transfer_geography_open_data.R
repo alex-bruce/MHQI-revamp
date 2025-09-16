@@ -33,8 +33,8 @@ location_names <- bind_rows(HBnames,LAnames)
 rm(HBnames,LAnames)
 
 #Populations
-base_hb_population <- readRDS(glue("//conf/linkage/output/lookups/Unicode/Populations/Estimates/HB2019_pop_est_5year_agegroups_1981_2023.rds"))
-base_la_population <- readRDS(glue("//conf/linkage/output/lookups/Unicode/Populations/Estimates/CA2019_pop_est_5year_agegroups_1981_2023.rds"))
+base_hb_population <- readRDS(glue("//conf/linkage/output/lookups/Unicode/Populations/Estimates/HB2019_pop_est_5year_agegroups_1981_2024.rds"))
+base_la_population <- readRDS(glue("//conf/linkage/output/lookups/Unicode/Populations/Estimates/CA2019_pop_est_5year_agegroups_1981_2024.rds"))
 
 scotland_pop <- base_hb_population %>%
   filter(year == 2023) %>%
