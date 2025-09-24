@@ -37,19 +37,19 @@ base_hb_population <- readRDS(glue("//conf/linkage/output/lookups/Unicode/Popula
 base_la_population <- readRDS(glue("//conf/linkage/output/lookups/Unicode/Populations/Estimates/CA2019_pop_est_5year_agegroups_1981_2024.rds"))
 
 scotland_pop <- base_hb_population %>%
-  filter(year == 2023) %>%
+  filter(year == 2024) %>%
   mutate(location_code = "Scotland")%>%
   group_by(location_code) %>%
   summarise(Pop = sum(pop))
 
 hb_pop <- base_hb_population %>%
-  filter(year == 2023) %>%
+  filter(year == 2024) %>%
   rename(location_code = hb2019)%>%
   group_by(location_code) %>%
   summarise(Pop = sum(pop))
 
 la_pop <- base_la_population %>%
-  filter(year == 2023) %>%
+  filter(year == 2024) %>%
   rename(location_code = ca2019) %>%
   group_by(location_code) %>%
   summarise(Pop = sum(pop))
