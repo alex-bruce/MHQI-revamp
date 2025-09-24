@@ -65,8 +65,8 @@ tagList(
                                                                                         ), # column
                                               column(4, pickerInput("respiratory_select_season",
                                                                     label = "Select a season",
-                                                                    choices = recent_five_seasons, # found in setup
-                                                                    selected = tail(recent_five_seasons,1))), # column
+                                                                    choices = recent_six_seasons, # found in setup
+                                                                    selected = tail(recent_six_seasons,1))), # column
                                                      column(4, pickerInput("respiratory_y_axis_plots",
                                                                            label =     "Select number or rate",
                                                                            choices = c("Number of cases", "Rate per 100,000"),

@@ -197,7 +197,7 @@ prev_week_iso <- lubridate::isoweek(Respiratory_Summary_Totals$DatePreviousWeek[
 
 # season values
 all_seasons <- unique(Respiratory_AllData$Season)
-recent_five_seasons <- tail(all_seasons,5)
+recent_six_seasons <- tail(all_seasons,6)
 admission_seasons <- unique(Length_of_Stay_Season$Season)
 
 # Static legend for MEM plots
