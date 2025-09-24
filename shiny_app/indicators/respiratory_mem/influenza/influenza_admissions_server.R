@@ -5,7 +5,7 @@ metadataButtonServer(id="respiratory_influenza_admissions",
 
 
 # Get recent seasons
-flu_adm_seasons <- tail(sort(unique(Influenza_admissions$Season)), 5)
+flu_adm_seasons <- tail(sort(unique(Influenza_admissions$Season)), 6)
 
 
 altTextServer("influenza_admissions_modal",
@@ -15,7 +15,7 @@ altTextServer("influenza_admissions_modal",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the number of hospital admissions."),
                                 tags$li(glue("There is a trace for each of the following season from ", 
-                                             flu_adm_seasons[1], " to ", flu_adm_seasons[5], "."))
+                                             flu_adm_seasons[1], " to ", flu_adm_seasons[6], "."))
               )
 )
 

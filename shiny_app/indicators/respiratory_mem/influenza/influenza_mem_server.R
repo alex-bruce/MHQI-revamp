@@ -57,7 +57,7 @@ influenza_seasons <- Respiratory_Pathogens_MEM_Scot %>%
   select(Season) %>%
   arrange(Season) %>%
   distinct() %>%
-  tail(5)
+  tail(6)
 influenza_seasons <- influenza_seasons$Season
 
 
@@ -69,8 +69,8 @@ altTextServer("influenza_mem_modal",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the rate of influenza infection per 100,000 population."),
                                 tags$li(glue("There is a trace for each of the following seasons: ", influenza_seasons[1], ", ",
-                                             influenza_seasons[2], ", ", influenza_seasons[3], ", ", influenza_seasons[4], ", and ",
-                                             influenza_seasons[5], ".")),
+                                             influenza_seasons[2], ", ", influenza_seasons[3], ", ", influenza_seasons[4], 
+                                             ", ", influenza_seasons[5],", and ", influenza_seasons[6], ".")),
                                 tags$li(glue("Activity levels for influenza based on MEM thresholds are represented by different coloured panels on the plot. ",
                                         "The activity levels and MEM thresholds for influenza are: ",
                                         "Baseline (< ", influenza_low_threshold, "), ",
@@ -85,7 +85,7 @@ altTextServer("influenza_mem_modal",
 altTextServer("influenza_mem_hb_modal",
               title = "Influenza incidence rate per 100,000 population by NHS Health Board",
               content = tags$ul(tags$li(glue("This is a plot showing the rate of influenza infection per 100,000 population by NHS Health Board for seasons ",
-                                             influenza_seasons[4], " and ", influenza_seasons[5], ".")),
+                                             influenza_seasons[5], " and ", influenza_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the NHS Health Board."),
@@ -105,7 +105,7 @@ altTextServer("influenza_mem_hb_modal",
 altTextServer("influenza_mem_age_modal",
               title = "Influenza incidence rate per 100,000 population by age group",
               content = tags$ul(tags$li(glue("This is a plot showing the rate of influenza infection per 100,000 population by age group for seasons ",
-                                             influenza_seasons[4], " and ", influenza_seasons[5], ".")),
+                                             influenza_seasons[5], " and ", influenza_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the age group."),
