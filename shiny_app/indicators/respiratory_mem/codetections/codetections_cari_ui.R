@@ -12,27 +12,6 @@ tagList(
   ),
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Pathogen composition of two-pathogen co-detections"))),
-  
-  fluidRow(
-    tabBox(width = NULL,
-           type = "pills",
-           tabPanel("Plot",
-                    tagList(linebreaks(1),
-                            altTextUI("duodetections_cari_modal"),
-                            withNavySpinner(plotlyOutput("duodetections_cari_plot")),
-                    )),
-           tabPanel("Data",
-                    tagList(linebreaks(1),
-                            withNavySpinner(dataTableOutput("duodetections_cari_table"))
-                    ) # tagList
-           ) # tabPanel
-           
-    ), # tabBox
-    linebreaks(1)
-  ),
-  
-  fluidRow(width = 12,
            tagList(h2("CARI - Proportion of positive samples that are co-detections by age group"))),
   
   fluidRow(
@@ -55,5 +34,28 @@ tagList(
            
     ), # tabBox
     linebreaks(1)
+  ),
+  
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Relative frequency (%) of each pathogen in all samples with two-pathogen co-detections"))),
+  
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("duodetections_cari_modal"),
+                            withNavySpinner(plotlyOutput("duodetections_cari_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("duodetections_cari_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
   )
+  
 )

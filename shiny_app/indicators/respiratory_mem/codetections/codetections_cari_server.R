@@ -4,10 +4,10 @@ metadataButtonServer(id="respiratory_codetections_cari",
                      parent = session)
 
 altTextServer("duodetections_cari_modal",
-              title = "CARI - Pathogen composition of two-pathogen co-detections",
-              content = tags$ul(tags$li("This is a plot showing the pathogen composition of two-pathogen co-detections in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              title = "CARI - Relative frequency (%) of each pathogen in all samples with two-pathogen co-detections",
+              content = tags$ul(tags$li("This is a plot showing how often each individual pathogen is identified (expressed as a percentage of all pathogens identified) in all samples with two-pathogen co-detections in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
-                                tags$li("The y axis is the percentage composition of all two-pathogen co-detections.")))
+                                tags$li("The y axis is the percentage of all pathogens identified.")))
 
 altTextServer("codetections_cari_modal",
               title = "CARI - Proportion of positive samples that are co-detections by age group",
@@ -26,7 +26,7 @@ output$duodetections_cari_table <- renderDataTable({
     mutate(perc = round_half_up(perc,1)) %>%
     rename(`Week Ending` = WeekEnding,
            `Pathogen` = pathogen,
-           `Percentage composition of two-pathogen co-detections (%)` = perc) %>%
+           `Percentage (%)` = perc) %>%
     make_table(filter_cols = c(1,2))
 })
 

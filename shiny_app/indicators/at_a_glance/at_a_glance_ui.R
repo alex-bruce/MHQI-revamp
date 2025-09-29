@@ -5,10 +5,11 @@ cari_at_a_glance <- Respiratory_Pathogens_CARI_Scot %>%
   filter(Pathogen %in% c("Adenovirus", "COVID-19", "Human Metapneumovirus", "Influenza",
                          "Mycoplasma Pneumoniae", "Overall Test Positivity", "Parainfluenza Virus",
                          "Respiratory Syncytial Virus", "Rhinovirus", "Seasonal Coronavirus (non-COVID-19)")) %>%
-  mutate(Pathogen = ifelse(Pathogen == "Overall Test Positivity", "Any pathogen", as.character(Pathogen))) %>%
+  mutate(Pathogen = ifelse(Pathogen == "Overall Test Positivity", "Any pathogen", as.character(Pathogen)),
+         Pathogen = ifelse(Pathogen == "Parainfluenza Virus", "Parainfluenza", as.character(Pathogen))) %>%
   mutate(Pathogen = factor(Pathogen, levels = c("Any pathogen", "COVID-19", "Influenza",
                                                 "Respiratory Syncytial Virus", "Adenovirus", "Human Metapneumovirus",
-                                                "Mycoplasma Pneumoniae", "Parainfluenza Virus", "Rhinovirus", 
+                                                "Mycoplasma Pneumoniae", "Parainfluenza", "Rhinovirus", 
                                                 "Seasonal Coronavirus (non-COVID-19)")))
 
 tagList(

@@ -172,8 +172,8 @@ output$parainfluenza_cari_subtype1_table <- renderDataTable({
 # CARI - Overall parainfluenza swabpos table
 output$parainfluenza_cari_subtype2_table <- renderDataTable({
   parainfluenza_cari_subtype %>%
-    filter(Pathogen %in% c("Parainfluenza Virus - Type 1", "Parainfluenza Virus - Type 2",
-                           "Parainfluenza Virus - Type 3", "Parainfluenza Virus - Type 4")) %>%
+    filter(Pathogen %in% c("HPIV-1", "HPIV-2",
+                           "HPIV-3", "HPIV-4")) %>%
     arrange(desc(WeekEnding), Pathogen) %>%
     mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, PositiveSamples) %>%
@@ -196,8 +196,8 @@ output$parainfluenza_cari_subtype1_plot <- renderPlotly({
 # CARI - Overall RSV swabpos plot
 output$parainfluenza_cari_subtype2_plot <- renderPlotly({
   parainfluenza_cari_subtype %>%
-    filter(Pathogen %in% c("Parainfluenza Virus - Type 1", "Parainfluenza Virus - Type 2",
-                           "Parainfluenza Virus - Type 3", "Parainfluenza Virus - Type 4")) %>%
+    filter(Pathogen %in% c("HPIV-1", "HPIV-2",
+                           "HPIV-3", "HPIV-4")) %>%
     create_cari_subtype_barchart()
   
 })

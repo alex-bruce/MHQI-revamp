@@ -1005,7 +1005,7 @@ create_cari_pathogen_linechart <- function(data){
     "Adenovirus" = "#12436D",
     "Human Metapneumovirus" = "#B4DEDB",
     "Mycoplasma Pneumoniae" = "#3F085C",
-    "Parainfluenza Virus" = "#A285D1",
+    "Parainfluenza" = "#A285D1",
     "Rhinovirus" = "#A8CCE8",
     "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"
   )
@@ -1148,22 +1148,22 @@ create_cari_subtype_linechart <- function(data){
   
   # Define a named color vector
   subtype_colours <- c(
-    "Influenza - Type A and B" = "#12436D",
-    "Influenza - Type A" = "#28A197",
-    "Influenza - Type A (H1N1)" = "#801650",
-    "Influenza - Type A (H3)" = "#F46A25",
-    "Influenza - Type A (not subtyped)" = "#3F085C",
-    "Influenza - Type B" = "#3E8ECC",
-    "Parainfluenza Virus" = "#12436D",
-    "Parainfluenza Virus - Type 1" = "#28A197",
-    "Parainfluenza Virus - Type 2" = "#801650",
-    "Parainfluenza Virus - Type 3" = "#F46A25",
-    "Parainfluenza Virus - Type 4" = "#3F085C",
+    "Type A and B" = "#12436D",
+    "Type A" = "#28A197",
+    "Type A (H1N1)" = "#801650",
+    "Type A (H3N2)" = "#F46A25",
+    "Type A (not subtyped)" = "#3F085C",
+    "Type B" = "#3E8ECC",
+    "HPIV" = "#12436D",
+    "HPIV-1" = "#28A197",
+    "HPIV-2" = "#801650",
+    "HPIV-3" = "#F46A25",
+    "HPIV-4" = "#3F085C",
     "Seasonal Coronavirus (non-COVID-19)" = "#12436D",
-    "Seasonal Coronavirus (non-COVID-19) - 229e" = "#28A197",
-    "Seasonal Coronavirus (non-COVID-19) - OC43" = "#801650", 
-    "Seasonal Coronavirus (non-COVID-19) - NL63" = "#F46A25",
-    "Seasonal Coronavirus (non-COVID-19) - Untyped" = "#3F085C"
+    "HCoV-229e (alpha)" = "#28A197",
+    "HCoV-OC43 (beta)" = "#801650", 
+    "HCoV-NL63 (alpha)" = "#F46A25",
+    "Untyped" = "#3F085C"
   )
 
   p <- plot_ly(data) %>%
@@ -1206,18 +1206,18 @@ create_cari_subtype_barchart <- function(data){
     
   # Define a named color vector
   subtype_colours <- c(
-    "Influenza - Type A (H1N1)" = "#801650",
-    "Influenza - Type A (H3)" = "#F46A25",
-    "Influenza - Type A (not subtyped)" = "#3F085C",
-    "Influenza - Type B" = "#3E8ECC",
-    "Parainfluenza Virus - Type 1" = "#28A197",
-    "Parainfluenza Virus - Type 2" = "#801650",
-    "Parainfluenza Virus - Type 3" = "#F46A25",
-    "Parainfluenza Virus - Type 4" = "#3F085C",
-    "Seasonal Coronavirus (non-COVID-19) - 229e" = "#28A197",
-    "Seasonal Coronavirus (non-COVID-19) - OC43" = "#801650", 
-    "Seasonal Coronavirus (non-COVID-19) - NL63" = "#F46A25",
-    "Seasonal Coronavirus (non-COVID-19) - Untyped" = "#3F085C"
+    "Type A (H1N1)" = "#801650",
+    "Type A (H3N2)" = "#F46A25",
+    "Type A (not subtyped)" = "#3F085C",
+    "Type B" = "#3E8ECC",
+    "HPIV-1" = "#28A197",
+    "HPIV-2" = "#801650",
+    "HPIV-3" = "#F46A25",
+    "HPIV-4" = "#3F085C",
+    "HCoV-229e (alpha)" = "#28A197",
+    "HCoV-NL63 (alpha)" = "#801650",
+    "HCoV-OC43 (beta)" = "#F46A25", 
+    "Untyped" = "#3F085C"
   )
 
   data <- data %>%
@@ -1268,7 +1268,7 @@ create_cari_duodetection_chart <- function(data){
     "Influenza A" = "#801650",
     "Influenza B" = "#CCA2B9",
     "Mycoplasma Pneumoniae" = "#3F085C",
-    "Parainfluenza Virus" = "#A285D1",
+    "Parainfluenza" = "#A285D1",
     "Respiratory Syncytial Virus" = "#28A197",
     "Rhinovirus" = "#A8CCE8",
     "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"

@@ -44,9 +44,14 @@ parainfluenza_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
   filter(substr(Pathogen,1,19) %in% "Parainfluenza Virus") %>%
   mutate(WeekBeginning = as.Date(WeekBeginning),
          WeekEnding = as.Date(WeekEnding)) %>%
-  mutate(Pathogen = factor(Pathogen, levels = c("Parainfluenza Virus", "Parainfluenza Virus - Type 1",
-                                                "Parainfluenza Virus - Type 2", "Parainfluenza Virus - Type 3",
-                                                "Parainfluenza Virus - Type 4")))
+  mutate(Pathogen = case_when(
+    Pathogen == "Parainfluenza Virus" ~ "HPIV",
+    Pathogen == "Parainfluenza Virus - Type 1" ~ "HPIV-1",
+    Pathogen == "Parainfluenza Virus - Type 2" ~ "HPIV-2",
+    Pathogen == "Parainfluenza Virus - Type 3" ~ "HPIV-3",
+    Pathogen == "Parainfluenza Virus - Type 4" ~ "HPIV-4",
+  )) %>%
+  mutate(Pathogen = factor(Pathogen, levels = c("HPIV", "HPIV-1", "HPIV-2", "HPIV-3", "HPIV-4")))
 
 
 tagList(
