@@ -89,9 +89,10 @@ output$covid_cases_table <- renderDataTable({
 
 altTextServer("reported_cases_per_100k",
 title = "Reported COVID-19 cases per 100,0000 people",
-content = tags$ul(tags$li("This is a plot shows the past 3 seasons of COVID-19 cases per 100,000 people."),
- tags$li("The x axis is the week number"),
-tags$li("The 3 lines show a separate season respectively. The legend indicates which line corresponds to which season.")
+content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 infection per 100,000 population in Scotland."),
+ tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
+ tags$li("The y axis shows the rate of COVID-19 infection per 100,000 population."),
+ tags$li("There is a trace for the three most recent seasons: 2023/2024, 2024/2025 and 2025/26.")
   )
 )
 

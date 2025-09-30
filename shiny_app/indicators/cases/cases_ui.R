@@ -77,7 +77,7 @@ tagList(
   # ),#fluidrow
 
   fluidRow(width = 12,
-         tagList(h2("COVID incidence rate per 100,000 population in Scotland"))),
+         tagList(h2("COVID-19 incidence rate per 100,000 population in Scotland"))),
 
   fluidRow(
     tabBox(width = NULL,
