@@ -26,8 +26,8 @@ covid_cases_weekly <- Cases_Weekly %>%
     Year = str_sub(ISOWeekFull, 1, 4),
     ISOWeek = str_sub(ISOWeekFull, -2, -1),
     Flu_Season = case_when(
-      str_sub(ISOWeekFull, -2, -1) < SeasonStartWeek ~ paste(as.numeric(Year) - 1, "-", Year, sep = ""),
-      TRUE ~ paste(Year, "-", as.numeric(Year) + 1, sep = "")
+      str_sub(ISOWeekFull, -2, -1) < SeasonStartWeek ~ paste(as.numeric(Year) - 1, "/", Year, sep = ""),
+      TRUE ~ paste(Year, "/", as.numeric(Year) + 1, sep = "")
     ),
     #When the new season hits, this logic line needs to be updated:
     RatePer100000 = case_when(
