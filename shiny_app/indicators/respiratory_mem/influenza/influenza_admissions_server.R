@@ -102,7 +102,7 @@ output$influenza_admissions_age_plot <- renderPlotly({
   age_rate_data_all_path %>%
     filter(age_band != "All Ages") %>% 
     select(week_ending, age_band,
-           rate = rsv_rate) %>%
+           rate = flu_rate) %>%
     mutate(age_band = factor(age_band, levels = c("<1",  "0-4", "5-14", "15-44", "45-64",
                                                   "65-74", "75+"))) %>% 
     create_pathogen_adms_age_linechart()

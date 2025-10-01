@@ -24,7 +24,7 @@ tagList(
   fluidRow(width = 12,
            tabPanel(stringr::str_to_sentence("HMPV"),
                     # headline figures for the week in Scotland
-                    tagList(h2(glue("Number of HMPV admissions to hospital in Scotland")),
+                    tagList(h2(glue("Number of acute HMPV admissions to hospital in Scotland")),
                             tags$div(class = "headline",
                                      br(),
 #                                     h3(glue("Total number of influenza hospital admissions in Scotland over the last two weeks")),

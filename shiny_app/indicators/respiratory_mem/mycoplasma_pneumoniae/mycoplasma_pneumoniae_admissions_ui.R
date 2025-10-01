@@ -24,7 +24,7 @@ tagList(
   fluidRow(width = 12,
            tabPanel(stringr::str_to_sentence("Mycoplasma pneumoniae"),
                     # headline figures for the week in Scotland
-                    tagList(h2(glue("Number of Mycoplasma pneumoniae admissions to hospital in Scotland")),
+                    tagList(h2(glue("Number of acute Mycoplasma pneumoniae admissions to hospital in Scotland")),
                             tags$div(class = "headline",
                                      br(),
 #                                     h3(glue("Total number of influenza hospital admissions in Scotland over the last two weeks")),
@@ -83,7 +83,7 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
      linebreaks(1)
        ), # fluidRow
 
-tagList(h2("Rate of acute mycoplasma pneumoniae hospital admissions by age group")),
+tagList(h2("Rate of acute Mycoplasma pneumoniae hospital admissions by age group")),
 
 #),
 br(),
