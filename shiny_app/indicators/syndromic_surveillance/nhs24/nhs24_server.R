@@ -67,9 +67,9 @@ altTextServer("nhs24_mem_modal",
                                              "The activity levels and MEM thresholds for NHS24 calls are: ",
                                              "Baseline (< ", nhs24_low_threshold, "), ",
                                              "Low (", nhs24_low_threshold, "-", nhs24_moderate_threshold-0.01, "), ",
-                                             "Moderate (", nhs24_moderate_threshold, "-", nhs24_high_threshold-0.01, "), ",
+                                             "Medium (", nhs24_moderate_threshold, "-", nhs24_high_threshold-0.01, "), ",
                                              "High (", nhs24_high_threshold, "-", nhs24_extraordinary_threshold-0.01, "), and ",
-                                             "Extraordinary (>= ", nhs24_extraordinary_threshold, ")."))))
+                                             "Very High (>= ", nhs24_extraordinary_threshold, ")."))))
 
 altTextServer("nhs24_mem_hb_modal",
               title = "Percentage of NHS24 calls for respiratory symptoms by NHS Health Board",
@@ -78,7 +78,7 @@ altTextServer("nhs24_mem_hb_modal",
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the NHS Health Board."),
-                                tags$li("Each cell is coloured according to the activity level: Baseline, Low, Moderate, High, or Extraordinary."),
+                                tags$li("Each cell is coloured according to the activity level: Baseline, Low, Medium, High, or Very High."),
                                 tags$li("Caution should be taken when interpreting the activity levels (and MEM thresholds) for smaller NHS Health Boards. ",
                                         "The percentage of calls for respiratory symptoms shows greater fluctuation as a result of the lower number of samples taken relative ",
                                         "to the population size; this has the effect of generating small or large incidence rates compared to NHS Health Boards ",
@@ -95,7 +95,7 @@ altTextServer("nhs24_mem_age_modal",
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the age group."),
-                                tags$li("Each cell is coloured according to the activity level: Baseline, Low, Moderate, High, or Extraordinary."),
+                                tags$li("Each cell is coloured according to the activity level: Baseline, Low, Medium, High, or Very High."),
                                 tags$li("Caution should be taken when interpreting the activity levels (and MEM thresholds) for smaller age groups. ",
                                         "The percentage of calls for respiratory symptoms shows greater fluctuation as a result of the lower number of samples taken relative ",
                                         "to the population size; this has the effect of generating small or large incidence rates compared to age groups ",
@@ -111,6 +111,11 @@ output$nhs24_mem_table <- renderDataTable({
     filter(Season %in% nhs24_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, Percentage, ActivityLevel) %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
@@ -127,6 +132,11 @@ output$nhs24_mem_hb_table <- renderDataTable({
     filter(Season %in% nhs24_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, Percentage, ActivityLevel) %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            HBName = factor(HBName),
@@ -145,6 +155,11 @@ output$nhs24_mem_age_table <- renderDataTable({
     filter(Season %in% nhs24_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, Percentage, ActivityLevel) %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            AgeGroup = factor(AgeGroup, levels = mem_age_groups_full),
@@ -161,6 +176,11 @@ output$nhs24_mem_age_table <- renderDataTable({
 # NHS24 MEM plot
 output$nhs24_mem_plot <- renderPlotly({
   Respiratory_NHS24_MEM_Scot %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     create_mem_linechart(value_variable = "Percentage",
                          y_axis_title = "Percentage of calls to NHS24 <br> for respiratory symptoms")
 
@@ -169,6 +189,11 @@ output$nhs24_mem_plot <- renderPlotly({
 # NHS24 MEM by HB plot
 output$nhs24_mem_hb_plot <- renderPlotly({
   Respiratory_NHS24_MEM_HB %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "HBCode", value_variable = "Percentage")
 
@@ -178,6 +203,11 @@ output$nhs24_mem_hb_plot <- renderPlotly({
 # NHS24 MEM by Age plot
 output$nhs24_mem_age_plot <- renderPlotly({
   Respiratory_NHS24_MEM_Age %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "AgeGroup", value_variable = "Percentage")
 

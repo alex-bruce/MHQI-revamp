@@ -75,9 +75,9 @@ altTextServer("adenovirus_mem_modal",
                                              "The activity levels and MEM thresholds for adenovirus are: ",
                                              "Baseline (< ", adenovirus_low_threshold, "), ",
                                              "Low (", adenovirus_low_threshold, "-", adenovirus_moderate_threshold-0.01, "), ",
-                                             "Moderate (", adenovirus_moderate_threshold, "-", adenovirus_high_threshold-0.01, "), ",
+                                             "Medium (", adenovirus_moderate_threshold, "-", adenovirus_high_threshold-0.01, "), ",
                                              "High (", adenovirus_high_threshold, "-", adenovirus_extraordinary_threshold-0.01, "), and ",
-                                             "Extraordinary (>= ", adenovirus_extraordinary_threshold, ").")),
+                                             "Very High (>= ", adenovirus_extraordinary_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))
@@ -90,7 +90,7 @@ altTextServer("adenovirus_mem_hb_modal",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 #"The first ISO week is the first week of the year (in January) and the 52nd ISO week is the last week of the year."),
                                 tags$li("The y axis shows the NHS Health Board."),
-                                tags$li("Each cell is coloured according to the activity level: Baseline, Low, Moderate, High, or Extraordinary."),
+                                tags$li("Each cell is coloured according to the activity level: Baseline, Low, Medium, High, or Very High."),
                                 tags$li("Caution should be taken when interpreting the activity levels (and MEM thresholds) for smaller NHS Health Boards. ",
                                         "The incidence rate shows greater fluctuation as a result of the lower number of samples taken relative ",
                                         "to the population size; this has the effect of generating small or large incidence rates compared to NHS Health Boards ",
@@ -110,7 +110,7 @@ altTextServer("adenovirus_mem_age_modal",
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory respiratory season starts."),
                                 tags$li("The y axis shows the age group."),
-                                tags$li("Each cell is coloured according to the activity level: Baseline, Low, Moderate, High, or Extraordinary."),
+                                tags$li("Each cell is coloured according to the activity level: Baseline, Low, Medium, High, or Very High."),
                                 tags$li("Caution should be taken when interpreting the activity levels (and MEM thresholds) for smaller age groups. ",
                                         "The incidence rate shows greater fluctuation as a result of the lower number of samples taken relative ",
                                         "to the population size; this has the effect of generating small or large incidence rates compared to age groups ",
@@ -130,6 +130,11 @@ output$adenovirus_mem_table <- renderDataTable({
     filter(Season %in% adenovirus_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, RatePer100000, ActivityLevel) %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
@@ -147,6 +152,11 @@ output$adenovirus_mem_hb_table <- renderDataTable({
     filter(Pathogen == "Adenovirus") %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            HBName = factor(HBName),
@@ -166,6 +176,11 @@ output$adenovirus_mem_age_table <- renderDataTable({
     filter(Pathogen == "Adenovirus") %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            AgeGroup = factor(AgeGroup, levels = mem_age_groups_full),
@@ -183,6 +198,11 @@ output$adenovirus_mem_age_table <- renderDataTable({
 output$adenovirus_mem_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Scot %>%
     filter(Pathogen == "Adenovirus") %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     create_mem_linechart()
 
 })
@@ -191,6 +211,11 @@ output$adenovirus_mem_plot <- renderPlotly({
 output$adenovirus_mem_hb_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_HB %>%
     filter(Pathogen == "Adenovirus") %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "HBCode")
 
@@ -201,6 +226,11 @@ output$adenovirus_mem_hb_plot <- renderPlotly({
 output$adenovirus_mem_age_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "Adenovirus") %>%
+    mutate(ActivityLevel = case_when(
+      ActivityLevel == "Moderate" ~ "Medium",
+      ActivityLevel == "Extraordinary" ~ "Very High",
+      TRUE ~ ActivityLevel
+    )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "AgeGroup")
 

@@ -207,16 +207,16 @@ mem_legend <- readPNG("www/MEM_legend_liberty10.PNG", native = FALSE, info = FAL
 euromomo_age_mem_legend <- readPNG("www/Euromomo_age_MEM_legend_liberty10.PNG", native = FALSE, info = FALSE)
 
 # Activity levels
-activity_levels <- c("Baseline", "Low", "Moderate", "High", "Extraordinary")
+activity_levels <- c("Baseline", "Low", "Medium", "High", "Very High")
 
 # Colours for thresholds
-activity_level_colours <- c("#01A148", "#FFDE17", "#F36523", "#ED1D24", "#7D4192")
+activity_level_colours <- c("#FDE725FF", "#5DC863FF", "#21908CFF", "#3B528BFF", "#440154FF")
 
 # Activity levels   for euromomo
-euromomo_activity_levels <- c("Baseline", "Low", "Moderate", "High", "Extraordinary", "Reporting delay")
+euromomo_activity_levels <- c("Baseline", "Low", "Medium", "High", "Very High", "Reporting delay")
 
 # Colours for thresholds for euromomo
-euromomo_activity_level_colours <- c("#01A148", "#FFDE17", "#F36523", "#ED1D24", "#7D4192", "#a6a6a6")
+euromomo_activity_level_colours <- c("#FDE725FF", "#5DC863FF", "#21908CFF", "#3B528BFF", "#440154FF", "#a6a6a6")
 
 # Colours for lines on line chart
 # mem_line_colours <- c("#010101", "#A35000", "#00FF1A", "#004785","#00a2e5",
