@@ -959,3 +959,102 @@ create_cari_age_linechart <- function(data){
   return(p)
   
 }
+
+
+
+# Create pathogeb occupancy line chart
+create_pathogen_occupancy_linechart <- function(data,
+                                           #rate_dp = 2,
+                                           #seasons = NULL,
+                                           value_variable = "sevenday_ave_inpatients",
+                                           y_axis_title = "Number of people in hospital\n (7 day average)") {
+  
+  # Rename value variable
+  data <- data %>%
+    rename(Value = value_variable)
+  
+  
+  # Wrangle data
+  data = data %>%
+    filter(ISOWeek != 53) %>%
+    select(Season, ISOWeek, Weekord, Value) %>%
+    arrange(Season, Weekord) %>%
+    mutate(ISOWeek = as.character(ISOWeek),
+           ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
+  
+  # Seasons in data
+  seasons <- unique(data$Season)
+  
+  # Current season data only
+  data_curr_season <- data %>%
+    filter(Season %in% seasons[length(seasons)])
+  
+  xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["dtick"]] <- 2
+  xaxis_plots[["range"]] <- c(-1,52)
+  
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["title"]] <- y_axis_title
+  
+  xaxis_plots[["showgrid"]] <- FALSE
+  yaxis_plots[["showgrid"]] <- FALSE
+  
+  
+  
+  #Text for tooltip
+  tooltip_trend <- c(paste0("Season: ", data$Season,
+                            "<br>", "Week number: ", data$ISOWeek,
+                            "<br>", "Number: ", data$Value))
+  
+  # Create plot
+  pathogen_occupancy_linechart = data %>%
+    plot_ly(x = ~ISOWeek,
+            y = ~Value,
+            textposition = "none",
+            text = tooltip_trend,
+            hoverinfo = "text",
+            color = ~Season,
+            type="scatter",
+            mode="lines",
+            line = list(width = 5),
+            colors = flu_hosp_adms_colours) %>%
+    layout(yaxis = yaxis_plots,
+           xaxis = xaxis_plots,
+           margin = list(b = 100, t = 5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")
+    ) %>%
+    
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  # For first week of new season (week 40), add in a marker
+  if(nrow(data_curr_season) == 1){
+    
+    pathogen_occupancy_linechart <- pathogen_occupancy_linechart %>%
+      add_trace(data = data_curr_season,
+                x = ~ISOWeek,
+                y = ~Value,
+                showlegend = F,
+                color = ~Season,
+                colors = "#FF0000",
+                type = "scatter",
+                mode = 'markers',
+                textposition = "none",
+                text = tooltip_trend,
+                hoverinfo = "text")
+  }
+  
+  return(pathogen_occupancy_linechart)
+  
+}
+
+
+
+
+
+
+
+

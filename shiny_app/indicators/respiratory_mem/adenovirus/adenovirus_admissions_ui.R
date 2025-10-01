@@ -86,6 +86,11 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
      linebreaks(1)
        ), # fluidRow
 
+tagList(h2("Rate of acute adenovirus hospital admissions by age group")),
+
+#),
+br(),
+
 fluidRow(
   tabBox(width = NULL,
          type = "pills",

@@ -156,7 +156,7 @@ ui <- fluidPage(
                                        "Influenza can be caught all year round but is more common in the winter months."),
                                      linebreaks(1),
                                      radioGroupButtons("influenza_select", status = "home",
-                                                       choices = c("Infection levels (all Influenza)", "Infection levels (by subtype)", "Hospital admissions", "CARI community surveillance"),
+                                                       choices = c("Infection levels (all Influenza)", "Infection levels (by subtype)", "Hospital admissions", "Hospital occupancy", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.influenza_select=='Infection levels (all Influenza)'",
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_mem_ui.R"), local = TRUE)$value)),
@@ -164,6 +164,8 @@ ui <- fluidPage(
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_subtype_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.influenza_select=='Hospital admissions'",
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_admissions_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.influenza_select=='Hospital occupancy'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_occupancy_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.influenza_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_cari_ui.R"), local = TRUE)$value))
                                      ),
@@ -177,12 +179,14 @@ ui <- fluidPage(
                                        "with peaks of activity in the winter months."),
                                      linebreaks(1),
                                      radioGroupButtons("rsv_select", status = "home",
-                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "Hospital occupancy", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.rsv_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_mem_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.rsv_select=='Hospital admissions'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_admissions_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.rsv_select=='Hospital occupancy'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_occupancy_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.rsv_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_cari_ui.R"), local = TRUE)$value))),
                             tabPanel(title = "Adenovirus",
@@ -438,6 +442,7 @@ server <- function(input, output, session) {
   source(file.path("indicators/respiratory_mem/influenza/influenza_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/influenza/influenza_subtype_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/influenza/influenza_admissions_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/influenza/influenza_occupancy_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/influenza/influenza_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/adenovirus/adenovirus_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/adenovirus/adenovirus_admissions_server.R"), local = TRUE)$value
@@ -447,6 +452,7 @@ server <- function(input, output, session) {
   source(file.path("indicators/respiratory_mem/hmpv/hmpv_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rsv/rsv_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rsv/rsv_admissions_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/rsv/rsv_occupancy_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rsv/rsv_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_admissions_server.R"), local = TRUE)$value

@@ -58,6 +58,24 @@ tagList(
                                            ),
 
                            ),
+                           fluidRow(
+                             tabBox(width = NULL,
+                                    type = "pills",
+                                    tabPanel("Plot",
+                                             tagList(linebreaks(1),
+                                                     altTextUI("influenza_admissions_age_modal"),
+                                                     withNavySpinner(plotlyOutput("influenza_admissions_age_plot")),
+                                             )),
+                                    tabPanel("Data",
+                                             tagList(linebreaks(1),
+                                                     withNavySpinner(dataTableOutput("influenza_admissions_age_table"))
+                                             ) # tagList
+                                    ) # tabPanel
+                                    
+                             ), # tabBox
+                             linebreaks(1)
+                           ), # fluidRow
+                           
 
 
                            #          tagList(h2("Number of acute COVID-19 admissions to hospital by NHS Health Board of treatment; week ending")),
