@@ -57,7 +57,7 @@ adenovirus_seasons <- Respiratory_Pathogens_MEM_Scot %>%
   select(Season) %>%
   arrange(Season) %>%
   distinct() %>%
-  tail(5)
+  tail(6)
 adenovirus_seasons <- adenovirus_seasons$Season
 
 
@@ -69,8 +69,8 @@ altTextServer("adenovirus_mem_modal",
                                        #"The first ISO week is the first week of the year (in January) and the 52nd ISO week is the last week of the year."),
                                 tags$li("The y axis shows the rate of adenovirus infection per 100,000 population."),
                                 tags$li(glue("There is a trace for each of the following seasons: ", adenovirus_seasons[1], ", ",
-                                             adenovirus_seasons[2], ", ", adenovirus_seasons[3], ", ", adenovirus_seasons[4], ", and ",
-                                             adenovirus_seasons[5], ".")),
+                                             adenovirus_seasons[2], ", ", adenovirus_seasons[3], ", ", adenovirus_seasons[4], 
+                                             ", ", adenovirus_seasons[5],", and ", adenovirus_seasons[6], ".")),
                                 tags$li(glue("Activity levels for adenovirus based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for adenovirus are: ",
                                              "Baseline (< ", adenovirus_low_threshold, "), ",
@@ -85,7 +85,7 @@ altTextServer("adenovirus_mem_modal",
 altTextServer("adenovirus_mem_hb_modal",
               title = "Adenovirus incidence rate per 100,000 population by NHS Health Board",
               content = tags$ul(tags$li(glue("This is a plot showing the rate of adenovirus infection per 100,000 population by NHS Health Board for seasons ",
-                                             adenovirus_seasons[4], " and ", adenovirus_seasons[5], ".")),
+                                             adenovirus_seasons[5], " and ", adenovirus_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 #"The first ISO week is the first week of the year (in January) and the 52nd ISO week is the last week of the year."),
@@ -106,7 +106,7 @@ altTextServer("adenovirus_mem_hb_modal",
 altTextServer("adenovirus_mem_age_modal",
               title = "Adenovirus incidence rate per 100,000 population by age group",
               content = tags$ul(tags$li(glue("This is a plot showing the rate of adenovirus infection per 100,000 population by age group for seasons ",
-                                             adenovirus_seasons[4], " and ", adenovirus_seasons[5], ".")),
+                                             adenovirus_seasons[5], " and ", adenovirus_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory respiratory season starts."),
                                 tags$li("The y axis shows the age group."),

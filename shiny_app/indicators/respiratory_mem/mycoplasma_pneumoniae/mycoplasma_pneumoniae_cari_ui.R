@@ -22,6 +22,25 @@ mycoplasma_pneumoniae_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
+# CARI HB data
+mpn_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
+  filter(Pathogen == 'Mycoplasma Pneumoniae') %>%
+  filter(HBName != "Scotland") %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
+#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+
+# CARI Age data
+mpn_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
+  filter(Pathogen == 'Mycoplasma Pneumoniae') %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", "15-44 years", 
+                                                "45-64 years", "65-74 years", "75+ years")))
+
+
 
 tagList(
   
@@ -80,21 +99,52 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Mycoplasma pneumoniae by age group"))),
+           tagList(h2("CARI - Test positivity for MPN by age group"))),
   
   fluidRow(
+    selectInput("mpn_cari_selected_age", "Select age group(s) of interest:", 
+                choices = sort(unique(mpn_cari_age$AgeGroup)),
+                selected = sort(unique(mpn_cari_age$AgeGroup))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
                     tagList(linebreaks(1),
-                            altTextUI("mycoplasma_pneumoniae_cari_age_modal"),
-                            swabposDefinitionUI("cari_mycoplasma_pneumoniae_age_swabpos"),
-                            ciDefinitionUI("cari_mycoplasma_pneumoniae_age_ci"),
-                            withNavySpinner(plotlyOutput("mycoplasma_pneumoniae_cari_age_plot")),
+                            altTextUI("mpn_cari_age_modal"),
+                            swabposDefinitionUI("cari_mpn_age_swabpos"),
+                            withNavySpinner(plotlyOutput("mpn_cari_age_plot")),
                     )),
            tabPanel("Data",
                     tagList(linebreaks(1),
-                            withNavySpinner(dataTableOutput("mycoplasma_pneumoniae_cari_age_table"))
+                            withNavySpinner(dataTableOutput("mpn_cari_age_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for MPN by NHS Health Board"))),
+  
+  fluidRow(
+    width = 12,
+    selectInput("mpn_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                choices = sort(unique(mpn_cari_hb$HBName)),
+                selected = sort(unique(mpn_cari_hb$HBName))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("mpn_cari_hb_modal"),
+                            swabposDefinitionUI("cari_mpn_hb_swabpos"),
+                            #ciDefinitionUI("cari_flu_hb_ci"),
+                            withNavySpinner(plotlyOutput("mpn_cari_hb_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("mpn_cari_hb_table"))
                     ) # tagList
            ) # tabPanel
            

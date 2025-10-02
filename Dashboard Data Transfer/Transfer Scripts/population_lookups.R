@@ -25,7 +25,6 @@ pop_year= 2024# use to filter through entire script, only need to update 1 line 
 
 gpd_base_path<-"/conf/linkage/output/lookups/Unicode/"
 
-# update when Pop Estimates updated
 base_hb_population <- readRDS(glue(gpd_base_path,"Populations/Estimates/HB2019_pop_est_5year_agegroups_1981_{pop_year}.rds"))%>%
   mutate(sex=if_else(sex_name=="F", "Female", "Male"))
 

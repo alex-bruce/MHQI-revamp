@@ -22,6 +22,23 @@ covid_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
+# CARI HB data
+covid_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
+  filter(Pathogen == 'COVID-19') %>%
+  filter(HBName != "Scotland") %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
+  #mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+
+# CARI HB data
+covid_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
+  filter(Pathogen == 'COVID-19') %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", "15-44 years", 
+                                                "45-64 years", "65-74 years", "75+ years")))
 
 tagList(
   
@@ -83,13 +100,17 @@ tagList(
            tagList(h2("CARI - Test positivity for COVID-19 by age group"))),
 
   fluidRow(
+    selectInput("covid_cari_selected_age", "Select age group(s) of interest:", 
+                choices = sort(unique(covid_cari_age$AgeGroup)),
+                selected = sort(unique(covid_cari_age$AgeGroup))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("covid_cari_age_modal"),
                             swabposDefinitionUI("cari_covid_age_swabpos"),
-                            ciDefinitionUI("cari_covid_age_ci"),
+                            #ciDefinitionUI("cari_covid_age_ci"),
                             withNavySpinner(plotlyOutput("covid_cari_age_plot")),
                     )),
            tabPanel("Data",
@@ -100,5 +121,60 @@ tagList(
 
     ), # tabBox
     linebreaks(1)
+  ), # fluidRow
+  
+  # fluidRow(width = 12,
+  #          tagList(h2("CARI - Test positivity for COVID-19 by NHS Health Board"))),
+  # 
+  # fluidRow(
+  #   selectInput("covid_cari_selected_board", "Select NHS Health Board of interest:", 
+  #               choices = sort(unique(covid_cari_hb$HBName)),
+  #               selected = sort(unique(covid_cari_hb$HBName))[1]),
+  #   tabBox(width = NULL,
+  #          type = "pills",
+  #          tabPanel("Plot",
+  #                   tagList(linebreaks(1),
+  #                           altTextUI("covid_cari_hb_modal"),
+  #                           swabposDefinitionUI("cari_covid_hb_swabpos"),
+  #                           ciDefinitionUI("cari_covid_hb_ci"),
+  #                           withNavySpinner(plotlyOutput("covid_cari_hb_plot")),
+  #                   )),
+  #          tabPanel("Data",
+  #                   tagList(linebreaks(1),
+  #                           withNavySpinner(dataTableOutput("covid_cari_hb_table"))
+  #                   ) # tagList
+  #          ) # tabPanel
+  #          
+  #   ), # tabBox
+  #   linebreaks(1)
+  # ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for COVID-19 by NHS Health Board"))),
+  
+  fluidRow(
+    width = 12,
+    selectInput("covid_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                choices = sort(unique(covid_cari_hb$HBName)),
+                selected = sort(unique(covid_cari_hb$HBName))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("covid_cari_hb_modal"),
+                            swabposDefinitionUI("cari_covid_hb_swabpos"),
+                            #ciDefinitionUI("cari_covid_hb_ci"),
+                            withNavySpinner(plotlyOutput("covid_cari_hb_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("covid_cari_hb_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
   ) # fluidRow
+  
 )

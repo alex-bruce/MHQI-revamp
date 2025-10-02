@@ -22,6 +22,25 @@ adenovirus_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
+# CARI HB data
+adenovirus_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
+  filter(Pathogen == 'Adenovirus') %>%
+  filter(HBName != "Scotland") %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
+#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+
+# CARI Age data
+adenovirus_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
+  filter(Pathogen == 'Adenovirus') %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", "15-44 years", 
+                                                "45-64 years", "65-74 years", "75+ years")))
+
+
 
 tagList(
   
@@ -55,7 +74,6 @@ tagList(
                                      h6("hidden text for padding page")
                             )))), # headline
   
-  
   fluidRow(width = 12,
            tagList(h2("CARI - Test positivity for Adenovirus"))),
   
@@ -83,18 +101,49 @@ tagList(
            tagList(h2("CARI - Test positivity for Adenovirus by age group"))),
   
   fluidRow(
+    selectInput("adenovirus_cari_selected_age", "Select age group(s) of interest:", 
+                choices = sort(unique(adenovirus_cari_age$AgeGroup)),
+                selected = sort(unique(adenovirus_cari_age$AgeGroup))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("adenovirus_cari_age_modal"),
                             swabposDefinitionUI("cari_adenovirus_age_swabpos"),
-                            ciDefinitionUI("cari_adenovirus_age_ci"),
                             withNavySpinner(plotlyOutput("adenovirus_cari_age_plot")),
                     )),
            tabPanel("Data",
                     tagList(linebreaks(1),
                             withNavySpinner(dataTableOutput("adenovirus_cari_age_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Adenovirus by NHS Health Board"))),
+  
+  fluidRow(
+    width = 12,
+    selectInput("adenovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                choices = sort(unique(adenovirus_cari_hb$HBName)),
+                selected = sort(unique(adenovirus_cari_hb$HBName))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("adenovirus_cari_hb_modal"),
+                            swabposDefinitionUI("cari_adenovirus_hb_swabpos"),
+                            #ciDefinitionUI("cari_flu_hb_ci"),
+                            withNavySpinner(plotlyOutput("adenovirus_cari_hb_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("adenovirus_cari_hb_table"))
                     ) # tagList
            ) # tabPanel
            
