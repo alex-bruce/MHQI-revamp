@@ -57,27 +57,50 @@ tagList(
 #   fluidRow(
 #     width = 12, br()),
 
+  # fluidRow(width = 12,
+  #          tagList(h2("Reported COVID-19 cases"),
+  #                  tabBox(width = NULL,
+  #                         type = "pills",
+  #                         tabPanel("Plot",
+  #                                  tagList(linebreaks(1),
+  #                                          altTextUI("reported_cases_modal"),
+  #                                          withNavySpinner(plotlyOutput("reported_cases_plot")),
+  #                                          fluidRow(
+  #                                            width=12, linebreaks(5)))),
+  #                         tabPanel("Data",
+  #                                  tagList(
+  #                                    withNavySpinner(dataTableOutput("reported_cases_table"))
+  #                                  ) # tagList
+  #                         ) # tabPanel
+  #                  ) # tabBox
+  #          ) # tagList
+  # ),#fluidrow
+
   fluidRow(width = 12,
-           tagList(h2("Reported COVID-19 cases"),
-                   tabBox(width = NULL,
-                          type = "pills",
-                          tabPanel("Plot",
-                                   tagList(linebreaks(1),
-                                           altTextUI("reported_cases_modal"),
-                                           withNavySpinner(plotlyOutput("reported_cases_plot")),
-                                           fluidRow(
-                                             width=12, linebreaks(5)))),
-                          tabPanel("Data",
-                                   tagList(
-                                     withNavySpinner(dataTableOutput("reported_cases_table"))
-                                   ) # tagList
-                          ) # tabPanel
-                   ) # tabBox
-           ) # tagList
-  ), #fluidrow
+         tagList(h2("COVID-19 incidence rate per 100,000 population in Scotland"))),
+
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("reported_cases_per_100k"),
+                            withNavySpinner(plotlyOutput("covid_line_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(
+                      withNavySpinner(dataTableOutput("covid_cases_table"))
+                    ) # tagList
+           )
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
 
   # Padding out the bottom of the page
   fluidRow(
     width=12, linebreaks(5))
 
 )#taglist
+
+
