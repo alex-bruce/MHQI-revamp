@@ -18,9 +18,6 @@ source(file.path("modules/alt_text/alt_text_modals_ui.R"), local = TRUE)$value
 source(file.path("modules/respiratory/respiratory_module_ui.R"), local = TRUE)$value
 source(file.path("modules/definitions/definitions_ui.R"), local = TRUE)$value
 
-# Setting up some data files
-source(file.path("indicators/cases/cases_data_load.R"), local = TRUE)$value
-
 # UI
 ui <- fluidPage(
   tagList(

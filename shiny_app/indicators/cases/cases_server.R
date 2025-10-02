@@ -88,7 +88,7 @@ output$covid_cases_table <- renderDataTable({
 })
 
 altTextServer("reported_cases_per_100k",
-title = "Reported COVID-19 cases per 100,0000 people",
+title = "COVID-19 incidence rate per 100,000 population",
 content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 infection per 100,000 population in Scotland."),
  tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
  tags$li("The y axis shows the rate of COVID-19 infection per 100,000 population."),
