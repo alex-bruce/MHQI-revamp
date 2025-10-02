@@ -1609,4 +1609,89 @@ create_cari_codetection_age_linechart <- function(data){
   
 }
 
+## Create test positivity charts for Influenza, Covid and RSV
+
+create_test_pos_seasons_linechart <- function(data, pathogen_type){
+  
+  # put weeks in correct order for season
+  week_order <- c(seq(40, 52, 1), seq(1, 39, 1))
+  
+  # Select correct number of seasons to plot
+  no_seasons <- case_when(pathogen_type == "Covid-19" ~ 4,
+                          pathogen_type == "RSV" ~ 6,
+                          pathogen_type == "Influenza (A or B)" ~ 6)
+  
+  seasons <- data %>%
+    select(season) %>%
+    arrange(season) %>%
+    distinct() %>%
+    tail(no_seasons)
+  seasons <- seasons$season 
+  
+  
+  data = data %>%
+    filter(ISOweek != "53" &
+             pathogen == pathogen_type &
+             season %in% seasons) %>%
+    mutate(ISOweek = as.character(ISOweek),
+           ISOweek = factor(ISOweek, levels = week_order), 
+           WeekOrd = as.numeric(ISOweek)) %>%
+    arrange(season, WeekOrd) 
+  
+  # Current season data only
+  data_curr_season <- data %>%
+    filter(season %in% seasons[length(seasons)])
+  
+  #Text for tooltip
+  tooltip_trend <- c(paste0("Season: ", data$season,
+                            "<br>", "Week number: ", data$ISOweek,
+                            "<br>", "Test positivity: ", round(data$positivity_percentage), "%"))
+  
+  yaxis_plots[["title"]] <- "Test positivity (%)"
+  xaxis_plots[["title"]] <- "Week number"
+  
+  # Line below hashed to remove slider
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  
+  p <- plot_ly(data) %>%
+    add_trace(x = ~ISOweek, y = ~positivity_percentage, split = ~season, text=~season,
+              type="scatter", mode="lines",
+              color=~season,
+              colors=phs_colours(c("phs-blue", "phs-rust", "phs-green",
+                                   "phs-purple", "phs-blue-50", "phs-magenta")),
+              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
+                                     '<b>Age group</b>: %{text}<br>',
+                                     '<b>Test positivity</b>: %{y}')
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  # For first week of new season (week 40), add in a marker
+  if(nrow(data_curr_season) == 1){
+    
+    p <- p %>%
+      add_trace(data = data_curr_season,
+                x = ~ISOweek,
+                y = ~positivity_percentage,
+                showlegend = F,
+                color = ~season,
+                colors = "#FF0000",
+                type = "scatter",
+                mode = 'markers',
+                textposition = "none",
+                text = tooltip_trend,
+                hoverinfo = "text") }
+  
+  
+  return(p)
+  
+}
 
