@@ -4,6 +4,8 @@ metadataButtonServer(id="respiratory_influenza_admissions",
                      parent = session)
 
 
+# Get recent seasons
+flu_adm_seasons <- tail(sort(unique(Influenza_admissions$Season)), 6)
 
 
 altTextServer("influenza_admissions_modal",
@@ -12,7 +14,10 @@ altTextServer("influenza_admissions_modal",
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the number of hospital admissions."),
-                                tags$li("There is a trace for each of the following season from 2016/2017 to 2022/2023")))
+                                tags$li(glue("There is a trace for each of the following season from ", 
+                                             flu_adm_seasons[1], " to ", flu_adm_seasons[6], "."))
+              )
+)
 
 altTextServer("influenza_admissions_age_modal",
               title = "Influenza hospital admission rate per 100,000 population by age group",
@@ -60,11 +65,11 @@ altTextServer("flu_los_modal",
                         "The bar sections are ordered from smallest length of stay to largest",
                         "length of stay from bottom to top.") ))
 
-
 # Influenza admissions table
 output$influenza_admissions_table <- renderDataTable({
   Influenza_admissions %>%
     filter(FluType == "Influenza A & B") %>%
+    filter(Season %in% flu_adm_seasons) %>%
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, Admissions) %>%
     mutate(Season = factor(Season),
@@ -96,6 +101,7 @@ output$influenza_admissions_age_table <- renderDataTable({
     make_table(add_separator_cols_1dp = c(3),
                filter_cols = c(1,2))
 })
+
 
 # Influenza Adms by age plot
 output$influenza_admissions_age_plot <- renderPlotly({

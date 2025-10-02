@@ -52,13 +52,13 @@ hmpv_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
 # seasons <- seasons$Season
 
 # Get seasons used in line chart
-seasons <- Respiratory_Pathogens_MEM_Scot %>%
+hmpv_seasons <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Human Metapneumovirus") %>%
   select(Season) %>%
   arrange(Season) %>%
   distinct() %>%
   tail(6)
-seasons <- seasons$Season
+hmpv_seasons <- hmpv_seasons$Season
 
 
 altTextServer("hmpv_mem_modal",
@@ -67,9 +67,9 @@ altTextServer("hmpv_mem_modal",
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the rate of HMPV infection per 100,000 population."),
-                                tags$li(glue("There is a trace for each of the following seasons: ", seasons[1], ", ",
-                                             seasons[2], ", ", seasons[3], ", ", seasons[4], ", ", seasons[5], ", and ",
-                                             seasons[6], ".")),
+                                tags$li(glue("There is a trace for each of the following seasons: ", hmpv_seasons[1], ", ",
+                                             hmpv_seasons[2], ", ", hmpv_seasons[3], ", ", hmpv_seasons[4], 
+                                             ", ", hmpv_seasons[5],", and ", hmpv_seasons[6], ".")),
                                 tags$li(glue("Activity levels for HMPV based on MEM thresholds are represented by different coloured panels on the plot. ",
                                         "The activity levels and MEM thresholds for HMPV are: ",
                                         "Baseline (< ", hmpv_low_threshold, "), ",
@@ -84,7 +84,7 @@ altTextServer("hmpv_mem_modal",
 altTextServer("hmpv_mem_hb_modal",
               title = "HMPV incidence rate per 100,000 population by NHS Health Board",
               content = tags$ul(tags$li(glue("This is a plot showing the rate of HMPV infection per 100,000 population by NHS Health Board for seasons ",
-                                             seasons[5], " and ", seasons[6], ".")),
+                                             hmpv_seasons[5], " and ", hmpv_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the NHS Health Board."),
@@ -104,7 +104,7 @@ altTextServer("hmpv_mem_hb_modal",
 altTextServer("hmpv_mem_age_modal",
               title = "HMPV incidence rate per 100,000 population by age group",
               content = tags$ul(tags$li(glue("This is a plot showing the rate of HMPV infection per 100,000 population by age group for seasons ",
-                                             seasons[5], " and ", seasons[6], ".")),
+                                             hmpv_seasons[5], " and ", hmpv_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the age group."),
@@ -125,7 +125,7 @@ altTextServer("hmpv_mem_age_modal",
 output$hmpv_mem_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Scot %>%
     filter(Pathogen == "Human Metapneumovirus") %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% hmpv_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, RatePer100000, ActivityLevel) %>%
     mutate(Season = factor(Season),
@@ -142,7 +142,7 @@ output$hmpv_mem_table <- renderDataTable({
 output$hmpv_mem_hb_table <- renderDataTable({
   Respiratory_Pathogens_MEM_HB %>%
     filter(Pathogen == "Human Metapneumovirus") %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% hmpv_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
     mutate(Season = factor(Season),
@@ -161,7 +161,7 @@ output$hmpv_mem_hb_table <- renderDataTable({
 output$hmpv_mem_age_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "Human Metapneumovirus") %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% hmpv_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
     mutate(Season = factor(Season),

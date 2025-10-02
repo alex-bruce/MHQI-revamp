@@ -26,7 +26,7 @@ altTextServer("respiratory_by_season_modal",
               content = tags$ul(
                 tags$li(glue("This is a plot of the influenza cases for a given subtype",
                              " over each season.")),
-                tags$li("There is a trace for each season, starting in 2016/2017."),
+                tags$li(glue("There is a trace for each season, starting in ", recent_six_seasons[1], ".")),
                 tags$li("The x axis is the isoweek. Week 40 is typically the start of October and when the winter respiratory season starts"),
                 tags$li(glue("The y axis is the rate of cases of the chosen influenza subtype in a given NHS health board.")),
                 tags$li("For Scotland there is an option to view the absolute number of cases."))
@@ -98,6 +98,7 @@ output$respiratory_by_season_plot = renderPlotly({
 
   Respiratory_AllData %>%
     filter(FluOrNonFlu == "flu") %>%
+    filter(Season %in% recent_six_seasons) %>%
     select_y_axis(., yaxis = input$respiratory_y_axis_plots) %>%
     filter_by_organism(., organism = input$respiratory_select_subtype,
                        healthboard = input$respiratory_select_healthboard) %>%
@@ -160,6 +161,7 @@ output$respiratory_by_season_table <- renderDataTable ({
     Respiratory_AllData %>%
       filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
       filter(FluOrNonFlu == "flu") %>%
+      filter(Season %in% recent_six_seasons) %>%
       arrange(desc(Date), Organism) %>%
       select(Season, Week, Organism, Count, Rate) %>%
       dplyr::rename("Number of cases" = "Count",
@@ -176,6 +178,7 @@ output$respiratory_by_season_table <- renderDataTable ({
     Respiratory_AllData %>%
       filter_over_time_plot_function(healthboard = input$respiratory_select_healthboard) %>%
       filter(FluOrNonFlu == "flu") %>%
+      filter(Season %in% recent_six_seasons) %>%
       arrange(desc(Date), Organism) %>%
       select(Season, Week, Organism, Rate) %>%
       dplyr::rename("Rate per 100,000" = "Rate",

@@ -21,12 +21,12 @@
 #### New population section####
 # retain i_population in the interim, but update cases with this version
 
-pop_year= 2023# use to filter through entire script, only need to update 1 line when Pop Est files updated
+pop_year= 2024# use to filter through entire script, only need to update 1 line when Pop Est files updated
 
 gpd_base_path<-"/conf/linkage/output/lookups/Unicode/"
 
 # update when Pop Estimates updated
-base_hb_population <- readRDS(glue(gpd_base_path,"Populations/Estimates/HB2019_pop_est_5year_agegroups_1981_2023.rds"))%>%
+base_hb_population <- readRDS(glue(gpd_base_path,"Populations/Estimates/HB2019_pop_est_5year_agegroups_1981_2024.rds"))%>%
   mutate(sex=if_else(sex_name=="F", "Female", "Male"))
 
 

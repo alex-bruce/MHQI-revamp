@@ -454,6 +454,18 @@ tagList(h1("Metadata"),
 
                    
                    
+                   
+                   #### CO-DETECTIONS PANEL ----
+                   bsCollapsePanel("Co-detections",
+                                   
+                                   # Infection Levels ----
+                                   p("Co-detection is indicated where a positive PCR test result for more than one pathogen is returned for an individual swab sample."),
+                                   p(strong("Source: Community Acute Respiratory Infection (CARI) sentinel practices")),
+                                   br()
+                                   
+                   ),
+                   
+                   
                    #### WASTEWATER PANEL ----
                    bsCollapsePanel("Wastewater",
                                    

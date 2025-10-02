@@ -2,6 +2,9 @@ metadataButtonServer(id="respiratory_rsv_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
+# Get recent seasons
+rsv_adm_seasons <- tail(sort(unique(RSV_admissions$Season)), 6)
+
 
 altTextServer("rsv_admissions_modal",
               title = "RSV hospital admissions in Scotland",
@@ -9,7 +12,8 @@ altTextServer("rsv_admissions_modal",
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the number of hospital admissions."),
-                                tags$li("There is a trace for each of the following season from 2017/2018 to 2022/2023")))
+                                tags$li(glue("There is a trace for each of the following season from ", 
+                                             rsv_adm_seasons[1], " to ", rsv_adm_seasons[6], "."))))
 
 altTextServer("rsv_admissions_age_modal",
               title = "RSV hospital admission rate per 100,000 population by age group",
@@ -59,6 +63,7 @@ altTextServer("rsv_los_modal",
 # RSV admissions table
 output$rsv_admissions_table <- renderDataTable({
   RSV_admissions %>%
+    filter(Season %in% flu_adm_seasons) %>%
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, Admissions) %>%
     mutate(Season = factor(Season),
@@ -86,6 +91,7 @@ output$rsv_admissions_age_table <- renderDataTable({
 # RSV Adms plot
 output$rsv_admissions_plot <- renderPlotly({
   RSV_admissions %>%
+
     create_pathogen_adms_linechart()
 
 })

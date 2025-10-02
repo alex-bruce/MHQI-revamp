@@ -52,13 +52,13 @@ influenza_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
 # seasons <- seasons$Season
 
 # Get seasons used in line chart
-seasons <- Respiratory_Pathogens_MEM_Scot %>%
+influenza_seasons <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Influenza") %>%
   select(Season) %>%
   arrange(Season) %>%
   distinct() %>%
   tail(6)
-seasons <- seasons$Season
+influenza_seasons <- influenza_seasons$Season
 
 
 
@@ -68,9 +68,9 @@ altTextServer("influenza_mem_modal",
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the rate of influenza infection per 100,000 population."),
-                                tags$li(glue("There is a trace for each of the following seasons: ", seasons[1], ", ",
-                                             seasons[2], ", ", seasons[3], ", ", seasons[4], ", ", seasons[5], ", and ",
-                                             seasons[6], ".")),
+                                tags$li(glue("There is a trace for each of the following seasons: ", influenza_seasons[1], ", ",
+                                             influenza_seasons[2], ", ", influenza_seasons[3], ", ", influenza_seasons[4], 
+                                             ", ", influenza_seasons[5],", and ", influenza_seasons[6], ".")),
                                 tags$li(glue("Activity levels for influenza based on MEM thresholds are represented by different coloured panels on the plot. ",
                                         "The activity levels and MEM thresholds for influenza are: ",
                                         "Baseline (< ", influenza_low_threshold, "), ",
@@ -85,7 +85,7 @@ altTextServer("influenza_mem_modal",
 altTextServer("influenza_mem_hb_modal",
               title = "Influenza incidence rate per 100,000 population by NHS Health Board",
               content = tags$ul(tags$li(glue("This is a plot showing the rate of influenza infection per 100,000 population by NHS Health Board for seasons ",
-                                             seasons[5], " and ", seasons[6], ".")),
+                                             influenza_seasons[5], " and ", influenza_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the NHS Health Board."),
@@ -105,7 +105,7 @@ altTextServer("influenza_mem_hb_modal",
 altTextServer("influenza_mem_age_modal",
               title = "Influenza incidence rate per 100,000 population by age group",
               content = tags$ul(tags$li(glue("This is a plot showing the rate of influenza infection per 100,000 population by age group for seasons ",
-                                             seasons[5], " and ", seasons[6], ".")),
+                                             influenza_seasons[5], " and ", influenza_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the age group."),
@@ -126,7 +126,7 @@ altTextServer("influenza_mem_age_modal",
 output$influenza_mem_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Scot %>%
     filter(Pathogen == "Influenza") %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% influenza_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, RatePer100000, ActivityLevel) %>%
     mutate(Season = factor(Season),
@@ -143,7 +143,7 @@ output$influenza_mem_table <- renderDataTable({
 output$influenza_mem_hb_table <- renderDataTable({
   Respiratory_Pathogens_MEM_HB %>%
     filter(Pathogen == "Influenza") %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% influenza_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
     mutate(Season = factor(Season),
@@ -162,7 +162,7 @@ output$influenza_mem_hb_table <- renderDataTable({
 output$influenza_mem_age_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "Influenza") %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% influenza_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
     mutate(Season = factor(Season),

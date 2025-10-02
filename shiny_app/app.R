@@ -132,8 +132,9 @@ ui <- fluidPage(
                                                                                                           "COVID-19.")),
                                      linebreaks(1),
                                      radioGroupButtons("covid19_select", status = "home",
-                                                       choices = c("Infection levels", "Hospital admissions", "Hospital occupancy",
-                                                                   "CARI community surveillance", "Archive"),
+                                                       choices = c("Infection levels", "CARI community surveillance", 
+                                                                   "Hospital admissions", "Hospital occupancy",
+                                                                   "Archive"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.covid19_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/cases/cases_ui.R"), local = TRUE)$value)),
@@ -153,9 +154,14 @@ ui <- fluidPage(
                                        "Influenza can cause mild to severe illness with symptoms including fever (38°C or above),",
                                        "cough, body aches, and fatigue. Influenza has a different presentation than the common",
                                        "cold, with symptoms starting more suddenly, presenting more severely, and lasting longer.",
-                                       "Influenza can be caught all year round but is more common in the winter months."),
+                                       "Influenza can be caught all year round but is more common in the winter months.",
+                                       "There are two main types of influenza virus: Types A and B. The influenza A and B viruses that", 
+                                       "routinely spread in people (human influenza viruses) are responsible for seasonal flu epidemics", 
+                                       "each year. Current subtypes of influenza A viruses found in people are influenza A(H1N1) and", 
+                                       "influenza A(H3N2) viruses. Currently circulating influenza B viruses mostly belong to B/Victoria."),
                                      linebreaks(1),
                                      radioGroupButtons("influenza_select", status = "home",
+
                                                        choices = c("Infection levels (all Influenza)", "Infection levels (by subtype)", "Hospital admissions", "Hospital occupancy", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.influenza_select=='Infection levels (all Influenza)'",
@@ -179,6 +185,7 @@ ui <- fluidPage(
                                        "with peaks of activity in the winter months."),
                                      linebreaks(1),
                                      radioGroupButtons("rsv_select", status = "home",
+
                                                        choices = c("Infection levels", "Hospital admissions", "Hospital occupancy", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.rsv_select=='Infection levels'",
@@ -252,8 +259,11 @@ ui <- fluidPage(
                                      p("Human parainfluenza virus (HPIV) is a virus that causes respiratory illness in humans.",
                                        "Despite its name, parainfluenza is not related to influenza and exhibits different",
                                        "characteristics. It is an important cause of upper and lower respiratory disease in",
-                                       "infants and young children, elderly people and people who are immunocompromised."),
-                                     #             "Additional information can be found on the PHS page for parainfluenza."),
+                                       "infants and young children, elderly people and people who are immunocompromised.",
+                                       "HPIV-1 is the most common cause of croup in young children, with outbreaks often occurring", 
+                                       "in autumn. HPIV-2 is less common than HPIV-1 and tends to follow a biennial outbreak pattern,", 
+                                       "usually in autumn. HPIV-3 circulates all year-round, while HPIV-4 is less frequently detected", 
+                                       "and typically associated with milder respiratory illness."),
                                      linebreaks(1),
                                      radioGroupButtons("parainfluenza_select", status = "home",
                                                        choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
@@ -289,8 +299,14 @@ ui <- fluidPage(
                                      h1("Other seasonal coronaviruses"),
                                      p("Seasonal Coronaviruses (non COVID-19) are a group of viruses that typically cause mild to moderate",
                                        "upper respiratory tract infections, such as the common cold, but can cause lower-respiratory",
-                                       "tract illnesses such as pneumonia and bronchitis. Infection can occur in people of all ages.",
-                                       "Seasonal coronaviruses have an annual seasonality and typically circulate in the winter months."),
+                                       "tract illnesses such as pneumonia and bronchitis. Seasonal coronaviruses typically circulate",
+                                       "in the winter months and infection can occur in people of all ages.",
+                                       "We generally monitor and report three types together, although some systems may report them separately:",
+                                       "HCoV-229E (alpha) commonly causes mild upper respiratory tract infections", 
+                                       "such as colds, HCoV-NL63 (alpha) causes a spectrum of illness from cold-like symptoms to croup and", 
+                                       "bronchiolitis, particularly in children, and HCoV-OC43 (beta) is one of the most prevalent types, often", 
+                                       "linked with winter outbreaks of mild respiratory illness. SARS-CoV-2, which causes COVID-19,", 
+                                       "is also a type of seasonal coronavirus which is reported separately."),
                                      linebreaks(1),
                                      radioGroupButtons("seasonal_coronavirus_select", status = "home",
                                                        choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
@@ -301,7 +317,14 @@ ui <- fluidPage(
                                                       column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.seasonal_coronavirus_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_cari_ui.R"), local = TRUE)$value))
-                                     )
+                                     ),
+                            tabPanel(title = "Co-detections",
+                                     value = "codetections",
+                                     h1("Co-detections"),
+                                     p("Co-detection is indicated where a positive PCR test result for more than one pathogen is returned for an individual swab sample."),
+                                     linebreaks(1),
+                                     column(12, source(file.path("indicators/respiratory_mem/codetections/codetections_cari_ui.R"), local = TRUE)$value)
+                            )
                             # tabPanel(title = "Other respiratory pathogens",
                             #          value = "other_pathogens",
                             #          source(file.path("indicators/respiratory_mem/other_pathogens/other_pathogens_mem_ui.R"), local = TRUE)$value)
@@ -467,6 +490,7 @@ server <- function(input, output, session) {
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_cari_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/codetections/codetections_cari_server.R"), local = TRUE)$value
   
 
   source(file.path("indicators/mortality/euromomo/euromomo_server.R"), local = TRUE)$value

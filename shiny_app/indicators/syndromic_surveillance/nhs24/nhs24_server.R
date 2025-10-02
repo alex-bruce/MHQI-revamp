@@ -45,12 +45,12 @@ nhs24_extraordinary_threshold <- Respiratory_NHS24_MEM_Scot %>%
 # seasons <- seasons$Season
 
 # Get seasons used in line chart
-seasons <- Respiratory_NHS24_MEM_Scot %>%
+nhs24_seasons <- Respiratory_NHS24_MEM_Scot %>%
   select(Season) %>%
   arrange(Season) %>%
   distinct() %>%
   tail(6)
-seasons <- seasons$Season
+nhs24_seasons <- nhs24_seasons$Season
 
 
 
@@ -60,9 +60,9 @@ altTextServer("nhs24_mem_modal",
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the percentage of NHS24 calls for respiratory symptoms."),
-                                tags$li(glue("There is a trace for each of the following seasons: ", seasons[1], ", ",
-                                             seasons[2], ", ", seasons[3], ", ", seasons[4], ", ", seasons[5], ", and ",
-                                             seasons[6], ".")),
+                                tags$li(glue("There is a trace for each of the following seasons: ", nhs24_seasons[1], ", ",
+                                             nhs24_seasons[2], ", ", nhs24_seasons[3], ", ", nhs24_seasons[4], 
+                                             ", ", nhs24_seasons[5],", and ", nhs24_seasons[6], ".")),
                                 tags$li(glue("Activity levels for NHS24 calls based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for NHS24 calls are: ",
                                              "Baseline (< ", nhs24_low_threshold, "), ",
@@ -74,7 +74,7 @@ altTextServer("nhs24_mem_modal",
 altTextServer("nhs24_mem_hb_modal",
               title = "Percentage of NHS24 calls for respiratory symptoms by NHS Health Board",
               content = tags$ul(tags$li(glue("This is a plot showing the percentage of NHS24 calls for respiratory symptoms by NHS Health Board for seasons ",
-                                             seasons[5], " and ", seasons[6], ".")),
+                                             nhs24_seasons[5], " and ", nhs24_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the NHS Health Board."),
@@ -91,7 +91,7 @@ altTextServer("nhs24_mem_hb_modal",
 altTextServer("nhs24_mem_age_modal",
               title = "Percentage of NHS24 calls for respiratory symptoms by age group",
               content = tags$ul(tags$li(glue("This is a plot showing the percentage of NHS24 calls for respiratory symptoms by age group for seasons ",
-                                             seasons[5], " and ", seasons[6], ".")),
+                                             nhs24_seasons[5], " and ", nhs24_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the age group."),
@@ -108,7 +108,7 @@ altTextServer("nhs24_mem_age_modal",
 # NHS24 MEM table
 output$nhs24_mem_table <- renderDataTable({
   Respiratory_NHS24_MEM_Scot %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% nhs24_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, Percentage, ActivityLevel) %>%
     mutate(Season = factor(Season),
@@ -124,7 +124,7 @@ output$nhs24_mem_table <- renderDataTable({
 # NHS24 MEM by HB table
 output$nhs24_mem_hb_table <- renderDataTable({
   Respiratory_NHS24_MEM_HB %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% nhs24_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, Percentage, ActivityLevel) %>%
     mutate(Season = factor(Season),
@@ -142,7 +142,7 @@ output$nhs24_mem_hb_table <- renderDataTable({
 # NHS24 MEM by Age table
 output$nhs24_mem_age_table <- renderDataTable({
   Respiratory_NHS24_MEM_Age %>%
-    filter(Season %in% seasons) %>%
+    filter(Season %in% nhs24_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, Percentage, ActivityLevel) %>%
     mutate(Season = factor(Season),
