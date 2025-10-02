@@ -11,13 +11,22 @@ flu_adm_seasons <- tail(sort(unique(Influenza_admissions$Season)), 6)
 altTextServer("influenza_admissions_modal",
               title = "Influenza hospital admissions in Scotland",
               content = tags$ul(tags$li("This is a plot showing the number of influenza hospital admissions in Scotland."),
-                                tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the number of hospital admissions."),
                                 tags$li(glue("There is a trace for each of the following season from ", 
                                              flu_adm_seasons[1], " to ", flu_adm_seasons[6], "."))
               )
 )
+
+altTextServer("influenza_admissions_age_modal",
+              title = "Influenza hospital admission rate per 100,000 population by age group",
+              content = tags$ul(tags$li("This is a plot showing the rate of influenza hospital admission per 100,000 population by age group."),
+                                tags$li("The x axis is the week ending date."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
+                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
+
 
 altTextServer("flu_adm_age_sex",
               title = glue("Acute influenza admissions by age and sex in Scotland"),
@@ -74,9 +83,36 @@ output$influenza_admissions_table <- renderDataTable({
 output$influenza_admissions_plot <- renderPlotly({
   Influenza_admissions %>%
     filter(FluType == "Influenza A & B") %>%
-    filter(Season %in% flu_adm_seasons) %>%
-    create_flu_adms_linechart()
+    create_pathogen_adms_linechart()
 
+})
+
+# Influenza admissions by age table
+output$influenza_admissions_age_table <- renderDataTable({
+  age_rate_data_all_path %>%
+    select(week_ending, age_band,
+           rate = flu_rate) %>% 
+    filter(age_band != "All Ages") %>%
+    mutate(week_ending = as_date(week_ending)) %>% 
+    arrange(desc(week_ending)) %>%
+    rename(`Week Ending` = week_ending,
+           `Age Group` = age_band,
+           `Admission Rate per 100k` = rate) %>%
+    make_table(add_separator_cols_1dp = c(3),
+               filter_cols = c(1,2))
+})
+
+
+# Influenza Adms by age plot
+output$influenza_admissions_age_plot <- renderPlotly({
+  age_rate_data_all_path %>%
+    filter(age_band != "All Ages") %>% 
+    select(week_ending, age_band,
+           rate = flu_rate) %>%
+    mutate(age_band = factor(age_band, levels = c("<1",  "0-4", "5-14", "15-44", "45-64",
+                                                  "65-74", "75+"))) %>% 
+    create_pathogen_adms_age_linechart()
+  
 })
 
 

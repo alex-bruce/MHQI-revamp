@@ -161,8 +161,8 @@ ui <- fluidPage(
                                        "influenza A(H3N2) viruses. Currently circulating influenza B viruses mostly belong to B/Victoria."),
                                      linebreaks(1),
                                      radioGroupButtons("influenza_select", status = "home",
-                                                       choices = c("Infection levels (all Influenza)", "Infection levels (by subtype)", 
-                                                                   "CARI community surveillance", "Hospital admissions"),
+
+                                                       choices = c("Infection levels (all Influenza)", "Infection levels (by subtype)", "Hospital admissions", "Hospital occupancy", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.influenza_select=='Infection levels (all Influenza)'",
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_mem_ui.R"), local = TRUE)$value)),
@@ -170,6 +170,8 @@ ui <- fluidPage(
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_subtype_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.influenza_select=='Hospital admissions'",
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_admissions_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.influenza_select=='Hospital occupancy'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_occupancy_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.influenza_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/influenza/influenza_cari_ui.R"), local = TRUE)$value))
                                      ),
@@ -183,12 +185,15 @@ ui <- fluidPage(
                                        "with peaks of activity in the winter months."),
                                      linebreaks(1),
                                      radioGroupButtons("rsv_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance", "Hospital admissions"),
+
+                                                       choices = c("Infection levels", "Hospital admissions", "Hospital occupancy", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.rsv_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_mem_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.rsv_select=='Hospital admissions'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_admissions_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.rsv_select=='Hospital occupancy'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_occupancy_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.rsv_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rsv/rsv_cari_ui.R"), local = TRUE)$value))),
                             tabPanel(title = "Adenovirus",
@@ -201,10 +206,12 @@ ui <- fluidPage(
                                        "pattern and circulate all year round."),
                                      linebreaks(1),
                                      radioGroupButtons("adenovirus_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.adenovirus_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/adenovirus/adenovirus_mem_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.adenovirus_select=='Hospital admissions'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/adenovirus/adenovirus_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.adenovirus_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/adenovirus/adenovirus_cari_ui.R"), local = TRUE)$value))),
                             tabPanel(title = "HMPV",
@@ -217,10 +224,12 @@ ui <- fluidPage(
                                        "transmission in the winter months."),
                                      linebreaks(1),
                                      radioGroupButtons("hmpv_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.hmpv_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/hmpv/hmpv_mem_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.hmpv_select=='Hospital admissions'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/hmpv/hmpv_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.hmpv_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/hmpv/hmpv_cari_ui.R"), local = TRUE)$value))
                                      ),
@@ -235,10 +244,12 @@ ui <- fluidPage(
                                        "circulates throughout the year."), 
                                      linebreaks(1),
                                      radioGroupButtons("mycoplasma_pneumoniae_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.mycoplasma_pneumoniae_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_mem_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.mycoplasma_pneumoniae_select=='Hospital admissions'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.mycoplasma_pneumoniae_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_cari_ui.R"), local = TRUE)$value))
                                      ),
@@ -255,10 +266,12 @@ ui <- fluidPage(
                                        "and typically associated with milder respiratory illness."),
                                      linebreaks(1),
                                      radioGroupButtons("parainfluenza_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.parainfluenza_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_mem_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.parainfluenza_select=='Hospital admissions'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.parainfluenza_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_cari_ui.R"), local = TRUE)$value))
                                      ),
@@ -272,10 +285,12 @@ ui <- fluidPage(
                                      #             "Additional information can be found on the PHS page for rhinovirus."),
                                      linebreaks(1),
                                      radioGroupButtons("rhinovirus_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.rhinovirus_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_mem_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.rhinovirus_select=='Hospital admissions'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.rhinovirus_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_cari_ui.R"), local = TRUE)$value))
                                      ),
@@ -294,10 +309,12 @@ ui <- fluidPage(
                                        "is also a type of seasonal coronavirus which is reported separately."),
                                      linebreaks(1),
                                      radioGroupButtons("seasonal_coronavirus_select", status = "home",
-                                                       choices = c("Infection levels", "CARI community surveillance"),
+                                                       choices = c("Infection levels", "Hospital admissions", "CARI community surveillance"),
                                                        direction = "horizontal", justified = F),
                                      conditionalPanel(condition="input.seasonal_coronavirus_select=='Infection levels'",
                                                       column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_mem_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.seasonal_coronavirus_select=='Hospital admissions'",
+                                                      column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_admissions_ui.R"), local = TRUE)$value)),
                                      conditionalPanel(condition="input.seasonal_coronavirus_select=='CARI community surveillance'",
                                                       column(12, source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_cari_ui.R"), local = TRUE)$value))
                                      ),
@@ -448,23 +465,30 @@ server <- function(input, output, session) {
   source(file.path("indicators/respiratory_mem/influenza/influenza_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/influenza/influenza_subtype_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/influenza/influenza_admissions_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/influenza/influenza_occupancy_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/influenza/influenza_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/adenovirus/adenovirus_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/adenovirus/adenovirus_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/adenovirus/adenovirus_cari_server.R"), local = TRUE)$value
-
   source(file.path("indicators/respiratory_mem/hmpv/hmpv_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/hmpv/hmpv_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/hmpv/hmpv_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rsv/rsv_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rsv/rsv_admissions_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/rsv/rsv_occupancy_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rsv/rsv_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/parainfluenza/parainfluenza_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/other_pathogens/other_pathogens_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_mem_server.R"), local = TRUE)$value
+  source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/seasonal_coronavirus/seasonal_coronavirus_cari_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/codetections/codetections_cari_server.R"), local = TRUE)$value
   
