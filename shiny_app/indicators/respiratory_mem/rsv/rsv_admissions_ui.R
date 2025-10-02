@@ -81,6 +81,29 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
     ), # tabBox
     linebreaks(1)
   ), # fluidRow
+
+tagList(h2("Rate of acute RSV hospital admissions by age group")),
+
+#),
+br(),
+
+fluidRow(
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  tagList(linebreaks(1),
+                          altTextUI("rsv_admissions_age_modal"),
+                          withNavySpinner(plotlyOutput("rsv_admissions_age_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("rsv_admissions_age_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+), # fluidRow
 # 
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute RSV admissions to hospital by NHS Health Board of Treatment; week ending")),
@@ -167,3 +190,4 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
 fluidRow(height="200px", width=12, linebreaks(5))
 
 )#taglist
+

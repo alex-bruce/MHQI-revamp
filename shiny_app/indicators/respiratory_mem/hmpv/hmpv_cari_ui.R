@@ -22,6 +22,25 @@ hmpv_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
+# CARI HB data
+hmpv_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
+  filter(Pathogen == 'Human Metapneumovirus') %>%
+  filter(HBName != "Scotland") %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
+#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+
+# CARI Age data
+hmpv_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
+  filter(Pathogen == 'Human Metapneumovirus') %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", "15-44 years", 
+                                                "45-64 years", "65-74 years", "75+ years")))
+
+
 
 tagList(
   
@@ -83,18 +102,49 @@ tagList(
            tagList(h2("CARI - Test positivity for HMPV by age group"))),
   
   fluidRow(
+    selectInput("hmpv_cari_selected_age", "Select age group(s) of interest:", 
+                choices = sort(unique(hmpv_cari_age$AgeGroup)),
+                selected = sort(unique(hmpv_cari_age$AgeGroup))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("hmpv_cari_age_modal"),
                             swabposDefinitionUI("cari_hmpv_age_swabpos"),
-                            ciDefinitionUI("cari_hmpv_age_ci"),
                             withNavySpinner(plotlyOutput("hmpv_cari_age_plot")),
                     )),
            tabPanel("Data",
                     tagList(linebreaks(1),
                             withNavySpinner(dataTableOutput("hmpv_cari_age_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for HMPV by NHS Health Board"))),
+  
+  fluidRow(
+    width = 12,
+    selectInput("hmpv_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                choices = sort(unique(hmpv_cari_hb$HBName)),
+                selected = sort(unique(hmpv_cari_hb$HBName))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("hmpv_cari_hb_modal"),
+                            swabposDefinitionUI("cari_hmpv_hb_swabpos"),
+                            #ciDefinitionUI("cari_flu_hb_ci"),
+                            withNavySpinner(plotlyOutput("hmpv_cari_hb_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("hmpv_cari_hb_table"))
                     ) # tagList
            ) # tabPanel
            
