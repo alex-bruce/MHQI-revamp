@@ -3,6 +3,37 @@ metadataButtonServer(id="respiratory_influenza_mem",
                      panel="Respiratory infection activity",
                      parent = session)
 
+altTextServer("influenza_positivity_modal",
+              title = "Influenza test positivity",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate for influenza testing across Scotland."),
+                                tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
+                                tags$li("The y axis is test positivity rate."),
+                                tags$li("There are several traces representing the test positivity rate across multiple seasons."),
+                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant season from the legend on the right of the chart.")
+              )
+)
+
+output$influenza_positivity_table <- renderDataTable({
+  Respiratory_Pathogens_Test_Positivity %>%
+    filter(pathogen == "Influenza (A or B)") %>%
+    dplyr::rename(`Year` = year,
+                  `Season` = season,
+                  `ISO Week` = ISOweek,
+                  `Total Samples` = total_samples,
+                  `Positive Samples` = positive_count,
+                  `Test Positivity (%)` = positivity_percentage) %>%
+    select(`Year`, `ISO Week`, `Total Samples`, `Positive Samples`, `Test Positivity (%)`) %>%
+    arrange(desc(`Year`), desc(`ISO Week`)) %>%
+    make_table(add_separator_cols = c(2), order_by_firstcol = "desc")
+})
+
+output$influenza_positivity_plot <- renderPlotly({
+  Respiratory_Pathogens_Test_Positivity %>%
+    create_test_pos_seasons_linechart(., "Influenza (A or B)")
+  
+})
+
+
 # Low threshold
 influenza_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Influenza") %>%

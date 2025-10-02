@@ -57,6 +57,27 @@ tagList(
 #   fluidRow(
 #     width = 12, br()),
 
+fluidRow(width = 12,
+         tagList(h2("Test positivity for COVID-19"),
+                 tabBox(width = NULL,
+                        type = "pills",
+                        tabPanel("Plot",
+                                 tagList(linebreaks(1),
+                                         altTextUI("covid_positivity_modal"),
+                                         swabposDefinitionUI("covid_swabpos"),
+                                         withNavySpinner(plotlyOutput("covid_positivity_plot")),
+                                         fluidRow(
+                                           width=12, linebreaks(1)))),
+                        tabPanel("Data",
+                                 tagList(
+                                   withNavySpinner(dataTableOutput("covid_positivity_table"))
+                                 ) # tagList
+                        ) # tabPanel
+                 ) # tabBox
+         ) # tagList
+), #fluidrow
+
+
   fluidRow(width = 12,
            tagList(h2("Reported COVID-19 cases"),
                    tabBox(width = NULL,
