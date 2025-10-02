@@ -28,19 +28,19 @@ altTextServer("seasonal_coronavirus_cari_hb_modal",
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 altTextServer("seasonal_coronavirus_cari_subtype1_modal",
-              title = "CARI - Test positivity for Seasonal Coronavirus by subtype",
-              content = tags$ul(tags$li("This is a plot showing the test positivity rate of Seasonal Coronavirus infection by subtype in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              title = "CARI - Test positivity for Seasonal Coronavirus by type",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of Seasonal Coronavirus infection by type in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
-                                tags$li("The plot contains a trace showing the test positivity rate for the selected subtype(s)."),
+                                tags$li("The plot contains a trace showing the test positivity rate for the selected type(s)."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 altTextServer("seasonal_coronavirus_cari_subtype2_modal",
-              title = "CARI - Number of positive samples by Seasonal Coronavirus subtype",
-              content = tags$ul(tags$li("This is a plot showing the number of positive samples for each Seasonal Coronavirus subtype in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              title = "CARI - Number of positive samples by Seasonal Coronavirus type",
+              content = tags$ul(tags$li("This is a plot showing the number of positive samples for each Seasonal Coronavirus type in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the number of positive samples."),
-                                tags$li("The plot contains a stacked bar showing the number of positive samples for each subtype."),
+                                tags$li("The plot contains a stacked bar showing the number of positive samples for each type."),
                                 tags$li("Each bar can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 
@@ -155,7 +155,7 @@ output$seasonal_coronavirus_cari_subtype1_table <- renderDataTable({
     mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
-           `Subtype` = Pathogen,
+           `Type` = Pathogen,
            `Total Samples` = TotalSamples,
            `Positive Samples` = PositiveSamples,
            `Test Positivity (%)` = SwabPositivity,
@@ -175,7 +175,7 @@ output$seasonal_coronavirus_cari_subtype2_table <- renderDataTable({
     mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, PositiveSamples) %>%
     rename(`Week Ending` = WeekEnding,
-           `Subtype` = Pathogen,
+           `Type` = Pathogen,
            `Positive Samples` = PositiveSamples) %>%
     make_table(filter_cols = c(1,2))
 })

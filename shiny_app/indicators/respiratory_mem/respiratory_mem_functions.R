@@ -1172,7 +1172,7 @@ create_cari_subtype_linechart <- function(data){
               color=~Pathogen,
               colors=subtype_colours,
               text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
-                             "<b>Subtype</b>: ", Pathogen, "\n",
+                             "<b>Type/Subtype</b>: ", Pathogen, "\n",
                              "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
                              "<b>Number of samples</b>: ", format(TotalSamples, big.mark=","), "\n",
                              "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
@@ -1229,7 +1229,7 @@ create_cari_subtype_barchart <- function(data){
               color=~Pathogen,
               colors=subtype_colours,
               hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
-                                     '<b>Subtype</b>: %{text}<br>',
+                                     '<b>Type/Subtype</b>: %{text}<br>',
                                      '<b>Positive samples</b>: %{y}')
     ) %>%
     layout(barmode = "stack",

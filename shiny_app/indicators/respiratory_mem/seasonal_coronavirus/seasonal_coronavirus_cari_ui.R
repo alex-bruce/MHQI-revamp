@@ -169,10 +169,10 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by subtype"))),
+           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by type"))),
   
   fluidRow(
-    selectInput("seasonal_coronavirus_cari_selected_subtype1", "Select subtype(s):", 
+    selectInput("seasonal_coronavirus_cari_selected_subtype1", "Select type(s):", 
                 choices = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen)),
                 selected = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen))[1],
                 multiple = TRUE),
@@ -196,7 +196,7 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Number of positive samples by Seasonal Coronavirus subtype"))),
+           tagList(h2("CARI - Number of positive samples by Seasonal Coronavirus type"))),
   
   fluidRow(
     tabBox(width = NULL,
