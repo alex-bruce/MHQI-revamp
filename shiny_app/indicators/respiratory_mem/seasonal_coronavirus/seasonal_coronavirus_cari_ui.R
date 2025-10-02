@@ -22,6 +22,41 @@ seasonal_coronavirus_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
+# CARI HB data
+seasonal_coronavirus_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
+  filter(Pathogen == 'Seasonal Coronavirus (non-COVID-19)') %>%
+  filter(HBName != "Scotland") %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
+#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+
+# CARI Age data
+seasonal_coronavirus_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
+  filter(Pathogen == 'Seasonal Coronavirus (non-COVID-19)') %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", "15-44 years", 
+                                                "45-64 years", "65-74 years", "75+ years")))
+
+seasonal_coronavirus_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
+  filter(substr(Pathogen,1,20) %in% "Seasonal Coronavirus") %>%
+  mutate(WeekBeginning = as.Date(WeekBeginning),
+         WeekEnding = as.Date(WeekEnding)) %>%
+  mutate(Pathogen = case_when(
+    Pathogen == "Seasonal Coronavirus (non-COVID-19)" ~ "Seasonal Coronavirus (non-COVID-19)",
+    Pathogen == "Seasonal Coronavirus (non-COVID-19) - 229e" ~ "HCoV-229e (alpha)",
+    Pathogen == "Seasonal Coronavirus (non-COVID-19) - OC43" ~ "HCoV-OC43 (beta)",
+    Pathogen == "Seasonal Coronavirus (non-COVID-19) - NL63" ~ "HCoV-NL63 (alpha)",
+    Pathogen == "Seasonal Coronavirus (non-COVID-19) - Untyped" ~ "Untyped",
+  )) %>%
+  mutate(Pathogen = factor(Pathogen, levels = c("Seasonal Coronavirus (non-COVID-19)", 
+                                                "HCoV-229e (alpha)",
+                                                "HCoV-NL63 (alpha)", 
+                                                "HCoV-OC43 (beta)",
+                                                "Untyped")))
+
 
 tagList(
 
@@ -81,15 +116,18 @@ tagList(
 
   fluidRow(width = 12,
            tagList(h2("CARI - Test positivity for Seasonal Coronavirus by age group"))),
-
+  
   fluidRow(
+    selectInput("seasonal_coronavirus_cari_selected_age", "Select age group(s) of interest:", 
+                choices = sort(unique(seasonal_coronavirus_cari_age$AgeGroup)),
+                selected = sort(unique(seasonal_coronavirus_cari_age$AgeGroup))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("seasonal_coronavirus_cari_age_modal"),
                             swabposDefinitionUI("cari_seasonal_coronavirus_age_swabpos"),
-                            ciDefinitionUI("cari_seasonal_coronavirus_age_ci"),
                             withNavySpinner(plotlyOutput("seasonal_coronavirus_cari_age_plot")),
                     )),
            tabPanel("Data",
@@ -97,7 +135,83 @@ tagList(
                             withNavySpinner(dataTableOutput("seasonal_coronavirus_cari_age_table"))
                     ) # tagList
            ) # tabPanel
-
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by NHS Health Board"))),
+  
+  fluidRow(
+    width = 12,
+    selectInput("seasonal_coronavirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                choices = sort(unique(seasonal_coronavirus_cari_hb$HBName)),
+                selected = sort(unique(seasonal_coronavirus_cari_hb$HBName))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("seasonal_coronavirus_cari_hb_modal"),
+                            swabposDefinitionUI("cari_seasonal_coronavirus_hb_swabpos"),
+                            #ciDefinitionUI("cari_flu_hb_ci"),
+                            withNavySpinner(plotlyOutput("seasonal_coronavirus_cari_hb_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("seasonal_coronavirus_cari_hb_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by type"))),
+  
+  fluidRow(
+    selectInput("seasonal_coronavirus_cari_selected_subtype1", "Select type(s):", 
+                choices = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen)),
+                selected = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("seasonal_coronavirus_cari_subtype1_modal"),
+                            swabposDefinitionUI("cari_seasonal_coronavirus_swabpos"),
+                            #ciDefinitionUI("cari_seasonal_coronavirus_ci"),
+                            withNavySpinner(plotlyOutput("seasonal_coronavirus_cari_subtype1_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("seasonal_coronavirus_cari_subtype1_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Number of positive samples by Seasonal Coronavirus type"))),
+  
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("seasonal_coronavirus_cari_subtype2_modal"),
+                            withNavySpinner(plotlyOutput("seasonal_coronavirus_cari_subtype2_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("seasonal_coronavirus_cari_subtype2_table"))
+                    ) # tagList
+           ) # tabPanel
+           
     ), # tabBox
     linebreaks(1)
   ) # fluidRow

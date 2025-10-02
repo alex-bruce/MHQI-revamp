@@ -22,6 +22,41 @@ influenza_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   head(1)
 ###
 
+# CARI HB data
+influenza_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
+  filter(Pathogen == 'Influenza') %>%
+  filter(HBName != "Scotland") %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
+#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+
+# CARI Age data
+influenza_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
+  filter(Pathogen == 'Influenza') %>%
+  mutate(SwabPositivity = as.numeric(SwabPositivity),
+         SwabPositivityLCL = as.numeric(SwabPositivityLCL),
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", "15-44 years", 
+                                                "45-64 years", "65-74 years", "75+ years")))
+
+
+flu_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
+  filter(substr(Pathogen,1,9) %in% "Influenza") %>%
+  mutate(WeekBeginning = as.Date(WeekBeginning),
+         WeekEnding = as.Date(WeekEnding)) %>%
+  mutate(Pathogen = case_when(
+    Pathogen == "Influenza" ~ "Type A and B",
+    Pathogen == "Influenza A" ~ "Type A",
+    Pathogen == "Influenza B" ~ "Type B",
+    Pathogen == "Influenza A (H1N1)" ~ "Type A (H1N1)",
+    Pathogen == "Influenza A (H3)" ~ "Type A (H3N2)",
+    Pathogen == "Influenza A (not subtyped)" ~ "Type A (not subtyped)"
+  )) %>%
+  mutate(Pathogen = factor(Pathogen, levels = c("Type A and B", "Type A",
+                                                "Type A (H1N1)", "Type A (H3N2)",
+                                                "Type A (not subtyped)", "Type B")))
+
 tagList(
   
   fluidRow(width = 12,
@@ -60,6 +95,9 @@ tagList(
            tagList(h2("CARI - Test positivity for Influenza"))),
 
   fluidRow(
+    # selectInput("flu_cari_selected_subtype", "Select subtype:", 
+    #             choices = sort(unique(flu_cari_subtype$Pathogen)),
+    #             selected = sort(unique(flu_cari_subtype$Pathogen))[1]),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
@@ -78,18 +116,21 @@ tagList(
     ), # tabBox
     linebreaks(1)
   ), # fluidRow
-
+  
   fluidRow(width = 12,
            tagList(h2("CARI - Test positivity for Influenza by age group"))),
-
+  
   fluidRow(
+    selectInput("influenza_cari_selected_age", "Select age group(s) of interest:", 
+                choices = sort(unique(influenza_cari_age$AgeGroup)),
+                selected = sort(unique(influenza_cari_age$AgeGroup))[1],
+                multiple = TRUE),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("influenza_cari_age_modal"),
                             swabposDefinitionUI("cari_influenza_age_swabpos"),
-                            ciDefinitionUI("cari_influenza_age_ci"),
                             withNavySpinner(plotlyOutput("influenza_cari_age_plot")),
                     )),
            tabPanel("Data",
@@ -97,8 +138,85 @@ tagList(
                             withNavySpinner(dataTableOutput("influenza_cari_age_table"))
                     ) # tagList
            ) # tabPanel
-
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Influenza by NHS Health Board"))),
+  
+  fluidRow(
+    width = 12,
+    selectInput("influenza_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                choices = sort(unique(influenza_cari_hb$HBName)),
+                selected = sort(unique(influenza_cari_hb$HBName))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("influenza_cari_hb_modal"),
+                            swabposDefinitionUI("cari_influenza_hb_swabpos"),
+                            #ciDefinitionUI("cari_flu_hb_ci"),
+                            withNavySpinner(plotlyOutput("influenza_cari_hb_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("influenza_cari_hb_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Test positivity for Influenza by type/subtype"))),
+  
+  fluidRow(
+    selectInput("flu_cari_selected_subtype1", "Select type/subtype(s):", 
+                choices = sort(unique(flu_cari_subtype$Pathogen)),
+                selected = sort(unique(flu_cari_subtype$Pathogen))[1],
+                multiple = TRUE),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("influenza_cari_subtype1_modal"),
+                            swabposDefinitionUI("cari_influenza_swabpos"),
+                            #ciDefinitionUI("cari_influenza_ci"),
+                            withNavySpinner(plotlyOutput("influenza_cari_subtype1_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("influenza_cari_subtype1_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("CARI - Number of positive samples by Influenza subtype"))),
+  
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("influenza_cari_subtype2_modal"),
+                            withNavySpinner(plotlyOutput("influenza_cari_subtype2_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("influenza_cari_subtype2_table"))
+                    ) # tagList
+           ) # tabPanel
+           
     ), # tabBox
     linebreaks(1)
   ) # fluidRow
+  
 )
