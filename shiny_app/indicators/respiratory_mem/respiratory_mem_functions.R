@@ -1025,6 +1025,31 @@ create_pathogen_occupancy_linechart <- function(data,
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10")
     ) %>%
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  
+  # For first week of new season (week 40), add in a marker
+  if(nrow(data_curr_season) == 1){
+    
+    pathogen_occupancy_linechart <- pathogen_occupancy_linechart %>%
+      add_trace(data = data_curr_season,
+                x = ~ISOWeek,
+                y = ~Value,
+                showlegend = F,
+                color = ~Season,
+                colors = "#FF0000",
+                type = "scatter",
+                mode = 'markers',
+                textposition = "none",
+                text = tooltip_trend,
+                hoverinfo = "text")
+  }
+  
+  return(pathogen_occupancy_linechart)
+  
+}
+
     
 
 create_cari_age_linechart2 <- function(data){
@@ -1375,30 +1400,6 @@ create_cari_subtype_linechart <- function(data){
            showlegend = TRUE) %>%
 
     
-    config(displaylogo = FALSE, displayModeBar = TRUE,
-           modeBarButtonsToRemove = bttn_remove)
-  
-
-  # For first week of new season (week 40), add in a marker
-  if(nrow(data_curr_season) == 1){
-    
-    pathogen_occupancy_linechart <- pathogen_occupancy_linechart %>%
-      add_trace(data = data_curr_season,
-                x = ~ISOWeek,
-                y = ~Value,
-                showlegend = F,
-                color = ~Season,
-                colors = "#FF0000",
-                type = "scatter",
-                mode = 'markers',
-                textposition = "none",
-                text = tooltip_trend,
-                hoverinfo = "text")
-  }
-  
-  return(pathogen_occupancy_linechart)
-  
-}
 
 
 
