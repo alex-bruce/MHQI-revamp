@@ -236,7 +236,8 @@ rsv_hosp_adms_colours <- c(phs_colours("phs-purple"), phs_colours("phs-green"),
                            phs_colours("phs-blue"))
 
 # Colours for lines on line chart
-euromomo_mem_line_colours <- c("#004785","#00a2e5", "#376C31", "#FF0000", "#FF0000")
+#euromomo_mem_line_colours <- c("#004785","#00a2e5", "#376C31", "#FF0000", "#FF0000")
+euromomo_mem_line_colours <- c("#3F085C","#F46A25", "#801650", "#12436D", "#12436D")
 
 # Isoweeks from week 40 to 39
 mem_isoweeks <- c(40:52, 1:39)
