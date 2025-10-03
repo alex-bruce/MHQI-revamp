@@ -221,8 +221,10 @@ euromomo_activity_level_colours <- c("#FDE725FF", "#5DC863FF", "#21908CFF", "#3B
 # Colours for lines on line chart
 # mem_line_colours <- c("#010101", "#A35000", "#00FF1A", "#004785","#00a2e5",
 #                       "#376C31", "#FF0000")
-mem_line_colours <- c("#A35000", "#00FF1A", "#004785","#00a2e5",
-                      "#376C31", "#FF0000")
+# mem_line_colours <- c("#A35000", "#00FF1A", "#004785","#00a2e5",
+#                       "#376C31", "#FF0000")
+mem_line_colours <- rev(c("#12436D", "#801650", "#F46A25","#3F085C",
+                      "#3E8ECC", "#3D3D3D"))
 
 # Colours for lines on summary admissions line chart
 flu_hosp_adms_colours <- c(phs_colours("phs-purple"), phs_colours("phs-green"),

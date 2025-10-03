@@ -92,44 +92,54 @@ create_mem_linechart <- function(data,
   data_curr_season <- data %>%
     filter(Season %in% seasons[length(seasons)])
   
-  linetypes <- c("dashdot", "longdash", "dot", "dash", "solid", "solid")
-  
-  mem_linechart <- plot_ly()
-  
-  week_template <- data.frame(seq(1:52))
-  names(week_template) <- "ISOWeek"
-  week_template <- week_template %>%
-    mutate(ISOWeek = factor(ISOWeek, levels = c(40:52,1:39)))
-  
-  for (i in seq_along(seasons)) {
-    
-    season_data <- data %>% 
-      filter(Season == seasons[i]) %>%
-      right_join(week_template)
-    
-    mem_linechart <- mem_linechart %>%
-      add_trace(
-        x = season_data$ISOWeek,
-        y = season_data$Value,
-        type = 'scatter',
-        mode = 'lines',
-        textposition = "none",
-        text = ~ c(paste0("Season: ", season_data$Season,
-                          "<br>", "Week number: ", season_data$ISOWeek,
-                          "<br>", "Rate: ", season_data$Value,
-                          "<br>", "Activity level: ", season_data$ActivityLevel)),
-        hoverinfo = "text",
-        name = seasons[i],
-        line = list(
-          color = 'black',
-          width = ifelse(i == 6, 4, 2),  # First season double width
-          dash = linetypes[i]           # Different linetypes
-        )
-      )
-  }
+  # linetypes <- c("dashdot", "longdash", "dot", "dash", "solid", "solid")
+  # 
+  # mem_linechart <- plot_ly()
+  # 
+  # week_template <- data.frame(seq(1:52))
+  # names(week_template) <- "ISOWeek"
+  # week_template <- week_template %>%
+  #   mutate(ISOWeek = factor(ISOWeek, levels = c(40:52,1:39)))
+  # 
+  # for (i in seq_along(seasons)) {
+  #   
+  #   season_data <- data %>% 
+  #     filter(Season == seasons[i]) %>%
+  #     right_join(week_template)
+  #   
+  #   mem_linechart <- mem_linechart %>%
+  #     add_trace(
+  #       x = season_data$ISOWeek,
+  #       y = season_data$Value,
+  #       type = 'scatter',
+  #       mode = 'lines',
+  #       textposition = "none",
+  #       text = ~ c(paste0("Season: ", season_data$Season,
+  #                         "<br>", "Week number: ", season_data$ISOWeek,
+  #                         "<br>", "Rate: ", season_data$Value,
+  #                         "<br>", "Activity level: ", season_data$ActivityLevel)),
+  #       hoverinfo = "text",
+  #       name = seasons[i],
+  #       line = list(
+  #         color = 'black',
+  #         width = ifelse(i == 6, 4, 2),  # First season double width
+  #         dash = linetypes[i]           # Different linetypes
+  #       )
+  #     )
+  # }
 
   # Create plot
-  mem_linechart = mem_linechart %>%
+  mem_linechart = data %>%
+    plot_ly(x = ~ISOWeek,
+            y = ~Value,
+            textposition = "none",
+            text = tooltip_trend,
+            hoverinfo = "text",
+            color = ~Season,
+            type="scatter",
+            mode="lines",
+            line = list(width = 5),
+            colors = mem_line_colours) %>%
     layout(yaxis = yaxis_plots,
            xaxis = xaxis_plots,
            margin = list(b = 100, t = 5),
