@@ -38,6 +38,17 @@ altTextServer("hospital_admissions_modal",
               )
 )
 
+altTextServer("hospital_admissions_age_modal",
+              title = "COVID-19 hospital admission rate per 100,000 population by age group",
+              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by age group."),
+                                tags$li("The x axis is the week ending date."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
+                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
+
+
+
+
 altTextServer("hospital_admissions_simd_modal",
               title = "Weekly number of COVID-19 hospital admissions by deprivation category (SIMD)",
               content = tags$ul(tags$li("This is a plot of weekly COVID-19 hospital admissions broken down by SIMD deprivation category."),
@@ -146,6 +157,40 @@ output$hospital_admissions_plot <- renderPlotly({
     make_hospital_admissions_plot()
 
 })
+
+#### WEEKLY ADMISSIONS BY AGE
+
+# COVID-19 admissions by age table
+output$covid_admissions_age_table <- renderDataTable({
+  age_rate_data_all_path %>%
+    select(week_ending, age_band,
+           rate = cov_rate) %>% 
+    filter(age_band != "All Ages") %>%
+    mutate(week_ending = as_date(week_ending)) %>% 
+    arrange(desc(week_ending)) %>%
+    rename(`Week Ending` = week_ending,
+           `Age Group` = age_band,
+           `Admission Rate per 100k` = rate) %>%
+    make_table(add_separator_cols_1dp = c(3),
+               filter_cols = c(1,2))
+})
+
+# COVID-19 Adms by age plot
+output$covid_admissions_age_plot <- renderPlotly({
+  age_rate_data_all_path %>%
+    filter(age_band != "All Ages") %>% 
+    select(week_ending, age_band,
+           rate = cov_rate) %>%
+    mutate(age_band = factor(age_band, levels = c("<1",  "0-4", "5-14", "15-44", "45-64",
+                                                  "65-74", "75+"))) %>% 
+    create_pathogen_adms_age_linechart()
+  
+})
+
+
+
+
+
 
 
 ### WEEKLY ADMISSIONS BY SIMD ### ----

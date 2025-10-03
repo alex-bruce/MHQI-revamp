@@ -64,6 +64,26 @@ tagList(
                                         # This text is hidden by css but helps pad the box at the bottom
                                        h6("hidden text for padding page")
                                                                  )))), # headline
+  
+  fluidRow(width = 12,
+           tagList(h2("Test positivity for RSV"),
+                   tabBox(width = NULL,
+                          type = "pills",
+                          tabPanel("Plot",
+                                   tagList(linebreaks(1),
+                                           altTextUI("rsv_positivity_modal"),
+                                           swabposDefinitionUI("rsv_swabpos"),
+                                           withNavySpinner(plotlyOutput("rsv_positivity_plot")),
+                                           fluidRow(
+                                             width=12, linebreaks(1)))),
+                          tabPanel("Data",
+                                   tagList(
+                                     withNavySpinner(dataTableOutput("rsv_positivity_table"))
+                                   ) # tagList
+                          ) # tabPanel
+                   ) # tabBox
+           ) # tagList
+  ), #fluidrow
 
   fluidRow(width = 12,
            tagList(h2("RSV incidence rate per 100,000 population in Scotland"))),

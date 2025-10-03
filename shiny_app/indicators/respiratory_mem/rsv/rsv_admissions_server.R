@@ -9,11 +9,21 @@ rsv_adm_seasons <- tail(sort(unique(RSV_admissions$Season)), 6)
 altTextServer("rsv_admissions_modal",
               title = "RSV hospital admissions in Scotland",
               content = tags$ul(tags$li("This is a plot showing the number of RSV hospital admissions in Scotland."),
-                                tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the number of hospital admissions."),
                                 tags$li(glue("There is a trace for each of the following season from ", 
                                              rsv_adm_seasons[1], " to ", rsv_adm_seasons[6], "."))))
+
+altTextServer("rsv_admissions_age_modal",
+              title = "RSV hospital admission rate per 100,000 population by age group",
+              content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by age group."),
+                                tags$li("The x axis is the week ending date."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
+                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
+
+
 
 
 altTextServer("rsv_adm_age_sex",
@@ -63,14 +73,40 @@ output$rsv_admissions_table <- renderDataTable({
 })
 
 
+# RSV admissions by age table
+output$rsv_admissions_age_table <- renderDataTable({
+  age_rate_data_all_path %>%
+    select(week_ending, age_band,
+           rate = rsv_rate) %>% 
+    filter(age_band != "All Ages") %>%
+    mutate(week_ending = as_date(week_ending)) %>% 
+    arrange(desc(week_ending)) %>%
+    rename(`Week Ending` = week_ending,
+           `Age Group` = age_band,
+           `Admission Rate per 100k` = rate) %>%
+    make_table(add_separator_cols_1dp = c(3),
+               filter_cols = c(1,2))
+})
+
 # RSV Adms plot
 output$rsv_admissions_plot <- renderPlotly({
   RSV_admissions %>%
-    filter(Season %in% flu_adm_seasons) %>%
-    create_rsv_adms_linechart()
+
+    create_pathogen_adms_linechart()
 
 })
 
+# RSV Adms by age plot
+output$rsv_admissions_age_plot <- renderPlotly({
+  age_rate_data_all_path %>%
+    filter(age_band != "All Ages") %>% 
+    select(week_ending, age_band,
+           rate = rsv_rate) %>%
+    mutate(age_band = factor(age_band, levels = c("<1",  "0-4", "5-14", "15-44", "45-64",
+                                                  "65-74", "75+"))) %>% 
+    create_pathogen_adms_age_linechart()
+  
+})
 
 observeEvent(input$respiratory_season,
              {

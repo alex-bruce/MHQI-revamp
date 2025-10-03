@@ -245,3 +245,96 @@ make_wastewater_plot <- function(data){
   return(p)
 
 }
+
+
+create_covid_line_chart <- function(data,
+                                    rate_dp = 2,
+                                    seasons = NULL,
+                                    value_variable = "RatePer100000",
+                                    y_axis_title = "Rate per 100,000 population") {
+  
+  # Rename value variable
+  data <- data %>%
+    rename(Value = !!value_variable) %>%
+    mutate(Value = round_half_up(Value, rate_dp))
+  
+  # Select recent seasons if not provided
+  if (is.null(seasons)) {
+    seasons <- data %>%
+      select(Season) %>%
+      arrange(Season) %>%
+      distinct() %>%
+      tail(3) %>%
+      pull(Season)
+  }
+  
+  # Wrangle data
+  data <- data %>%
+    filter(ISOWeek != 53) %>%
+    filter(Season %in% seasons) %>%
+    select(Season, ISOWeek, Weekord, Value) %>%
+    arrange(Season, Weekord) %>%
+    mutate(ISOWeek = as.numeric(ISOWeek),
+           ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
+  
+  # Axis settings
+  xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["dtick"]] <- 2
+  xaxis_plots[["range"]] <- c(-1, 52)
+  xaxis_plots[["showgrid"]] <- TRUE
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["title"]] <- y_axis_title
+  yaxis_plots[["tickformat"]] <- ""
+  yaxis_plots[["showgrid"]] <- TRUE
+  
+  # Tooltip
+  tooltip_trend <- paste0("Season: ", data$Season,
+                          "<br>Week number: ", data$ISOWeek,
+                          "<br>Rate: ", data$Value)
+  
+  # Current season data
+  data_curr_season <- data %>%
+    filter(Season == seasons[length(seasons)])
+  
+  # Create plot
+  simple_linechart <- data %>%
+    plot_ly(x = ~ISOWeek,
+            y = ~Value,
+            text = tooltip_trend,
+            hoverinfo = "text",
+            color = ~Season,
+            type = "scatter",
+            mode = "lines",
+            line = list(width = 5),
+            colors = mem_line_colours) %>%
+    layout(yaxis = yaxis_plots,
+           xaxis = xaxis_plots,
+           margin = list(b = 100, t = 5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           
+           legend = list(
+             x = 1.05,        
+             y = 0.8,        
+             xanchor = "left",
+             yanchor = "top"
+           )) %>%
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  # Optional: Add marker for first week of new season
+  if (nrow(data_curr_season) == 1) {
+    simple_linechart <- simple_linechart %>%
+      add_trace(data = data_curr_season,
+                x = ~ISOWeek,
+                y = ~Value,
+                showlegend = FALSE,
+                type = "scatter",
+                mode = "markers",
+                marker = list(color = "#FF0000"),
+                text = tooltip_trend,
+                hoverinfo = "text")
+  }
+  
+  return(simple_linechart)
+}

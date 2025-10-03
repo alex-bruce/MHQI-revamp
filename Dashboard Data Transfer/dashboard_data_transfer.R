@@ -207,6 +207,9 @@ source("Transfer Scripts/transfer_rsv_admissions.R")
 #### CARI
 source("Transfer Scripts/transfer_respiratory_cari.R")
 
+#### Test Positivity
+source("Transfer Scripts/transfer_respiratory_test_positivity.R")
+
 ## Open Data transfers ##
 
 #### Open data test and cases by HB or CA

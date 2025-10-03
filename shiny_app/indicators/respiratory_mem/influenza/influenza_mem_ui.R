@@ -49,6 +49,26 @@ tagList(
                             )))), # headline
 
   fluidRow(width = 12,
+           tagList(h2("Test positivity for influenza"),
+                   tabBox(width = NULL,
+                          type = "pills",
+                          tabPanel("Plot",
+                                   tagList(linebreaks(1),
+                                           altTextUI("influenza_positivity_modal"),
+                                           swabposDefinitionUI("influenza_swabpos"),
+                                           withNavySpinner(plotlyOutput("influenza_positivity_plot")),
+                                           fluidRow(
+                                             width=12, linebreaks(1)))),
+                          tabPanel("Data",
+                                   tagList(
+                                     withNavySpinner(dataTableOutput("influenza_positivity_table"))
+                                   ) # tagList
+                          ) # tabPanel
+                   ) # tabBox
+           ) # tagList
+  ), #fluidrow
+  
+  fluidRow(width = 12,
            tagList(h2("Influenza incidence rate per 100,000 population in Scotland"))),
 
   fluidRow(

@@ -3,7 +3,7 @@
 
 ##### Respiratory CARI
 
-filenames <- c("scotland", "agegp")
+filenames <- c("scotland", "agegp", "hb")
 
 for (filename in filenames){
   
@@ -19,3 +19,4 @@ for (filename in filenames){
 # Output
 write_csv(Respiratory_CARI_scotland, glue(output_folder, "Respiratory_Pathogens_CARI_Scot.csv"))
 write_csv(Respiratory_CARI_agegp, glue(output_folder, "Respiratory_Pathogens_CARI_Age.csv"))
+write_csv(Respiratory_CARI_hb, glue(output_folder, "Respiratory_Pathogens_CARI_HB.csv"))

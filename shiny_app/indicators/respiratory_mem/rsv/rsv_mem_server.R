@@ -3,6 +3,38 @@ metadataButtonServer(id="respiratory_rsv_mem",
                      panel="Respiratory infection activity",
                      parent = session)
 
+
+altTextServer("rsv_positivity_modal",
+              title = "RSV test positivity",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of RSV testing across Scotland."),
+                                tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
+                                tags$li("The y axis is test positivity rate."),
+                                tags$li("Each trace represents the test positivity rate across a particular season."),
+                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant season from the legend on the right of the chart.")
+              )
+)
+
+output$rsv_positivity_table <- renderDataTable({
+  Respiratory_Pathogens_Test_Positivity %>%
+    filter(pathogen == "RSV") %>%
+    dplyr::rename(`Year` = year,
+                  `Season` = season,
+                  `ISO Week` = ISOweek,
+                  `Total Samples` = total_samples,
+                  `Positive Samples` = positive_count,
+                  `Test Positivity (%)` = positivity_percentage) %>%
+    select(`Year`, `ISO Week`, `Total Samples`, `Positive Samples`, `Test Positivity (%)`) %>%
+    arrange(desc(`Year`), desc(`ISO Week`)) %>%
+    make_table(add_separator_cols = c(2), order_by_firstcol = "desc")
+})
+
+output$rsv_positivity_plot <- renderPlotly({
+  Respiratory_Pathogens_Test_Positivity %>%
+    create_test_pos_seasons_linechart(., "RSV")
+  
+})
+
+
 # Low threshold
 rsv_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Respiratory Syncytial Virus") %>%
