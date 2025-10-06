@@ -27,7 +27,13 @@ for (filename in filenames){
            WeekBeginning = gsub("-", "", as.character(WeekBeginning))) %>%
     mutate(WeekEnding = as.numeric(as.character(WeekEnding)),
            WeekBeginning = as.numeric(as.character(WeekBeginning))) %>%
-    select(WeekBeginning, WeekEnding, season, ISOweek, year, pathogen, positive_count, total_samples, positivity_percentage)
+    dplyr::rename(Season = season,
+                  ISOyear = year,
+                  Pathogen = pathogen,
+                  PositiveCount = positive_count,
+                  TotalSamples = total_samples,
+                  PositivityPercentage = positivity_percentage) %>%
+    select(WeekBeginning, WeekEnding, Season, ISOweek, ISOyear, Pathogen, PositiveCount, TotalSamples, PositivityPercentage)
 }
 
 
