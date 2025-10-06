@@ -23,6 +23,10 @@ for (filename in filenames){
                                             str_pad(as.character(ISOweek), width = 2,
                                                     side = "left", pad = "0"), "-7")),
            WeekBeginning = WeekEnding - days(6)) %>%
+    mutate(WeekEnding = gsub("-", "", as.character(WeekEnding)),
+           WeekBeginning = gsub("-", "", as.character(WeekBeginning))) %>%
+    mutate(WeekEnding = as.numeric(as.character(WeekEnding)),
+           WeekBeginning = as.numeric(as.character(WeekBeginning))) %>%
     select(WeekBeginning, WeekEnding, season, ISOweek, year, pathogen, positive_count, total_samples, positivity_percentage)
 }
 
