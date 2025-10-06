@@ -18,18 +18,8 @@ for (filename in filenames){
 
 # Output
 write_csv(Respiratory_test_pos_agg, glue(output_folder, "Respiratory_Pathogens_Test_Positivity.csv"))
-#write_csv(Respiratory_CARI_agegp, glue(output_folder, "Respiratory_Pathogens_CARI_Age.csv"))
 
 
-# filenames <- c("scotland", "agegp_sex", "agegp", "sex", "hb")
-# 
-# ## Getting respiratory data
-# for (filename in filenames){
-#   assign(glue("i_respiratory_{filename}_agg"),
-#          read_csv_with_options(
-#            match_base_filename(
-#              glue("{input_data}/{filename}_agg.csv")
-#            )
-#          )
-#   )
-# }
+# Output to Open Data subfolder with datestamp
+write_csv(Respiratory_test_pos_agg, glue(od_folder, "Respiratory_Pathogens_Test_Positivity_{od_report_date}.csv"))
+
