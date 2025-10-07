@@ -17,7 +17,7 @@ tagList(
            tabPanel(stringr::str_to_sentence("influenza"),
                     # headline figures for the week in Scotland
 
-                    tagList(h2(glue("Summary of influenza cases in Scotland")),
+                    tagList(h2(glue("Summary of laboratory-confirmed influenza cases in Scotland")),
 
                             tags$div(class = "headline",
                                      br(),
@@ -49,7 +49,7 @@ tagList(
                             )))), # headline
 
   fluidRow(width = 12,
-           tagList(h2("Test positivity for influenza"),
+           tagList(h2("Influenza percentage test positivity"),
                    tabBox(width = NULL,
                           type = "pills",
                           tabPanel("Plot",
@@ -69,7 +69,7 @@ tagList(
   ), #fluidrow
   
   fluidRow(width = 12,
-           tagList(h2("Influenza incidence rate per 100,000 population in Scotland"))),
+           tagList(h2("Laboratory-confirmed influenza incidence per 100,000 population in Scotland"))),
 
   fluidRow(
     tabBox(width = NULL,
@@ -90,7 +90,7 @@ tagList(
   ), # fluidRow
 
   fluidRow(width = 12,
-           tagList(h2("Influenza incidence rate per 100,000 population by NHS Health Board"))),
+           tagList(h2("Laboratory-confirmed influenza incidence per 100,000 population by NHS Health Board"))),
    
 
    fluidRow(
@@ -118,7 +118,7 @@ tagList(
 
 
   fluidRow(width = 12,
-           tagList(h2("Influenza incidence rate per 100,000 population by age group"))),
+           tagList(h2("Laboratory-confirmed influenza incidence per 100,000 population by age group"))),
 
   fluidRow(
     tabBox(width = NULL,
@@ -139,7 +139,7 @@ tagList(
   ), # fluidRow
 
   fluidRow(
-    tagList(h2(glue("Influenza cases by age and sex in Scotland")),
+    tagList(h2(glue("Laboratory-confirmed influenza cases by age and sex in Scotland")),
 
             tabBox(width = NULL,
                    type = "pills",

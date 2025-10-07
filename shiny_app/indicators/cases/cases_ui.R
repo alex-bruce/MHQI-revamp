@@ -59,7 +59,7 @@ tagList(
 
 
 fluidRow(width = 12,
-         tagList(h2("Test positivity for COVID-19"),
+         tagList(h2("COVID-19 percentage test positivity"),
                  tabBox(width = NULL,
                         type = "pills",
                         tabPanel("Plot",
@@ -81,7 +81,7 @@ fluidRow(width = 12,
 
 
   fluidRow(width = 12,
-         tagList(h2("COVID-19 incidence rate per 100,000 population in Scotland"))),
+         tagList(h2("Laboratory-confirmed COVID-19 incidence per 100,000 population in Scotland"))),
 
   fluidRow(
     tabBox(width = NULL,

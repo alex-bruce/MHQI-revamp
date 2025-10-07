@@ -42,7 +42,7 @@ tagList(
     fluidRow(width = 12,
              tabPanel(stringr::str_to_sentence("influenza"),
                       # headline figures for the week in Scotland
-                      tagList(h2(glue("Summary of RSV cases in Scotland")),
+                      tagList(h2(glue("Summary of laboratory-confirmed RSV cases in Scotland")),
                               tags$div(class = "headline",
                                        br(),
                                       # h3(glue("Total number of RSV cases in Scotland over the last two weeks")),
@@ -86,7 +86,7 @@ tagList(
   ), #fluidrow
 
   fluidRow(width = 12,
-           tagList(h2("RSV incidence rate per 100,000 population in Scotland"))),
+           tagList(h2("Laboratory-confirmed RSV incidence per 100,000 population in Scotland"))),
 
   fluidRow(
     tabBox(width = NULL,
@@ -107,7 +107,7 @@ tagList(
   ), # fluidRow
 
 fluidRow(width = 12,
-         tagList(h2("RSV incidence rate per 100,000 population by NHS Health Board"))),
+         tagList(h2("Laboratory-confirmed RSV incidence per 100,000 population by NHS Health Board"))),
 
 fluidRow(
   p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
@@ -136,7 +136,7 @@ fluidRow(
 
 
   fluidRow(width = 12,
-           tagList(h2("RSV incidence rate per 100,000 population by age group"))),
+           tagList(h2("Laboratory-confirmed RSV incidence per 100,000 population by age group"))),
 
   fluidRow(
     tabBox(width = NULL,
