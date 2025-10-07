@@ -6,7 +6,7 @@ tagList(
 ),
 
   fluidRow(width = 12,
-           tagList(h2("Laboratory-confirmed rhinovirus incidence rate 100,000 population in Scotland"))),
+           tagList(h2("Laboratory-confirmed rhinovirus incidence per 100,000 population in Scotland"))),
 
   fluidRow(
     tabBox(width = NULL,
