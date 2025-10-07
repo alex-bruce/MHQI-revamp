@@ -2,7 +2,7 @@
 make_occupancy_plots <- function(data, occupancy) {
 
   data%<>%
-    filter(HealthBoardQF== "d") # filter to Scotland
+    #filter(HealthBoardQF== "d") # filter to Scotland
     
   xaxis_plots[["title"]] <- "Week ending"
 
@@ -31,6 +31,11 @@ make_occupancy_plots <- function(data, occupancy) {
                           xs= c("2023-05-08"),
                           notes=c("Change to inpatient definition from 08 May 2023 (max number 10 days)"),
                           colors=c(phs_colours("phs-rust"))) %>% #phs_colours("phs-purple") 
+      add_lines_and_notes(dataframe = data,
+                          ycol = "HospitalOccupancy",
+                          xs= c("2025-09-28"),
+                          notes=c("Inpatient data source changed to RAPID from 28 September 2023"),
+                          colors=c(phs_colours("phs-graphite"))) %>% 
       layout(legend = list(xanchor = "center", x = 0.5, y = -0.5, orientation = 'h'))
 
 

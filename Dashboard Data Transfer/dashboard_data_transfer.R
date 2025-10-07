@@ -179,8 +179,11 @@ source("Transfer Scripts/transfer_covid_wastewater_ca.R")
 # Covid WW IND
 source("Transfer Scripts/transfer_covid_wastewater_ind.R")
 
-#### Occupancy
+#### Occupancy - Board submissions
 source("Transfer Scripts/transfer_occupancy.R")
+
+#### Occupancy - RAPID methdd
+source("Transfer Scripts/transfer_occupancy_rapid.R")
 
 #### Respiratory
 source("Transfer Scripts/transfer_respiratory.R")
