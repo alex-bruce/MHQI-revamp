@@ -62,11 +62,11 @@ parainfluenza_seasons <- parainfluenza_seasons$Season
 
 
 altTextServer("parainfluenza_mem_modal",
-              title = "Parainfluenza incidence rate per 100,000 population",
-              content = tags$ul(tags$li("This is a plot showing the rate of parainfluenza infection per 100,000 population in Scotland."),
+              title = "Laboratory-confirmed parainfluenza incidence per 100,000 population",
+              content = tags$ul(tags$li("This is a plot showing the rate of laboratory-confirmed parainfluenza infection per 100,000 population in Scotland."),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the rate of parainfluenza infection per 100,000 population."),
+                                tags$li("The y axis shows the rate of laboratory-confirmed parainfluenza infection per 100,000 population."),
                                 tags$li(glue("There is a trace for each of the following seasons: ", parainfluenza_seasons[1], ", ",
                                              parainfluenza_seasons[2], ", ", parainfluenza_seasons[3], ", ", parainfluenza_seasons[4], 
                                              ", ", parainfluenza_seasons[5],", and ", parainfluenza_seasons[6], ".")),
@@ -82,8 +82,8 @@ altTextServer("parainfluenza_mem_modal",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))
 
 altTextServer("parainfluenza_mem_hb_modal",
-              title = "Parainfluenza incidence rate per 100,000 population by NHS Health Board",
-              content = tags$ul(tags$li(glue("This is a plot showing the rate of parainfluenza infection per 100,000 population by NHS Health Board for seasons ",
+              title = "Laboratory-confirmed parainfluenza incidence per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li(glue("This is a plot showing the rate of laboratory-confirmed parainfluenza infection per 100,000 population by NHS Health Board for seasons ",
                                              parainfluenza_seasons[5], " and ", parainfluenza_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
@@ -102,8 +102,8 @@ altTextServer("parainfluenza_mem_hb_modal",
 
 
 altTextServer("parainfluenza_mem_age_modal",
-              title = "Parainfluenza incidence rate per 100,000 population by age group",
-              content = tags$ul(tags$li(glue("This is a plot showing the rate of parainfluenza infection per 100,000 population by age group for seasons ",
+              title = "Laboratory-confirmed parainfluenza incidence per 100,000 population by age group",
+              content = tags$ul(tags$li(glue("This is a plot showing the rate of laboratory-confirmed parainfluenza infection per 100,000 population by age group for seasons ",
                                              parainfluenza_seasons[5], " and ", parainfluenza_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),

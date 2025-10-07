@@ -66,7 +66,7 @@ tagList(
                                                                  )))), # headline
   
   fluidRow(width = 12,
-           tagList(h2("Test positivity for RSV"),
+           tagList(h2("RSV percentage test positivity"),
                    tabBox(width = NULL,
                           type = "pills",
                           tabPanel("Plot",
