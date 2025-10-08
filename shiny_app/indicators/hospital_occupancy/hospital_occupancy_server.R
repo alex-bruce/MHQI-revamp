@@ -61,7 +61,8 @@ occupancy_covid <- occupancy_rapid %>%
   arrange(desc(week_ending)) %>% 
   select(WeekEnding = week_ending,
          HospitalOccupancy = bed_occupancy,
-         SevenDayAverage= sevenday_ave_inpatients)
+         SevenDayAverage= sevenday_ave_inpatients) %>%
+  mutate(WeekEnding = as.Date(WeekEnding))
 
 occupancy_covid <- bind_rows(occupancy_covid, occupancy_manual)
 
