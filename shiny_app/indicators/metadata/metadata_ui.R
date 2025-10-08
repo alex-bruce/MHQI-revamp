@@ -134,22 +134,22 @@ tagList(h1("Metadata"),
                                                    
                                                 
                                    
-                                   #### LENGTH OF STAY (LOS) PANEL ----
-                                   bsCollapsePanel("Length of stay (LOS)",
-                                                   
-                                                   p("This measure is shown for admissions with laboratory-confirmed positive test results for Influenza, COVID-19 and RSV.  
-                                                     LOS can be influenced by a variety of factors including age, reason for admission, co-morbidities, and hospital pressures. 
-                                                     This analysis does not account for these factors."),
-                                                   p("LOS is calculated from admission and discharge dates provided in RAPID. It can take 6-8 weeks before a record is finalised, 
-                                                     discharge details in particular can be slow to complete. For this reason, discharge values are imputed when they are missing.
-                                                     Data are subject to revision as hospital records are updated."),
-                                                   p("Data are reported a week in lag, to allow for discharge dates to be supplied."),
-                                                   p("Values shown are median LOS values, across the previous 4-week period."),
-                                                   p("Patients admitted to hospital and discharged on the same date are not included in this count."),
-                                                   p("Cases where more than one virus has been co-detected will be counted more than once, in each pathogen specific count."),
-                                                   p(strong("Source: Rapid and Preliminary Inpatient Data (RAPID) and Electronic Communication of Surveillance in Scotland (ECOSS)")),
-                                                   br()),
-                                         
+                                   # #### LENGTH OF STAY (LOS) PANEL ----
+                                   # bsCollapsePanel("Length of stay (LOS)",
+                                   #                 
+                                   #                 p("This measure is shown for admissions with laboratory-confirmed positive test results for Influenza, COVID-19 and RSV.  
+                                   #                   LOS can be influenced by a variety of factors including age, reason for admission, co-morbidities, and hospital pressures. 
+                                   #                   This analysis does not account for these factors."),
+                                   #                 p("LOS is calculated from admission and discharge dates provided in RAPID. It can take 6-8 weeks before a record is finalised, 
+                                   #                   discharge details in particular can be slow to complete. For this reason, discharge values are imputed when they are missing.
+                                   #                   Data are subject to revision as hospital records are updated."),
+                                   #                 p("Data are reported a week in lag, to allow for discharge dates to be supplied."),
+                                   #                 p("Values shown are median LOS values, across the previous 4-week period."),
+                                   #                 p("Patients admitted to hospital and discharged on the same date are not included in this count."),
+                                   #                 p("Cases where more than one virus has been co-detected will be counted more than once, in each pathogen specific count."),
+                                   #                 p(strong("Source: Rapid and Preliminary Inpatient Data (RAPID) and Electronic Communication of Surveillance in Scotland (ECOSS)")),
+                                   #                 br()),
+                                   #       
                    
                                    
                                    #### WASTEWATER PANEL ----
@@ -237,7 +237,7 @@ tagList(h1("Metadata"),
                                                              capture trends even where the infectious respiratory pathogen is not known.")
                                                    ),
                                                    p(strong("Source: ", tags$a("National Records of Scotland (NRS)",
-                                                                               href="https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/vital-events/general-publications/weekly-deaths-registered-in-scotland"))
+                                                                               href="https://www.nrscotland.gov.uk/publications/deaths-registered-weekly-in-scotland/"))
                                                      ),
                                                    br()),
                                                    
@@ -400,7 +400,7 @@ tagList(h1("Metadata"),
 
                                                    # SEVEN-DAY AVERAGE
                                                    h4("Seven-day average"),
-                                                   p("This is the sum of numbers for the previous 7 days added together and then divided by 7. Looking at a 7-day average can helps to smooth out short-term
+                                                   p("This is the sum of numbers for the previous 7 days added together and then divided by 7. Looking at a 7-day average can help to smooth out short-term
                                                      fluctuations, for example normal day-to-day fluctuations, or submissions of data that might be affected by weekends."),
                                                    br(),
 
