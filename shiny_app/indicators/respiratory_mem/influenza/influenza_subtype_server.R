@@ -6,14 +6,14 @@ metadataButtonServer(id="respiratory_influenza_subtype",
 
 # Alt text ----
 altTextServer("respiratory_over_time_modal",
-              title = glue("Influenza cases by subtype"),
+              title = glue("Laboratory-confirmed influenza cases by subtype"),
               content = tags$ul(
-                tags$li(glue("This is a stacked bar chart plot of influenza cases",
+                tags$li(glue("This is a stacked bar chart plot of laboratory-confirmed influenza cases",
                              " by subtype within a given NHS Health Board",
                              " for a selected respiratory season.")),
                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                tags$li(glue("The cases are presented as a rate, i.e. the number of people with ",
+                tags$li(glue("The laboratory-confirmed cases are presented as a rate, i.e. the number of people with ",
                         "influenza for every 100,000 people in that NHS Health Board.")),
                 tags$li("For Scotland there is an option to view the absolute number of cases."),
                 tags$li("The y axis is either the rate of cases or the number of cases."),
@@ -22,13 +22,13 @@ altTextServer("respiratory_over_time_modal",
 )
 
 altTextServer("respiratory_by_season_modal",
-              title =  glue("Influenza cases over time by season"),
+              title =  glue("Laboratory-confirmed influenza cases over time by season"),
               content = tags$ul(
-                tags$li(glue("This is a plot of the influenza cases for a given subtype",
+                tags$li(glue("This is a plot of the laboratory-confirmed influenza cases for a given subtype",
                              " over each season.")),
                 tags$li(glue("There is a trace for each season, starting in ", recent_six_seasons[1], ".")),
                 tags$li("The x axis is the isoweek. Week 40 is typically the start of October and when the winter respiratory season starts"),
-                tags$li(glue("The y axis is the rate of cases of the chosen influenza subtype in a given NHS health board.")),
+                tags$li(glue("The y axis is the rate of laboratory-confirmed cases of the chosen influenza subtype in a given NHS health board.")),
                 tags$li("For Scotland there is an option to view the absolute number of cases."))
               #  tags$li("The trend is that each winter there is a peak in cases. The peak was",
               #          "highest in 2017/2018 at about 2,800 cases.")
@@ -45,7 +45,7 @@ output$respiratory_headline_figures_subtype_count <- renderValueBox ({
     .$Count %>% format(big.mark=",")
 
   valueBox(value = organism_summary_total,
-           subtitle = glue("cases of {input$respiratory_headline_subtype} in Scotland"),
+           subtitle = glue("laboratory-confirmed cases of {input$respiratory_headline_subtype} in Scotland"),
            color = "navy",
            icon = icon_no_warning_fn("virus"),
            width = NULL)
@@ -62,7 +62,7 @@ output$respiratory_headline_figures_healthboard_count <- renderValueBox ({
     format(big.mark=",")
 
   valueBox(value = organism_summary_total,
-           subtitle = glue("{input$respiratory_headline_subtype} cases per 100,000 people in {input$respiratory_headline_healthboard}"),
+           subtitle = glue("{input$respiratory_headline_subtype} laboratory-confirmed cases per 100,000 people in {input$respiratory_headline_healthboard}"),
            color = "navy",
            icon = icon_no_warning_fn("house-medical"),
            width = NULL)
@@ -89,7 +89,7 @@ output$respiratory_over_time_plot <- renderPlotly({
 })
 
 
-output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases by subtype in ",
+output$respiratory_over_time_title <- renderUI({h3(glue("Laboratory-confirmed influenza cases by subtype in ",
                                                         input$respiratory_select_healthboard, " in Season ",
                                                         input$respiratory_select_season))})
 
@@ -107,7 +107,7 @@ output$respiratory_by_season_plot = renderPlotly({
 })
 
 
-output$respiratory_by_season_title <- renderUI({h3(glue("Influenza cases over time by season in ",
+output$respiratory_by_season_title <- renderUI({h3(glue("Laboratory-confirmed influenza cases over time by season in ",
                                                         input$respiratory_select_healthboard))})
 
 

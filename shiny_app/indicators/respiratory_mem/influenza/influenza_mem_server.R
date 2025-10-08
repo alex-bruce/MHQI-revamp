@@ -4,7 +4,7 @@ metadataButtonServer(id="respiratory_influenza_mem",
                      parent = session)
 
 altTextServer("influenza_positivity_modal",
-              title = "Influenza test positivity",
+              title = "Influenza percentage test positivity",
               content = tags$ul(tags$li("This is a plot showing the test positivity rate for influenza testing across Scotland."),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis is test positivity rate."),
@@ -94,11 +94,11 @@ influenza_seasons <- influenza_seasons$Season
 
 
 altTextServer("influenza_mem_modal",
-              title = "Influenza incidence rate per 100,000 population",
-              content = tags$ul(tags$li("This is a plot showing the rate of influenza infection per 100,000 population in Scotland."),
+              title = "Laboratory-confirmed influenza incidence per 100,000 population",
+              content = tags$ul(tags$li("This is a plot showing the rate of laboratory-confirmed influenza infection per 100,000 population in Scotland."),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the rate of influenza infection per 100,000 population."),
+                                tags$li("The y axis shows the rate of laboratory-confirmed influenza infection per 100,000 population."),
                                 tags$li(glue("There is a trace for each of the following seasons: ", influenza_seasons[1], ", ",
                                              influenza_seasons[2], ", ", influenza_seasons[3], ", ", influenza_seasons[4], 
                                              ", ", influenza_seasons[5],", and ", influenza_seasons[6], ".")),
@@ -114,8 +114,8 @@ altTextServer("influenza_mem_modal",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))
 
 altTextServer("influenza_mem_hb_modal",
-              title = "Influenza incidence rate per 100,000 population by NHS Health Board",
-              content = tags$ul(tags$li(glue("This is a plot showing the rate of influenza infection per 100,000 population by NHS Health Board for seasons ",
+              title = "Laboratory-confirmed influenza incidence per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li(glue("This is a plot showing the rate of laboratory-confirmed influenza infection per 100,000 population by NHS Health Board for seasons ",
                                              influenza_seasons[5], " and ", influenza_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
@@ -134,8 +134,8 @@ altTextServer("influenza_mem_hb_modal",
 
 
 altTextServer("influenza_mem_age_modal",
-              title = "Influenza incidence rate per 100,000 population by age group",
-              content = tags$ul(tags$li(glue("This is a plot showing the rate of influenza infection per 100,000 population by age group for seasons ",
+              title = "Laboratory-confirmed influenza incidence per 100,000 population by age group",
+              content = tags$ul(tags$li(glue("This is a plot showing the rate of laboratory-confirmed influenza infection per 100,000 population by age group for seasons ",
                                              influenza_seasons[5], " and ", influenza_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
@@ -289,9 +289,9 @@ output$influenza_mem_age_plot <- renderPlotly({
 # )
 
 altTextServer("influenza_age_sex",
-              title = glue("Influenza cases by age and/or sex in Scotland"),
+              title = glue("Laboratory-confirmed influenza cases by age and/or sex in Scotland"),
               content = tags$ul(
-                tags$li(glue("This is a pyramid plot of rate per 100,000 people of influenza cases in Scotland by age and sex.")),
+                tags$li(glue("This is a pyramid plot of rate per 100,000 people of laboratory-confirmed influenza cases in Scotland by age and sex.")),
                 tags$li("The information is displayed for a selected season."),
                 tags$li("Weekly rate data for age and sex on a weekly basis area available in the Data Download section of the dashboard and ",
                         "the PHS Open Data platform ",

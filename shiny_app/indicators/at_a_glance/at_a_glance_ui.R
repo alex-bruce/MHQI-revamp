@@ -20,7 +20,7 @@ tagList(
            linebreaks(1)), #fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("Number and rate of respiratory pathogen cases (week ending)")),
+           tagList(h2("Number and rate of laboratory-confirmed respiratory pathogen cases (week ending)")),
            linebreaks(1)), #fluidRow
 
   fluidRow(width=12,
@@ -69,18 +69,18 @@ tagList(
                  plotlyOutput("hosp_adms_intro_plot")),
            fluidRow(
              width=12, linebreaks(5)))
-  ), #fluidRow
+  )#, #fluidRow
 
-  fluidRow(width = 12,
-           tagList(h2("Number of inpatients with COVID-19 in hospital (seven day average)")),
-           linebreaks(1)), #fluidRow
-
-  fluidRow(width=12,
-           box(width = NULL,
-               withNavySpinner(dataTableOutput("inpatients_intro_table"))),
-           fluidRow(
-             width=12, linebreaks(5))
-  )
+  # fluidRow(width = 12,
+  #          tagList(h2("Number of inpatients with COVID-19 in hospital (seven day average)")),
+  #          linebreaks(1)), #fluidRow
+  # 
+  # fluidRow(width=12,
+  #          box(width = NULL,
+  #              withNavySpinner(dataTableOutput("inpatients_intro_table"))),
+  #          fluidRow(
+  #            width=12, linebreaks(5))
+ # )
 
 
 

@@ -5,7 +5,7 @@ metadataButtonServer(id="respiratory_rsv_mem",
 
 
 altTextServer("rsv_positivity_modal",
-              title = "RSV test positivity",
+              title = "RSV percentage test positivity",
               content = tags$ul(tags$li("This is a plot showing the test positivity rate of RSV testing across Scotland."),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis is test positivity rate."),
@@ -95,11 +95,11 @@ rsv_seasons <- rsv_seasons$Season
 
 
 altTextServer("rsv_mem_modal",
-              title = "RSV incidence rate per 100,000 population",
-              content = tags$ul(tags$li("This is a plot showing the rate of RSV infection per 100,000 population in Scotland."),
+              title = "Laboratory-confirmed RSV incidence per 100,000 population",
+              content = tags$ul(tags$li("This is a plot showing the rate of laboratory-confirmed RSV infection per 100,000 population in Scotland."),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the rate of RSV infection per 100,000 population."),
+                                tags$li("The y axis shows the rate of laboratory-confirmed RSV infection per 100,000 population."),
                                 tags$li(glue("There is a trace for each of the following seasons: ", rsv_seasons[1], ", ",
                                              rsv_seasons[2], ", ", rsv_seasons[3], ", ", rsv_seasons[4], 
                                              ", ", rsv_seasons[5],", and ", rsv_seasons[6], ".")),
@@ -115,8 +115,8 @@ altTextServer("rsv_mem_modal",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))
 
 altTextServer("rsv_mem_hb_modal",
-              title = "RSV incidence rate per 100,000 population by NHS Health Board",
-              content = tags$ul(tags$li(glue("This is a plot showing the rate of RSV infection per 100,000 population by NHS Health Board for seasons ",
+              title = "Laboratory-confirmed RSV incidence per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li(glue("This is a plot showing the rate of laboratory-confirmed RSV infection per 100,000 population by NHS Health Board for seasons ",
                                              rsv_seasons[5], " and ", rsv_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
@@ -135,8 +135,8 @@ altTextServer("rsv_mem_hb_modal",
 
 
 altTextServer("rsv_mem_age_modal",
-              title = "RSV incidence rate per 100,000 population by age group",
-              content = tags$ul(tags$li(glue("This is a plot showing the rate of RSV infection per 100,000 population by age group for seasons ",
+              title = "Laboratory-confirmed RSV incidence per 100,000 population by age group",
+              content = tags$ul(tags$li(glue("This is a plot showing the rate of laboratory-confirmed RSV infection per 100,000 population by age group for seasons ",
                                              rsv_seasons[5], " and ", rsv_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),

@@ -10,7 +10,7 @@ tagList(
   fluidRow(width = 12,
            tabPanel(stringr::str_to_sentence("influenza"),
                     tags$div(class = "headline",
-                             h3(glue("Influenza cases by NHS Health Board and subtype")),
+                             h3(glue("Laboratory-confirmed influenza cases by NHS Health Board and subtype")),
                              h4(glue("during week {this_week_iso} (ending {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
                                     .$DateThisWeek %>% format('%d %b %y')})")),
                              linebreaks(1),
@@ -45,7 +45,7 @@ tagList(
 
 
   fluidRow(width = 12,
-           tagList(h2("Trends of influenza cases in Scotland"))),
+           tagList(h2("Trends of laboratory-confirmed influenza cases in Scotland"))),
   
   fluidRow(width = 12,
            tagList(uiOutput("respiratory_over_time_title"),

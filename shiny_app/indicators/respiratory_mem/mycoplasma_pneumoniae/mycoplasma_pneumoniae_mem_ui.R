@@ -14,7 +14,7 @@ tagList(
            ),
   
   fluidRow(width = 12,
-           tagList(h2("Mycoplasma pneumoniae incidence rate per 100,000 population in Scotland"))),
+           tagList(h2("Laboratory-confirmed mycoplasma pneumoniae incidence per 100,000 population in Scotland"))),
   
   fluidRow(
     tabBox(width = NULL,
@@ -35,7 +35,7 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("Mycoplasma pneumoniae incidence rate per 100,000 population by NHS Health Board"))),
+           tagList(h2("Laboratory-confirmed mycoplasma pneumoniae incidence per 100,000 population by NHS Health Board"))),
   
   fluidRow(
     p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
@@ -63,7 +63,7 @@ tagList(
   # 
   
   fluidRow(width = 12,
-           tagList(h2("Mycoplasma pneumoniae incidence rate per 100,000 population by age group"))),
+           tagList(h2("Laboratory-confirmed mycoplasma pneumoniae incidence per 100,000 population by age group"))),
   
   fluidRow(
     tabBox(width = NULL,

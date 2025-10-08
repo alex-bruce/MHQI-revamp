@@ -13,7 +13,7 @@ tagList(
            ),
 
   fluidRow(width = 12,
-           tagList(h2("Adenovirus incidence rate per 100,000 population in Scotland"))),
+           tagList(h2("Laboratory-confirmed adenovirus incidence per 100,000 population in Scotland"))),
 
   fluidRow(
     tabBox(width = NULL,
@@ -34,7 +34,7 @@ tagList(
   ), # fluidRow
 
   fluidRow(width = 12,
-           tagList(h2("Adenovirus incidence rate per 100,000 population by NHS Health Board"))),
+           tagList(h2("Laboratory-confirmed adenovirus incidence per 100,000 population by NHS Health Board"))),
   fluidRow(
     p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
       "impact of different testing practices by board on incidence rates and implications for smaller board areas ",
@@ -61,7 +61,7 @@ tagList(
 
 
   fluidRow(width = 12,
-           tagList(h2("Adenovirus incidence rate per 100,000 population by age group"))),
+           tagList(h2("Laboratory-confirmed adenovirus incidence per 100,000 population by age group"))),
 
   fluidRow(
     tabBox(width = NULL,
