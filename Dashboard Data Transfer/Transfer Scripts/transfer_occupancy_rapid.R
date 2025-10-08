@@ -3,8 +3,8 @@
 
 i_rapid_occupancy <- read_csv_with_options(match_base_filename(glue(input_data, "occupancy_rapid.csv")))
 
-write.csv(g_rsv_admissions, glue(output_folder, "RSV_admissions.csv"), row.names = FALSE)
+write.csv(i_rapid_occupancy, glue(output_folder, "occupancy_rapid.csv"), row.names = FALSE)
 
-rm(i_rsv_admissions, g_rsv_admissions)
+rm(i_rapid_occupancy)
 
 

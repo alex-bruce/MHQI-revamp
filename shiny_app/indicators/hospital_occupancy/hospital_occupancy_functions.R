@@ -1,7 +1,7 @@
 # function for occupancy or ICU plot, ICU data now archived but code retained as runs old data in the archive
 make_occupancy_plots <- function(data, occupancy) {
 
-  data%<>%
+  #data %<>%
     #filter(HealthBoardQF== "d") # filter to Scotland
     
   xaxis_plots[["title"]] <- "Week ending"
@@ -72,6 +72,8 @@ make_occupancy_plots <- function(data, occupancy) {
            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
 
 }
 
