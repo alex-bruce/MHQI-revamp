@@ -23,7 +23,7 @@ altTextServer("rsv_occupancy_modal",
 
 # make data table with all the hospital occupancy data in it
 output$rsv_occupancy_table <- renderDataTable({
-  occupancy_c19_flu_rsv %>%
+  occupancy_rapid %>%
     filter(pathogen == "RSV") %>% 
     arrange(desc(Date)) %>% 
     select('Week ending' = Date,
@@ -40,7 +40,7 @@ output$rsv_occupancy_table <- renderDataTable({
 
 
 output$rsv_occupancy_plot <- renderPlotly({
-  occupancy_c19_flu_rsv %>%
+  occupancy_rapid %>%
     filter(pathogen == "RSV") %>%
     create_pathogen_occupancy_linechart()
   

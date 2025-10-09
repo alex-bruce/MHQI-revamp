@@ -1,4 +1,4 @@
-influenza_occupancy_recent_week <- occupancy_c19_flu_rsv %>%
+influenza_occupancy_recent_week <- occupancy_rapid %>%
   filter(pathogen == "Influenza") %>%
   tail(3) %>%
   #select(-Rate_per_100000) %>%

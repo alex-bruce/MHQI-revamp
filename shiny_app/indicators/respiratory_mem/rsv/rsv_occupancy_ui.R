@@ -1,4 +1,4 @@
-rsv_occupancy_recent_week <- occupancy_c19_flu_rsv %>%
+rsv_occupancy_recent_week <- occupancy_rapid %>%
   filter(pathogen == "RSV") %>%
   tail(3) %>%
   #select(-Rate_per_100000) %>%

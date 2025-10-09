@@ -81,7 +81,6 @@ output$euromomo_mem_table <- renderDataTable({
     mutate(ReportingDelay = ifelse(ActivityLevelDelay == "Reporting delay",
                                 "Yes", "")) %>%
     arrange(desc(WeekEnding)) %>%
-    select(Season, ISOWeek, ZScore, ActivityLevel, ReportingDelay) %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
       ActivityLevel == "Extraordinary" ~ "Very High",
@@ -92,6 +91,7 @@ output$euromomo_mem_table <- renderDataTable({
       ActivityLevelDelay == "Extraordinary" ~ "Very High",
       TRUE ~ ActivityLevelDelay
     )) %>%
+    select(Season, ISOWeek, ZScore, ActivityLevel, ReportingDelay) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
@@ -110,7 +110,6 @@ output$euromomo_mem_age_table <- renderDataTable({
     mutate(ReportingDelay = ifelse(ActivityLevelDelay == "Reporting delay",
                                 "Yes", "")) %>%
     arrange(desc(WeekEnding)) %>%
-    select(Season, ISOWeek, AgeGroup, ZScore, ActivityLevel, ReportingDelay) %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
       ActivityLevel == "Extraordinary" ~ "Very High",
@@ -121,6 +120,7 @@ output$euromomo_mem_age_table <- renderDataTable({
       ActivityLevelDelay == "Extraordinary" ~ "Very High",
       TRUE ~ ActivityLevelDelay
     )) %>%
+    select(Season, ISOWeek, AgeGroup, ZScore, ActivityLevel, ReportingDelay) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            AgeGroup = factor(AgeGroup, levels = euromomo_mem_age_groups_full),
