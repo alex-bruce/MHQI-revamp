@@ -1682,7 +1682,7 @@ create_test_pos_seasons_linechart <- function(data, pathogen_type){
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$season,
                             "<br>", "Week number: ", data$ISOweek,
-                            "<br>", "Test positivity: ", round(data$positivity_percentage), "%"))
+                            "<br>", "Test positivity: ", round(data$positivity_percentage,1), "%"))
   
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week number"
@@ -1693,14 +1693,17 @@ create_test_pos_seasons_linechart <- function(data, pathogen_type){
   yaxis_plots[["ticksuffix"]] <- "%"
   
   p <- plot_ly(data) %>%
-    add_trace(x = ~ISOweek, y = ~positivity_percentage, split = ~season, text=~season,
+    add_trace(x = ~ISOweek, y = ~positivity_percentage, split = ~season, #text=~season,
               type="scatter", mode="lines",
               color=~season,
               colors=phs_colours(c("phs-blue", "phs-rust", "phs-green",
                                    "phs-purple", "phs-blue-50", "phs-magenta")),
-              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
-                                     '<b>Age group</b>: %{text}<br>',
-                                     '<b>Test positivity</b>: %{y}')
+              # hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
+              #                        '<b>Age group</b>: %{text}<br>',
+              #                        '<b>Test positivity</b>: %{y}')
+              textposition = "none",
+              text = tooltip_trend,
+              hoverinfo = "text"
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,

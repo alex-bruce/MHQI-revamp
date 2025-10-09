@@ -152,6 +152,7 @@ colnames(cases_intro)[3] <- paste("Rate per 100,000 population (", as.character(
 # rename and add week titles for the dashboard
 
 hosp_adms_intro <- Respiratory_admissions_summary %>%
+  filter(CaseDefinition %in% c("Covid-19", "RSV", "Influenza")) %>%
   tail(6) %>%
   mutate(CaseDefinition = ifelse(CaseDefinition == "Covid-19", "COVID-19", CaseDefinition)) %>%
   mutate(flag = ifelse(Date==max(Date), "latest_week", "previous_week")) %>%
