@@ -5,7 +5,7 @@ tagList(h1("Metadata"),
         bsCollapse(id="notes_collapse", open = "Panel 1",
                    
                    #### INFECTION LEVELS PANEL ----
-                   bsCollapsePanel("Infection Levels",
+                   bsCollapsePanel("Laboratory Surveillance",
                                    
                                    p("All pathogen testing is recorded in Electronic Communication of Surveillance in Scotland (ECOSS), a national laboratory surveillance
                                      system that captures laboratory results from diagnostic and reference laboratories in Scotland."),
