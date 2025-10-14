@@ -81,7 +81,7 @@ output$introduction_about <- renderUI({
           fluidRow(
             column(4,tags$div(class = "special_button",
                               actionButton("jump_to_download", "Download data"))),
-            column(8, p("Data pertaining to selected indicators presented in this dashboard can be filtered and downloaded. "))),
+            column(8, p("Data pertaining to selected indicators presented in this dashboard can be downloaded as open data."))),
 
           br()
 
@@ -108,7 +108,8 @@ output$introduction_use <- renderUI({
           p(tags$li("Click on 'Metadata' to view notes about the data"),
             tags$img(src = "intro_images/metadata_tab.png", height = 50,
                        alt ="Image of the 'Metadata' tab in the navigation bar")),
-          p(tags$li("Click on 'Download data' to download datasets as an Excel or CSV file"),
+          #p(tags$li("Click on 'Download data' to download datasets as an Excel or CSV file"),
+          p(tags$li("Click on 'Download data' to access the open data platform"),
             tags$img(src = "intro_images/download_data_tab.png", height = 50,
                        alt ="Image of the 'download data' tab in the navigation bar")),
           br(),
@@ -154,24 +155,29 @@ output$introduction_use <- renderUI({
                        provides a recap of the 'ineracxting with the charts' section")),
           br(),
           p(tags$b("Downloading data")),
-          p(tags$li("Data can be downloaded in open data format from the 'Download data' tab by clicking the 'Download Data' button
-                    as well as from the",
+          p(tags$li("Data can be downloaded in open data format from the ",
                     tags$a(href="https://www.opendata.nhs.scot",
-                           "Scottish Health and Social Care Open Data platform (external website)", target="_blank")),
-            tags$img(src = "intro_images/download_data.png", height = 50,
-                       alt ="Image of the download data button")
-            ),
-          p(tags$li("On the 'Download data' tab you can select the dataset and file type you wish to download")),
-          p(tags$li("You can view a data summary and a data preview before downloading by click ing between the toggles"),
-            tags$img(src = "intro_images/summary_preview.png", height = 60,
-                       alt ="Image of the data summary and data preview toggle")),
-          p(tags$li("To download an image of any of the charts in the dashboard, click the camera icon in the top-right
-                    corner of the chart and a png image file will automatically download"),
-            tags$img(src = "intro_images/camera.png", height = 50,
-                       alt ="Image of the camera button on the graphs used to download the plot as a png file")),
-          p(tags$li("Please note if you cannot see the full screen, try setting screen zoom to below 100%.
-                    We are aware of this occasionally being an issue and are working to resolve it."))
-          ) #tagList
+                           "Scottish Health and Social Care Open Data platform (external website)", target="_blank"))
+          )
+  )
+          # p(tags$li("Data can be downloaded in open data format from the 'Download data' tab by clicking the 'Download Data' button
+          #           as well as from the",
+          #           tags$a(href="https://www.opendata.nhs.scot",
+          #                  "Scottish Health and Social Care Open Data platform (external website)", target="_blank")),
+          #   tags$img(src = "intro_images/download_data.png", height = 50,
+          #              alt ="Image of the download data button")
+          #   ),
+          # p(tags$li("On the 'Download data' tab you can select the dataset and file type you wish to download")),
+          # p(tags$li("You can view a data summary and a data preview before downloading by click ing between the toggles"),
+          #   tags$img(src = "intro_images/summary_preview.png", height = 60,
+          #              alt ="Image of the data summary and data preview toggle")),
+          # p(tags$li("To download an image of any of the charts in the dashboard, click the camera icon in the top-right
+          #           corner of the chart and a png image file will automatically download"),
+          #   tags$img(src = "intro_images/camera.png", height = 50,
+          #              alt ="Image of the camera button on the graphs used to download the plot as a png file")),
+          # p(tags$li("Please note if you cannot see the full screen, try setting screen zoom to below 100%.
+          #           We are aware of this occasionally being an issue and are working to resolve it."))
+          # ) #tagList
 })
 
 output$introduction_contact <- renderUI({
