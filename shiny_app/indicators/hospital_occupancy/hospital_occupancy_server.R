@@ -67,6 +67,25 @@ occupancy_covid <- occupancy_rapid %>%
 occupancy_covid <- bind_rows(occupancy_covid, occupancy_manual)
 
 
+# Figures for last three weeks
+covid_occupancy_recent_week <- occupancy_covid %>%
+  arrange(WeekEnding) %>% 
+  mutate(pathogen = "COVID-19") %>% 
+  tail(3) %>%
+  #select(-Rate_per_100000) %>%
+  pivot_wider(names_from = pathogen,
+              values_from = SevenDayAverage) %>%
+  mutate(DateTwoWeek = .$WeekEnding[1],
+         DateLastWeek = .$WeekEnding[2],
+         DateThisWeek = .$WeekEnding[3],
+         OccupancyTwoWeek = .$`COVID-19`[1],
+         OccupancyLastWeek = .$`COVID-19`[2],
+         OccupancyThisWeek = .$`COVID-19`[3]) %>%
+  select(DateTwoWeek, DateLastWeek, DateThisWeek, OccupancyTwoWeek, OccupancyLastWeek, OccupancyThisWeek) %>%
+  head(1)
+
+
+
 # make data table with all the hospital occupancy data in it
 # the Occupancy_Weekly_Hospital_HB has two dates, an numeric 'open data' version, formatted as a number, 
 # and a date-formatted WeekEnding
