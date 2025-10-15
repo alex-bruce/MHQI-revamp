@@ -44,29 +44,6 @@ altTextServer("icu_occupancy_modal",
 )
 
 
-
-
-### Make data table with hospital occupancy using manual submissions up to W39 2025
-### Then figures based on RAPID from that point onwards
-
-occupancy_manual <- Occupancy_Weekly_Hospital_HB %>%
-  filter(HealthBoardQF== "d") %>% #filters for Scotland values
-  filter(WeekEnding <= as_date("2025/09/28")) %>% 
-  arrange(desc(WeekEnding_od)) %>% 
-  select(WeekEnding, HospitalOccupancy, SevenDayAverage)
-
-occupancy_covid <- occupancy_rapid %>%
-  filter(pathogen == "COVID-19") %>% 
-  filter(week_ending > as_date("2025/09/28")) %>% 
-  arrange(desc(week_ending)) %>% 
-  select(WeekEnding = week_ending,
-         HospitalOccupancy = bed_occupancy,
-         SevenDayAverage= sevenday_ave_inpatients) %>%
-  mutate(WeekEnding = as.Date(WeekEnding))
-
-occupancy_covid <- bind_rows(occupancy_covid, occupancy_manual)
-
-
 # Figures for last three weeks
 covid_occupancy_recent_week <- occupancy_covid %>%
   arrange(WeekEnding) %>% 
