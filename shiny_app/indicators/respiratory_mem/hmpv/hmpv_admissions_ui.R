@@ -1,7 +1,7 @@
 # Recent weeks admissions
 
 hmpv_admissions_recent_week <- all_pathogen_admissions %>%
-  mutate(Date = dmy(Date)) %>%
+ # mutate(Date = dmy(Date)) %>%
   tail(3) %>%
   mutate(DateTwoWeek = .$Date[1],
          DateLastWeek = .$Date[2],

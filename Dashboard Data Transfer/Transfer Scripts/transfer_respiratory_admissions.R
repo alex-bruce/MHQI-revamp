@@ -1,7 +1,7 @@
-# Dashboard data transfer for RSV hospital admissions data
+# Dashboard data transfer for all pathogen hospital admissions data
 # Sourced from ../dashboard_data_transfer.R
 
-##### RSV
+
 
 #create weekord
 date_reference_ord <-readRDS("/conf/C19_Test_and_Protect/Analyst Space/Calum (Analyst Space)/flu_seasons.Rds") %>%
@@ -18,22 +18,22 @@ date_reference <- readRDS("/conf/C19_Test_and_Protect/Analyst Space/Calum (Analy
   distinct(date, year, ISOweek, flu_season) %>%
   left_join(date_reference_ord)
 
-i_respiratory_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "All_path_admissions.csv")))
+i_respiratory_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "All_path_admissions_by_week_ending.csv")))
 
 
-g_respiratory_admissions <- all_pathogen_admissions %>%
-  # dplyr::rename(Date = date) %>%
-  #  mutate(date = as.Date(Date)) %>%
-  left_join(date_reference, by = c("iso_year" = "year", "iso_week" = "ISOweek")) %>%
+g_respiratory_admissions <- i_respiratory_admissions %>%
+  dplyr::rename(Date = date) %>%
+  mutate(date = as.Date(Date)) %>%
+  left_join(date_reference, by = c("date" = "date", "iso_year" = "year", "iso_week" = "ISOweek")) %>%
   mutate(Date = as_date(ceiling_date(as_date(Date), "week",
                                      change_on_boundary = F))) %>%
-  dplyr::rename(Year = iso_yar,
+  dplyr::rename(Year = iso_year,
                 ISOWeek = iso_week,
                 Season = flu_season)
 
 
 
-write.csv(g_respiratory_admissions, glue(output_folder, "All_path__admissions.csv"), row.names = FALSE)
+write.csv(g_respiratory_admissions, glue(output_folder, "all_pathogen_admissions.csv"), row.names = FALSE)
 
 rm(i_respiratory_admissions, g_respiratory_admissions)
 
