@@ -65,7 +65,7 @@ create_mem_linechart <- function(data,
   
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
-  xaxis_plots[["range"]] <- c(-1,52)
+  xaxis_plots[["range"]] <- c(0,52)
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
