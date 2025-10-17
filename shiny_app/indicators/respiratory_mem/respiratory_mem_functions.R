@@ -680,7 +680,6 @@ create_pathogen_adms_linechart <- function(data,
   data <- data %>%
     rename(Value = value_variable)
   
-  
   # Wrangle data
   data = data %>%
     filter(ISOWeek != 53) %>%
@@ -690,7 +689,12 @@ create_pathogen_adms_linechart <- function(data,
            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
   
   # Seasons in data
-  seasons <- unique(data$Season)
+  seasons <- unique(data$Season) %>% 
+    tail(6)
+  
+  # Filter to six seasons
+  data <- data %>%
+    filter(Season %in% seasons)
   
   # Current season data only
   data_curr_season <- data %>%
@@ -698,14 +702,14 @@ create_pathogen_adms_linechart <- function(data,
   
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
-  xaxis_plots[["range"]] <- c(-1,52)
+  xaxis_plots[["range"]] <- c(0,52)
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
   
-  xaxis_plots[["showgrid"]] <- FALSE
-  yaxis_plots[["showgrid"]] <- FALSE
+  # xaxis_plots[["showgrid"]] <- FALSE
+  # yaxis_plots[["showgrid"]] <- FALSE
   
   
   
