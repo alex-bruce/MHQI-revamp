@@ -50,7 +50,7 @@ make_hospital_admissions_plot <- function(data){
   xaxis_plots[["title"]] <- xaxis_title
 
   # Adding slider
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
   #Text for tooltip
@@ -125,7 +125,7 @@ make_hospital_admissions_simd_plot <- function(data){
   xaxis_plots[["title"]] <- "Week ending"
 
   # Adding slider
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
   p <- plot_ly(data) %>%
@@ -273,7 +273,7 @@ make_hospital_admissions_ethnicity_plot <- function(data){
   yaxis_plots[["title"]] <- "COVID-19 admissions"
 
   # Adding slider
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
 
@@ -330,7 +330,7 @@ make_icu_admissions_plot <- function(data){
   xaxis_plots[["title"]] <- "Date of admission"
 
   # Adding slider
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
   #Text for tooltip
@@ -378,7 +378,7 @@ make_icu_admissions_weekly_plot <- function(data){
   xaxis_plots[["title"]] <- "Week ending of admission"
 
   # Adding slider
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
   #Text for tooltip

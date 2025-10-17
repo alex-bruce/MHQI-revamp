@@ -6,7 +6,7 @@ make_occupancy_plots <- function(data, occupancy) {
     
   xaxis_plots[["title"]] <- "Week ending"
 
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
   if(occupancy == "hospital") {

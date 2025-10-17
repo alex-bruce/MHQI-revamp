@@ -197,7 +197,7 @@ make_respiratory_trend_by_season_plot_function <- function(data, y_axis_title) {
 
   xaxis_plots[["title"]] <- "ISO week"
 
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
 

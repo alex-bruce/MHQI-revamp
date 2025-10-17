@@ -9,7 +9,7 @@ make_national_wastewater_plot <- function(data){
   xaxis_plots[["title"]] <- "Date of sample"
   
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   
   p <- plot_ly(data, x = ~Date,

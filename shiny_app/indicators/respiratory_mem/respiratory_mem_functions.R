@@ -764,7 +764,7 @@ create_pathogen_adms_age_linechart <- function(data){
   yaxis_plots[["title"]] <- "Admission rate per 100k"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   
   
@@ -798,7 +798,7 @@ make_adms_summary_plot <- function(data){
   yaxis_plots[["title"]] <- "Reported cases"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   
   
@@ -907,7 +907,7 @@ create_cari_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -969,7 +969,7 @@ create_cari_age_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1093,7 +1093,7 @@ create_cari_age_linechart2 <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   # yaxis_plots[["rangemode"]] <- "tozero"
@@ -1155,7 +1155,7 @@ create_cari_hb_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1240,7 +1240,7 @@ create_cari_pathogen_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1389,7 +1389,7 @@ create_cari_subtype_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1454,7 +1454,7 @@ create_cari_subtype_barchart <- function(data){
   yaxis_plots[["title"]] <- "Number of positive samples"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   #yaxis_plots[["ticksuffix"]] <- "%"
     
@@ -1509,7 +1509,7 @@ create_cari_duodetection_chart <- function(data){
   yaxis_plots[["title"]] <- "Percentage (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   xaxis_plots[["range"]] <- c(min(data$WeekEnding), max(data$WeekEnding))
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
@@ -1608,7 +1608,7 @@ create_cari_codetection_age_linechart <- function(data){
   yaxis_plots[["title"]] <- "Percentage of positive\nsamples (%)"
   xaxis_plots[["title"]] <- "Four-week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
