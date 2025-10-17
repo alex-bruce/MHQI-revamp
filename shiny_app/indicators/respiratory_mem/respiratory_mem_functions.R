@@ -1686,6 +1686,7 @@ create_test_pos_seasons_linechart <- function(data, pathogen_type){
   
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["dtick"]] <- 2
   
   # Line below hashed to remove slider
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
