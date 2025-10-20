@@ -201,6 +201,9 @@ source("Transfer Scripts/transfer_respiratory_nhs24_mem.R")
 #### Respiratory GP - MEM
 source("Transfer Scripts/transfer_respiratory_gp_mem.R")
 
+#### All respiratory pathogen admissions
+source("Transfer Scripts/transer_respiratory_admissions.R")
+
 #### Influenza Hospital Admissions
 source("Transfer Scripts/transfer_flu_admissions.R")
 
