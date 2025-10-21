@@ -152,8 +152,8 @@ colnames(cases_intro)[3] <- paste("Rate per 100,000 population (", as.character(
 # rename and add week titles for the dashboard
 
 hosp_adms_intro <- Respiratory_admissions_summary %>%
-  filter(CaseDefinition %in% c("Covid-19", "RSV", "Influenza")) %>%
-  tail(6) %>%
+  #filter(CaseDefinition %in% c("Covid-19", "RSV", "Influenza")) %>%
+  tail(18) %>%
   mutate(CaseDefinition = ifelse(CaseDefinition == "Covid-19", "COVID-19", CaseDefinition)) %>%
   mutate(flag = ifelse(Date==max(Date), "latest_week", "previous_week")) %>%
   select(-Date) %>%
@@ -166,9 +166,14 @@ hosp_adms_intro <- Respiratory_admissions_summary %>%
          'Rate of admissions per 100,000 population (previous week)'= admissions_rate_previous_week,
          'Number of admissions (latest week)'= admissions_number_latest_week,
          'Rate of admissions per 100,000 population (latest week)'= admissions_rate_latest_week  ) %>%
-  mutate(Pathogen =  factor(Pathogen, levels = c("COVID-19", "Influenza", "RSV"))) %>%
+  mutate(Pathogen =  factor(Pathogen, levels = c("Adenovirus", "COVID-19", "HMPV", "Influenza", "MPN", "Non-seasonal Coronavirus", "Parainfluenza", "Rhinovirus", "RSV"))) %>%
   arrange(Pathogen) %>%
-  mutate(Pathogen=if_else(Pathogen=="RSV", "Respiratory syncytial virus",Pathogen))
+  mutate(Pathogen=if_else(Pathogen=="RSV", "Respiratory syncytial virus", Pathogen)) %>% 
+  mutate(Pathogen=if_else(Pathogen=="HMPV", "Human Metapneumovirus", Pathogen)) %>% 
+  mutate(Pathogen=if_else(Pathogen=="MPN", "Mycoplasma Pneumoniae", Pathogen))
+
+
+
 
 colnames(hosp_adms_intro)[4] <- paste("Number of admissions (", as.character(latest_week_admissions_title),")")
 colnames(hosp_adms_intro)[5] <- paste("Rate of admissions per 100,000 population (", as.character(latest_week_admissions_title),")")

@@ -814,23 +814,57 @@ make_adms_summary_plot <- function(data){
                text = ~paste0("<b>Season</b>: ", Season, "\n",
                               "<b>Date</b>: ", format(Date, "%d %b %y"), "\n",
                               "<b>Week number</b>: ", ISOWeek, "\n",
+                              "<b>Adenovirus</b>: ", Adenovirus, "\n",
+                              "<b>COVID-19</b>: ", `COVID-19`, "\n",
+                              "<b>HMPV</b>: ", HMPV, "\n",
                               "<b>Influenza</b>: ", Influenza, "\n",
-                              "<b>RSV</b>: ", RSV, "\n",
-                              "<b>COVID-19</b>: ", `COVID-19`, "\n"),
+                              "<b>MPN</b>: ", MPN, "\n",
+                              "<b>Non-seasonal Coronavirus</b>: ", `Non-seasonal Coronavirus`, "\n",
+                              "<b>Parainfluenza</b>: ", Parainfluenza, "\n",
+                              "<b>Rhinovirus</b>: ", Rhinovirus, "\n",
+                              "<b>RSV</b>: ", RSV, "\n"),
                hovertemplate = "%{text}",
                height = 500)%>%
     
-    add_lines(y = ~Influenza,
+    add_lines(y = ~`Adenovirus`,
+              name = 'Adenovirus',
+              line = list(color = phs_colours("phs-purple"), dash = "dot")) %>%
+    
+    add_lines(y = ~`COVID-19`,
+              name = 'COVID-19',
+              line = list(color = phs_colours("phs-purple"), dash = "dot")) %>%
+ 
+    add_lines(y = ~`HMPV`,
+              name = 'HMPV',
+              line = list(color = phs_colours("phs-purple"), dash = "dot")) %>%
+    
+    
+    add_lines(y = ~`Influenza`,
               line = list(color = phs_colours("phs-blue"), dash = "dash"),
               name = 'Influenza') %>%
     
-    add_lines(y = ~RSV,
+    add_lines(y = ~`MPN`,
+              line = list(color = phs_colours("phs-blue"), dash = "dash"),
+              name = 'MPN') %>%
+    
+    add_lines(y = ~`Non-seasonal Coronavirus`,
+              line = list(color = phs_colours("phs-blue"), dash = "dash"),
+              name = 'Non-seasonal Coronavirus') %>%
+    
+    add_lines(y = ~`Parainfluenza`,
+              line = list(color = phs_colours("phs-blue"), dash = "dash"),
+              name = 'Parainfluenza') %>%
+    
+    add_lines(y = ~`Rhinovirus`,
+              line = list(color = phs_colours("phs-blue"), dash = "dash"),
+              name = 'Rhinovirus') %>%
+    
+    add_lines(y = ~`RSV`,
               name = 'RSV',
               line = list(color = phs_colours("phs-green"))) %>%
+
     
-    add_lines(y = ~`COVID-19`,
-              name = 'Covid-19',
-              line = list(color = phs_colours("phs-purple"), dash = "dot")) %>%
+
     
     
     # Adding vertical lines for notes on chart
