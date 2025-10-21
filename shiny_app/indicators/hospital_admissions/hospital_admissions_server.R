@@ -136,26 +136,58 @@ altTextServer("covid_adm_age_sex",
 
 ### WEEKLY ADMISSIONS-Scotland ### ----
 
+# # Table
+# output$hospital_admissions_table <- renderDataTable({
+#   Admissions_Weekly %>%
+#     arrange(desc(AdmissionDate)) %>%
+#     mutate(AdmissionDate = convert_opendata_date(AdmissionDate),
+#            ProvisionalFlag = factor(recode(ProvisionalFlag, "1" = "p", "0" = " "))) %>%
+#     select(AdmissionDate, TotalInfections,  ProvisionalFlag) %>%
+#     dplyr::rename(`Week of Admission` = AdmissionDate,
+#                   `Number of admissions` = TotalInfections,
+#                   `Is data provisional (p)?` = ProvisionalFlag) %>%
+#   make_table(add_separator_cols = 2,
+#                filter_cols = 3)
+# 
+# })
+
 # Table
 output$hospital_admissions_table <- renderDataTable({
-  Admissions_Weekly %>%
+  all_pathogen_admissions %>%
+    select(Date, cov) %>%
+    rename(AdmissionDate = Date,
+           TotalInfections = cov) %>%
     arrange(desc(AdmissionDate)) %>%
-    mutate(AdmissionDate = convert_opendata_date(AdmissionDate),
-           ProvisionalFlag = factor(recode(ProvisionalFlag, "1" = "p", "0" = " "))) %>%
+    mutate(ProvisionalFlag = ifelse(row_number() == 1, "p", " ")) %>%
+    mutate(ProvisionalFlag = factor(ProvisionalFlag)) %>%
     select(AdmissionDate, TotalInfections,  ProvisionalFlag) %>%
     dplyr::rename(`Week of Admission` = AdmissionDate,
                   `Number of admissions` = TotalInfections,
                   `Is data provisional (p)?` = ProvisionalFlag) %>%
-  make_table(add_separator_cols = 2,
+    make_table(add_separator_cols = 2,
                filter_cols = 3)
-
+  
 })
+
+# # Plot
+# output$hospital_admissions_plot <- renderPlotly({
+#   Admissions_Weekly %>%
+#     make_hospital_admissions_plot()
+# 
+# })
 
 # Plot
 output$hospital_admissions_plot <- renderPlotly({
-  Admissions_Weekly %>%
+  all_pathogen_admissions %>%
+    select(Date, cov) %>%
+    rename(AdmissionDate = Date,
+           TotalInfections = cov) %>%
+    arrange(desc(AdmissionDate)) %>%
+    mutate(ProvisionalFlag = ifelse(row_number() == 1, 1, 0)) %>%
+    select(AdmissionDate, TotalInfections,  ProvisionalFlag) %>%
+    mutate(AdmissionDate = as.numeric(format(AdmissionDate, "%Y%m%d"))) %>%
     make_hospital_admissions_plot()
-
+  
 })
 
 #### WEEKLY ADMISSIONS BY AGE

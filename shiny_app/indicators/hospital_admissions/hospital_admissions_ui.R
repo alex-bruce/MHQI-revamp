@@ -13,18 +13,22 @@ tagList(
                                             linebreaks(1),
                                             #h3("Weekly totals from last three weeks"),
 
-                                            valueBox(value = {admissions_headlines[[3]] %>%
+                                            valueBox(value = {admissions_headlines[1,2] %>% .$cov %>%
                                                 format(big.mark = ",")},
-                                                subtitle = glue("Week ending {names(admissions_headlines)[[3]]}"),
+                                                subtitle = glue("Week ending {admissions_headlines[1,1] %>% .$Date %>%
+                                                                format('%d %b %y')}"),
                                                 color = "navy",
                                                 icon = icon_no_warning_fn("calendar-week")),
-                                            valueBox(value = {admissions_headlines[[2]] %>%
+                                            valueBox(value = {admissions_headlines[2,2] %>% .$cov %>%
                                                 format(big.mark = ",")},
-                                                subtitle = glue("Week ending {names(admissions_headlines)[[2]]}"),
+                                                subtitle = glue("Week ending {admissions_headlines[2,1] %>% .$Date %>%
+                                                                format('%d %b %y')}"),
                                                 color = "navy",
                                                 icon = icon_no_warning_fn("calendar-week")),
-                                            valueBox(value = glue("{admissions_headlines[[1]]}*"),
-                                                     subtitle = glue("Week ending {names(admissions_headlines)[[1]]}"),
+                                            valueBox(value = glue("{admissions_headlines[3,2] %>% .$cov %>% 
+                                                                    format(big.mark = ",")}*"),
+                                                     subtitle = glue("Week ending {admissions_headlines[3,1] %>% .$Date %>%
+                                                                format('%d %b %y')}"),
                                                      color = "navy",
                                                      icon = icon_no_warning_fn("calendar-week")),
                                             h4("* provisional figures",
