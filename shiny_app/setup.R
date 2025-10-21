@@ -85,14 +85,19 @@ if (config::get()$online){
 
 # Creating variable for latest week for headlines
 
-# Admissions and ICU
-admissions_headlines <- get_threeweek_admissions_figures(df = Admissions,
-                                                         sumcol = "TotalInfections",
-                                                         datecol="AdmissionDate")
+# # Admissions and ICU
+# admissions_headlines <- get_threeweek_admissions_figures(df = Admissions,
+#                                                          sumcol = "TotalInfections",
+#                                                          datecol="AdmissionDate")
 
 icu_headlines <- get_threeweek_admissions_figures(df = ICU,
                                                   sumcol = "NewCovidAdmissionsPerDay",
                                                   datecol="DateFirstICUAdmission")
+
+# Admissions
+admissions_headlines <- all_pathogen_admissions %>%
+  select(Date, cov) %>%
+  tail(3)
 
 # occupancy_headlines <- get_threeweek_occupancy_figures(df = Occupancy_Hospital,
 #                                                        datecol = "Date")
