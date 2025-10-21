@@ -152,7 +152,8 @@ tagList(
                                                       label = "Select a season",
                                                       choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
                                                           .$Season %>% unique()},
-                                                      selected = "2024/25")
+                                                      selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
+                                                          .$Season %>% unique() %>% tail(1)})
                                 )
                                 # column(4, pickerInput("respiratory_date",
                                 #                       label = "Select date",

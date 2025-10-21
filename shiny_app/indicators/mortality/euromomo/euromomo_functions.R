@@ -223,7 +223,9 @@ create_euromomo_mem_linechart <- function(data,
             xanchor="center",  
             yanchor="bottom" 
           )
-        )) %>%
+        ),
+        legend = list(y = 0.5,
+                      yanchor = 'middle')) %>%
       
       config(displaylogo = FALSE, displayModeBar = TRUE,
              modeBarButtonsToRemove = bttn_remove)
@@ -371,13 +373,15 @@ create_euromomo_mem_linechart <- function(data,
             xref = "paper",  
             yref = "paper",  
             x = 0.5,  
-            y = -0.32,  
+            y = -0.35,  
             sizex = 0.4,  
             sizey = 0.3,  
             xanchor="center",  
             yanchor="bottom" 
           )
-        )) %>%
+        ),
+        legend = list(y = 0.5,
+                      yanchor = 'middle')) %>%
       
       config(displaylogo = FALSE, displayModeBar = TRUE,
              modeBarButtonsToRemove = bttn_remove)
@@ -496,7 +500,9 @@ create_euromomo_mem_linechart <- function(data,
             xanchor="center",  
             yanchor="bottom" 
           )
-        )) %>%
+        ),
+        legend = list(y = 0.5,
+                      yanchor = 'middle')) %>%
       
       config(displaylogo = FALSE, displayModeBar = TRUE,
              modeBarButtonsToRemove = bttn_remove)
@@ -742,7 +748,7 @@ create_euromomo_mem_heatmap <- function(data,
           xref = "paper",  
           yref = "paper",  
           x = 0.5,  
-          y = -0.6,  
+          y = -0.7,  
           sizex = 0.4,  
           sizey = 0.3,  
           xanchor="center",  

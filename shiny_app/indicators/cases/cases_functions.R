@@ -7,7 +7,7 @@ make_reported_cases_plot <- function(data){
   yaxis_plots[["title"]] <- "Reported cases"
   xaxis_plots[["title"]] <- "Date"
 
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
 
@@ -62,7 +62,7 @@ make_weekly_reported_cases_plot <- function(data){
   yaxis_plots[["title"]] <- "Reported cases"
   xaxis_plots[["title"]] <- "Week ending"
 
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
 
@@ -116,7 +116,7 @@ make_ons_cases_plot <- function(data){
   xaxis_plots[["title"]] <- "Week ending"
 
 
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
 
@@ -216,7 +216,7 @@ make_wastewater_plot <- function(data){
   xaxis_plots[["title"]] <- "Date of sample"
 
 
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
   p <- plot_ly(data, x = ~Date,

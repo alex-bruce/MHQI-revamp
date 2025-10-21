@@ -65,7 +65,7 @@ create_mem_linechart <- function(data,
   
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
-  xaxis_plots[["range"]] <- c(-1,52)
+  xaxis_plots[["range"]] <- c(0,52)
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
@@ -212,13 +212,15 @@ create_mem_linechart <- function(data,
           xref = "paper",
           yref = "paper",
           x = 0.5,
-          y = -0.32,
+          y = -0.35,
           sizex = 0.4,
           sizey = 0.3,
           xanchor="center",
           yanchor="bottom"
         )
-      )) %>%
+      ),
+      legend = list(y = 0.5,
+                    yanchor = 'middle')) %>%
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
@@ -467,7 +469,7 @@ create_mem_heatmap <- function(data = df,
           xref = "paper",
           yref = "paper",
           x = 0.5,
-          y = -0.6,
+          y = -0.7,
           sizex = 0.4,
           sizey = 0.3,
           xanchor="center",
@@ -680,7 +682,6 @@ create_pathogen_adms_linechart <- function(data,
   data <- data %>%
     rename(Value = value_variable)
   
-  
   # Wrangle data
   data = data %>%
     filter(ISOWeek != 53) %>%
@@ -690,7 +691,12 @@ create_pathogen_adms_linechart <- function(data,
            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
   
   # Seasons in data
-  seasons <- unique(data$Season)
+  seasons <- unique(data$Season) %>% 
+    tail(6)
+  
+  # Filter to six seasons
+  data <- data %>%
+    filter(Season %in% seasons)
   
   # Current season data only
   data_curr_season <- data %>%
@@ -698,14 +704,14 @@ create_pathogen_adms_linechart <- function(data,
   
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
-  xaxis_plots[["range"]] <- c(-1,52)
+  xaxis_plots[["range"]] <- c(0,52)
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
   
-  xaxis_plots[["showgrid"]] <- FALSE
-  yaxis_plots[["showgrid"]] <- FALSE
+  # xaxis_plots[["showgrid"]] <- FALSE
+  # yaxis_plots[["showgrid"]] <- FALSE
   
   
   
@@ -730,9 +736,10 @@ create_pathogen_adms_linechart <- function(data,
            xaxis = xaxis_plots,
            margin = list(b = 100, t = 5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           legend = list(y = 0.5,
+                         yanchor = 'middle')
     ) %>%
-    
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
@@ -764,7 +771,7 @@ create_pathogen_adms_age_linechart <- function(data){
   yaxis_plots[["title"]] <- "Admission rate per 100k"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   
   
@@ -798,7 +805,7 @@ make_adms_summary_plot <- function(data){
   yaxis_plots[["title"]] <- "Reported cases"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   
   
@@ -907,7 +914,7 @@ create_cari_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -969,7 +976,7 @@ create_cari_age_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1027,14 +1034,14 @@ create_pathogen_occupancy_linechart <- function(data,
   
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
-  xaxis_plots[["range"]] <- c(-1,52)
+  xaxis_plots[["range"]] <- c(0,52)
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
   
-  xaxis_plots[["showgrid"]] <- FALSE
-  yaxis_plots[["showgrid"]] <- FALSE
+  # xaxis_plots[["showgrid"]] <- FALSE
+  # yaxis_plots[["showgrid"]] <- FALSE
   
   
   
@@ -1059,7 +1066,9 @@ create_pathogen_occupancy_linechart <- function(data,
            xaxis = xaxis_plots,
            margin = list(b = 100, t = 5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           legend = list(y = 0.5,
+                         yanchor = 'middle')
     ) %>%
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
@@ -1093,7 +1102,7 @@ create_cari_age_linechart2 <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   # yaxis_plots[["rangemode"]] <- "tozero"
@@ -1155,7 +1164,7 @@ create_cari_hb_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1240,7 +1249,7 @@ create_cari_pathogen_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1389,7 +1398,7 @@ create_cari_subtype_linechart <- function(data){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1451,10 +1460,14 @@ create_cari_subtype_linechart <- function(data){
 
 create_cari_subtype_barchart <- function(data){
   
+  data <- flu_cari_subtype %>%
+    filter(Pathogen %in% c("Type A (H1N1)", "Type A (H3N2)",
+                           "Type A (not subtyped)", "Type B"))
+  
   yaxis_plots[["title"]] <- "Number of positive samples"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   #yaxis_plots[["ticksuffix"]] <- "%"
     
@@ -1482,6 +1495,7 @@ create_cari_subtype_barchart <- function(data){
               type="bar",
               color=~Pathogen,
               colors=subtype_colours,
+              textposition = "none",
               hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
                                      '<b>Type/Subtype</b>: %{text}<br>',
                                      '<b>Positive samples</b>: %{y}')
@@ -1496,6 +1510,8 @@ create_cari_subtype_barchart <- function(data){
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
   
+  p
+  
   return(p)
   
 }
@@ -1509,7 +1525,7 @@ create_cari_duodetection_chart <- function(data){
   yaxis_plots[["title"]] <- "Percentage (%)"
   xaxis_plots[["title"]] <- "Week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   xaxis_plots[["range"]] <- c(min(data$WeekEnding), max(data$WeekEnding))
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
@@ -1608,7 +1624,7 @@ create_cari_codetection_age_linechart <- function(data){
   yaxis_plots[["title"]] <- "Percentage of positive\nsamples (%)"
   xaxis_plots[["title"]] <- "Four-week ending"
   
-  xaxis_plots[["rangeslider"]] <- list(type = "date")
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   
@@ -1686,6 +1702,7 @@ create_test_pos_seasons_linechart <- function(data, pathogen_type){
   
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["dtick"]] <- 2
   
   # Line below hashed to remove slider
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
