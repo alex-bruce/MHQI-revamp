@@ -799,39 +799,41 @@ create_pathogen_adms_age_linechart <- function(data){
 
 make_adms_summary_plot <- function(data){
   
-  data %<>%
-    pivot_wider(names_from = CaseDefinition, values_from = Admissions)
-  
+  # data %<>%
+  #   pivot_wider(names_from = CaseDefinition, values_from = Admissions)
+  # 
   yaxis_plots[["title"]] <- "Reported cases"
   xaxis_plots[["title"]] <- "Week ending"
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   
+  # Define a named color vector
+  path_colours <- c(
+    "COVID-19" = "#F46A25",
+    "Influenza" = "#801650",
+    "Respiratory syncytial virus" = "#28A197",
+    "Adenovirus" = "#12436D",
+    "Human Metapneumovirus" = "#B4DEDB",
+    "Mycoplasma Pneumoniae" = "#3F085C",
+    "Parainfluenza" = "#A285D1",
+    "Rhinovirus" = "#A8CCE8",
+    "Seasonal Coronavirus (non COVID-19)" = "#3E8ECC"
+  )
   
-  p <- plot_ly(data, x = ~Date,
-               textposition = "none",
-               text = ~paste0("<b>Season</b>: ", Season, "\n",
-                              "<b>Date</b>: ", format(Date, "%d %b %y"), "\n",
-                              "<b>Week number</b>: ", ISOWeek, "\n",
-                              "<b>Influenza</b>: ", Influenza, "\n",
-                              "<b>RSV</b>: ", RSV, "\n",
-                              "<b>COVID-19</b>: ", `COVID-19`, "\n"),
-               hovertemplate = "%{text}",
-               height = 500)%>%
+  p <- plot_ly(data) %>% 
     
-    add_lines(y = ~Influenza,
-              line = list(color = phs_colours("phs-blue"), dash = "dash"),
-              name = 'Influenza') %>%
-    
-    add_lines(y = ~RSV,
-              name = 'RSV',
-              line = list(color = phs_colours("phs-green"))) %>%
-    
-    add_lines(y = ~`COVID-19`,
-              name = 'Covid-19',
-              line = list(color = phs_colours("phs-purple"), dash = "dot")) %>%
-    
+    add_trace(x = ~Date, y = ~Admissions, split = ~CaseDefinition,
+              type = "scatter", mode = "lines",
+              color = ~CaseDefinition,
+              colors = path_colours,
+              text = ~paste0("<b>Season</b>:", Season, "\n",
+                            "<b>Date</b>: ", format(Date, "%d %b %y"), "\n",
+                            "<b>Week number</b>: ", ISOWeek, "\n",
+                            "<b>Pathogen</b>: ", CaseDefinition, "\n"),
+              hovertemplate = "%{text}",
+              showlegend=TRUE) %>% 
+
     
     # Adding vertical lines for notes on chart
     # add_lines_and_notes(dataframe = data,
@@ -843,7 +845,7 @@ make_adms_summary_plot <- function(data){
     
     layout(margin = list(b = 80, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
-           legend = list(xanchor = "center", x = 0.5, y = -0.5, orientation = 'h'),
+           legend = list(xanchor = "center", x = 100, y = 0.5),# orientation = 'h'),
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
     

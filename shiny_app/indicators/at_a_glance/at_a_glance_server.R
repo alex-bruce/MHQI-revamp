@@ -152,8 +152,8 @@ colnames(cases_intro)[3] <- paste("Rate per 100,000 population (", as.character(
 # rename and add week titles for the dashboard
 
 hosp_adms_intro <- Respiratory_admissions_summary %>%
-  filter(CaseDefinition %in% c("Covid-19", "RSV", "Influenza")) %>%
-  tail(6) %>%
+  #filter(CaseDefinition %in% c("Covid-19", "RSV", "Influenza")) %>%
+  tail(18) %>%
   mutate(CaseDefinition = ifelse(CaseDefinition == "Covid-19", "COVID-19", CaseDefinition)) %>%
   mutate(flag = ifelse(Date==max(Date), "latest_week", "previous_week")) %>%
   select(-Date) %>%
@@ -166,9 +166,15 @@ hosp_adms_intro <- Respiratory_admissions_summary %>%
          'Rate of admissions per 100,000 population (previous week)'= admissions_rate_previous_week,
          'Number of admissions (latest week)'= admissions_number_latest_week,
          'Rate of admissions per 100,000 population (latest week)'= admissions_rate_latest_week  ) %>%
-  mutate(Pathogen =  factor(Pathogen, levels = c("COVID-19", "Influenza", "RSV"))) %>%
+  mutate(Pathogen =  factor(Pathogen, levels = c("COVID-19", "Influenza", "RSV", "Adenovirus",  "HMPV",  "MPN", "Parainfluenza", "Rhinovirus", "Non-seasonal Coronavirus"))) %>%
   arrange(Pathogen) %>%
-  mutate(Pathogen=if_else(Pathogen=="RSV", "Respiratory syncytial virus",Pathogen))
+  mutate(Pathogen=if_else(Pathogen=="RSV", "Respiratory syncytial virus", Pathogen)) %>% 
+  mutate(Pathogen=if_else(Pathogen=="Non-seasonal Coronavirus", "Seasonal Coronavirus (non COVID-19)", Pathogen)) %>% 
+  mutate(Pathogen=if_else(Pathogen=="HMPV", "Human Metapneumovirus", Pathogen)) %>% 
+  mutate(Pathogen=if_else(Pathogen=="MPN", "Mycoplasma Pneumoniae", Pathogen))
+
+
+
 
 colnames(hosp_adms_intro)[4] <- paste("Number of admissions (", as.character(latest_week_admissions_title),")")
 colnames(hosp_adms_intro)[5] <- paste("Rate of admissions per 100,000 population (", as.character(latest_week_admissions_title),")")
@@ -220,13 +226,11 @@ output$inpatients_intro_table <- renderDataTable({
 })
 
 altTextServer("adms_summary_modal",
-              title = "Number of acute hospital admissions due to COVID-19, influenza and RSV",
-              content = tags$ul(tags$li("This is a plot of the number of acute hospital admissions due to COVID-19, influenza and RSV."),
+              title = "Number of acute hospital admissions due to each pathogen",
+              content = tags$ul(tags$li("This is a plot of the number of acute hospital admissions due to each of a variety of pathogens."),
                                 tags$li("The x axis is the week ending"),
                                 tags$li("The y axis is the number of admissions"),
-                                tags$li("There are three traces: a blue dashed trace which shows the number of admissions due to influenza;",
-                                        "a green solid trace which shows the number of admissions due to RSV;",
-                                        "and a purple dotted trace which showss the number of admissions due to COVID-19.")
+                                tags$li("There are nine traces representing the number of admissions due to each pathogen.")
               )
 )
 
@@ -242,6 +246,16 @@ altTextServer("cari_summary_modal",
 output$hosp_adms_intro_plot <- renderPlotly({
   Respiratory_admissions_summary %>%
     mutate(CaseDefinition = ifelse(CaseDefinition == "Covid-19", "COVID-19", CaseDefinition)) %>%
+    mutate(CaseDefinition=if_else(CaseDefinition=="RSV", "Respiratory syncytial virus", CaseDefinition)) %>% 
+    mutate(CaseDefinition=if_else(CaseDefinition=="HMPV", "Human Metapneumovirus", CaseDefinition)) %>% 
+    mutate(CaseDefinition=if_else(CaseDefinition=="MPN", "Mycoplasma Pneumoniae", CaseDefinition)) %>% 
+    mutate(CaseDefinition=if_else(CaseDefinition=="Non-seasonal Coronavirus", "Seasonal Coronavirus (non COVID-19)", CaseDefinition)) %>% 
+    mutate(CaseDefinition =  factor(CaseDefinition, levels = c("COVID-19", "Influenza", "Respiratory syncytial virus", "Adenovirus",  
+                                                               "Human Metapneumovirus",  "Mycoplasma Pneumoniae", 
+                                                               "Parainfluenza", "Rhinovirus", "Seasonal Coronavirus (non COVID-19)"))) %>%
+    arrange(CaseDefinition) %>%
+
+    mutate(Date = ymd(Date)) %>%
     make_adms_summary_plot()#create_summary_adms_linechart()
 
 })
