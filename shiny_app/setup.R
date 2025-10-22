@@ -23,6 +23,7 @@ library(R.utils)
 library(lubridate)
 library(png)
 library(tidyr)
+library(readxl)
 
 # Load core functions ----
 source("functions/core_functions.R")
