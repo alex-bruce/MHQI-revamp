@@ -180,10 +180,13 @@ source("Transfer Scripts/transfer_covid_wastewater_ca.R")
 source("Transfer Scripts/transfer_covid_wastewater_ind.R")
 
 #### Occupancy - Board submissions
-source("Transfer Scripts/transfer_occupancy.R")
+#source("Transfer Scripts/transfer_occupancy.R")
 
 #### Occupancy - RAPID methdd
 source("Transfer Scripts/transfer_occupancy_rapid.R")
+
+#### Occupancy - UKHSA file
+source("Transfer Scripts/transfer_ukhsa_occupancy.R")
 
 #### Respiratory
 source("Transfer Scripts/transfer_respiratory.R")
@@ -202,7 +205,7 @@ source("Transfer Scripts/transfer_respiratory_nhs24_mem.R")
 source("Transfer Scripts/transfer_respiratory_gp_mem.R")
 
 #### All respiratory pathogen admissions
-source("Transfer Scripts/transer_respiratory_admissions.R")
+source("Transfer Scripts/transfer_respiratory_admissions.R")
 
 #### Influenza Hospital Admissions
 source("Transfer Scripts/transfer_flu_admissions.R")
