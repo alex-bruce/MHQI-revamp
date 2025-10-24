@@ -407,7 +407,7 @@ ui <- fluidPage(
       ##############################################.
       # DATA DOWNLOAD ----
       ##############################################.
-      tabPanel(title = "Download data",
+      tabPanel(title = "Open data",
                # Look at https://fontawesome.com/search?m=free for icons
                icon = icon_no_warning_fn("floppy-disk"),
                value = "download",

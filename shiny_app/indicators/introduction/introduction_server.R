@@ -80,7 +80,7 @@ output$introduction_about <- renderUI({
 
           fluidRow(
             column(4,tags$div(class = "special_button",
-                              actionButton("jump_to_download", "Download data"))),
+                              actionButton("jump_to_download", "Open data"))),
             column(8, p("Data pertaining to selected indicators presented in this dashboard can be downloaded as open data."))),
 
           br()
