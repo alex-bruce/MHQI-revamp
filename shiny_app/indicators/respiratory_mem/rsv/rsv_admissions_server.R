@@ -78,7 +78,7 @@ output$rsv_admissions_age_table <- renderDataTable({
   age_rate_data_all_path %>%
     select(week_ending, age_band,
            rate = rsv_rate) %>% 
-    mutate(week_ending = dmy(week_ending)) %>%
+    #mutate(week_ending = dmy(week_ending)) %>%
     filter(age_band != "All Ages") %>%
     mutate(week_ending = as_date(week_ending)) %>% 
     arrange(desc(week_ending)) %>%
@@ -100,7 +100,7 @@ output$rsv_admissions_plot <- renderPlotly({
 # RSV Adms by age plot
 output$rsv_admissions_age_plot <- renderPlotly({
   age_rate_data_all_path %>%
-    mutate(week_ending = dmy(week_ending)) %>%
+    #mutate(week_ending = dmy(week_ending)) %>%
     filter(age_band != "All Ages") %>% 
     select(week_ending, age_band,
            rate = rsv_rate) %>%
