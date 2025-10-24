@@ -20,7 +20,8 @@
 
 i_rapid_occupancy_c19_rapid <- read_csv_with_options(match_base_filename(glue(input_data, "occupancy_c19_rapid.csv"))) %>%
   select(-SevenDayAverage) %>%
-  mutate(HealthBoard = "Scotland")
+  mutate(HealthBoard = "Scotland") %>%
+  mutate(Date = format(as.Date(Date), "%Y%m%d"))
 
 i_occupancy_boards <- read_all_excel_sheets(glue("/PHI_conf/Respiratory_Surveillance_Viral/Dashboard/Data/Occupancy/Hospital-ICU Daily Numbers 29092025.xlsx"))
 
@@ -61,7 +62,7 @@ g_occupancy_hospital <- g_occupancy_hospital_scotland %>%
          HospitalOccupancyQF = ifelse(is.na(HospitalOccupancy), ":", "")) %>%
   #ungroup() %>%
   #arrange(Date) %>%
-  select(Date, HealthBoard, HealthBoardQF, HospitalOccupancy, HospitalOccupancyQF, SevenDayAverage, SevenDayAverageQF) %>%
+  select(Date, HealthBoard, HealthBoardQF, HospitalOccupancy, HospitalOccupancyQF, SevenDayAverage, SevenDayAverageQF) #%>%
   # mutate(HealthBoard = ifelse(substr(HealthBoard,1,1)=="Z", "Other", HealthBoard),
   #        HealthBoard = unlist(hblookup[HealthBoard]),
   #        HealthBoardQF = ifelse(HealthBoard == "", ":", HealthBoardQF)) %>%
