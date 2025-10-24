@@ -45,12 +45,11 @@ output$council_area_plot =  renderPlotly({
                         notes=c("From 01 August 2024, COVID-19 water samples testing transferred<br>from Scottish Environment Protection Agency (SEPA) to NHS Lothian"),
                         colors=c(phs_colours("phs-rust"))) %>%
     layout(title = paste("COVID-19 wastewater viral RNA (Mgc/p/d) for", input$selected_area),
-           xaxis = list(title = "Week Ending Date",
-                        rangeslider = list(type = "date")),
+           xaxis = list(title = "Week Ending Date"),
            yaxis = list(title = "Wastewater viral RNA (Mgc/p/d)"),
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10"),
-           legend = list(xanchor = "center", x = 0.5, y = -0.75, orientation = 'h')) %>% 
+           legend = list(xanchor = "center", x = 0.5, y = -0.2, orientation = 'h')) %>% 
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)

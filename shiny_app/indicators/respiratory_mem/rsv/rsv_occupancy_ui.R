@@ -65,7 +65,7 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be reporti
                             altTextUI("rsv_occupancy_modal"),
                             withNavySpinner(plotlyOutput("rsv_occupancy_plot")),
                             fluidRow(
-                              width=12, linebreaks(4))
+                              width=12, linebreaks(1))
                     ) # taglist
            ), # tabpanel
 

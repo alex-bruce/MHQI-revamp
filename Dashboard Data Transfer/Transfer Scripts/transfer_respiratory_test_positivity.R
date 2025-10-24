@@ -44,4 +44,4 @@ write_csv(Respiratory_test_pos_agg, glue(output_folder, "Respiratory_Pathogens_T
 
 
 # Output to Open Data subfolder with datestamp
-write_csv(Respiratory_test_pos_agg_od, glue(od_folder, "new/", "Respiratory_Pathogens_Test_Positivity_{od_report_date}.csv"))
+#write_csv(Respiratory_test_pos_agg_od, glue(od_folder, "new/", "Respiratory_Pathogens_Test_Positivity_{od_report_date}.csv"))
