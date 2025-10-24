@@ -35,7 +35,7 @@ make_national_wastewater_plot <- function(data){
            #legend = list(x = 100, y = 0.5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
            plot_bgcolor = phs_colours("phs-liberty-10"),
-           legend = list(xanchor = "center", x = 0.5, y = -0.5, orientation = 'h')) %>%
+           legend = list(xanchor = "center", x = 0.5, y = -0.2, orientation = 'h')) %>%
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)

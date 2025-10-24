@@ -101,7 +101,7 @@ make_hospital_admissions_plot <- function(data){
   # Add layout and config
     layout(margin = list(b = 80, t = 5),
                 yaxis = yaxis_plots, xaxis = xaxis_plots,
-           legend = list(xanchor = "center", x = 0.5, y = -0.5, orientation = 'h'),
+           legend = list(xanchor = "center", x = 0.5, y = -0.2, orientation = 'h'),
                 paper_bgcolor = phs_colours("phs-liberty-10"),
                 plot_bgcolor = phs_colours("phs-liberty-10")) %>%
     config(displaylogo = FALSE, displayModeBar = TRUE,

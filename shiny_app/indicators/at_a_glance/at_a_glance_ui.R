@@ -68,7 +68,8 @@ tagList(
                withNavySpinner(
                  plotlyOutput("hosp_adms_intro_plot")),
            fluidRow(
-             width=12, linebreaks(5)))
+             width=12, 
+             linebreaks(1)))
   ), #fluidRow
 
  fluidRow(width = 12,
