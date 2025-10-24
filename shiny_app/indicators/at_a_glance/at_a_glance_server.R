@@ -43,27 +43,40 @@ previous_week_admissions_title <- previous_week_admissions_title$Date
 
 # occupancy labels- (uses weekly covid HB occupancy i.e. same dataframe that produces the table)
 
-latest_week_occupancy_title<- Occupancy_Weekly_Hospital_HB %>%
-     filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
-     tail(1) %>%
-     select(Date=WeekEnding)
-# Convert to the correct format
-latest_week_occupancy_title$Date<- format(latest_week_occupancy_title$Date, "%d %b %y")
+# latest_week_occupancy_title<- Occupancy_Weekly_Hospital_HB %>%
+#      filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
+#      tail(1) %>%
+#      select(Date=WeekEnding)
+# # Convert to the correct format
+# latest_week_occupancy_title$Date<- format(latest_week_occupancy_title$Date, "%d %b %y")
+# 
+# # Convert to the correct format
+# latest_week_occupancy_title<-latest_week_occupancy_title$Date
+# 
+# previous_week_occupancy_title<- Occupancy_Weekly_Hospital_HB %>%
+#      filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
+#      tail(2) %>%
+#      select(Date=WeekEnding) %>%
+#      filter(Date== min(Date))
+# 
+# # Convert to the correct format
+#    previous_week_occupancy_title$Date<- format(previous_week_occupancy_title$Date, "%d %b %y")
+# 
+# # makle it a value
+#    previous_week_occupancy_title<- previous_week_occupancy_title$Date
 
-# Convert to the correct format
-latest_week_occupancy_title<-latest_week_occupancy_title$Date
+latest_week_occupancy_title <- occupancy_rapid %>%
+  tail(1) %>%
+  select(Date) %>%
+  mutate(Date = format(Date, "%d %b %y")) %>%
+  .$Date
 
-previous_week_occupancy_title<- Occupancy_Weekly_Hospital_HB %>%
-     filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
-     tail(2) %>%
-     select(Date=WeekEnding) %>%
-     filter(Date== min(Date))
-
-# Convert to the correct format
-   previous_week_occupancy_title$Date<- format(previous_week_occupancy_title$Date, "%d %b %y")
-
-# makle it a value
-   previous_week_occupancy_title<- previous_week_occupancy_title$Date
+previous_week_occupancy_title <- occupancy_rapid %>%
+  tail(4) %>%
+  select(Date) %>%
+  filter(Date == min(Date)) %>%
+  mutate(Date = format(Date, "%d %b %y")) %>%
+  .$Date
 
 # create value to produce population rate values
 pop_scot_total <- i_population_v2 %>%
@@ -189,18 +202,28 @@ colnames(hosp_adms_intro)[3] <- paste("Rate of admissions per 100,000 population
 # join into one table
 # rename and add week titles for the dashboard
 
-covid_inpatients_intro <- Occupancy_Weekly_Hospital_HB %>%
-  filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
-  tail(2) %>% #last 2 weeks
-  mutate(flag= if_else(WeekEnding_od==max(WeekEnding_od),"Latest Week", "Previous Week")) %>% #add flags
-  select(flag, SevenDayAverage) %>%
-  pivot_wider(names_from = flag, values_from = SevenDayAverage) %>%
-  mutate(Pathogen = "COVID-19") %>%
+# covid_inpatients_intro <- Occupancy_Weekly_Hospital_HB %>%
+#   filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
+#   tail(2) %>% #last 2 weeks
+#   mutate(flag= if_else(WeekEnding_od==max(WeekEnding_od),"Latest Week", "Previous Week")) %>% #add flags
+#   select(flag, SevenDayAverage) %>%
+#   pivot_wider(names_from = flag, values_from = SevenDayAverage) %>%
+#   mutate(Pathogen = "COVID-19") %>%
+#   select(Pathogen, `Previous Week`, `Latest Week`)
+# 
+# colnames(covid_inpatients_intro)[3] <- paste("Seven day average number (", as.character(latest_week_occupancy_title),")")
+# colnames(covid_inpatients_intro)[2] <- paste("Seven day average number (", as.character(previous_week_occupancy_title),")")
+
+inpatients_intro <- occupancy_rapid %>%
+  tail(6) %>%
+  mutate(flag= if_else(Date == max(Date),"Latest Week", "Previous Week")) %>% #add flags
+  select(pathogen, flag, sevenday_ave_inpatients) %>%
+  pivot_wider(names_from = flag, values_from = sevenday_ave_inpatients) %>%
+  rename(Pathogen = pathogen) %>%
   select(Pathogen, `Previous Week`, `Latest Week`)
 
-colnames(covid_inpatients_intro)[3] <- paste("Seven day average number (", as.character(latest_week_occupancy_title),")")
-colnames(covid_inpatients_intro)[2] <- paste("Seven day average number (", as.character(previous_week_occupancy_title),")")
-
+colnames(inpatients_intro)[3] <- paste("Seven day average number (", as.character(latest_week_occupancy_title),")")
+colnames(inpatients_intro)[2] <- paste("Seven day average number (", as.character(previous_week_occupancy_title),")")
 
 ### Data tables -----
 
@@ -220,7 +243,7 @@ output$hosp_adms_intro_table <- renderDataTable({
 
 # Inpatients table
 output$inpatients_intro_table <- renderDataTable({
-  covid_inpatients_intro%>%
+  inpatients_intro%>%
     make_summary_table()
 
 })
