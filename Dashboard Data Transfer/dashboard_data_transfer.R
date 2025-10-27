@@ -300,26 +300,26 @@ source("Transfer Scripts/new_od_cases_raw_data.R")
 source("Transfer Scripts/new_od_cases_outputs.R")
 
 ##ADMISSIONS----
-source("R_scripts/Source_scripts/new_od_admissions_raw_data.R")
-source("R_scripts/Source_scripts/new_od_admissions_outputs.R")
+source("Transfer Scripts/new_od_admissions_raw_data.R")
+source("Transfer Scripts/new_od_admissions_outputs.R")
 
 ##TESTS----
-source("R_scripts/Source_scripts/new_od_tests_raw_data.R")
-source("R_scripts/Source_scripts/new_od_tests_outputs.R")
+source("Transfer Scripts/new_od_tests_raw_data.R")
+source("Transfer Scripts/new_od_tests_outputs.R")
 
 ##OCCUPANCY----
-source("R_scripts/Source_scripts/new_od_occupancy_outputs.R")
+source("Transfer Scripts/new_od_occupancy_outputs.R")
 
 ##CARI----
-source("R_scripts/Source_scripts/new_od_cari_outputs.R")
+source("Transfer Scripts/new_od_cari_outputs.R")
 
 ##*Below files are directly from previous OD outputs saved in od_outputs folder----
 
 ##WASTEWATER----
-source("R_scripts/Source_scripts/new_od_wastewater_outputs.R")
+source("Transfer Scripts/new_od_wastewater_outputs.R")
 
 ##CARE Home----
-source("R_scripts/Source_scripts/new_od_care_home_outputs.R")
+source("Transfer Scripts/new_od_care_home_outputs.R")
 
 
 #################################### *********** ###############################
