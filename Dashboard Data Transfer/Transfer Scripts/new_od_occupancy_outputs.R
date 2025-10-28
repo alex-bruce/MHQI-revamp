@@ -33,11 +33,55 @@ write_csv(occupancy_rapid_rsv_flu_covid19_scotland %>%
                  "Occupancy_RAPID_weekly_COVID19_FLU_RSV_scotland_",
                  od_report_date,".csv")) 
 
-#2.HB level- live and weekly----------------------------------------
+#2.HB level- weekly----------------------------------------
 
-##COVID 19----
+##2a.Weekly-RAPID ----
+occupancy_covid19_rsv_flu_hb_a<-
+  read_csv(paste0(
+    file_paths$Data$Dashboard_input_folder,
+    "occupancy_rapid_HB_",od_date,".csv"))
 
-##2a.Weekly---- by the boards (ARCHIVE) ----
+occupancy_covid19_rsv_flu_hb<-
+  occupancy_covid19_rsv_flu_hb_a%>% 
+  mutate(health_board=recode(health_board,
+                             "NATIONAL FACILITY"="Golden Jubilee National Hospital"),
+         health_board=str_replace(health_board,"&","and"),
+         health_board=str_to_title(health_board),
+         health_board=str_replace(health_board,"And","and"),
+         health_board=str_replace(health_board,"Nhs","NHS"),
+         Season=paste0(str_sub(Season,1,4),"/",str_sub(Season,8,9)),
+         pathogen=recode(pathogen,
+                         "Influenza"="Influenza (All)")) %>% 
+  select(Season,ISOyear=Year,ISOweek=ISOWeek,
+         WeekEnding=week_ending,
+         WeekBeginning=week_start,
+         HBName=health_board,
+         Pathogen=pathogen,
+         BedOccupancy=bed_occupancy,
+         SevenDayAverageInpatients=sevenday_ave_inpatients) %>% 
+  merge(HB_admissions,by=c("HBName")) %>% 
+  relocate(HBcode,.after = HBName) %>% 
+  #Scotland values for QF
+  rbind(occupancy_rapid_rsv_flu_covid19_scotland %>% 
+          rename(HBcode=Country) %>% 
+          mutate(HBName="Scotland")) %>% 
+  mutate(HBQF=if_else(HBName=="Scotland","d","")) %>% 
+  select(Season, ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
+         HBName,HBcode,HBQF,BedOccupancy,SevenDayAverageInpatients) %>%
+  arrange(WeekBeginning,Pathogen,HBQF) %>% 
+  mutate(WeekBeginning=str_remove_all(WeekBeginning,"-"),
+         WeekEnding=str_remove_all(WeekEnding,"-"))
+
+
+###write csv----
+message("Writing Occupancy_weekly_covid19_rsv_flu_by_HB file")
+write_csv(occupancy_covid19_rsv_flu_hb,
+          paste0(file_paths$Outputs$Output_folder,
+                 "Occupancy_RAPID_weekly_COVID19_FLU_RSV_by_HB_",
+                 od_report_date ,".csv")) 
+
+
+##2b.Weekly(COVID19 only) by the boards (ARCHIVE) ----
 occupancy_covid19_hb_a<-
   read_csv(paste0(
     file_paths$Data$Dashboard_output_folder,
