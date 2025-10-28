@@ -82,14 +82,12 @@ output$hospital_occupancy_table <- renderDataTable({
 })
 
 output$hospital_occupancy_hb_table <- renderDataTable({
-  occupancy_rapid_hb %>%
-    filter(pathogen == "COVID-19") %>% 
-    # mutate(Date = as_date("dd/mm/yyyy")) %>% 
-    arrange(desc(Date)) %>% 
-    select('Week ending' = Date,
+  occupancy_covid_hb %>%
+    arrange(desc(WeekEnding)) %>% 
+    select('Week ending' = WeekEnding,
            'Health board' = health_board,
-           'Number of patients in hospital' = bed_occupancy,
-           `7 day average`= sevenday_ave_inpatients) %>%
+           'Number of patients in hospital' = HospitalOccupancy,
+           `7 day average`= SevenDayAverage) %>%
     make_table(.,
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
