@@ -38,6 +38,25 @@ output$rsv_occupancy_table <- renderDataTable({
 
 })
 
+output$rsv_occupancy_hb_table <- renderDataTable({
+  occupancy_rapid_hb %>%
+    filter(pathogen == "RSV") %>% 
+    # mutate(Date = as_date("dd/mm/yyyy")) %>% 
+    arrange(desc(Date)) %>% 
+    select('Week ending' = Date,
+           'Health board' = health_board,
+           'Number of patients in hospital' = bed_occupancy,
+           `7 day average`= sevenday_ave_inpatients) %>%
+    make_table(.,
+               add_separator_cols=NULL, # Column indices to add thousand separators to
+               add_percentage_cols = NULL, # with % symbol and 2dp
+               maxrows=10,
+               order_by_firstcol="desc"
+    )
+  
+})
+
+
 
 output$rsv_occupancy_plot <- renderPlotly({
   occupancy_rapid %>%

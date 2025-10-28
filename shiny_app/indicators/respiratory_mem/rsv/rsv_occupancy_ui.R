@@ -78,16 +78,28 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be reporti
 
   ), # fluid row
 
-  # tagList(h2("Seven day average of inpatients with COVID-19 in hospital by NHS Health Board of treatment; week ending")),
-  # 
-  # 
-  # fluidRow(width=12,
-  #          box(width = NULL,
-  #              withNavySpinner(dataTableOutput("hospital_occupancy_hb_table"))),
-  # ),
+fluidRow(width = 12,
+         tagList(h2("Number of inpatients with RSV in hospital by health board")),
+         linebreaks(1)),
 
-  fluidRow(
-    br()),
+fluidRow(width=12,
+         box(width = NULL,
+             withNavySpinner(dataTableOutput("rsv_occupancy_hb_table"))),
+         fluidRow(
+           width=12, linebreaks(1))
+         
+),
+
+# tagList(h2("Seven day average of inpatients with COVID-19 in hospital by NHS Health Board of treatment; week ending")),
+# 
+# 
+# fluidRow(width=12,
+#          box(width = NULL,
+#              withNavySpinner(dataTableOutput("hospital_occupancy_hb_table"))),
+# ),
+
+fluidRow(
+  br()),
 
 ) # taglist
 
