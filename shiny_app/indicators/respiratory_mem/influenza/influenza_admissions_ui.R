@@ -86,6 +86,20 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
     linebreaks(1)
       ), # fluidRow
 
+fluidRow(width = 12,
+         tagList(h2("Number of influenza admissions by health board")),
+         linebreaks(1)),
+
+fluidRow(width=12,
+         box(width = NULL,
+             withNavySpinner(dataTableOutput("influenza_admissions_hb_table"))),
+         fluidRow(
+           width=12, linebreaks(1))
+         
+),
+
+
+
 tagList(h2("Rate of acute influenza hospital admissions by age group")),
 
 #),

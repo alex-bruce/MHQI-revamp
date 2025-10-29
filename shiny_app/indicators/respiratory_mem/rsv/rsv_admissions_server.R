@@ -72,6 +72,23 @@ output$rsv_admissions_table <- renderDataTable({
     make_table(filter_cols = c(1,2))
 })
 
+# RSV admissions by HB table
+output$rsv_admissions_hb_table <- renderDataTable({
+  RSV_Admissions_HB %>%
+    filter(HealthBoardOfTreatment != "Scotland") %>%
+    arrange(desc(WeekEnding)) %>%
+    select('Week of Admission' = WeekEnding,
+           'Health board' = HealthBoardOfTreatment, 
+           'Admissions' = TotalInfections) %>% 
+    make_table(.,
+               add_separator_cols=NULL, # Column indices to add thousand separators to
+               add_percentage_cols = NULL, # with % symbol and 2dp
+               maxrows=10,
+               order_by_firstcol="desc"
+    )
+})
+
+
 
 # RSV admissions by age table
 output$rsv_admissions_age_table <- renderDataTable({

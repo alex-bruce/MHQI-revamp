@@ -78,6 +78,22 @@ output$influenza_admissions_table <- renderDataTable({
     make_table(filter_cols = c(1,2))
 })
 
+# Influenza admissions by HB table
+output$influenza_admissions_hb_table <- renderDataTable({
+  Flu_Admissions_HB %>%
+    filter(HealthBoardOfTreatment != "Scotland") %>%
+    arrange(desc(WeekEnding)) %>%
+    select('Week of Admission' = WeekEnding,
+          'Health board' = HealthBoardOfTreatment, 
+          'Admissions' = TotalInfections) %>% 
+    make_table(.,
+               add_separator_cols=NULL, # Column indices to add thousand separators to
+               add_percentage_cols = NULL, # with % symbol and 2dp
+               maxrows=10,
+               order_by_firstcol="desc"
+    )
+})
+
 
 # Influenza Adms plot
 output$influenza_admissions_plot <- renderPlotly({
