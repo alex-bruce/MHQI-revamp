@@ -85,7 +85,7 @@ all_resp_hb_admissions_a<-
   filter(WeekBeginning>="2020-09-28")  %>%
   merge(df_template_hb_admissions %>% 
           filter(WeekBeginning>="2020-09-28" &
-                   !Pathogen %in% c("Influenza A","Influenza B")&
+                   Pathogen %in% c("Influenza (All)","RSV","COVID-19")&
                    HBName != "Scotland"),
         all=TRUE) %>% 
   select(-HB) %>%
@@ -95,21 +95,23 @@ all_resp_hb_admissions_a<-
 all_resp_hb_admissions<-
   #add scotland level rows
   rbind(all_pathogens_scotland_admissions %>% 
+          filter(Pathogen %in% c("Influenza (All)","RSV","COVID-19")) %>% 
           rename(HBcode=Country) %>% 
           mutate(HBName="Scotland"),all_resp_hb_admissions_a) %>% 
-  arrange(ISOyear,ISOweek,HBcode,Pathogen) %>% 
   relocate(HBName,.before = HBcode) %>% 
   mutate(HBQF=if_else(HBName=="Scotland","d",""),
          NumberAdmissionsPerWeek=
            if_else(is.na(NumberAdmissionsPerWeek),
                    0,NumberAdmissionsPerWeek)) %>% 
-  relocate(HBQF,.after = HBcode)
+  arrange(ISOyear,ISOweek,Pathogen,HBQF) %>% 
+  relocate(HBQF,.after = HBcode) %>% 
+  relocate(Pathogen,.before = HBName)
 
 ##write csv----
 message("Writing Admissions_All_respiratory_pathogens_by_HB")
 write_csv(all_resp_hb_admissions,
           paste0(file_paths$Outputs$Output_folder,
-                 "Admissions_All_respiratory_pathogens_by_HB_",od_report_date,".csv")) 
+                 "Admissions_COVID19_FLU_RSV_by_HB_",od_report_date,".csv")) 
 
 
 #4.by SIMD ---------------------------------------------------------------------

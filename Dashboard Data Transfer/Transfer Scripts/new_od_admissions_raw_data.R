@@ -70,13 +70,14 @@ i_admsn_all_resp_hb<-
   mutate(Pathogen=recode(Pathogen,
                          "cov"="COVID-19",
                          "flu"="Influenza (All)",
-                         "rsv"="RSV",
-                         "rhino"="Rhinovirus",
-                         "coron"="Seasonal coronavirus",
-                         "para"="Parainfluenza (Any Type)",
-                         "adeno"="Adenovirus",
-                         "hmpv"="HMPV",
-                         "mpn"="Mycoplasma pneumoniae"))
+                         "rsv"="RSV"
+                         # "rhino"="Rhinovirus",
+                         # "coron"="Seasonal coronavirus",
+                         # "para"="Parainfluenza (Any Type)",
+                         # "adeno"="Adenovirus",
+                         # "hmpv"="HMPV",
+                         # "mpn"="Mycoplasma pneumoniae"
+                         ))
 
 
 #4. SIMD------------------------------------------------------------------------
