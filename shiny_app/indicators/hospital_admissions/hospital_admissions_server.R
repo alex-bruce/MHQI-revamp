@@ -273,22 +273,39 @@ output$hospital_admissions_simd_plot <- renderPlotly({
 })
 
 ### WEEKLY HB ADMISSIONS Table ### ----
-
 output$hospital_admissions_hb_table <- renderDataTable({
-  Admissions_HB_3wks%>%
-   # filter(WeekEnding %in% adm_hb_dates) %>%
-    rename(HealthBoard=HealthBoardOfTreatment) %>%
-    mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
-    pivot_wider(names_from = WeekEnding,
-                values_from = TotalInfections) %>%
-    mutate(HealthBoard = factor(HealthBoard,
-                                levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
-                                                        "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
-                                                        "NHS Tayside", "NHS Western Isles", "Golden Jubilee National Hospital", "Scotland"))) %>%
-    arrange(HealthBoard) %>%
-    dplyr::rename(`Health Board of treatment` = HealthBoard) %>%
-    make_summary_table(maxrows = 16)
+  admissions_hb_all_path %>%
+    # filter(WeekEnding %in% adm_hb_dates) %>%
+   # rename(HealthBoard=HealthBoardOfTreatment) %>%
+   # mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
+    filter(admission_type == "cov") %>% 
+    arrange(desc(week_ending)) %>%
+    select('Week of Admission' = week_ending,
+           `Health Board of treatment` = health_board_of_treatment,
+           'Admissions' = n) %>%
+    make_table(.,
+               add_separator_cols=NULL, # Column indices to add thousand separators to
+               add_percentage_cols = NULL, # with % symbol and 2dp
+               maxrows=10,
+               order_by_firstcol="desc"
+    )
 })
+
+# output$hospital_admissions_hb_table <- renderDataTable({
+#   Admissions_HB_3wks%>%
+#    # filter(WeekEnding %in% adm_hb_dates) %>%
+#     rename(HealthBoard=HealthBoardOfTreatment) %>%
+#     mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
+#     pivot_wider(names_from = WeekEnding,
+#                 values_from = TotalInfections) %>%
+#     mutate(HealthBoard = factor(HealthBoard,
+#                                 levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
+#                                                         "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
+#                                                         "NHS Tayside", "NHS Western Isles", "Golden Jubilee National Hospital", "Scotland"))) %>%
+#     arrange(HealthBoard) %>%
+#     dplyr::rename(`Health Board of treatment` = HealthBoard) %>%
+#     make_summary_table(maxrows = 16)
+# })
 
 
 ### LENGTH OF STAY ### ----

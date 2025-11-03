@@ -74,12 +74,12 @@ output$rsv_admissions_table <- renderDataTable({
 
 # RSV admissions by HB table
 output$rsv_admissions_hb_table <- renderDataTable({
-  RSV_Admissions_HB %>%
-    filter(HealthBoardOfTreatment != "Scotland") %>%
-    arrange(desc(WeekEnding)) %>%
-    select('Week of Admission' = WeekEnding,
-           'Health board' = HealthBoardOfTreatment, 
-           'Admissions' = TotalInfections) %>% 
+  admissions_hb_all_path %>%
+    filter(admission_type == "rsv") %>% 
+    arrange(desc(week_ending)) %>%
+    select('Week of Admission' = week_ending,
+           `Health Board of treatment` = health_board_of_treatment,
+           'Admissions' = n) %>%
     make_table(.,
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
@@ -141,21 +141,21 @@ observeEvent(input$respiratory_season,
 
 
 # HB Table
-output$rsv_admissions_hb_table <- renderDataTable({
-  RSV_Admissions_HB_3wks %>%
-   # filter(WeekEnding %in% adm_hb_dates) %>%
-    mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
-    select(WeekEnding, HealthBoardOfTreatment,TotalInfections) %>% 
-    pivot_wider(names_from = WeekEnding,
-                values_from = TotalInfections) %>%
-    mutate(HealthBoardOfTreatment = factor(HealthBoardOfTreatment,
-                                           levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
-                                                      "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
-                                                      "NHS Tayside", "NHS Western Isles","Golden Jubilee National Hospital", "Scotland"))) %>%
-    arrange(HealthBoardOfTreatment) %>%
-    dplyr::rename(`Health Board of treatment` = HealthBoardOfTreatment) %>%
-    make_summary_table(maxrows = 16)
-})
+# output$rsv_admissions_hb_table <- renderDataTable({
+#   RSV_Admissions_HB_3wks %>%
+#    # filter(WeekEnding %in% adm_hb_dates) %>%
+#     mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
+#     select(WeekEnding, HealthBoardOfTreatment,TotalInfections) %>% 
+#     pivot_wider(names_from = WeekEnding,
+#                 values_from = TotalInfections) %>%
+#     mutate(HealthBoardOfTreatment = factor(HealthBoardOfTreatment,
+#                                            levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
+#                                                       "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
+#                                                       "NHS Tayside", "NHS Western Isles","Golden Jubilee National Hospital", "Scotland"))) %>%
+#     arrange(HealthBoardOfTreatment) %>%
+#     dplyr::rename(`Health Board of treatment` = HealthBoardOfTreatment) %>%
+#     make_summary_table(maxrows = 16)
+# })
 
 #---------------------##
 ### RSV adm pyramid ####

@@ -44,6 +44,11 @@ write.csv(i_respiratory_age_admissions, glue(output_folder, "age_rate_data_all_p
 
 rm(i_respiratory_age_admissions)
 
+i_respiratory_hb_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "hb summary - all path.csv")))
+
+write.csv(i_respiratory_hb_admissions, glue(output_folder, "admissions_hb_all_path.csv"), row.names = FALSE)
+
+rm(i_respiratory_hb_admissions)
 
 #### RSV healthboard admissions
 #i_rsv_hb_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "admissions_rsv_hb.csv")))

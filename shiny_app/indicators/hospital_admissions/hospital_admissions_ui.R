@@ -63,6 +63,18 @@ tagList(
 
                            ),
                            
+                           fluidRow(width = 12,
+                                    tagList(h2("Number of acute COVID-19 admissions by NHS Health Board of treatment")),
+                                    linebreaks(1)),
+                           
+                           fluidRow(width=12,
+                                    box(width = NULL,
+                                        withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))),
+                                    fluidRow(
+                                      width=12, linebreaks(1))
+                                    
+                           ),
+                           
                            tagList(h2("Rate of acute COVID-19 hospital admissions by age group")),
                            
                            #),

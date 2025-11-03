@@ -80,12 +80,12 @@ output$influenza_admissions_table <- renderDataTable({
 
 # Influenza admissions by HB table
 output$influenza_admissions_hb_table <- renderDataTable({
-  Flu_Admissions_HB %>%
-    filter(HealthBoardOfTreatment != "Scotland") %>%
-    arrange(desc(WeekEnding)) %>%
-    select('Week of Admission' = WeekEnding,
-          'Health board' = HealthBoardOfTreatment, 
-          'Admissions' = TotalInfections) %>% 
+    admissions_hb_all_path %>%
+    filter(admission_type == "flu") %>% 
+    arrange(desc(week_ending)) %>%
+    select('Week of Admission' = week_ending,
+           `Health Board of treatment` = health_board_of_treatment,
+           'Admissions' = n) %>% 
     make_table(.,
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
