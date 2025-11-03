@@ -62,6 +62,7 @@ output$influenza_occupancy_hb_table <- renderDataTable({
 output$influenza_occupancy_plot <- renderPlotly({
   occupancy_rapid %>%
     filter(pathogen == "Influenza") %>%
+    filter(Season %in% c("2023-2024", "2024-2025", "2025-2026", "2026-2027")) %>% 
     create_pathogen_occupancy_linechart()
   
 })
