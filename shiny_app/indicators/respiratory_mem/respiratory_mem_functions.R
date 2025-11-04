@@ -1462,10 +1462,6 @@ create_cari_subtype_linechart <- function(data){
 
 create_cari_subtype_barchart <- function(data){
   
-  data <- flu_cari_subtype %>%
-    filter(Pathogen %in% c("Type A (H1N1)", "Type A (H3N2)",
-                           "Type A (not subtyped)", "Type B"))
-  
   yaxis_plots[["title"]] <- "Number of positive samples"
   xaxis_plots[["title"]] <- "Week ending"
   
