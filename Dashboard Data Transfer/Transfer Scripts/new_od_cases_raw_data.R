@@ -85,7 +85,10 @@ i_non_covid_simd<-rbind(i_non_covid_simd_past,i_non_covid_simd_curr_season) %>%
   merge(ref_simd_lookup,by="PostCode",all.x=TRUE) %>% 
   mutate(SIMD=if_else(is.na(SIMD),"Unknown",SIMD)) %>% 
   count(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,
-        Pathogen,SIMD, name = "NumberCasesPerWeek")  
+        Pathogen,SIMD, name = "NumberCasesPerWeek") %>% 
+  #limit upto current week
+  filte(ISOyear != od_isoyear |
+          (ISOyear == od_isoyear & ISOweek <= od_isoweek))
 
 
 #1b. COVID 19 ------------------------------------------------------------------
@@ -98,7 +101,7 @@ i_covid19_all_cases_tests_data<-
          test_type,test_result, subject_sex, submitted_subject_sex,
          age, date_reporting, date_test_received_at_bi,
          test_result_record_source,episode_number_deduplicated, episode_derived_case_type) %>% 
-  filter(specimen_date>="2020-02-24") %>% 
+  filter(specimen_date>="2020-02-24" & specimen_date <=od_sunday) %>% 
   # filter(!(reporting_health_board %in% c("UK (not resident in Scotland)",
   #                                        "Outside UK","No Fixed Abode"))&
   #          !is.na(reporting_health_board)) %>%
