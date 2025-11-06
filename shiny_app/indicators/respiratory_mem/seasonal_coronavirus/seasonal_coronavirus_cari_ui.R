@@ -118,7 +118,7 @@ tagList(
            tagList(h2("CARI - Test positivity for Seasonal Coronavirus by age group"))),
   
   fluidRow(
-    selectInput("seasonal_coronavirus_cari_selected_age", "Select age group(s) of interest:", 
+    pickerInput("seasonal_coronavirus_cari_selected_age", "Select age group(s) of interest:", 
                 choices = sort(unique(seasonal_coronavirus_cari_age$AgeGroup)),
                 selected = sort(unique(seasonal_coronavirus_cari_age$AgeGroup))[1],
                 multiple = TRUE),
@@ -145,7 +145,7 @@ tagList(
   
   fluidRow(
     width = 12,
-    selectInput("seasonal_coronavirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+    pickerInput("seasonal_coronavirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
                 choices = sort(unique(seasonal_coronavirus_cari_hb$HBName)),
                 selected = sort(unique(seasonal_coronavirus_cari_hb$HBName))[1],
                 multiple = TRUE),
@@ -172,7 +172,7 @@ tagList(
            tagList(h2("CARI - Test positivity for Seasonal Coronavirus by type"))),
   
   fluidRow(
-    selectInput("seasonal_coronavirus_cari_selected_subtype1", "Select type(s):", 
+    pickerInput("seasonal_coronavirus_cari_selected_subtype1", "Select type(s):", 
                 choices = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen)),
                 selected = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen))[1],
                 multiple = TRUE),

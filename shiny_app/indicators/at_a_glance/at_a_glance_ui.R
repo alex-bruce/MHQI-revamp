@@ -36,7 +36,7 @@ tagList(
            linebreaks(1)), #fluidRow
   
   fluidRow(width=12,
-           selectInput("cari_selected_pathogen", "Select pathogen(s):", 
+           pickerInput("cari_selected_pathogen", "Select pathogen(s):", 
                        choices = sort(unique(cari_at_a_glance$Pathogen)),
                        selected = sort(unique(cari_at_a_glance$Pathogen))[1],
                        multiple = TRUE),

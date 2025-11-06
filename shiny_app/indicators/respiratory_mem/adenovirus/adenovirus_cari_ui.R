@@ -101,7 +101,7 @@ tagList(
            tagList(h2("CARI - Test positivity for Adenovirus by age group"))),
   
   fluidRow(
-    selectInput("adenovirus_cari_selected_age", "Select age group(s) of interest:", 
+    pickerInput("adenovirus_cari_selected_age", "Select age group(s) of interest:", 
                 choices = sort(unique(adenovirus_cari_age$AgeGroup)),
                 selected = sort(unique(adenovirus_cari_age$AgeGroup))[1],
                 multiple = TRUE),
@@ -128,7 +128,7 @@ tagList(
   
   fluidRow(
     width = 12,
-    selectInput("adenovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+    pickerInput("adenovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
                 choices = sort(unique(adenovirus_cari_hb$HBName)),
                 selected = sort(unique(adenovirus_cari_hb$HBName))[1],
                 multiple = TRUE),

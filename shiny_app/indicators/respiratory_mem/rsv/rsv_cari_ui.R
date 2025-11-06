@@ -102,7 +102,7 @@ tagList(
            tagList(h2("CARI - Test positivity for RSV by age group"))),
   
   fluidRow(
-    selectInput("rsv_cari_selected_age", "Select age group(s) of interest:", 
+    pickerInput("rsv_cari_selected_age", "Select age group(s) of interest:", 
                 choices = sort(unique(rsv_cari_age$AgeGroup)),
                 selected = sort(unique(rsv_cari_age$AgeGroup))[1],
                 multiple = TRUE),
@@ -129,7 +129,7 @@ tagList(
   
   fluidRow(
     width = 12,
-    selectInput("rsv_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+    pickerInput("rsv_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
                 choices = sort(unique(rsv_cari_hb$HBName)),
                 selected = sort(unique(rsv_cari_hb$HBName))[1],
                 multiple = TRUE),

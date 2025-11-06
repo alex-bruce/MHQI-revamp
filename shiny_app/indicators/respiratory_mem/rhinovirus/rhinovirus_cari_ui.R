@@ -101,7 +101,7 @@ tagList(
            tagList(h2("CARI - Test positivity for Rhinovirus by age group"))),
   
   fluidRow(
-    selectInput("rhinovirus_cari_selected_age", "Select age group(s) of interest:", 
+    pickerInput("rhinovirus_cari_selected_age", "Select age group(s) of interest:", 
                 choices = sort(unique(rhinovirus_cari_age$AgeGroup)),
                 selected = sort(unique(rhinovirus_cari_age$AgeGroup))[1],
                 multiple = TRUE),
@@ -128,7 +128,7 @@ tagList(
   
   fluidRow(
     width = 12,
-    selectInput("rhinovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+    pickerInput("rhinovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
                 choices = sort(unique(rhinovirus_cari_hb$HBName)),
                 selected = sort(unique(rhinovirus_cari_hb$HBName))[1],
                 multiple = TRUE),
