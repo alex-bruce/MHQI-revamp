@@ -67,6 +67,8 @@ i_admsn_all_resp_hb<-
   select(WeekEnding=week_ending,Pathogen=admission_type,
          NumberAdmissionsPerWeek=n,
          HB=health_board_of_treatment) %>% 
+  #only covid19,flu,rsv
+  filter(Pathogen %in% c ("cov","flu","rsv")) %>% 
   mutate(Pathogen=recode(Pathogen,
                          "cov"="COVID-19",
                          "flu"="Influenza (All)",
