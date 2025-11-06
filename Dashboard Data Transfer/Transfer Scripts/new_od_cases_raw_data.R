@@ -87,7 +87,7 @@ i_non_covid_simd<-rbind(i_non_covid_simd_past,i_non_covid_simd_curr_season) %>%
   count(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,
         Pathogen,SIMD, name = "NumberCasesPerWeek") %>% 
   #limit upto current week
-  filte(ISOyear != od_isoyear |
+  filter(ISOyear != od_isoyear |
           (ISOyear == od_isoyear & ISOweek <= od_isoweek))
 
 
