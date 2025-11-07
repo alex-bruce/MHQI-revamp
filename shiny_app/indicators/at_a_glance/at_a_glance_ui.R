@@ -42,6 +42,7 @@ tagList(
                        multiple = TRUE),
            box(width = NULL,
                altTextUI("cari_summary_modal"),
+               cariDefinitionUI("cari_summary_definition"),
                swabposDefinitionUI("cari_summary_swabpos"),
                #ciDefinitionUI("cari_summary_ci"),
                withNavySpinner(
