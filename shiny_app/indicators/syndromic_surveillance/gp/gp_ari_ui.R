@@ -8,7 +8,7 @@ tagList(
              "for use in recruiting participants to sentinel surveillance programs such as the Community ",
              "Acute Respiratory Infection (CARI) system. Consultations for ARI typically occur at much ",
              "higher rates than those of influenza-like illness (ILI) because the ARI surveillance system ", 
-             "typically reports GP visits from patients with a wide range of respiratory diagnoses. ARI ",
+             "reports GP visits from patients with a wide range of respiratory diagnoses. ARI ",
              "consultation rates are used internationally as a key measure of respiratory viral activity in ", 
              "the community and is recommended for use alongside ILI surveillance to indicate overall trends ", 
              "in respiratory infection rates."),
