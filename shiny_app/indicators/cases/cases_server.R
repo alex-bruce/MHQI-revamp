@@ -154,7 +154,7 @@ content = tags$ul(tags$li("This is a plot showing the rate of laboratory-confirm
 
 # Low threshold
 covid_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
-  filter(Pathogen == "Influenza") %>%
+  filter(Pathogen == "COVID-19") %>%
   select(LowThreshold) %>%
   distinct() %>%
   .$LowThreshold %>%
@@ -162,7 +162,7 @@ covid_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
 
 # Moderate threshold
 covid_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
-  filter(Pathogen == "Influenza") %>%
+  filter(Pathogen == "COVID-19") %>%
   select(MediumThreshold) %>%
   distinct() %>%
   .$MediumThreshold %>%
@@ -170,7 +170,7 @@ covid_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
 
 # High threshold
 covid_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
-  filter(Pathogen == "Influenza") %>%
+  filter(Pathogen == "COVID-19") %>%
   select(HighThreshold) %>%
   distinct() %>%
   .$HighThreshold %>%
@@ -178,7 +178,7 @@ covid_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
 
 # Extraordinary
 covid_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
-  filter(Pathogen == "Influenza") %>%
+  filter(Pathogen == "COVID-19") %>%
   select(ExtraordinaryThreshold) %>%
   distinct() %>%
   .$ExtraordinaryThreshold %>%
@@ -263,7 +263,7 @@ altTextServer("covid_mem_hb_modal",
                                         "overall number of laboratory-confirmed episodes.")))
 
 
-# Influenza MEM by HB table
+# COVID-19 MEM by HB table
 output$covid_mem_hb_table <- renderDataTable({
   Respiratory_Pathogens_MEM_HB %>%
     filter(Pathogen == "COVID-19") %>%
@@ -287,7 +287,7 @@ output$covid_mem_hb_table <- renderDataTable({
                filter_cols = c(1,2,3,5))
 })
 
-# Influenza MEM by HB plot
+# COVID-19 MEM by HB plot
 output$covid_mem_hb_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_HB %>%
     filter(Pathogen == "COVID-19") %>%
@@ -298,7 +298,7 @@ output$covid_mem_hb_plot <- renderPlotly({
       TRUE ~ ActivityLevel
     )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
-    create_mem_heatmap(breakdown_variable = "HBCode")
+    create_mem_heatmap(breakdown_variable = "HBName")
   
 })
 
@@ -323,7 +323,7 @@ altTextServer("covid_mem_age_modal",
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes.")))
 
-# Influenza MEM by Age table
+# COVID-19 MEM by Age table
 output$covid_mem_age_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "COVID-19") %>%
@@ -347,7 +347,7 @@ output$covid_mem_age_table <- renderDataTable({
                filter_cols = c(1,2,3,5))
 })
 
-# Influenza MEM by Age plot
+# COVID-19 MEM by Age plot
 output$covid_mem_age_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "COVID-19") %>%

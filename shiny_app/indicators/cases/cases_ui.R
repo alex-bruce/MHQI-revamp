@@ -131,7 +131,7 @@ tagList(
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("covid_mem_hb_modal"),
-                            withNavySpinner(plotlyOutput("covid_mem_hb_plot")),
+                            withNavySpinner(plotlyOutput("covid_mem_hb_plot", height = "500px")),
                     )),
            tabPanel("Data",
                     tagList(linebreaks(1),
