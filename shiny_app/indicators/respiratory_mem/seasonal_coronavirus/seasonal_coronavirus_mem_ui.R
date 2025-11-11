@@ -31,8 +31,8 @@ tagList(
 
 fluidRow(
   p("Public Health Scotland have paused reporting of NHS Board-specific activity data for pathogens which do not have ",
-    "uniform testing policies across different board areas. This is because different testing practices by board may ",
-    "have an impact on incidence rates and therefore has implications for smaller board areas, particularly for ",
+    "uniform testing policies across different Health Board areas. This is because different testing practices by Health Board may ",
+    "have an impact on incidence rates and therefore has implications for smaller Health Board areas, particularly for ",
     "calculation of activity threshold levels."),
   linebreaks(1)
 ),
