@@ -2,6 +2,40 @@
 ###########################
 ### HOSPITAL ADMISSIONS ### ----
 ###########################
+# admissions labels- (matches Respiratory_admissions_summary data set)
+latest_week_admissions_title <-Respiratory_admissions_summary %>%
+  tail(1) %>%
+  select(Date)
+
+# Convert to the correct format
+latest_week_admissions_title$Date<- format(latest_week_admissions_title $Date, "%d %b %y")
+
+# make it a value
+latest_week_admissions_title <- latest_week_admissions_title$Date
+
+previous_week_admissions_title <- Respiratory_admissions_summary %>%
+  filter(CaseDefinition=='RSV') %>%
+  tail(2) %>%
+  filter(Date== min(Date)) %>%
+  select(Date)
+
+# Convert to correct format
+previous_week_admissions_title $Date<- format(previous_week_admissions_title $Date, "%d %b %y")
+
+# make it a value
+previous_week_admissions_title <- previous_week_admissions_title$Date
+
+previous_2week_admissions_title <- Respiratory_admissions_summary %>%
+  filter(CaseDefinition=='RSV') %>%
+  tail(3) %>%
+  filter(Date== min(Date)) %>%
+  select(Date)
+
+# Convert to correct format
+previous_2week_admissions_title $Date<- format(previous_2week_admissions_title $Date, "%d %b %y")
+
+# make it a value
+previous_2week_admissions_title <- previous_2week_admissions_title$Date
 
 metadataButtonServer(id="hospital_admissions",
                      panel="COVID-19 hospital admissions",
@@ -273,20 +307,23 @@ output$hospital_admissions_simd_plot <- renderPlotly({
 })
 
 ### WEEKLY HB ADMISSIONS Table ### ----
+hb_admissions_cov_table <- admissions_hb_all_path_3wks %>%
+  filter(admission_type == "cov") %>% 
+  arrange(desc(week_ending)) %>%
+  pivot_wider(names_from = week_ending, values_from = n) %>% 
+  select(-admission_type)
+
+colnames(hb_admissions_cov_table)[1] <- paste("Health board of treatment")
+colnames(hb_admissions_cov_table)[2] <- paste("Number of admissions (", as.character(latest_week_admissions_title),")")
+colnames(hb_admissions_cov_table)[3] <- paste("Number of admissions (", as.character(previous_week_admissions_title),")")
+colnames(hb_admissions_cov_table)[4] <- paste("Number of admissions (", as.character(previous_2week_admissions_title),")")
+
 output$hospital_admissions_hb_table <- renderDataTable({
-  admissions_hb_all_path %>%
-    # filter(WeekEnding %in% adm_hb_dates) %>%
-   # rename(HealthBoard=HealthBoardOfTreatment) %>%
-   # mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
-    filter(admission_type == "cov") %>% 
-    arrange(desc(week_ending)) %>%
-    select('Week of Admission' = week_ending,
-           `Health Board of treatment` = health_board_of_treatment,
-           'Admissions' = n) %>%
+  hb_admissions_cov_table %>%
     make_table(.,
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
-               maxrows=10,
+               maxrows=15,
                order_by_firstcol="desc"
     )
 })
