@@ -461,23 +461,46 @@ create_mem_heatmap <- function(data = df,
   }
   
   # Add static legend
-  heatmap_curr_season <- heatmap_curr_season %>%
-    layout(
-      images = list(
-        list(
-          source =  raster2uri(mem_legend),
-          xref = "paper",
-          yref = "paper",
-          x = 0.5,
-          y = -0.7,
-          sizex = 0.4,
-          sizey = 0.3,
-          xanchor="center",
-          yanchor="bottom"
-        )
-      ))
+  if(breakdown_variable %in% c("HBCode", "HBName")){
+    
+    heatmap_curr_season <- heatmap_curr_season %>%
+      layout(
+        images = list(
+          list(
+            source =  raster2uri(mem_legend),
+            xref = "paper",
+            yref = "paper",
+            x = 0.5,
+            y = -0.5,
+            sizex = 0.4,
+            sizey = 0.3,
+            xanchor="center",
+            yanchor="bottom"
+          )
+        ))
+    
+  } else{
+    
+    # Add static legend
+    heatmap_curr_season <- heatmap_curr_season %>%
+      layout(
+        images = list(
+          list(
+            source =  raster2uri(mem_legend),
+            xref = "paper",
+            yref = "paper",
+            x = 0.5,
+            y = -0.7,
+            sizex = 0.4,
+            sizey = 0.3,
+            xanchor="center",
+            yanchor="bottom"
+          )
+        ))
+    
+  }
   
-  # Arrange the heatmaps in a subplot (one above the other)
+# Arrange the heatmaps in a subplot (one above the other)
   subplot_heatmap <- subplot(
     heatmap_prev_season, heatmap_curr_season,
     nrows = 2,
