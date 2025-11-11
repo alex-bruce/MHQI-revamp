@@ -37,7 +37,7 @@ tagList(
            tagList(h2("Laboratory-confirmed adenovirus incidence per 100,000 population by NHS Health Board"))),
   fluidRow(
     p("Public Health Scotland have paused reporting of NHS Board-specific activity data for pathogens which do not have ",
-      "uniform testing policies across different Health Board areas. This is because different testing practices by board may ",
+      "uniform testing policies across different Health Board areas. This is because different testing practices by Health Board may ",
       "have an impact on incidence rates and therefore has implications for smaller Health Board areas, particularly for ",
       "calculation of activity threshold levels."),
     linebreaks(1)
