@@ -377,7 +377,17 @@ ui <- fluidPage(
                                      column(12, source(file.path("indicators/syndromic_surveillance/nhs24/nhs24_ui.R"), local = TRUE)$value)),
                             tabPanel(title = "GP consultations",
                                      value = "gp_consultations",
-                                     column(12, source(file.path("indicators/syndromic_surveillance/gp/gp_ui.R"), local = TRUE)$value))
+                                     h1("GP consultations"),
+                                     p(""),
+                                     linebreaks(1),
+                                     radioGroupButtons("gp_consultations_select", status = "home",
+                                                       choices = c("Influenza-Like Illness (ILI)", 
+                                                                   "Acute respiratory infection (ARI)"),
+                                                       direction = "horizontal", justified = F),
+                                     conditionalPanel(condition="input.gp_consultations_select=='Influenza-Like Illness (ILI)'",
+                                                      column(12, source(file.path("indicators/syndromic_surveillance/gp/gp_ili_ui.R"), local = TRUE)$value)),
+                                     conditionalPanel(condition="input.gp_consultations_select=='Acute respiratory infection (ARI)'",
+                                                      column(12, source(file.path("indicators/syndromic_surveillance/gp/gp_ari_ui.R"), local = TRUE)$value)))
                ) # navbarlistPanel
                #
       ),#tabPanel
@@ -496,7 +506,8 @@ server <- function(input, output, session) {
   source(file.path("indicators/mortality/euromomo/euromomo_server.R"), local = TRUE)$value
 
   source(file.path("indicators/syndromic_surveillance/nhs24/nhs24_server.R"), local = TRUE)$value
-  source(file.path("indicators/syndromic_surveillance/gp/gp_server.R"), local = TRUE)$value
+  source(file.path("indicators/syndromic_surveillance/gp/gp_ili_server.R"), local = TRUE)$value
+  source(file.path("indicators/syndromic_surveillance/gp/gp_ari_server.R"), local = TRUE)$value
   
  source(file.path("indicators/wastewater/national/national_server.R"), local = TRUE)$value
  source(file.path("indicators/wastewater/health_board/hb_server.R"), local = TRUE)$value

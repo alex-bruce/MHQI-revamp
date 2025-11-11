@@ -202,8 +202,11 @@ source("Transfer Scripts/transfer_respiratory_euromomo.R")
 #### Respiratory NHS24 - MEM
 source("Transfer Scripts/transfer_respiratory_nhs24_mem.R")
 
-#### Respiratory GP - MEM
-source("Transfer Scripts/transfer_respiratory_gp_mem.R")
+#### Respiratory GP ILI - MEM
+source("Transfer Scripts/transfer_respiratory_gp_ili_mem.R")
+
+#### Respiratory GP ARI - MEM
+source("Transfer Scripts/transfer_respiratory_gp_ari_mem.R")
 
 #### All respiratory pathogen admissions
 source("Transfer Scripts/transfer_respiratory_admissions.R")
