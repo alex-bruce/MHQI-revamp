@@ -115,20 +115,22 @@ output$influenza_admissions_table <- renderDataTable({
 # Make Influenza admissions by HB table
 hb_admissions_flu_table <- admissions_hb_all_path_3wks %>%
   filter(admission_type == "flu") %>% 
-  arrange(desc(week_ending)) %>%
-  pivot_wider(names_from = week_ending, values_from = n) %>% 
-  select(-admission_type)
+  arrange((week_ending)) %>%
+  pivot_wider(names_from = week_ending, values_from = rate) %>% 
+  select(-admission_type) 
   
 colnames(hb_admissions_flu_table)[1] <- paste("Health board of treatment")
-colnames(hb_admissions_flu_table)[2] <- paste("Number of admissions (", as.character(latest_week_admissions_title),")")
-colnames(hb_admissions_flu_table)[3] <- paste("Number of admissions (", as.character(previous_week_admissions_title),")")
-colnames(hb_admissions_flu_table)[4] <- paste("Number of admissions (", as.character(previous_2week_admissions_title),")")
+colnames(hb_admissions_flu_table)[4] <- paste("Rate of admissions per 100k (", as.character(latest_week_admissions_title),")")
+colnames(hb_admissions_flu_table)[3] <- paste("Rate of admissions per 100k (", as.character(previous_week_admissions_title),")")
+colnames(hb_admissions_flu_table)[2] <- paste("Rate of admissions per 100k (", as.character(previous_2week_admissions_title),")")
 
 
 
 output$influenza_admissions_hb_table <- renderDataTable({
   hb_admissions_flu_table %>%
-    make_table(.,
+   # select(1, rev(2:ncol(.))) %>% 
+    make_summary_table(.,
+               add_separator_cols_1dp = c(2, 3, 4),
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
                maxrows=15,

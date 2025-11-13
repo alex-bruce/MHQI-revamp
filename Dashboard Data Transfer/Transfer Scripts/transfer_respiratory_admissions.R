@@ -99,8 +99,8 @@ hb_last_three_weeks <- expand.grid(health_board_of_treatment=unique(HealthBoardN
 
 g_respiratory_hb_admissions_3wks <- hb_last_three_weeks %>%
   left_join(g_respiratory_hb_admissions, by=c("health_board_of_treatment","week_ending", "admission_type")) %>% 
-  select(-c("NRS_population_estimate", "rate")) %>% 
-  replace_na(list(n = 0))
+  select(-c("NRS_population_estimate", "n")) %>% 
+  replace_na(list(n = 0, rate = 0))
 
 write.csv(g_respiratory_hb_admissions_3wks, glue(output_folder, "admissions_hb_all_path_3wks.csv"), row.names = FALSE)
 

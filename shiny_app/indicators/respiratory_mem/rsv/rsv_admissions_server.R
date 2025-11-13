@@ -111,20 +111,21 @@ output$rsv_admissions_table <- renderDataTable({
 # RSV admissions by HB table
 hb_admissions_rsv_table <- admissions_hb_all_path_3wks %>%
   filter(admission_type == "rsv") %>% 
-  arrange(desc(week_ending)) %>%
-  pivot_wider(names_from = week_ending, values_from = n) %>% 
+  arrange(week_ending) %>%
+  pivot_wider(names_from = week_ending, values_from = rate) %>% 
   select(-admission_type)
 
 colnames(hb_admissions_rsv_table)[1] <- paste("Health board of treatment")
-colnames(hb_admissions_rsv_table)[2] <- paste("Number of admissions (", as.character(latest_week_admissions_title),")")
-colnames(hb_admissions_rsv_table)[3] <- paste("Number of admissions (", as.character(previous_week_admissions_title),")")
-colnames(hb_admissions_rsv_table)[4] <- paste("Number of admissions (", as.character(previous_2week_admissions_title),")")
+colnames(hb_admissions_rsv_table)[4] <- paste("Rate of admissions per 100k (", as.character(latest_week_admissions_title),")")
+colnames(hb_admissions_rsv_table)[3] <- paste("Rate of admissions per 100k (", as.character(previous_week_admissions_title),")")
+colnames(hb_admissions_rsv_table)[2] <- paste("Rate of admissions per 100k (", as.character(previous_2week_admissions_title),")")
 
 
 
 output$rsv_admissions_hb_table <- renderDataTable({
   hb_admissions_rsv_table %>%
-    make_table(.,
+    make_summary_table(.,
+               add_separator_cols_1dp = c(2, 3, 4),
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
                maxrows=15,

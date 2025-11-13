@@ -64,7 +64,7 @@ tagList(
                            ),
                            
                            fluidRow(width = 12,
-                                    tagList(h2("Number of acute COVID-19 admissions by NHS Health Board of treatment")),
+                                    tagList(h2("Rate of acute COVID-19 admissions by NHS Health Board of treatment")),
                                     linebreaks(1)),
                            
                            fluidRow(width=12,
