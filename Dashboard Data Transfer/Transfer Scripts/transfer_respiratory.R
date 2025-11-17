@@ -87,7 +87,7 @@ for (filename in filenames){
 
 ##  create dictionaries so we can make new column names with meaningful data for user
 flu <- c("fluaorb", "h1n1", "typea", "typeah3", "typeb", "unknowna")
-nonflu <- c("adeno", "coron", "hmpv", "mpn", "para", "rhino", "rsv")
+nonflu <- c("adeno", "coron", "hmpv", "mpn", "para", "rhino", "rsv", "Covid-19")
 
 healthboards <- c("AA" = "S08000015",
                   "BR" = "S08000016",
@@ -116,7 +116,8 @@ organism <- c("fluaorb" = "Influenza - Type A or B",
               "mpn" = "Mycoplasma pneumoniae",
               "para" = "Parainfluenza virus",
               "rhino" = "Rhinovirus",
-              "rsv" = "Respiratory syncytial virus")
+              "rsv" = "Respiratory syncytial virus",
+              "Covid-19" = "Covid-19")
 
 for(filename in filenames) {
 
@@ -478,7 +479,8 @@ case_rates_age <- case_rates_age_template %>%
                            "mpn" = "Mycoplasma pneumoniae",
                            "para" = "Parainfluenza virus",
                            "rhino" = "Rhinovirus",
-                           "rsv" = "Respiratory syncytial virus")) %>%
+                           "rsv" = "Respiratory syncytial virus",
+                           "Covid-19" = "Covid-19")) %>%
   mutate(WeekEnding = gsub("-", "", as.character(WeekEnding)),
          WeekBeginning = gsub("-", "", as.character(WeekBeginning))) %>%
   mutate(WeekEnding = as.numeric(as.character(WeekEnding)),
@@ -564,7 +566,8 @@ case_rates_scotland_mem <- cases_scotland_template %>%
                            "Mycoplasma pneumoniae" = "Mycoplasma Pneumoniae",
                            "Respiratory syncytial virus" = "Respiratory Syncytial Virus",
                            "Parainfluenza virus" = "Parainfluenza Virus",
-                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus")) %>%
+                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus",
+                           "Covid-19" = "Covid-19")) %>%
   select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, Pathogen, RatePer100000,
          ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
   arrange(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, Pathogen)
@@ -597,7 +600,8 @@ case_rates_hb_mem <- case_rates_hb_template %>%
                            "Mycoplasma pneumoniae" = "Mycoplasma Pneumoniae",
                            "Respiratory syncytial virus" = "Respiratory Syncytial Virus",
                            "Parainfluenza virus" = "Parainfluenza Virus",
-                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus")) %>%
+                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus",
+                           "Covid-19" = "Covid-19")) %>%
   select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, HBCode, HB, HBName, Pathogen, RatePer100000,
          ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
   arrange(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, HBCode, HB, HBName, Pathogen)
@@ -637,7 +641,8 @@ case_rates_age_mem <- case_rates_age_template %>%
                            "Mycoplasma pneumoniae" = "Mycoplasma Pneumoniae",
                            "Respiratory syncytial virus" = "Respiratory Syncytial Virus",
                            "Parainfluenza virus" = "Parainfluenza Virus",
-                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus")) %>%
+                           "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus",
+                           "Covid-19" = "Covid-19")) %>%
   select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, AgeGroup, Pathogen, RatePer100000,
          ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
   bind_rows(case_rates_scotland_mem) %>%
@@ -713,7 +718,8 @@ write_csv(case_rates_age_mem, glue(output_folder, "Respiratory_Pathogens_MEM_Age
                              "mpn" = "Mycoplasma pneumoniae",
                              "para" = "Parainfluenza virus",
                              "rhino" = "Rhinovirus",
-                             "rsv" = "Respiratory syncytial virus"),
+                             "rsv" = "Respiratory syncytial virus",
+                             "Covid-19" = "Covid-19"),
            AgeGroup = paste0(AgeGroup, " years")) %>%
    group_by(season, organism, pop, AgeGroup, flu_nonflu) %>%
    summarise(SeasonCount=sum(count)) %>%
