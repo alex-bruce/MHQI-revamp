@@ -154,7 +154,7 @@ content = tags$ul(tags$li("This is a plot showing the rate of laboratory-confirm
 
 # Low threshold
 covid_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
-  filter(Pathogen == "COVID-19") %>%
+  filter(Pathogen == "Covid-19") %>%
   select(LowThreshold) %>%
   distinct() %>%
   .$LowThreshold %>%
@@ -162,7 +162,7 @@ covid_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
 
 # Moderate threshold
 covid_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
-  filter(Pathogen == "COVID-19") %>%
+  filter(Pathogen == "Covid-19") %>%
   select(MediumThreshold) %>%
   distinct() %>%
   .$MediumThreshold %>%
@@ -170,7 +170,7 @@ covid_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
 
 # High threshold
 covid_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
-  filter(Pathogen == "COVID-19") %>%
+  filter(Pathogen == "Covid-19") %>%
   select(HighThreshold) %>%
   distinct() %>%
   .$HighThreshold %>%
@@ -178,7 +178,7 @@ covid_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
 
 # Extraordinary
 covid_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
-  filter(Pathogen == "COVID-19") %>%
+  filter(Pathogen == "Covid-19") %>%
   select(ExtraordinaryThreshold) %>%
   distinct() %>%
   .$ExtraordinaryThreshold %>%
@@ -208,7 +208,7 @@ altTextServer("covid_mem_modal",
 # Covid MEM table
 output$covid_mem_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Scot %>%
-    filter(Pathogen == "COVID-19") %>%
+    filter(Pathogen == "Covid-19") %>%
     filter(Season >= "2023/2024") %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, RatePer100000, ActivityLevel) %>%
@@ -230,7 +230,7 @@ output$covid_mem_table <- renderDataTable({
 # Covid MEM plot
 output$covid_mem_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Scot %>%
-    filter(Pathogen == "COVID-19") %>%
+    filter(Pathogen == "Covid-19") %>%
     filter(Season >= "2023/2024") %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
@@ -266,7 +266,7 @@ altTextServer("covid_mem_hb_modal",
 # COVID-19 MEM by HB table
 output$covid_mem_hb_table <- renderDataTable({
   Respiratory_Pathogens_MEM_HB %>%
-    filter(Pathogen == "COVID-19") %>%
+    filter(Pathogen == "Covid-19") %>%
     filter(Season >= "2023/2024") %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
@@ -290,7 +290,7 @@ output$covid_mem_hb_table <- renderDataTable({
 # COVID-19 MEM by HB plot
 output$covid_mem_hb_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_HB %>%
-    filter(Pathogen == "COVID-19") %>%
+    filter(Pathogen == "Covid-19") %>%
     filter(Season >= "2023/2024") %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
@@ -326,7 +326,7 @@ altTextServer("covid_mem_age_modal",
 # COVID-19 MEM by Age table
 output$covid_mem_age_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Age %>%
-    filter(Pathogen == "COVID-19") %>%
+    filter(Pathogen == "Covid-19") %>%
     filter(Season >= "2023/2024") %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
@@ -350,7 +350,7 @@ output$covid_mem_age_table <- renderDataTable({
 # COVID-19 MEM by Age plot
 output$covid_mem_age_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Age %>%
-    filter(Pathogen == "COVID-19") %>%
+    filter(Pathogen == "Covid-19") %>%
     filter(Season >= "2023/2024") %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
