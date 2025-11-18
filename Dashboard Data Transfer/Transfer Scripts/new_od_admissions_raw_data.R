@@ -54,7 +54,8 @@ i_admsn_covid19_flu_rsv_ageGp_Sex<-
   read_csv(paste0(file_paths$Data$Dashboard_input_folder,
                   "age_sex_weekly_adm_all paths.csv")) %>% 
   select(WeekBeginning=week_start, WeekEnding,
-         Pathogen,AgeGroup,Sex,NumberAdmissionsPerWeek=Count)
+         Pathogen,AgeGroup,Sex,NumberAdmissionsPerWeek=Count,
+         RateAdmissionsPerWeek=Rate,Population)
 
 
 
@@ -63,10 +64,10 @@ i_admsn_covid19_flu_rsv_ageGp_Sex<-
 i_admsn_all_resp_hb<-
   read_csv(paste0(file_paths$Data$Dashboard_input_folder,
                   od_admsn_date," - hb summary - all path.csv")) %>% 
-  mutate(Pathogen="Influenza (All)") %>% 
   select(WeekEnding=week_ending,Pathogen=admission_type,
          NumberAdmissionsPerWeek=n,
-         HB=health_board_of_treatment) %>% 
+         HB=health_board_of_treatment,RateAdmissionsPerWeek=rate,
+         Population=NRS_population_estimate) %>% 
   #only covid19,flu,rsv
   filter(Pathogen %in% c ("cov","flu","rsv")) %>% 
   mutate(Pathogen=recode(Pathogen,
@@ -87,8 +88,7 @@ i_admsn_all_resp_hb<-
 i_admsn_covid19_flu_rsv_simd<-
   read_csv(paste0(file_paths$Data$Dashboard_input_folder,
                   od_admsn_date," - simd summary - all path.csv")) %>% 
-  mutate(Pathogen="Influenza (All)") %>% 
-  select(WeekEnding=date,simd,contains("Total"))
+ select(WeekEnding=date,everything())
 
 
 gc()
