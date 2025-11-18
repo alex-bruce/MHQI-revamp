@@ -23,6 +23,7 @@ altTextServer("covid_positivity_modal",
 output$covid_positivity_table <- renderDataTable({
   Respiratory_Pathogens_Test_Positivity %>%
     filter(pathogen == "Covid-19") %>%
+    filter(season >= "2023/2024") %>%
     dplyr::rename(`Year` = year,
                   `Season` = season,
                   `ISO Week` = ISOweek,
@@ -36,6 +37,7 @@ output$covid_positivity_table <- renderDataTable({
 
 output$covid_positivity_plot <- renderPlotly({
   Respiratory_Pathogens_Test_Positivity %>%
+    filter(season >= "2023/2024") %>%
     create_test_pos_seasons_linechart(., "Covid-19")
 
 })
