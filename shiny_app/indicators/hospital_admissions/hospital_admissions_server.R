@@ -22,21 +22,32 @@ observeEvent(input$glossary,
 # Hospital admissions ----
 
 altTextServer("hospital_admissions_modal",
-              title = "Weekly number of COVID-19 hospital admissions",
-              content = tags$ul(tags$li("This is a plot of weekly COVID-19 hospital admissions."),
-                                tags$li("The x axis is the date, starting 01 Mar 2020."),
-                                tags$li("The y axis is the number of admissions in that week."),
-                                tags$li("There is one blue trace, which shows the number of",
-                                        "hospital admissions."),
-                                tags$li("The data for the most recent week are provisional and displayed in grey."),
-                                tags$li("There are two vertical lines: the first denotes that prior to 5 Jan 2022 ",
-                                        "reported cases are PCR only, and since then they include PCR and LFD cases; ",
-                                        "the second marks the change in testing policy on 1 May 2022."),
-                                tags$li("There have been several peaks since the start of the pandemic, notably in",
-                                        "Apr 2020, Oct 2020, Jan 2021, Jul 2021, Sep 2021,",
-                                        "Jan 2022, Mar 2022, Jun 2022, Jan 2023 and Mar 2023.")
+              title = "Weekly rate of COVID-19 hospital admissions in Scotland",
+              content = tags$ul(tags$li("This is a plot showing the weekly rate of COVID-19 hospital admissions in Scotland."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),
+                                tags$li("The y axis shows the rate of hospital admissions per 100,000."),
+                                tags$li(glue("There is a trace for each of the following seasons from ", 
+                                             flu_adm_seasons[1], " to ", flu_adm_seasons[6], ".")),
+                                tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")
               )
 )
+# altTextServer("hospital_admissions_modal",
+#               title = "Weekly number of COVID-19 hospital admissions",
+#               content = tags$ul(tags$li("This is a plot of weekly COVID-19 hospital admissions."),
+#                                 tags$li("The x axis is the date, starting 01 Mar 2020."),
+#                                 tags$li("The y axis is the number of admissions in that week."),
+#                                 tags$li("There is one blue trace, which shows the number of",
+#                                         "hospital admissions."),
+#                                 tags$li("The data for the most recent week are provisional and displayed in grey."),
+#                                 tags$li("There are two vertical lines: the first denotes that prior to 5 Jan 2022 ",
+#                                         "reported cases are PCR only, and since then they include PCR and LFD cases; ",
+#                                         "the second marks the change in testing policy on 1 May 2022."),
+#                                 tags$li("There have been several peaks since the start of the pandemic, notably in",
+#                                         "Apr 2020, Oct 2020, Jan 2021, Jul 2021, Sep 2021,",
+#                                         "Jan 2022, Mar 2022, Jun 2022, Jan 2023 and Mar 2023.")
+#               )
+# )
 
 altTextServer("hospital_admissions_age_modal",
               title = "COVID-19 hospital admission rate per 100,000 population by age group",
@@ -151,23 +162,52 @@ altTextServer("covid_adm_age_sex",
 # 
 # })
 
-# Table
-output$hospital_admissions_table <- renderDataTable({
-  all_pathogen_admissions %>%
-    select(Date, cov) %>%
-    rename(AdmissionDate = Date,
-           TotalInfections = cov) %>%
-    arrange(desc(AdmissionDate)) %>%
-    mutate(ProvisionalFlag = ifelse(row_number() == 1, "p", " ")) %>%
-    mutate(ProvisionalFlag = factor(ProvisionalFlag)) %>%
-    select(AdmissionDate, TotalInfections,  ProvisionalFlag) %>%
-    dplyr::rename(`Week of Admission` = AdmissionDate,
-                  `Number of admissions` = TotalInfections,
-                  `Is data provisional (p)?` = ProvisionalFlag) %>%
-    make_table(add_separator_cols = 2,
-               filter_cols = 3)
-  
+## Organise Covid data into the right format for the plot and table
+
+
+Cov_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, cov, cov_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = cov,
+         RatePer100000 = cov_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+        Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                            ISOWeek < 40 ~ ISOWeek + 13))
+
+# COVID admissions table
+output$hopsital_admissions_table <- renderDataTable({
+  Cov_admissions %>%
+    filter(Season %in% flu_adm_seasons) %>%
+    arrange(desc(Date)) %>%
+    select(Season, ISOWeek, RatePer100000) %>%
+    mutate(Season = factor(Season),
+           RatePer100000 = round(RatePer100000, 1),
+           ISOWeek = factor(ISOWeek)) %>%
+    rename(`ISO Week` = ISOWeek,
+           `Admission Rate per 100k` = RatePer100000) %>%
+    make_table(filter_cols = c(1,2))
 })
+
+# output$hospital_admissions_table <- renderDataTable({
+#   all_pathogen_admissions %>%
+#     select(Date, cov) %>%
+#     rename(AdmissionDate = Date,
+#            TotalInfections = cov) %>%
+#     arrange(desc(AdmissionDate)) %>%
+#     mutate(ProvisionalFlag = ifelse(row_number() == 1, "p", " ")) %>%
+#     mutate(ProvisionalFlag = factor(ProvisionalFlag)) %>%
+#     select(AdmissionDate, TotalInfections,  ProvisionalFlag) %>%
+#     dplyr::rename(`Week of Admission` = AdmissionDate,
+#                   `Number of admissions` = TotalInfections,
+#                   `Is data provisional (p)?` = ProvisionalFlag) %>%
+#     make_table(add_separator_cols = 2,
+#                filter_cols = 3)
+#   
+# })
 
 # # Plot
 # output$hospital_admissions_plot <- renderPlotly({
@@ -176,19 +216,27 @@ output$hospital_admissions_table <- renderDataTable({
 # 
 # })
 
-# Plot
+# RSV Adms plot
 output$hospital_admissions_plot <- renderPlotly({
-  all_pathogen_admissions %>%
-    select(Date, cov) %>%
-    rename(AdmissionDate = Date,
-           TotalInfections = cov) %>%
-    arrange(desc(AdmissionDate)) %>%
-    mutate(ProvisionalFlag = ifelse(row_number() == 1, 1, 0)) %>%
-    select(AdmissionDate, TotalInfections,  ProvisionalFlag) %>%
-    mutate(AdmissionDate = as.numeric(format(AdmissionDate, "%Y%m%d"))) %>%
-    make_hospital_admissions_plot()
+  Cov_admissions %>%
+    
+    create_pathogen_adms_linechart()
   
 })
+
+# # Plot
+# output$hospital_admissions_plot <- renderPlotly({
+#   all_pathogen_admissions %>%
+#     select(Date, cov) %>%
+#     rename(AdmissionDate = Date,
+#            TotalInfections = cov) %>%
+#     arrange(desc(AdmissionDate)) %>%
+#     mutate(ProvisionalFlag = ifelse(row_number() == 1, 1, 0)) %>%
+#     select(AdmissionDate, TotalInfections,  ProvisionalFlag) %>%
+#     mutate(AdmissionDate = as.numeric(format(AdmissionDate, "%Y%m%d"))) %>%
+#     make_hospital_admissions_plot()
+#   
+# })
 
 #### WEEKLY ADMISSIONS BY AGE
 

@@ -5,15 +5,27 @@ metadataButtonServer(id="respiratory_rsv_admissions",
 # Get recent seasons
 rsv_adm_seasons <- tail(sort(unique(RSV_admissions$Season)), 6)
 
-
 altTextServer("rsv_admissions_modal",
-              title = "RSV hospital admissions in Scotland",
-              content = tags$ul(tags$li("This is a plot showing the number of RSV hospital admissions in Scotland."),
+              title = "Wekly rate of RSV hospital admissions in Scotland",
+              content = tags$ul(tags$li("This is a plot showing the weekly rate of RSV hospital admissions in Scotland."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the number of hospital admissions."),
-                                tags$li(glue("There is a trace for each of the following season from ", 
-                                             rsv_adm_seasons[1], " to ", rsv_adm_seasons[6], "."))))
+                                tags$li("The y axis shows the rate of hospital admissions per 100,000."),
+                                tags$li(glue("There is a trace for each of the following seasons from ", 
+                                             flu_adm_seasons[1], " to ", flu_adm_seasons[6], ".")),
+                                tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")
+              )
+)
+
+
+# altTextServer("rsv_admissions_modal",
+#               title = "RSV hospital admissions in Scotland",
+#               content = tags$ul(tags$li("This is a plot showing the number of RSV hospital admissions in Scotland."),
+#                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+#                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
+#                                 tags$li("The y axis shows the number of hospital admissions."),
+#                                 tags$li(glue("There is a trace for each of the following season from ", 
+#                                              rsv_adm_seasons[1], " to ", rsv_adm_seasons[6], "."))))
 
 altTextServer("rsv_admissions_age_modal",
               title = "RSV hospital admission rate per 100,000 population by age group",
@@ -65,10 +77,12 @@ output$rsv_admissions_table <- renderDataTable({
   RSV_admissions %>%
     filter(Season %in% flu_adm_seasons) %>%
     arrange(desc(Date)) %>%
-    select(Season, ISOWeek, Admissions) %>%
+    select(Season, ISOWeek, RatePer100000) %>%
     mutate(Season = factor(Season),
+           RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
-    rename(`ISO Week` = ISOWeek) %>%
+    rename(`ISO Week` = ISOWeek,
+           `Admission Rate per 100k` = RatePer100000) %>%
     make_table(filter_cols = c(1,2))
 })
 

@@ -65,6 +65,8 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
                                      h6("hidden text for padding page")
                             )))), # headline
 
+    tagList(h2("Rate of acute influenza hospital admissions in Scotland")),
+
 #  fluidRow(width = 12,
 #           tagList(h2("Number of acute influenza admissions to hospital"))),
 

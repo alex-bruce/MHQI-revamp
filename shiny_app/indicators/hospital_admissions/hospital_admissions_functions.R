@@ -13,104 +13,104 @@
 # (i.e.not over the proxy Monday date point). To do this the  wrangle creates **a 3rd dataframe**
 # that only contains the last Sunday's datafor use asthe hover text (but it has no line element)
 
-make_hospital_admissions_plot <- function(data){
-
-  # Wrangle Data
-  data <-data %>%
-    arrange(desc(AdmissionDate)) %>%
-    mutate(AdmissionDate = convert_opendata_date(AdmissionDate))
-
-  # slice last two weeks of data for use in provisional line on chart
-  prov_data_2wk<-  slice_head(data, n = 2) %>% 
-    select(AdmissionDate, TotalInfections) 
-  
-  min_last_sun_date <- min(prov_data_2wk$AdmissionDate) # use to create proxy date
-  
-  prov_data_2wk%<>%
-    mutate(proxy_day = ifelse(AdmissionDate == min_last_sun_date ,  1, 0)) %>% # use to add a day to the start of the dataframe
-    mutate(AdmissionDate_Adj= AdmissionDate+proxy_day) %>% 
-    select(AdmissionDate=AdmissionDate_Adj, TotalInfections) # provisional proxy now has a day gap between it and the non-provional data
-  
-  # Provisional data used for hover text
-  prov_data_1wk <- data %>%
-    filter(ProvisionalFlag == 1) %>%
-    select(AdmissionDate, TotalInfections)
-
-  # Remainder of the data
-  non_prov_data <- data %>%
-    filter(ProvisionalFlag == 0) %>%
-    select(AdmissionDate, TotalInfections)
-
-  # Create axis titles
-  yaxis_title <- "Number of admissions"
-  xaxis_title <- ""
-
-  #Modifying standard layout
-  yaxis_plots[["title"]] <- yaxis_title
-  xaxis_plots[["title"]] <- xaxis_title
-
-  # Adding slider
-  #xaxis_plots[["rangeslider"]] <- list(type = "date")
-  yaxis_plots[["fixedrange"]] <- FALSE
-
-  #Text for tooltip
-  tooltip_trend <- c(paste0("Week ending: ", format(non_prov_data$AdmissionDate, "%d %b %y"),
-                            "<br>", "Admissions: ", non_prov_data$TotalInfections))
-                           
-  # Text for tooltip (provisional data, using 1 week dataframe)
-  tooltip_trend_prov <- c(paste0("Provisional data: ",
-                                 "<br>", "Week ending: ", format(prov_data_1wk$AdmissionDate, "%d %b %y"),
-                                 "<br>", "Admissions: ", prov_data_1wk$TotalInfections))
-
-    
-    # #Creating time trend plot
-    p <- plot_ly(non_prov_data, x = ~AdmissionDate) %>%
-    add_lines(y = ~TotalInfections,
-              line = list(color = "navy"),
-              text = tooltip_trend, hoverinfo = "text",
-              name = "Weekly hospital admissions") %>%
-
-    # # Add in provisional data using 2 weeks of data
-    add_lines(data = prov_data_2wk,
-              x = ~AdmissionDate,
-              y = ~TotalInfections,
-              line = list(color = phs_colours("phs-graphite-50"),
-                          dash = "dash"), # make it dashed to mask the "missing day" of data
-              hoverinfo = "none", # no hover for this line
-    # text = tooltip_trend_prov, hoverinfo = "text",
-     name = "Weekly hospital admissions (provisional)") %>%
-    # 
-    # # Add in provisional dataframe with only the Sunday for use in the hover text
-    add_lines(data = prov_data_1wk,
-              x = ~AdmissionDate,
-              y = ~TotalInfections,
-              line = list(color = phs_colours("phs-graphite-50")),
-              text = tooltip_trend_prov, hoverinfo = "text",
-              showlegend = FALSE 
-              ) %>%
-
-  # Add in vertical lines
-    # Adding vertical lines for notes on chart
-    add_lines_and_notes(dataframe = data,
-                        ycol = "TotalInfections",
-                        xs= c("2022-01-06", "2022-05-01"),
-                        notes=c("From 5 Jan cases  include PCR + LFD",
-                                "Change in testing policy on 1 May"),
-                        colors=c(phs_colours("phs-teal"),
-                                 phs_colours("phs-purple"))) %>%
-  # Add layout and config
-    layout(margin = list(b = 80, t = 5),
-                yaxis = yaxis_plots, xaxis = xaxis_plots,
-           legend = list(xanchor = "center", x = 0.5, y = -0.2, orientation = 'h'),
-                paper_bgcolor = phs_colours("phs-liberty-10"),
-                plot_bgcolor = phs_colours("phs-liberty-10")) %>%
-    config(displaylogo = FALSE, displayModeBar = TRUE,
-           modeBarButtonsToRemove = bttn_remove)
-
-
-  return(p)
-
-}
+# make_hospital_admissions_plot <- function(data){
+# 
+#   # Wrangle Data
+#   data <-data %>%
+#     arrange(desc(AdmissionDate)) %>%
+#     mutate(AdmissionDate = convert_opendata_date(AdmissionDate))
+# 
+#   # slice last two weeks of data for use in provisional line on chart
+#   prov_data_2wk<-  slice_head(data, n = 2) %>% 
+#     select(AdmissionDate, TotalInfections) 
+#   
+#   min_last_sun_date <- min(prov_data_2wk$AdmissionDate) # use to create proxy date
+#   
+#   prov_data_2wk%<>%
+#     mutate(proxy_day = ifelse(AdmissionDate == min_last_sun_date ,  1, 0)) %>% # use to add a day to the start of the dataframe
+#     mutate(AdmissionDate_Adj= AdmissionDate+proxy_day) %>% 
+#     select(AdmissionDate=AdmissionDate_Adj, TotalInfections) # provisional proxy now has a day gap between it and the non-provional data
+#   
+#   # Provisional data used for hover text
+#   prov_data_1wk <- data %>%
+#     filter(ProvisionalFlag == 1) %>%
+#     select(AdmissionDate, TotalInfections)
+# 
+#   # Remainder of the data
+#   non_prov_data <- data %>%
+#     filter(ProvisionalFlag == 0) %>%
+#     select(AdmissionDate, TotalInfections)
+# 
+#   # Create axis titles
+#   yaxis_title <- "Number of admissions"
+#   xaxis_title <- ""
+# 
+#   #Modifying standard layout
+#   yaxis_plots[["title"]] <- yaxis_title
+#   xaxis_plots[["title"]] <- xaxis_title
+# 
+#   # Adding slider
+#   #xaxis_plots[["rangeslider"]] <- list(type = "date")
+#   yaxis_plots[["fixedrange"]] <- FALSE
+# 
+#   #Text for tooltip
+#   tooltip_trend <- c(paste0("Week ending: ", format(non_prov_data$AdmissionDate, "%d %b %y"),
+#                             "<br>", "Admissions: ", non_prov_data$TotalInfections))
+#                            
+#   # Text for tooltip (provisional data, using 1 week dataframe)
+#   tooltip_trend_prov <- c(paste0("Provisional data: ",
+#                                  "<br>", "Week ending: ", format(prov_data_1wk$AdmissionDate, "%d %b %y"),
+#                                  "<br>", "Admissions: ", prov_data_1wk$TotalInfections))
+# 
+#     
+#     # #Creating time trend plot
+#     p <- plot_ly(non_prov_data, x = ~AdmissionDate) %>%
+#     add_lines(y = ~TotalInfections,
+#               line = list(color = "navy"),
+#               text = tooltip_trend, hoverinfo = "text",
+#               name = "Weekly hospital admissions") %>%
+# 
+#     # # Add in provisional data using 2 weeks of data
+#     add_lines(data = prov_data_2wk,
+#               x = ~AdmissionDate,
+#               y = ~TotalInfections,
+#               line = list(color = phs_colours("phs-graphite-50"),
+#                           dash = "dash"), # make it dashed to mask the "missing day" of data
+#               hoverinfo = "none", # no hover for this line
+#     # text = tooltip_trend_prov, hoverinfo = "text",
+#      name = "Weekly hospital admissions (provisional)") %>%
+#     # 
+#     # # Add in provisional dataframe with only the Sunday for use in the hover text
+#     add_lines(data = prov_data_1wk,
+#               x = ~AdmissionDate,
+#               y = ~TotalInfections,
+#               line = list(color = phs_colours("phs-graphite-50")),
+#               text = tooltip_trend_prov, hoverinfo = "text",
+#               showlegend = FALSE 
+#               ) %>%
+# 
+#   # Add in vertical lines
+#     # Adding vertical lines for notes on chart
+#     add_lines_and_notes(dataframe = data,
+#                         ycol = "TotalInfections",
+#                         xs= c("2022-01-06", "2022-05-01"),
+#                         notes=c("From 5 Jan cases  include PCR + LFD",
+#                                 "Change in testing policy on 1 May"),
+#                         colors=c(phs_colours("phs-teal"),
+#                                  phs_colours("phs-purple"))) %>%
+#   # Add layout and config
+#     layout(margin = list(b = 80, t = 5),
+#                 yaxis = yaxis_plots, xaxis = xaxis_plots,
+#            legend = list(xanchor = "center", x = 0.5, y = -0.2, orientation = 'h'),
+#                 paper_bgcolor = phs_colours("phs-liberty-10"),data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAbElEQVR4Xs2RQQrAMAgEfZgf7W9LAguybljJpR3wEse5JOL3ZObDb4x1loDhHbBOFU6i2Ddnw2KNiXcdAXygJlwE8OFVBHDgKrLgSInN4WMe9iXiqIVsTMjH7z/GhNTEibOxQswcYIWYOR/zAjBJfiXh3jZ6AAAAAElFTkSuQmCC
+#                 plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+#     config(displaylogo = FALSE, displayModeBar = TRUE,
+#            modeBarButtonsToRemove = bttn_remove)
+# 
+# 
+#   return(p)
+# 
+# }
 
 # Weekly Admissions by SIMD plot
 make_hospital_admissions_simd_plot <- function(data){
@@ -470,4 +470,18 @@ make_age_sex_adm_pyramid_plot <- function(data, title = NULL) {
   fig <- fig %>%
     config(displaylogo = F, displayModeBar = TRUE, modeBarButtonsToRemove = bttn_remove)
   return(fig)
+}
+
+
+## Function to add seasons to covid admissions for plot
+
+add_season <- function(input_data) {
+  input_data %>%
+    mutate(week_start = week_ending - 6,
+           week = ISOweek::ISOweek(week_ending),
+           Season = case_when(str_sub(week, start = -2) < 40 ~
+                                (paste(as.numeric(str_sub(week, end = 4)) -1 , "-",
+                                       as.numeric(str_sub(week, end = 4)), sep="")),
+                              TRUE ~ (paste(as.numeric(str_sub(week, end = 4)),
+                                            "-", as.numeric(str_sub(week, end = 4)) + 1, sep=""))))
 }

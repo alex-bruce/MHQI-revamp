@@ -63,6 +63,7 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
 
 #  fluidRow(width = 12,
 #           tagList(h2("Number of acute RSV admissions to hospital"))),
+            tagList(h2("Rate of acute RSV hospital admissions in Scotland")),
 
   fluidRow(
     tabBox(width = NULL,

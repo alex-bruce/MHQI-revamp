@@ -44,7 +44,8 @@ tagList(
                                                ,
                                             ),
 
-
+                                   tagList(h2("Rate of acute COVID-19 hospital admissions in Scotland")),
+                                   
                            tabBox(width = NULL, type = "pills",
                                   tabPanel("Plot",
                                            tagList(
@@ -55,6 +56,8 @@ tagList(
                                              width=12, linebreaks(1),
                                              p("*Hospital admissions for the most recent week may be incomplete,",
                                                "and should be treated as provisional and interpreted with caution."),
+                                             p("From 5 Jan 2022 cases  include PCR + LFD."),
+                                             p("Change in testing policy on 1 May 2022."),
                                            ))),
                                   tabPanel("Data",
                                            tagList(
