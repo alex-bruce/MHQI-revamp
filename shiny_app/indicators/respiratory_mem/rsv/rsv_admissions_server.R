@@ -1,37 +1,3 @@
-# admissions labels- (matches Respiratory_admissions_summary data set)
-latest_week_admissions_title <-Respiratory_admissions_summary %>%
-  tail(1) %>%
-  select(Date)
-
-# Convert to the correct format
-latest_week_admissions_title$Date<- format(latest_week_admissions_title $Date, "%d %b %y")
-
-# make it a value
-latest_week_admissions_title <- latest_week_admissions_title$Date
-
-previous_week_admissions_title <- Respiratory_admissions_summary %>%
-  filter(CaseDefinition=='RSV') %>%
-  tail(2) %>%
-  filter(Date== min(Date)) %>%
-  select(Date)
-
-# Convert to correct format
-previous_week_admissions_title $Date<- format(previous_week_admissions_title $Date, "%d %b %y")
-
-# make it a value
-previous_week_admissions_title <- previous_week_admissions_title$Date
-
-previous_2week_admissions_title <- Respiratory_admissions_summary %>%
-  filter(CaseDefinition=='RSV') %>%
-  tail(3) %>%
-  filter(Date== min(Date)) %>%
-  select(Date)
-
-# Convert to correct format
-previous_2week_admissions_title $Date<- format(previous_2week_admissions_title $Date, "%d %b %y")
-
-# make it a value
-previous_2week_admissions_title <- previous_2week_admissions_title$Date
 
 
 metadataButtonServer(id="respiratory_rsv_admissions",
@@ -59,7 +25,12 @@ altTextServer("rsv_admissions_age_modal",
                                 tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
-
+altTextServer("rsv_admissions_hb_modal",
+              title = "RSV hospital admission rate per 100,000 population by Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by Health Board."),
+                                tags$li("The x axis is the week ending date."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population.")
+              ))
 
 
 altTextServer("rsv_adm_age_sex",
@@ -108,31 +79,18 @@ output$rsv_admissions_table <- renderDataTable({
     make_table(filter_cols = c(1,2))
 })
 
-# RSV admissions by HB table
-hb_admissions_rsv_table <- admissions_hb_all_path_3wks %>%
-  filter(admission_type == "rsv") %>% 
-  arrange(week_ending) %>%
-  pivot_wider(names_from = week_ending, values_from = rate) %>% 
-  select(-admission_type)
-
-colnames(hb_admissions_rsv_table)[1] <- paste("Health board of treatment")
-colnames(hb_admissions_rsv_table)[4] <- paste("Rate of admissions per 100k (", as.character(latest_week_admissions_title),")")
-colnames(hb_admissions_rsv_table)[3] <- paste("Rate of admissions per 100k (", as.character(previous_week_admissions_title),")")
-colnames(hb_admissions_rsv_table)[2] <- paste("Rate of admissions per 100k (", as.character(previous_2week_admissions_title),")")
-
-
-
+# RSV HB admissions table
 output$rsv_admissions_hb_table <- renderDataTable({
-  hb_admissions_rsv_table %>%
-    make_summary_table(.,
-               add_separator_cols_1dp = c(2, 3, 4),
-               add_separator_cols=NULL, # Column indices to add thousand separators to
-               add_percentage_cols = NULL, # with % symbol and 2dp
-               maxrows=15,
-               order_by_firstcol="desc"
-    )
+  admissions_hb_all_path %>%
+    filter(admission_type == "rsv") %>%
+    filter(health_board_of_treatment %in% input$rsv_adms_selected_boards) %>%
+    arrange(desc(week_ending)) %>%
+    select('Week Ending' = week_ending, 
+           'Health Board' = health_board_of_treatment,
+           'Admission rate per 100k population' = rate) %>%
+    make_table(add_separator_cols_1dp = c(3),
+               filter_cols = c(1,2))
 })
-
 
 
 # RSV admissions by age table
@@ -184,90 +142,13 @@ observeEvent(input$respiratory_season,
              }
 )
 
-
-# HB Table
-# output$rsv_admissions_hb_table <- renderDataTable({
-#   RSV_Admissions_HB_3wks %>%
-#    # filter(WeekEnding %in% adm_hb_dates) %>%
-#     mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
-#     select(WeekEnding, HealthBoardOfTreatment,TotalInfections) %>% 
-#     pivot_wider(names_from = WeekEnding,
-#                 values_from = TotalInfections) %>%
-#     mutate(HealthBoardOfTreatment = factor(HealthBoardOfTreatment,
-#                                            levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
-#                                                       "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
-#                                                       "NHS Tayside", "NHS Western Isles","Golden Jubilee National Hospital", "Scotland"))) %>%
-#     arrange(HealthBoardOfTreatment) %>%
-#     dplyr::rename(`Health Board of treatment` = HealthBoardOfTreatment) %>%
-#     make_summary_table(maxrows = 16)
-# })
-
-#---------------------##
-### RSV adm pyramid ####
-#----------------------#
-# 
-# output$rsv_adm_pyr_title <- renderUI({h3(glue("Acute RSV hospital admissions by age and sex in Scotland; ",
-#                                               input$rsv_age_sex_adm_season))})
-# 
-# 
-# # pyramid plot that shows the breakdown by age and sex
-# output$rsv_adm_age_sex_pyramid_plot = renderPlotly({
-#   Admissions_AgeSex_Season %>%
-#     filter(Pathogen == "rsv",
-#            Sex %in% c("M", "F"),
-#            Season == input$rsv_age_sex_adm_season) %>%
-#     make_age_sex_adm_pyramid_plot # hospital_admissions_functions
-#   
-# })
-# 
-# 
-# output$rsv_adm_age_sex_pyramid_table = renderDataTable({
-#   
-#   rsv_adm_age_sex_pyramid_table <- Admissions_AgeSex_Season %>%
-#     filter(Pathogen  == "rsv",
-#            Season == input$rsv_age_sex_adm_season) %>%
-#     select(Season, AgeGroup, Sex, Rate) %>%
-#     mutate(Season = factor(Season)) %>%
-#     arrange(desc(Season), AgeGroup, Sex) %>%
-#     dplyr::rename("Season" = "Season",
-#                   "Age group" = "AgeGroup",
-#                   "Rate per 100,000" = "Rate") %>%
-#     mutate(Sex = factor(Sex, levels = c("All", "F", "M")),
-#            `Age group` = factor(`Age group`, levels =
-#                                   c("All","Under 18","18-64","65-74","75+"))) %>%
-#     arrange(desc(`Season`), `Age group`, Sex) %>%
-#     make_table(add_separator_cols_1dp = c(4),
-#                filter_cols = c(1,2,3))
-#   
-# })
-
-#--------------------------#
-### LENGTH OF STAY ### ----
-#-------------------------#
-# 
-# # los plot reactive title
-# output$rsv_los_title <- renderUI({h3(glue("RSV length of stay by age group in Season ",
-#                                           input$los_season_flu))})
-# 
-# # Plot
-# output$rsv_los_plot<- renderPlotly({
-#   rsv_los_weekly_plot<-Length_of_Stay_Season %>%
-#     filter(admission_type == "rsv") %>% 
-#     filter(Season == input$los_season_rsv) %>%
-#     make_hospital_admissions_los_plot() #function in "/...../indicators/hospital_admissions/hospital_admissions_functions.R"
-# })
-# # Table
-# output$rsv_los_table <- renderDataTable({
-#   rsv_los_weekly_table<- Length_of_Stay_Weekly %>% 
-#     filter(admission_type == "rsv") %>% 
-#     filter(Season == input$los_season_rsv) %>%
-#     mutate(`Length of stay` = factor(LengthOfStay,
-#                                      levels = c("1 day or less",
-#                                                 "2-3 days", "4-5 days",
-#                                                 "6-7 days", "8+ days"))) %>% 
-#     select(Season,
-#            'Week ending' = AdmissionWeekEnding, 
-#            'Age group' = AgeGroup,
-#            'Length of stay',
-#            'Percent' = PercentageOfAdmissions) })
-
+# RSV Adms by HB plot
+output$rsv_admissions_hb_plot <- renderPlotly({
+  admissions_hb_all_path %>%
+    filter(admission_type == "rsv") %>% 
+    filter(health_board_of_treatment %in% input$rsv_adms_selected_boards) %>%
+    select(week_ending, health_board_of_treatment, rate) %>%
+    arrange(week_ending, health_board_of_treatment) %>%
+    create_pathogen_adms_hb_linechart()
+  
+})

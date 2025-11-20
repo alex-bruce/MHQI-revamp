@@ -2,39 +2,39 @@
 ###########################
 ### HOSPITAL ADMISSIONS ### ----
 ###########################
-# admissions labels- (matches Respiratory_admissions_summary data set)
+#admissions labels- (matches Respiratory_admissions_summary data set)
 latest_week_admissions_title <-Respiratory_admissions_summary %>%
   tail(1) %>%
   select(Date)
 
-# Convert to the correct format
+# # Convert to the correct format
 latest_week_admissions_title$Date<- format(latest_week_admissions_title $Date, "%d %b %y")
-
-# make it a value
+ 
+# # make it a value
 latest_week_admissions_title <- latest_week_admissions_title$Date
-
+ 
 previous_week_admissions_title <- Respiratory_admissions_summary %>%
   filter(CaseDefinition=='RSV') %>%
   tail(2) %>%
   filter(Date== min(Date)) %>%
   select(Date)
-
-# Convert to correct format
+ 
+# # Convert to correct format
 previous_week_admissions_title $Date<- format(previous_week_admissions_title $Date, "%d %b %y")
-
-# make it a value
+ 
+# # make it a value
 previous_week_admissions_title <- previous_week_admissions_title$Date
-
+ 
 previous_2week_admissions_title <- Respiratory_admissions_summary %>%
   filter(CaseDefinition=='RSV') %>%
   tail(3) %>%
   filter(Date== min(Date)) %>%
   select(Date)
-
-# Convert to correct format
+ 
+# # Convert to correct format
 previous_2week_admissions_title $Date<- format(previous_2week_admissions_title $Date, "%d %b %y")
-
-# make it a value
+ 
+# # make it a value
 previous_2week_admissions_title <- previous_2week_admissions_title$Date
 
 metadataButtonServer(id="hospital_admissions",
@@ -73,13 +73,19 @@ altTextServer("hospital_admissions_modal",
 )
 
 altTextServer("hospital_admissions_age_modal",
+              title = "COVID-19 hospital admission rate per 100,000 population by Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by Health Board."),
+                                tags$li("The x axis is the week ending date."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The plot contains a trace showing the admission rate per 100k.")))
+
+altTextServer("hospital_admissions_hb_modal",
               title = "COVID-19 hospital admission rate per 100,000 population by age group",
               content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by age group."),
                                 tags$li("The x axis is the week ending date."),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
                                 tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
-
 
 
 
@@ -256,11 +262,31 @@ output$covid_admissions_age_plot <- renderPlotly({
   
 })
 
+#### WEEKLY ADMISSIONS BY HEALTH BOARD
 
+# COVID-19 HB admissions table
+output$hospital_admissions_hb_table <- renderDataTable({
+  admissions_hb_all_path %>%
+    filter(admission_type == "cov") %>%
+    filter(health_board_of_treatment %in% input$hospital_adms_selected_boards) %>%
+    arrange(desc(week_ending)) %>%
+    select('Week Ending' = week_ending, 
+           'Health Board' = health_board_of_treatment,
+           'Admission rate per 100k population' = rate) %>%
+    make_table(add_separator_cols_1dp = c(3),
+               filter_cols = c(1,2))
+})
 
-
-
-
+# COVID-19 Adms by HB plot
+output$hospital_admissions_hb_plot <- renderPlotly({
+  admissions_hb_all_path %>%
+    filter(admission_type == "cov") %>% 
+    filter(health_board_of_treatment %in% input$hospital_adms_selected_boards) %>%
+    select(week_ending, health_board_of_treatment, rate) %>%
+    arrange(week_ending, health_board_of_treatment) %>%
+    create_pathogen_adms_hb_linechart()
+  
+})
 
 ### WEEKLY ADMISSIONS BY SIMD ### ----
 
@@ -306,28 +332,6 @@ output$hospital_admissions_simd_plot <- renderPlotly({
 
 })
 
-### WEEKLY HB ADMISSIONS Table ### ----
-hb_admissions_cov_table <- admissions_hb_all_path_3wks %>%
-  filter(admission_type == "cov") %>% 
-  arrange(week_ending) %>%
-  pivot_wider(names_from = week_ending, values_from = rate) %>% 
-  select(-admission_type)
-
-colnames(hb_admissions_cov_table)[1] <- paste("Health board of treatment")
-colnames(hb_admissions_cov_table)[4] <- paste("Rate of admissions per 100k (", as.character(latest_week_admissions_title),")")
-colnames(hb_admissions_cov_table)[3] <- paste("Rate of admissions per 100k (", as.character(previous_week_admissions_title),")")
-colnames(hb_admissions_cov_table)[2] <- paste("Rate of admissions per 100k (", as.character(previous_2week_admissions_title),")")
-
-output$hospital_admissions_hb_table <- renderDataTable({
-  hb_admissions_cov_table %>%
-    make_summary_table(.,
-               add_separator_cols_1dp = c(2, 3, 4),
-               add_separator_cols=NULL, # Column indices to add thousand separators to
-               add_percentage_cols = NULL, # with % symbol and 2dp
-               maxrows=15,
-               order_by_firstcol="desc"
-    )
-})
 
 # output$hospital_admissions_hb_table <- renderDataTable({
 #   Admissions_HB_3wks%>%

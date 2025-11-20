@@ -1,37 +1,3 @@
-# admissions labels- (matches Respiratory_admissions_summary data set)
-latest_week_admissions_title <-Respiratory_admissions_summary %>%
-  tail(1) %>%
-  select(Date)
-
-# Convert to the correct format
-latest_week_admissions_title$Date<- format(latest_week_admissions_title $Date, "%d %b %y")
-
-# make it a value
-latest_week_admissions_title <- latest_week_admissions_title$Date
-
-previous_week_admissions_title <- Respiratory_admissions_summary %>%
-  filter(CaseDefinition=='RSV') %>%
-  tail(2) %>%
-  filter(Date== min(Date)) %>%
-  select(Date)
-
-# Convert to correct format
-previous_week_admissions_title $Date<- format(previous_week_admissions_title $Date, "%d %b %y")
-
-# make it a value
-previous_week_admissions_title <- previous_week_admissions_title$Date
-
-previous_2week_admissions_title <- Respiratory_admissions_summary %>%
-  filter(CaseDefinition=='RSV') %>%
-  tail(3) %>%
-  filter(Date== min(Date)) %>%
-  select(Date)
-
-# Convert to correct format
-previous_2week_admissions_title $Date<- format(previous_2week_admissions_title $Date, "%d %b %y")
-
-# make it a value
-previous_2week_admissions_title <- previous_2week_admissions_title$Date
 
 metadataButtonServer(id="respiratory_influenza_admissions",
                      panel="Respiratory infection activity",
@@ -60,6 +26,13 @@ altTextServer("influenza_admissions_age_modal",
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
                                 tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
+
+altTextServer("influenza_admissions_hb_modal",
+              title = "Influenza hospital admission rate per 100,000 population by Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of influenza hospital admission per 100,000 population by Health Board."),
+                                tags$li("The x axis is the week ending date."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population.")
+                                ))
 
 
 altTextServer("flu_adm_age_sex",
@@ -112,30 +85,18 @@ output$influenza_admissions_table <- renderDataTable({
     make_table(filter_cols = c(1,2))
 })
 
-# Make Influenza admissions by HB table
-hb_admissions_flu_table <- admissions_hb_all_path_3wks %>%
-  filter(admission_type == "flu") %>% 
-  arrange((week_ending)) %>%
-  pivot_wider(names_from = week_ending, values_from = rate) %>% 
-  select(-admission_type) 
-  
-colnames(hb_admissions_flu_table)[1] <- paste("Health board of treatment")
-colnames(hb_admissions_flu_table)[4] <- paste("Rate of admissions per 100k (", as.character(latest_week_admissions_title),")")
-colnames(hb_admissions_flu_table)[3] <- paste("Rate of admissions per 100k (", as.character(previous_week_admissions_title),")")
-colnames(hb_admissions_flu_table)[2] <- paste("Rate of admissions per 100k (", as.character(previous_2week_admissions_title),")")
 
-
-
+# Influenza HB admissions table
 output$influenza_admissions_hb_table <- renderDataTable({
-  hb_admissions_flu_table %>%
-   # select(1, rev(2:ncol(.))) %>% 
-    make_summary_table(.,
-               add_separator_cols_1dp = c(2, 3, 4),
-               add_separator_cols=NULL, # Column indices to add thousand separators to
-               add_percentage_cols = NULL, # with % symbol and 2dp
-               maxrows=15,
-               order_by_firstcol="desc"
-    )
+  admissions_hb_all_path %>%
+    filter(admission_type == "flu") %>%
+    filter(health_board_of_treatment %in% input$influenza_adms_selected_boards) %>%
+    arrange(desc(week_ending)) %>%
+    select('Week Ending' = week_ending, 
+           'Health Board' = health_board_of_treatment,
+           'Admission rate per 100k population' = rate) %>%
+    make_table(add_separator_cols_1dp = c(3),
+               filter_cols = c(1,2))
 })
 
 
@@ -146,6 +107,18 @@ output$influenza_admissions_plot <- renderPlotly({
     create_pathogen_adms_linechart()
 
 })
+
+# Influenza Adms by HB plot
+output$influenza_admissions_hb_plot <- renderPlotly({
+  admissions_hb_all_path %>%
+    filter(admission_type == "flu") %>% 
+    filter(health_board_of_treatment %in% input$influenza_adms_selected_boards) %>%
+    select(week_ending, health_board_of_treatment, rate) %>%
+    arrange(week_ending, health_board_of_treatment) %>%
+    create_pathogen_adms_hb_linechart()
+
+})
+
 
 # Influenza admissions by age table
 output$influenza_admissions_age_table <- renderDataTable({

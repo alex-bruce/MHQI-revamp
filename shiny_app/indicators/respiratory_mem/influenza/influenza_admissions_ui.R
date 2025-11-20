@@ -86,19 +86,6 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
     linebreaks(1)
       ), # fluidRow
 
-fluidRow(width = 12,
-         tagList(h2("Rate of influenza admissions by NHS Health Board of treatment")),
-         linebreaks(1)),
-
-fluidRow(width=12,
-         box(width = NULL,
-             withNavySpinner(dataTableOutput("influenza_admissions_hb_table"))),
-         fluidRow(
-           width=12, linebreaks(1))
-         
-),
-
-
 
 tagList(h2("Rate of acute influenza hospital admissions by age group")),
 
@@ -121,7 +108,37 @@ fluidRow(
          
   ), # tabBox
   linebreaks(1)
-), # fluidRow
+), 
+
+fluidRow(width = 12,
+         tagList(h2("Rate of influenza admissions by NHS Health Board of treatment")),
+         linebreaks(1)),
+
+fluidRow(
+  tabBox(width = NULL,
+         selectInput("influenza_adms_selected_boards", "Select NHS Health Board(s) of interest:", 
+                     choices = sort(unique(admissions_hb_all_path$health_board_of_treatment)),
+                     selected = sort(unique(admissions_hb_all_path$health_board_of_treatment))[2],  #using [2] skips over 'National Facility'
+                     multiple = TRUE),
+         type = "pills",
+         tabPanel("Plot",
+                  tagList(linebreaks(1),
+                          altTextUI("influenza_admissions_hb_modal"),
+                          withNavySpinner(plotlyOutput("influenza_admissions_hb_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("influenza_admissions_hb_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+), 
+
+
+
+# fluidRow
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute influenza admissions to hospital by NHS Health Board of Treatment; week ending")),
 #          linebreaks(1)), #fluidRow

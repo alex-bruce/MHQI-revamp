@@ -63,17 +63,7 @@ tagList(
 
                            ),
                            
-                           fluidRow(width = 12,
-                                    tagList(h2("Rate of acute COVID-19 admissions by NHS Health Board of treatment")),
-                                    linebreaks(1)),
                            
-                           fluidRow(width=12,
-                                    box(width = NULL,
-                                        withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))),
-                                    fluidRow(
-                                      width=12, linebreaks(1))
-                                    
-                           ),
                            
                            tagList(h2("Rate of acute COVID-19 hospital admissions by age group")),
                            
@@ -95,10 +85,40 @@ tagList(
                                     
                              ), # tabBox
                              linebreaks(1)
-                           ), # fluidRow
+                           ), 
                            
-
-
+                           fluidRow(width = 12,
+                                    tagList(h2("Rate of COVID-19 admissions by NHS Health Board of treatment")),
+                                    linebreaks(1)),
+                           
+                           fluidRow(
+                             tabBox(width = NULL,
+                                    selectInput("hospital_adms_selected_boards", "Select NHS Health Board(s) of interest:", 
+                                                choices = sort(unique(admissions_hb_all_path$health_board_of_treatment)),
+                                                selected = sort(unique(admissions_hb_all_path$health_board_of_treatment))[2],  #using [2] skips over 'National Facility'
+                                                multiple = TRUE),
+                                    type = "pills",
+                                    tabPanel("Plot",
+                                             tagList(linebreaks(1),
+                                                     altTextUI("hospital_admissions_hb_modal"),
+                                                     withNavySpinner(plotlyOutput("hospital_admissions_hb_plot")),
+                                             )),
+                                    tabPanel("Data",
+                                             tagList(linebreaks(1),
+                                                     withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))
+                                             ) # tagList
+                                    ) # tabPanel
+                                    
+                             ), # tabBox
+                             linebreaks(1)
+                           ), 
+                           
+                           
+                           
+                           # fluidRow
+                           
+                           
+                           
                            #          tagList(h2("Number of acute COVID-19 admissions to hospital by NHS Health Board of treatment; week ending")),
                            # 
                            # 
@@ -106,12 +126,12 @@ tagList(
                            #          box(width = NULL,
                            #              withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))),
                            # ),
-
+                           
                            tagList(h2("Weekly number of acute COVID-19 hospital admissions by deprivation category (SIMD)"))
-
+                           
                            ),
                            br(),
-
+                           
                            tabBox(width = NULL, type = "pills",
                                   tabPanel("Plot",
                                            tagList(
@@ -124,15 +144,15 @@ tagList(
                                              ),
                                              withNavySpinner(
                                                plotlyOutput("hospital_admissions_simd_plot"))
-                                            )
-                                           ),
+                                           )
+                                  ),
                                   tabPanel("Data",
                                            tagList(
                                              withNavySpinner(
                                                dataTableOutput("hospital_admissions_simd_table"))
-                                            )
                                            )
-
+                                  )
+                                  
                            ),
                            tagList(h2("Number of acute COVID-19 admissions to hospital by ethnicity"),
                                    #  temporary caveat for no Ethnicity information
@@ -140,37 +160,37 @@ tagList(
                                            "hospital broken down by ethnic group",
                                            " as we undertake developments",
                                            "to include this analysis for other respiratory pathogens.")),
-##### age/sex admissions pyramid        
-           
-           # #tagList(h2(glue("Acute COVID-19 cases by age and sex in Scotland")),
-           # tagList(uiOutput("cov_adm_pyr_title")),
-           # tabBox(width = NULL,
-           #        type = "pills",
-           #        tabPanel("Plot",
-           #                 tagList(linebreaks(1),
-           #                         fluidRow(column(4, pickerInput("cov_age_sex_adm_season",
-           #                                                        label = "Select a season",
-           #                                                        choices = {Admissions_AgeSex_Season %>% 
-           #                                                            filter(Pathogen == "cov") %>%
-           #                                                            .$Season %>% unique()},
-           #                                                        selected = "2024-2025")  )),#tfluidrow
-           #                                                   altTextUI("covid_adm_age_sex"),
-           #                         withNavySpinner(plotlyOutput("covid_adm_age_sex_pyramid_plot"))
-           #                                                 ) # tagList
-           #                                        ), # tabPanel
-           #        tabPanel("Data",
-           #                 withNavySpinner(dataTableOutput("covid_adm_age_sex_pyramid_table"))) #tabpanel
-           #               ), # tabbox
-           #                         #), #age/sex 
-           #                # ),
-##### LOS section
-tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
-        #  temporary caveat for no LOS information
-        tagList("Public Health Scotland have paused reporting of the Length",
-                "of Stay of acute COVID-19 hospital admissions as we undertake developments",
-                "to include this analysis for other respiratory pathogens.")),
-
-
+                           ##### age/sex admissions pyramid        
+                           
+                           # #tagList(h2(glue("Acute COVID-19 cases by age and sex in Scotland")),
+                           # tagList(uiOutput("cov_adm_pyr_title")),
+                           # tabBox(width = NULL,
+                           #        type = "pills",
+                           #        tabPanel("Plot",
+                           #                 tagList(linebreaks(1),
+                           #                         fluidRow(column(4, pickerInput("cov_age_sex_adm_season",
+                           #                                                        label = "Select a season",
+                           #                                                        choices = {Admissions_AgeSex_Season %>% 
+                           #                                                            filter(Pathogen == "cov") %>%
+                           #                                                            .$Season %>% unique()},
+                           #                                                        selected = "2024-2025")  )),#tfluidrow
+                           #                                                   altTextUI("covid_adm_age_sex"),
+                           #                         withNavySpinner(plotlyOutput("covid_adm_age_sex_pyramid_plot"))
+                           #                                                 ) # tagList
+                           #                                        ), # tabPanel
+                           #        tabPanel("Data",
+                           #                 withNavySpinner(dataTableOutput("covid_adm_age_sex_pyramid_table"))) #tabpanel
+                           #               ), # tabbox
+                           #                         #), #age/sex 
+                           #                # ),
+                           ##### LOS section
+                           tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
+                                   #  temporary caveat for no LOS information
+                                   tagList("Public Health Scotland have paused reporting of the Length",
+                                           "of Stay of acute COVID-19 hospital admissions as we undertake developments",
+                                           "to include this analysis for other respiratory pathogens.")),
+                           
+                           
                            # tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
                            #         tags$div(class = "headline",
                            #                  h3(glue("Median length of stay of acute COVID-19 hospital admissions for 4 week period {los_date_start %>% format('%d %b %y')} to {los_date_end%>% format('%d %b %y')} ")),
@@ -213,13 +233,13 @@ tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
                            #                         withNavySpinner(dataTableOutput("cov_los_table")) )
                            #        ) # tabPanel
                            #        )#tabbox
-### end LOS section
-                           )#tabbox
-                           ), #fluid row
-
-
-
+                           ### end LOS section
+                  )#tabbox
+  ), #fluid row
+  
+  
+  
   # Padding out the bottom of the page
   fluidRow(height="200px", width=12, linebreaks(5))
-
+  
 )#taglist

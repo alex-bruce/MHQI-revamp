@@ -796,6 +796,38 @@ create_pathogen_adms_age_linechart <- function(data){
   return(p)
 }
 
+# Create pathogen HB Adms line chart
+create_pathogen_adms_hb_linechart <- function(data){
+  
+  yaxis_plots[["title"]] <- "Admission rate per 100k"
+  xaxis_plots[["title"]] <- "Week ending"
+  
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  
+  
+  p <- plot_ly(data) %>%
+    add_trace(x = ~week_ending, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
+              type = "scatter", mode = "lines",
+              #color = ~age_band,
+              colors = phs_colours(c("phs-blue")),
+              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+                                     '<b>Health Board</b>: %{text}<br>',
+                                     '<b>Admission rate per 100k</b>: %{y}')
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
+}
+
+
+
 
 make_adms_summary_plot <- function(data){
   
