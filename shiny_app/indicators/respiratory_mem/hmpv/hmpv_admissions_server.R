@@ -1,15 +1,37 @@
+## Organise HMPV admissions data into the right format for the plot and table
 
+
+hmpv_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, hmpv, hmpv_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = hmpv,
+         RatePer100000 = hmpv_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13))
+
+hmpv_adm_seasons <- tail(sort(unique(hmpv_admissions$Season)), 6)
+
+
+## Plot descriptions
 metadataButtonServer(id="respiratory_hmpv_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
 
 altTextServer("hmpv_admissions_modal",
-              title = "HMPV hospital admissions in Scotland",
-              content = tags$ul(tags$li("This is a plot showing the number of HMPV hospital admissions in Scotland."),
+              title = "Weekly rate of HMPV hospital admissions in Scotland",
+              content = tags$ul(tags$li("This is a plot showing the weekly rate of HMPV hospital admissions in Scotland."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the number of hospital admissions.")))
+                                tags$li("The y axis shows the rate of hospital admissions per 100,000."),
+                                tags$li(glue("There is a trace for each of the following seasons from ", 
+                                             hmpv_adm_seasons[1], " to ", hmpv_adm_seasons[6], ".")),
+                                tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")))
 
 altTextServer("hmpv_admissions_age_modal",
               title = "HMPV hospital admission rate per 100,000 population by age group",
@@ -20,14 +42,29 @@ altTextServer("hmpv_admissions_age_modal",
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 
+# # HMPV admissions table
+# output$hmpv_admissions_table <- renderDataTable({
+#     all_pathogen_admissions %>%
+#     arrange(desc(Date)) %>%
+#     select(Season, ISOWeek, Admissions = hmpv) %>%
+#     mutate(Season = factor(Season),
+#            ISOWeek = factor(ISOWeek)) %>%
+#     rename(`ISO Week` = ISOWeek) %>%
+#     make_table(filter_cols = c(1,2))
+# })
+
 # HMPV admissions table
+
 output$hmpv_admissions_table <- renderDataTable({
-    all_pathogen_admissions %>%
+  hmpv_admissions %>%
+    filter(Season %in% adeno_adm_seasons) %>%
     arrange(desc(Date)) %>%
-    select(Season, ISOWeek, Admissions = hmpv) %>%
+    select(Season, ISOWeek, RatePer100000) %>%
     mutate(Season = factor(Season),
+           RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
-    rename(`ISO Week` = ISOWeek) %>%
+    rename(`ISO Week` = ISOWeek,
+           `Admission Rate per 100k` = RatePer100000) %>%
     make_table(filter_cols = c(1,2))
 })
 
@@ -47,14 +84,22 @@ output$hmpv_admissions_age_table <- renderDataTable({
                filter_cols = c(1,2))
 })
 
+# HMPV Adms plot
 
-# MPN Adms plot
 output$hmpv_admissions_plot <- renderPlotly({
-  all_pathogen_admissions %>%
-    select(Date, Year, ISOWeek, Weekord, Season, Admissions = hmpv) %>% 
+  hmpv_admissions %>%
+    
     create_pathogen_adms_linechart()
-
+  
 })
+
+# # MPN Adms plot
+# output$hmpv_admissions_plot <- renderPlotly({
+#   all_pathogen_admissions %>%
+#     select(Date, Year, ISOWeek, Weekord, Season, Admissions = hmpv) %>% 
+#     create_pathogen_adms_linechart()
+# 
+# })
 
 # MPN Adms by age plot
 output$hmpv_admissions_age_plot <- renderPlotly({

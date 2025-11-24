@@ -1,3 +1,22 @@
+## Organise rhinovirus admissions data into the right format for the plot and table
+
+
+rhino_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, rhino, rhino_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = rhino,
+         RatePer100000 = rhino_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13))
+
+rhino_adm_seasons <- tail(sort(unique(rhino_admissions$Season)), 6)
+
+## Plot descriptions
 
 metadataButtonServer(id="respiratory_rhino_admissions",
                      panel="Respiratory infection activity",
@@ -5,11 +24,14 @@ metadataButtonServer(id="respiratory_rhino_admissions",
 
 
 altTextServer("rhino_admissions_modal",
-              title = "Rhinovirus hospital admissions in Scotland",
-              content = tags$ul(tags$li("This is a plot showing the number of rhinovirus hospital admissions in Scotland."),
+              title = "Weekly rate of rhinovirus hospital admissions in Scotland",
+              content = tags$ul(tags$li("This is a plot showing the weekly rate of rhinovirus hospital admissions in Scotland."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the number of hospital admissions.")))
+                                tags$li("The y axis shows the rate of hospital admissions per 100,000."),
+                                tags$li(glue("There is a trace for each of the following seasons from ", 
+                                             rhino_adm_seasons[1], " to ", rhino_adm_seasons[6], ".")),
+                                tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")))
 
 altTextServer("rhino_admissions_age_modal",
               title = "Rhinovirus hospital admission rate per 100,000 population by age group",
@@ -22,12 +44,15 @@ altTextServer("rhino_admissions_age_modal",
 
 # rhinovirus admissions table
 output$rhino_admissions_table <- renderDataTable({
-    all_pathogen_admissions %>%
+  rhino_admissions %>%
+    filter(Season %in% rhino_adm_seasons) %>%
     arrange(desc(Date)) %>%
-    select(Season, ISOWeek, Admissions = rhino) %>%
+    select(Season, ISOWeek, RatePer100000) %>%
     mutate(Season = factor(Season),
+           RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
-    rename(`ISO Week` = ISOWeek) %>%
+    rename(`ISO Week` = ISOWeek,
+           `Admission Rate per 100k` = RatePer100000) %>%
     make_table(filter_cols = c(1,2))
 })
 
@@ -49,11 +74,12 @@ output$rhino_admissions_age_table <- renderDataTable({
 
 
 # rhinovirus Adms plot
-output$rhino_admissions_plot <- renderPlotly({
-  all_pathogen_admissions %>%
-    select(Date, Year, ISOWeek, Weekord, Season, Admissions = rhino) %>% 
-    create_pathogen_adms_linechart()
 
+output$rhino_admissions_plot <- renderPlotly({
+  rhino_admissions %>%
+    
+    create_pathogen_adms_linechart()
+  
 })
 
 # rhinovirus Adms by age plot

@@ -732,6 +732,7 @@ create_pathogen_adms_linechart <- function(data,
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
+  yaxis_plots$tickmode <- "auto"
   
   # xaxis_plots[["showgrid"]] <- FALSE
   # yaxis_plots[["showgrid"]] <- FALSE

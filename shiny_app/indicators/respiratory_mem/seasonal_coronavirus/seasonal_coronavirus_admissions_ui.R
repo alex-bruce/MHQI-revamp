@@ -66,6 +66,8 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
   # fluidRow(width = 12,
   #          tagList(h2("Number of acute adenovirus admissions to hospital"))),
 
+tagList(h2("Rate of acute seasonal coronavirus hospital admissions in Scotland")),
+
    fluidRow(
      tabBox(width = NULL,
             type = "pills",
@@ -73,7 +75,12 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
                      tagList(linebreaks(1),
                              altTextUI("seasonal_coronavirus_admissions_modal"),
                              withNavySpinner(plotlyOutput("seasonal_coronavirus_admissions_plot")),
-                     )),
+                     ),
+                     fluidRow(column(
+                       width=12, linebreaks(1),
+                       p("*Hospital admissions for the most recent week may be incomplete,",
+                         "and should be treated as provisional and interpreted with caution."),
+                     ))),
             tabPanel("Data",
                      tagList(linebreaks(1),
                              withNavySpinner(dataTableOutput("seasonal_coronavirus_admissions_table"))

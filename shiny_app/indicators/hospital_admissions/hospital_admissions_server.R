@@ -21,6 +21,26 @@ observeEvent(input$glossary,
 
 # Hospital admissions ----
 
+## Organise Covid data into the right format for the plot and table
+
+
+Cov_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, cov, cov_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = cov,
+         RatePer100000 = cov_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13))
+
+cov_adm_seasons <- tail(sort(unique(Cov_admissions$Season)), 6)
+
+## Create plot descriptions
+
 altTextServer("hospital_admissions_modal",
               title = "Weekly rate of COVID-19 hospital admissions in Scotland",
               content = tags$ul(tags$li("This is a plot showing the weekly rate of COVID-19 hospital admissions in Scotland."),
@@ -28,7 +48,7 @@ altTextServer("hospital_admissions_modal",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the rate of hospital admissions per 100,000."),
                                 tags$li(glue("There is a trace for each of the following seasons from ", 
-                                             flu_adm_seasons[1], " to ", flu_adm_seasons[6], ".")),
+                                             cov_adm_seasons[1], " to ", cov_adm_seasons[6], ".")),
                                 tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")
               )
 )
@@ -162,26 +182,12 @@ altTextServer("covid_adm_age_sex",
 # 
 # })
 
-## Organise Covid data into the right format for the plot and table
 
-
-Cov_admissions <- age_rate_data_all_path %>% 
-  filter(age_band == "All Ages") %>% 
-  add_season() %>% 
-  select(week_ending, cov, cov_rate, Season) %>% 
-  rename(Date = week_ending,
-         Admissions = cov,
-         RatePer100000 = cov_rate) %>% 
-  mutate(Year = year(Date),
-         ISOWeek = isoweek(Date)) %>% 
-  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
-        Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
-                            ISOWeek < 40 ~ ISOWeek + 13))
 
 # COVID admissions table
-output$hopsital_admissions_table <- renderDataTable({
+output$hospital_admissions_table <- renderDataTable({
   Cov_admissions %>%
-    filter(Season %in% flu_adm_seasons) %>%
+    filter(Season %in% cov_adm_seasons) %>%
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, RatePer100000) %>%
     mutate(Season = factor(Season),
@@ -216,7 +222,7 @@ output$hopsital_admissions_table <- renderDataTable({
 # 
 # })
 
-# RSV Adms plot
+# Covid Adms plot
 output$hospital_admissions_plot <- renderPlotly({
   Cov_admissions %>%
     

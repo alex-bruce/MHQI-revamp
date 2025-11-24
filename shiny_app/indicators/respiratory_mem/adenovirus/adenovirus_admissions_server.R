@@ -1,3 +1,22 @@
+## Organise adenovirus admissions data into the right format for the plot and table
+
+
+adeno_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, adeno, adeno_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = adeno,
+         RatePer100000 = adeno_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13))
+
+adeno_adm_seasons <- tail(sort(unique(adeno_admissions$Season)), 6)
+
+## Plot descriptions
 
 metadataButtonServer(id="respiratory_adenovirus_admissions",
                      panel="Respiratory infection activity",
@@ -5,11 +24,14 @@ metadataButtonServer(id="respiratory_adenovirus_admissions",
 
 
 altTextServer("adenovirus_admissions_modal",
-              title = "Adenovirus hospital admissions in Scotland",
-              content = tags$ul(tags$li("This is a plot showing the number of adenovirus hospital admissions in Scotland."),
+              title = "Weekly rate of adenovirus hospital admissions in Scotland",
+              content = tags$ul(tags$li("This is a plot showing the weekly rate of adenovirus hospital admissions in Scotland."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the number of hospital admissions.")))
+                                tags$li("The y axis shows the rate of hospital admissions per 100,000."),
+                                tags$li(glue("There is a trace for each of the following seasons from ", 
+                                             adeno_adm_seasons[1], " to ", adeno_adm_seasons[6], ".")),
+                                tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")))
 
 altTextServer("adenovirus_admissions_age_modal",
               title = "Adenovirus hospital admission rate per 100,000 population by age group",
@@ -21,13 +43,17 @@ altTextServer("adenovirus_admissions_age_modal",
 
 
 # Adenovirus admissions table
+
 output$adenovirus_admissions_table <- renderDataTable({
-    all_pathogen_admissions %>%
+  adeno_admissions %>%
+    filter(Season %in% adeno_adm_seasons) %>%
     arrange(desc(Date)) %>%
-    select(Season, ISOWeek, Admissions = adeno) %>%
+    select(Season, ISOWeek, RatePer100000) %>%
     mutate(Season = factor(Season),
+           RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
-    rename(`ISO Week` = ISOWeek) %>%
+    rename(`ISO Week` = ISOWeek,
+           `Admission Rate per 100k` = RatePer100000) %>%
     make_table(filter_cols = c(1,2))
 })
 
@@ -49,12 +75,22 @@ output$adenovirus_admissions_age_table <- renderDataTable({
 
 
 # Adenovirus Adms plot
-output$adenovirus_admissions_plot <- renderPlotly({
-  all_pathogen_admissions %>%
-    select(Date, Year, ISOWeek, Weekord, Season, Admissions = adeno) %>% 
-    create_pathogen_adms_linechart()
 
+output$adenovirus_admissions_plot <- renderPlotly({
+  adeno_admissions %>%
+    
+    create_pathogen_adms_linechart()
+  
 })
+
+# output$adenovirus_admissions_plot <- renderPlotly({
+#   all_pathogen_admissions %>%
+#     select(Date, Year, ISOWeek, Weekord, Season, Admissions = adeno) %>% 
+#     create_pathogen_adms_linechart()
+# 
+# })
+
+
 
 # Adenovirus Adms by age plot
 output$adenovirus_admissions_age_plot <- renderPlotly({

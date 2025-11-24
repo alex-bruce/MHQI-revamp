@@ -12,7 +12,7 @@ altTextServer("rsv_admissions_modal",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the rate of hospital admissions per 100,000."),
                                 tags$li(glue("There is a trace for each of the following seasons from ", 
-                                             flu_adm_seasons[1], " to ", flu_adm_seasons[6], ".")),
+                                             rsv_adm_seasons[1], " to ", rsv_adm_seasons[6], ".")),
                                 tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")
               )
 )
@@ -75,7 +75,7 @@ altTextServer("rsv_los_modal",
 # RSV admissions table
 output$rsv_admissions_table <- renderDataTable({
   RSV_admissions %>%
-    filter(Season %in% flu_adm_seasons) %>%
+    filter(Season %in% rsv_adm_seasons) %>%
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, RatePer100000) %>%
     mutate(Season = factor(Season),
