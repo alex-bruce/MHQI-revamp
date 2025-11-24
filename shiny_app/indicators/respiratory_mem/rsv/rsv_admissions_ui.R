@@ -105,6 +105,33 @@ fluidRow(
   ), # tabBox
   linebreaks(1)
 ), # fluidRow
+
+tagList(h2("Rate of acute RSV hospital admissions by deprivation category (SIMD)")),
+
+br(),
+
+tabBox(width = NULL, type = "pills",
+       tabPanel("Plot",
+                tagList(
+                  linebreaks(1),
+                  altTextUI("rsv_admissions_simd_modal"),
+                  actionButton("btn_modal_simd",
+                               label = "What is SIMD?",
+                               class = "simd-btn",
+                               icon = icon_no_warning_fn("circle-question")
+                  ),
+                  withNavySpinner(
+                    plotlyOutput("rsv_admissions_simd_plot"))
+                )
+       ),
+       tabPanel("Data",
+                tagList(
+                  withNavySpinner(
+                    dataTableOutput("rsv_admissions_simd_table"))
+                )
+       )
+       
+),
 # 
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute RSV admissions to hospital by NHS Health Board of Treatment; week ending")),

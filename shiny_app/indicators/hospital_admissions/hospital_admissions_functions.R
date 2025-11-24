@@ -115,13 +115,13 @@
 # Weekly Admissions by SIMD plot
 make_hospital_admissions_simd_plot <- function(data){
 
-  data <- Admissions_SimdTrend
+  #data <- Admissions_SimdTrend
 
   data %<>%
     arrange(desc(WeekEnding)) %>%
     mutate(WeekEnding = convert_opendata_date(WeekEnding))
 
-  yaxis_plots[["title"]] <- "Number of admissions"
+  yaxis_plots[["title"]] <- "Admission rate per 100k"
   xaxis_plots[["title"]] <- "Week ending"
 
   # Adding slider
@@ -129,7 +129,7 @@ make_hospital_admissions_simd_plot <- function(data){
   yaxis_plots[["fixedrange"]] <- FALSE
 
   p <- plot_ly(data) %>%
-    add_trace(x = ~WeekEnding, y = ~NumberOfAdmissions, split = ~SIMD, text=~SIMD,
+    add_trace(x = ~WeekEnding, y = ~RateOfAdmissions, split = ~SIMD, text=~SIMD,
               type="scatter", mode="lines",
               color=~SIMD,
               colors=phs_colours(c("phs-rust", "phs-liberty-30", "phs-liberty-30",

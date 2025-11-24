@@ -98,7 +98,7 @@ tagList(
                            #              withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))),
                            # ),
 
-                           tagList(h2("Weekly number of acute COVID-19 hospital admissions by deprivation category (SIMD)"))
+                           tagList(h2("Rate of acute COVID-19 hospital admissions by deprivation category (SIMD)"))
 
                            ),
                            br(),

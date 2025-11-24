@@ -110,6 +110,34 @@ fluidRow(
   ), # tabBox
   linebreaks(1)
 ), # fluidRow
+
+
+tagList(h2("Rate of acute influenza hospital admissions by deprivation category (SIMD)")),
+
+br(),
+
+tabBox(width = NULL, type = "pills",
+       tabPanel("Plot",
+                tagList(
+                  linebreaks(1),
+                  altTextUI("influenza_admissions_simd_modal"),
+                  actionButton("btn_modal_simd",
+                               label = "What is SIMD?",
+                               class = "simd-btn",
+                               icon = icon_no_warning_fn("circle-question")
+                  ),
+                  withNavySpinner(
+                    plotlyOutput("influenza_admissions_simd_plot"))
+                )
+       ),
+       tabPanel("Data",
+                tagList(
+                  withNavySpinner(
+                    dataTableOutput("influenza_admissions_simd_table"))
+                )
+       )
+       
+),
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute influenza admissions to hospital by NHS Health Board of Treatment; week ending")),
 #          linebreaks(1)), #fluidRow

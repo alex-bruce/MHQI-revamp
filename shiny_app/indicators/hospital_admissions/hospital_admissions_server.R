@@ -81,8 +81,8 @@ altTextServer("hospital_admissions_age_modal",
 
 
 altTextServer("hospital_admissions_simd_modal",
-              title = "Weekly number of COVID-19 hospital admissions by deprivation category (SIMD)",
-              content = tags$ul(tags$li("This is a plot of weekly COVID-19 hospital admissions broken down by SIMD deprivation category."),
+              title = "COVID-19 hospital admission rate per 100,000 population by deprivation category (SIMD)",
+              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by SIMD deprivation category."),
                                 tags$li("SIMD is a relative measure of deprivation across small areas in Scotland.",
                                         "There are equal numbers of data zones in each of the five categories.",
                                         "SIMD 1 contains the 20% most deprived zones and SIMD 5 contains the 20%",
@@ -91,12 +91,12 @@ altTextServer("hospital_admissions_simd_modal",
                                                href="https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/"),
                                         "for more information."),
                                 tags$li("The x axis is the week ending, starting 03 Jan 2021."),
-                                tags$li("The y axis is the number of COVID-19 hospital admissions in that week."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
                                 tags$li("The plot contains a trace for each of the SIMD categories. SIMD 1 is",
                                         "highlighted in red and SIMD 5 in blue. The other categories are in grey."),
-                                tags$li("There have been several peaks throughout the pandemic, notably in",
-                                        "Apr 2020, Oct 2020, Jan 2021, Jul 2021, Sep 2021,",
-                                        "Jan 2022, Mar 2022, Jun 2022, Jan 2023 and Mar 2023.")
+                                # tags$li("There have been several peaks throughout the pandemic, notably in",
+                                #         "Apr 2020, Oct 2020, Jan 2021, Jul 2021, Sep 2021,",
+                                #         "Jan 2022, Mar 2022, Jun 2022, Jan 2023 and Mar 2023.")
               )
 )
 
@@ -306,26 +306,32 @@ observeEvent(input$btn_modal_simd, { showModal(simd_modal) })
 
 # Table
 output$hospital_admissions_simd_table <- renderDataTable({
-  Admissions_SimdTrend %>%
+  admissions_simd_Cov_flu_RSV %>% 
+    filter(Pathogen == "COVID-19") %>%
     arrange(desc(WeekEnding)) %>%
     mutate(WeekEnding = convert_opendata_date(WeekEnding),
            SIMD = factor(SIMD),
            ProvisionalFlag = factor(recode(ProvisionalFlag, "1" = "p", "0" = ""))) %>%
-    select(WeekEnding, SIMD, NumberOfAdmissions, ProvisionalFlag) %>%
+    select(WeekEnding, SIMD, NumberOfAdmissions, RateOfAdmissions, ProvisionalFlag) %>%
     dplyr::rename(`Week ending` = WeekEnding,
                   `Number of admissions` = NumberOfAdmissions,
+                  `Admission Rate per 100k` = RateOfAdmissions,
                   `Is data provisional (p)?` = ProvisionalFlag) %>%
     make_table(add_separator_cols = c(3),
-               filter_cols = c(2,4))
+               filter_cols = c(2,5))
 })
+
 
 
 # Plot
 output$hospital_admissions_simd_plot <- renderPlotly({
-  Admissions_SimdTrend %>%
+  admissions_simd_Cov_flu_RSV %>% 
+    filter(Pathogen == "COVID-19") %>%
     make_hospital_admissions_simd_plot()
-
+  
 })
+
+
 
 ### WEEKLY HB ADMISSIONS Table ### ----
 

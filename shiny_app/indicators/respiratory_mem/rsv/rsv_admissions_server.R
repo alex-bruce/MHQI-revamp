@@ -71,6 +71,25 @@ altTextServer("rsv_los_modal",
                         "The bar sections are ordered from smallest length of stay to largest",
                         "length of stay from bottom to top.") ))
 
+altTextServer("rsv_admissions_simd_modal",
+              title = "RSV hospital admission rate per 100,000 population by deprivation category (SIMD)",
+              content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by SIMD deprivation category."),
+                                tags$li("SIMD is a relative measure of deprivation across small areas in Scotland.",
+                                        "There are equal numbers of data zones in each of the five categories.",
+                                        "SIMD 1 contains the 20% most deprived zones and SIMD 5 contains the 20%",
+                                        "least deprived zones. See the",
+                                        tags$a("Scottish government website (external link)",
+                                               href="https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/"),
+                                        "for more information."),
+                                tags$li("The x axis is the week ending, starting 03 Jan 2021."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The plot contains a trace for each of the SIMD categories. SIMD 1 is",
+                                        "highlighted in red and SIMD 5 in blue. The other categories are in grey."),
+                                # tags$li("There have been several peaks throughout the pandemic, notably in",
+                                #         "Apr 2020, Oct 2020, Jan 2021, Jul 2021, Sep 2021,",
+                                #         "Jan 2022, Mar 2022, Jun 2022, Jan 2023 and Mar 2023.")
+              )
+)
 
 # RSV admissions table
 output$rsv_admissions_table <- renderDataTable({
@@ -153,6 +172,39 @@ output$rsv_admissions_hb_table <- renderDataTable({
     arrange(HealthBoardOfTreatment) %>%
     dplyr::rename(`Health Board of treatment` = HealthBoardOfTreatment) %>%
     make_summary_table(maxrows = 16)
+})
+
+### WEEKLY ADMISSIONS BY SIMD ### ----
+
+
+### Modal links
+observeEvent(input$btn_modal_simd, { showModal(simd_modal) })
+
+# Table
+output$rsv_admissions_simd_table <- renderDataTable({
+  admissions_simd_Cov_flu_RSV %>% 
+    filter(Pathogen == "RSV") %>%
+    arrange(desc(WeekEnding)) %>%
+    mutate(WeekEnding = convert_opendata_date(WeekEnding),
+           SIMD = factor(SIMD),
+           ProvisionalFlag = factor(recode(ProvisionalFlag, "1" = "p", "0" = ""))) %>%
+    select(WeekEnding, SIMD, NumberOfAdmissions, RateOfAdmissions, ProvisionalFlag) %>%
+    dplyr::rename(`Week ending` = WeekEnding,
+                  `Number of admissions` = NumberOfAdmissions,
+                  `Admission Rate per 100k` = RateOfAdmissions,
+                  `Is data provisional (p)?` = ProvisionalFlag) %>%
+    make_table(add_separator_cols = c(3),
+               filter_cols = c(2,5))
+})
+
+
+
+# Plot
+output$rsv_admissions_simd_plot <- renderPlotly({
+  admissions_simd_Cov_flu_RSV %>% 
+    filter(Pathogen == "RSV") %>%
+    make_hospital_admissions_simd_plot()
+  
 })
 
 #---------------------##
