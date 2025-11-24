@@ -47,11 +47,12 @@ output$para_admissions_table <- renderDataTable({
   para_admissions %>%
     filter(Season %in% para_adm_seasons) %>%
     arrange(desc(Date)) %>%
-    select(Season, ISOWeek, RatePer100000) %>%
+    select(Season, ISOWeek, Admissions, RatePer100000) %>%
     mutate(Season = factor(Season),
            RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
     rename(`ISO Week` = ISOWeek,
+           `Number of Admissions` = Admissions,
            `Admission Rate per 100k` = RatePer100000) %>%
     make_table(filter_cols = c(1,2))
 })
