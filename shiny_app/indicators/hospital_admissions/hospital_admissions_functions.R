@@ -138,7 +138,7 @@ make_hospital_admissions_simd_plot <- function(data){
               linetypes = c("dash", "solid", "solid", "solid", "dot"),
               hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
                                      '<b>SIMD quintile</b>: %{text}<br>',
-                                     '<b>Number of admissions</b>: %{y}')
+                                     '<b>Admission rate per 100k</b>: %{y}')
     ) %>%
     layout(margin = list(b = 50, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
