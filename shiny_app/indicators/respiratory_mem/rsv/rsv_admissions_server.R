@@ -2,6 +2,18 @@ metadataButtonServer(id="respiratory_rsv_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
+RSV_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, rsv, rsv_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = rsv,
+         RatePer100000 = rsv_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13)) 
 # Get recent seasons
 rsv_adm_seasons <- tail(sort(unique(RSV_admissions$Season)), 6)
 

@@ -3,6 +3,18 @@ metadataButtonServer(id="respiratory_influenza_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
+Influenza_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, flu, flu_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = flu,
+         RatePer100000 = flu_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13)) 
 
 # Get recent seasons
 flu_adm_seasons <- tail(sort(unique(Influenza_admissions$Season)), 6)
@@ -89,7 +101,7 @@ altTextServer("influenza_admissions_simd_modal",
 # Influenza admissions table
 output$influenza_admissions_table <- renderDataTable({
   Influenza_admissions %>%
-    filter(FluType == "Influenza A & B") %>%
+    #filter(FluType == "Influenza A & B") %>%
     filter(Season %in% flu_adm_seasons) %>%
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, Admissions, RatePer100000) %>%
@@ -106,7 +118,7 @@ output$influenza_admissions_table <- renderDataTable({
 # Influenza Adms plot
 output$influenza_admissions_plot <- renderPlotly({
   Influenza_admissions %>%
-    filter(FluType == "Influenza A & B") %>%
+    #filter(FluType == "Influenza A & B") %>%
     create_pathogen_adms_linechart()
 
 })
