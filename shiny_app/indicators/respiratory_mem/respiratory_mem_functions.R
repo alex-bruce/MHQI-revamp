@@ -699,7 +699,7 @@ create_pathogen_adms_linechart <- function(data,
                                       #rate_dp = 2,
                                       #seasons = NULL,
                                       value_variable = "RatePer100000",
-                                      y_axis_title = "Rate of hospital admissions per 100,000") {
+                                      y_axis_title = "Rate of hospital admissions<br>per 100,000 population") {
   
   # Rename value variable
   data <- data %>%
@@ -792,7 +792,7 @@ create_pathogen_adms_linechart <- function(data,
 # Create pathogen age Adms line chart
 create_pathogen_adms_age_linechart <- function(data){
   
-  yaxis_plots[["title"]] <- "Admission rate per 100k"
+  yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
   xaxis_plots[["title"]] <- "Week ending"
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")

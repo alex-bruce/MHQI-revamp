@@ -121,7 +121,7 @@ make_hospital_admissions_simd_plot <- function(data){
     arrange(desc(WeekEnding)) %>%
     mutate(WeekEnding = convert_opendata_date(WeekEnding))
 
-  yaxis_plots[["title"]] <- "Admission rate per 100k"
+  yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
   xaxis_plots[["title"]] <- "Week ending"
 
   # Adding slider
