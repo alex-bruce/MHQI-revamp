@@ -479,3 +479,17 @@ make_age_sex_adm_pyramid_plot <- function(data, title = NULL) {
   return(fig)
 }
 
+make_admissions_age_table <- function(data) {
+  
+  data %>% 
+    mutate(week_ending = as_date(week_ending)) %>% 
+    arrange(desc(week_ending)) %>%
+    select(week_ending, age_band, Admissions,
+           rate)  %>% 
+    rename(`Week Ending` = week_ending,
+           `Age Group` = age_band,
+           `Number of Admissions` = Admissions,
+           `Admission Rate per 100k` = rate) %>% 
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(1,2))
+}

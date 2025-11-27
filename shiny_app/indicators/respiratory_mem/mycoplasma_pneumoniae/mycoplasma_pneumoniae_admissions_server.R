@@ -61,17 +61,13 @@ output$mpn_admissions_table <- renderDataTable({
 # MPN admissions by age table
 output$mpn_admissions_age_table <- renderDataTable({
   age_rate_data_all_path %>%
-    select(week_ending, age_band,
-           rate = mpn_rate) %>% 
-    #mutate(week_ending = dmy(week_ending)) %>%
-    filter(age_band != "All Ages") %>%
-    mutate(week_ending = as_date(week_ending)) %>% 
-    arrange(desc(week_ending)) %>%
-    rename(`Week Ending` = week_ending,
-           `Age Group` = age_band,
-           `Admission Rate per 100k` = rate) %>%
-    make_table(add_separator_cols_1dp = c(3),
-               filter_cols = c(1,2))
+    add_season() %>% 
+    select(week_ending, age_band, Season,
+           Admissions = mpn, rate = mpn_rate) %>% 
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    filter(Season %in% mpn_adm_seasons) %>% 
+    make_admissions_age_table()
+  
 })
 
 
