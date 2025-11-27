@@ -117,6 +117,11 @@ br(),
 
 tabBox(width = NULL, type = "pills",
        tabPanel("Plot",
+                br(),
+                pickerInput(inputId = "adm_season_rsv_simd",
+                            label = "Select season",
+                            choices = {admissions_seasons %>%  tail(6) },
+                            selected = {admissions_seasons %>% tail(1)}),
                 tagList(
                   linebreaks(1),
                   altTextUI("rsv_admissions_simd_modal"),

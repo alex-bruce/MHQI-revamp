@@ -117,19 +117,26 @@ make_hospital_admissions_simd_plot <- function(data){
 
   #data <- Admissions_SimdTrend
 
-  data %<>%
-    arrange(desc(WeekEnding)) %>%
-    mutate(WeekEnding = convert_opendata_date(WeekEnding))
+  # put weeks in correct order for season
+  week_order <- c(seq(40, 52, 1), seq(1, 39, 1))
+  
+  data <- data %>%  
+    mutate(WeekNumber = as.numeric(substr(week, nchar(week) - 1, nchar(week))),
+           WeekNumber = factor(WeekNumber, levels = week_order))
+  # data %<>%
+  #   arrange(desc(WeekEnding)) %>%
+  #   mutate(WeekEnding = convert_opendata_date(WeekEnding))
 
   yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
-  xaxis_plots[["title"]] <- "Week ending"
-
+  xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["range"]] <- list(-0.5, 52.5)
+  
   # Adding slider
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
 
   p <- plot_ly(data) %>%
-    add_trace(x = ~WeekEnding, y = ~RateOfAdmissions, split = ~SIMD, text=~SIMD,
+    add_trace(x = ~WeekNumber, y = ~RateOfAdmissions, split = ~SIMD, text=~SIMD,
               type="scatter", mode="lines",
               color=~SIMD,
               colors=phs_colours(c("phs-rust", "phs-liberty-30", "phs-liberty-30",

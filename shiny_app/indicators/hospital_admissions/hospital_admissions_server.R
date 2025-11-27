@@ -73,8 +73,8 @@ altTextServer("hospital_admissions_modal",
 altTextServer("hospital_admissions_age_modal",
               title = "COVID-19 hospital admission rate per 100,000 population by age group",
               content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by age group."),
-                                tags$li("The x axis is the week ending date."),
-                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
                                 tags$li("By default, the plot contains a trace showing the admission rate per 100,000 across all age groups."),
                                 tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
@@ -84,7 +84,8 @@ altTextServer("hospital_admissions_age_modal",
 
 altTextServer("hospital_admissions_simd_modal",
               title = "COVID-19 hospital admission rate per 100,000 population by deprivation category (SIMD)",
-              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by SIMD deprivation category."),
+              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by SIMD deprivation category
+                                        for the selected season."),
                                 tags$li("SIMD is a relative measure of deprivation across small areas in Scotland.",
                                         "There are equal numbers of data zones in each of the five categories.",
                                         "SIMD 1 contains the 20% most deprived zones and SIMD 5 contains the 20%",
@@ -92,7 +93,8 @@ altTextServer("hospital_admissions_simd_modal",
                                         tags$a("Scottish government website (external link)",
                                                href="https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/"),
                                         "for more information."),
-                                tags$li("The x axis is the week ending, starting 03 Jan 2021."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),                                
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
                                 tags$li("The plot contains a trace for each of the SIMD categories. SIMD 1 is",
                                         "highlighted in red and SIMD 5 in blue. The other categories are in grey."),
@@ -348,7 +350,9 @@ output$hospital_admissions_simd_plot <- renderPlotly({
     mutate(week_ending = ymd(WeekEnding)) %>% 
     add_season() %>%    
     mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
-    filter(Season %in% cov_adm_seasons) %>% 
+    #filter(Season %in% cov_adm_seasons) %>% 
+    mutate(week = isoweek(week_ending)) %>% 
+    filter(Season == input$adm_season_cov_simd) %>%
     make_hospital_admissions_simd_plot()
   
 })

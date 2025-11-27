@@ -86,7 +86,8 @@ altTextServer("rsv_los_modal",
 
 altTextServer("rsv_admissions_simd_modal",
               title = "RSV hospital admission rate per 100,000 population by deprivation category (SIMD)",
-              content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by SIMD deprivation category."),
+              content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by SIMD deprivation category
+                                        for the selected season."),
                                 tags$li("SIMD is a relative measure of deprivation across small areas in Scotland.",
                                         "There are equal numbers of data zones in each of the five categories.",
                                         "SIMD 1 contains the 20% most deprived zones and SIMD 5 contains the 20%",
@@ -94,8 +95,8 @@ altTextServer("rsv_admissions_simd_modal",
                                         tags$a("Scottish government website (external link)",
                                                href="https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/"),
                                         "for more information."),
-                                tags$li("The x axis is the week ending, starting 03 Jan 2021."),
-                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
                                 tags$li("The plot contains a trace for each of the SIMD categories. SIMD 1 is",
                                         "highlighted in red and SIMD 5 in blue. The other categories are in grey."),
                                 # tags$li("There have been several peaks throughout the pandemic, notably in",
@@ -222,6 +223,11 @@ output$rsv_admissions_simd_table <- renderDataTable({
 output$rsv_admissions_simd_plot <- renderPlotly({
   admissions_simd_Cov_flu_RSV %>% 
     filter(Pathogen == "RSV") %>%
+    mutate(week_ending = ymd(WeekEnding)) %>% 
+    add_season() %>%    
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    mutate(week = isoweek(week_ending)) %>% 
+    filter(Season == input$adm_season_rsv_simd) %>%
     make_hospital_admissions_simd_plot()
   
 })

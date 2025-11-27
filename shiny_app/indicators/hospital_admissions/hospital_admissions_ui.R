@@ -115,6 +115,11 @@ tagList(
 
                            tabBox(width = NULL, type = "pills",
                                   tabPanel("Plot",
+                                           br(),
+                                           pickerInput(inputId = "adm_season_cov_simd",
+                                                       label = "Select season",
+                                                       choices = {admissions_seasons %>%  tail(3) },
+                                                       selected = {admissions_seasons %>% tail(1)}),
                                            tagList(
                                              linebreaks(1),
                                              altTextUI("hospital_admissions_simd_modal"),
