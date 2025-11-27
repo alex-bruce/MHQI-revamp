@@ -45,8 +45,7 @@ output$influenza_occupancy_hb_table <- renderDataTable({
     arrange(desc(Date)) %>% 
     select('Week ending' = Date,
            'Health board' = health_board,
-           'Number of patients in hospital' = bed_occupancy,
-           `7 day average`= sevenday_ave_inpatients) %>%
+           `7 day average of number of patients in hospital`= sevenday_ave_inpatients) %>%
     make_table(.,
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
