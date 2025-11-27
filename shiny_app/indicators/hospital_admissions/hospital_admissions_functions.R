@@ -143,7 +143,7 @@ make_hospital_admissions_simd_plot <- function(data){
                                    "phs-liberty-30", "phs-blue")),
               linetype = ~SIMD,
               linetypes = c("dash", "solid", "solid", "solid", "dot"),
-              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
                                      '<b>SIMD quintile</b>: %{text}<br>',
                                      '<b>Admission rate per 100k</b>: %{y}')
     ) %>%

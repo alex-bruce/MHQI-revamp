@@ -807,7 +807,7 @@ create_pathogen_adms_age_linechart <- function(data){
   
   # Text for tooltip
   tooltip_trend <- paste0(#"Season: ", plot_data$Season, "<br>",
-    "Week ending: ", format(plot_data$week_ending, "%d %b %y"), "<br>",
+    "Week number: ", plot_data$WeekNumber, "<br>",
     "Age group: ", plot_data$age_band, "<br>",
     "Admission rate per 100k: ", round(plot_data$rate, 1), "<br>")
   
