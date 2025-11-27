@@ -115,11 +115,22 @@ fluidRow(width = 12,
          linebreaks(1)),
 
 fluidRow(
+  pickerInput(
+           inputId = "influenza_adms_selected_boards", 
+           label = "Select NHS Health Board(s) of interest:", 
+           choices = sort(unique(admissions_hb_all_path$health_board_of_treatment)),
+           selected = sort(unique(admissions_hb_all_path$health_board_of_treatment))[2],  # skips 'National Facility'
+           multiple = TRUE,
+           options = list(
+             `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
+             `live-search` = TRUE,    # Enables search within the dropdown
+             `selected-text-format` = "count > 3" # Shows count if more than 3 selected
+           )
+         )),
+  
+
+fluidRow(
   tabBox(width = NULL,
-         selectInput("influenza_adms_selected_boards", "Select NHS Health Board(s) of interest:", 
-                     choices = sort(unique(admissions_hb_all_path$health_board_of_treatment)),
-                     selected = sort(unique(admissions_hb_all_path$health_board_of_treatment))[2],  #using [2] skips over 'National Facility'
-                     multiple = TRUE),
          type = "pills",
          tabPanel("Plot",
                   tagList(linebreaks(1),
@@ -134,7 +145,7 @@ fluidRow(
          
   ), # tabBox
   linebreaks(1)
-), 
+) 
 
 
 
@@ -226,7 +237,7 @@ fluidRow(
 ### end LOS section
 
 # Padding out the bottom of the page
-fluidRow(height="200px", width=12, linebreaks(5))
+#fluidRow(height="200px", width=12, linebreaks(5))
 
 )#taglist
 
