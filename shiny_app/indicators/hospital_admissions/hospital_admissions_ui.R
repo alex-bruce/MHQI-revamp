@@ -1,3 +1,10 @@
+admissions_seasons <- age_rate_data_all_path %>%
+  add_season() %>%
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>%
+  select(Season) %>%
+  unique() %>%
+  unlist(., use.names=FALSE)
+
 tagList(
   fluidRow(width = 12,
            metadataButtonUI("hospital_admissions"),
@@ -72,6 +79,11 @@ tagList(
                              tabBox(width = NULL,
                                     type = "pills",
                                     tabPanel("Plot",
+                                             br(),
+                                             pickerInput(inputId = "adm_season_cov_age",
+                                                         label = "Select season",
+                                                         choices = {admissions_seasons %>%  tail(3) },
+                                                         selected = {admissions_seasons %>% tail(1)}),
                                              tagList(linebreaks(1),
                                                      altTextUI("hospital_admissions_age_modal"),
                                                      withNavySpinner(plotlyOutput("covid_admissions_age_plot")),

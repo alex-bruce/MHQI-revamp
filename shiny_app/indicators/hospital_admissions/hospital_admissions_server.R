@@ -75,7 +75,8 @@ altTextServer("hospital_admissions_age_modal",
               content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by age group."),
                                 tags$li("The x axis is the week ending date."),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
-                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
+                                tags$li("By default, the plot contains a trace showing the admission rate per 100,000 across all age groups."),
+                                tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 
@@ -283,6 +284,9 @@ output$covid_admissions_age_plot <- renderPlotly({
     mutate(age_band = factor(age_band, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
                                                   "65-74", "75+", "All Ages"))) %>% 
     arrange(week_ending, age_band) %>%
+    mutate(week = isoweek(week_ending)) %>% 
+    filter(Season == input$adm_season_cov_age) %>%
+    #filter(Season == "2024/2025") %>% 
     create_pathogen_adms_age_linechart()
   
 })
