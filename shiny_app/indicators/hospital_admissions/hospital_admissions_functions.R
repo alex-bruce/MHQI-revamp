@@ -472,16 +472,3 @@ make_age_sex_adm_pyramid_plot <- function(data, title = NULL) {
   return(fig)
 }
 
-
-## Function to add seasons to covid admissions for plot
-
-add_season <- function(input_data) {
-  input_data %>%
-    mutate(week_start = week_ending - 6,
-           week = ISOweek::ISOweek(week_ending),
-           Season = case_when(str_sub(week, start = -2) < 40 ~
-                                (paste(as.numeric(str_sub(week, end = 4)) -1 , "-",
-                                       as.numeric(str_sub(week, end = 4)), sep="")),
-                              TRUE ~ (paste(as.numeric(str_sub(week, end = 4)),
-                                            "-", as.numeric(str_sub(week, end = 4)) + 1, sep=""))))
-}
