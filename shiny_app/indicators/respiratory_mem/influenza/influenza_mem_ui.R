@@ -148,7 +148,7 @@ tagList(
                               linebreaks(1),
                               # adding selection for flu subtype
                               fluidRow(
-                                column(4, pickerInput("respiratory_season",
+                                column(4, pickerInput("flu_respiratory_season",
                                                       label = "Select a season",
                                                       choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
                                                           .$Season %>% unique() %>% tail(6)},

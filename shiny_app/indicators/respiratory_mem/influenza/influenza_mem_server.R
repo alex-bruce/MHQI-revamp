@@ -324,7 +324,7 @@ output$influenza_age_sex_pyramid_plot = renderPlotly({
     mutate(Rate = round_half_up(Rate,1)) %>%
     filter(scotland_by_age_sex_season_flag == 1,
            # scotland_by_age_sex_flag == 1,
-           Season == input$respiratory_season) %>%
+           Season == input$flu_respiratory_season) %>%
     make_age_sex_pyramid_plot()#respiratory functions
 
 })
@@ -403,16 +403,17 @@ output$influenza_age_sex_pyramid_table = renderDataTable({
 
 })
 
-observeEvent(input$respiratory_season,
+observeEvent(input$flu_respiratory_season,
              {
-               updatePickerInput(session, inputId = "respiratory_date",
-                                 choices = {Respiratory_AllData %>% filter(Season == input$respiratory_season) %>%
+               updatePickerInput(session, inputId = "flu_respiratory_date",
+                                 choices = {Respiratory_AllData %>% filter(Season == input$flu_respiratory_season) %>%
                                      .$Date %>% unique() %>% as.Date() %>% format("%d %b %y")},
-                                 selected = {Respiratory_AllData %>% filter(Season == input$respiratory_season) %>%
+                                 selected = {Respiratory_AllData %>% filter(Season == input$flu_respiratory_season) %>%
                                      .$Date %>% max() %>% as.Date() %>% format("%d %b %y")})
 
              }
 )
+
 
 
 

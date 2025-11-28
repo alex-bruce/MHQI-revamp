@@ -165,7 +165,7 @@ fluidRow(
                             linebreaks(1),
                             # adding selection for flu subtype
                             fluidRow(
-                              column(4, pickerInput("respiratory_season",
+                              column(4, pickerInput("rsv_respiratory_season",
                                                     label = "Select a season",
                                                     choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
                                                         .$Season %>% unique() %>% tail(6)},
