@@ -153,6 +153,36 @@ fluidRow(
 
     ), # tabBox
     linebreaks(1)
-  )#, # fluidRow
+  ), # fluidRow
+
+fluidRow(
+  tagList(h2(glue("Laboratory-confirmed RSV cases by age and sex in Scotland")),
+
+          tabBox(width = NULL,
+                 type = "pills",
+                 tabPanel("Plot",
+                          tagList(
+                            linebreaks(1),
+                            # adding selection for flu subtype
+                            fluidRow(
+                              column(4, pickerInput("respiratory_season",
+                                                    label = "Select a season",
+                                                    choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
+                                                        .$Season %>% unique()},
+                                                    selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
+                                                        .$Season %>% unique() %>% tail(1)})
+                              )
+                            ),
+                            altTextUI("rsv_age_sex"),
+                            withNavySpinner(plotlyOutput("rsv_age_sex_pyramid_plot"))
+                          ) # tagList
+                 ), # tabPanel
+                 tabPanel("Data",
+                          withNavySpinner(dataTableOutput("rsv_age_sex_pyramid_table")))
+          ) # tabbox
+  ), # tagList
+  linebreaks(1)
+)
+
 
 )

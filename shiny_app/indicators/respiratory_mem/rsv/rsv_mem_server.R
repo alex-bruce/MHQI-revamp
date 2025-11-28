@@ -268,4 +268,57 @@ output$rsv_mem_age_plot <- renderPlotly({
 })
 
 
+altTextServer("rsv_age_sex",
+              title = glue("Laboratory-confirmed RSV cases by age and/or sex in Scotland"),
+              content = tags$ul(
+                tags$li(glue("This is a pyramid plot of rate per 100,000 people of laboratory-confirmed RSV cases in Scotland by age and sex.")),
+                tags$li("The information is displayed for a selected season."),
+                tags$li("Weekly rate data for age and sex on a weekly basis area available in the Data Download section of the dashboard and ",
+                        "the PHS Open Data platform ",
+                        tags$a(href="https://www.opendata.nhs.scot/dataset/viral-respiratory-diseases-including-influenza-and-covid-19-data-in-scotland",
+                               "Viral Respiratory Diseases (Including Influenza and COVID-19) Data in Scotland page (external website).", 
+                               target="_blank")),
+                tags$li("The y axis shows the age group. The left side of the y axis corresponds to females (F) and the right side to males (M)."),
+                tags$li("For the x axis the plot shows rate per 100,000 people.")
+                # tags$li("The youngest and oldest groups have the highest rates of illness.")
+              )
+)
+
+# pyramid plot that shows the breakdown by age and sex
+output$rsv_age_sex_pyramid_plot = renderPlotly({
+  Respiratory_AllData %>%
+    filter(Pathogen == "RSV Season Total") %>%
+    filter(scotland_by_age_sex_season_flag == 1,
+           # scotland_by_age_sex_flag == 1,
+           Season == input$respiratory_season) %>%
+    make_age_sex_pyramid_plot()#respiratory functions
+  
+})
+
+# Flu by age/sex/age and sex
+output$rsv_age_sex_pyramid_table = renderDataTable({
+  
+  flu_age_sex_pyramid_table <- Respiratory_AllData %>%
+    filter(Pathogen == "RSV Season Total") %>%
+    filter(scotland_by_age_sex_season_flag == 1) %>%
+    select(Season, AgeGroup, Sex, Rate) %>%
+    mutate(Season = factor(Season)) %>%
+    arrange(desc(Season), AgeGroup, Sex) %>%
+    dplyr::rename("Season" = "Season",
+                  "Age group" = "AgeGroup",
+                  "Rate per 100,000" = "Rate") %>%
+    mutate(Sex = factor(Sex, levels = c("All", "F", "M")),
+           `Age group` = factor(`Age group`, levels =
+                                  c("All", "<1", "1-4", "5-14",
+                                    "15-44", "45-64", "65-74", "75+"))) %>%
+    arrange(desc(`Season`), `Age group`, Sex) %>%
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(1,2,3))
+  
+})
+
+
+
+
+
 
