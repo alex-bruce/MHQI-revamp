@@ -168,7 +168,7 @@ fluidRow(
                               column(4, pickerInput("respiratory_season",
                                                     label = "Select a season",
                                                     choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
-                                                        .$Season %>% unique()},
+                                                        .$Season %>% unique() %>% tail(6)},
                                                     selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
                                                         .$Season %>% unique() %>% tail(1)})
                               )

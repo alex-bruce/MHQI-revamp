@@ -319,7 +319,12 @@ make_age_sex_pyramid_plot <- function(data, title = NULL) {
       Sex == "F" ~ -Rate,
       TRUE ~ Rate)) %>%
     mutate_if(is.numeric, ~replace_na(., 0)) %>%
-    mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")))
+    mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+"))) %>%
+    mutate(Sex = case_when(
+      Sex == "F" ~ "Female",
+      Sex == "M" ~ "Male",
+      TRUE ~ NA_character_
+    ))
 
   xaxis_breaks <- pretty(c(-max(data$Rate), 0, max(data$Rate)))
   yaxis_ticks <- list("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")
@@ -335,9 +340,10 @@ make_age_sex_pyramid_plot <- function(data, title = NULL) {
             textposition = "none",
             text = ~paste0("<b>Season</b>: ", Season, "\n",
                            "<b>Sex</b>: ", Sex, "\n",
-                           "<b>Age group</b>: ", AgeGroup, "\n",
+                           "<b>Age Group</b>: ", AgeGroup, "\n",
                            "<b>Rate per 100,000</b>: ", format(abs(Rate), big.mark=",")),
-            hovertemplate = "%{text}",
+            hoverinfo = "text",
+            #hovertemplate = "%{text}",
             colors = phs_colours(c("phs-purple", "phs-magenta"))) %>%
     layout(
       xaxis = list(
@@ -348,9 +354,9 @@ make_age_sex_pyramid_plot <- function(data, title = NULL) {
         linecolor = 'black',
         range = c(-max(data$Rate), max(data$Rate))
       ),
-      yaxis = list(yaxis_ticks
+      yaxis = list(yaxis_ticks,
                    #tickmode = "array",
-                   #title = "Age Group",
+                   title = "Age Group"#,
                    #tickvals = yaxis_ticks,
                    #ticktext= yaxis_ticks,
                    #showline = TRUE,

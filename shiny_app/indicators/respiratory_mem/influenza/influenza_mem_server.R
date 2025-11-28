@@ -293,12 +293,12 @@ altTextServer("influenza_age_sex",
               content = tags$ul(
                 tags$li(glue("This is a pyramid plot of rate per 100,000 people of laboratory-confirmed influenza cases in Scotland by age and sex.")),
                 tags$li("The information is displayed for a selected season."),
-                tags$li("Weekly rate data for age and sex on a weekly basis area available in the Data Download section of the dashboard and ",
+                tags$li("Weekly rate data for age and sex on a weekly basis are available on ",
                         "the PHS Open Data platform ",
                         tags$a(href="https://www.opendata.nhs.scot/dataset/viral-respiratory-diseases-including-influenza-and-covid-19-data-in-scotland",
                                "Viral Respiratory Diseases (Including Influenza and COVID-19) Data in Scotland page (external website).", 
                                target="_blank")),
-                tags$li("The y axis shows the age group. The left side of the y axis corresponds to females (F) and the right side to males (M)."),
+                tags$li("The y axis shows the age group. The left side of the y axis corresponds to females and the right side to males."),
                 tags$li("For the x axis the plot shows rate per 100,000 people.")
                 # tags$li("The youngest and oldest groups have the highest rates of illness.")
               )
@@ -320,6 +320,8 @@ altTextServer("influenza_age_sex",
 output$influenza_age_sex_pyramid_plot = renderPlotly({
   Respiratory_AllData %>%
     filter(FluOrNonFlu == "flu") %>%
+    filter(Season %in% recent_six_seasons) %>%
+    mutate(Rate = round_half_up(Rate,1)) %>%
     filter(scotland_by_age_sex_season_flag == 1,
            # scotland_by_age_sex_flag == 1,
            Season == input$respiratory_season) %>%
@@ -336,6 +338,7 @@ output$influenza_age_sex_table = renderDataTable({
     mutate(Sex = "All") %>%
     select(Season, Date, AgeGroup, Sex, Rate) %>%
     mutate(Season = factor(Season)) %>%
+    mutate(Rate = round_half_up(Rate,1)) %>%
     dplyr::rename("Week ending" = "Date",
                   "Age group" = "AgeGroup",
                   "Rate per 100,000" = "Rate")
@@ -375,18 +378,26 @@ output$influenza_age_sex_pyramid_table = renderDataTable({
 
   flu_age_sex_pyramid_table <- Respiratory_AllData %>%
     filter(FluOrNonFlu == "flu") %>%
+    filter(Season %in% recent_six_seasons) %>%
     filter(scotland_by_age_sex_season_flag == 1) %>%
     select(Season, AgeGroup, Sex, Rate) %>%
     mutate(Season = factor(Season)) %>%
     arrange(desc(Season), AgeGroup, Sex) %>%
     dplyr::rename("Season" = "Season",
-                  "Age group" = "AgeGroup",
+                  "Age Group" = "AgeGroup",
                   "Rate per 100,000" = "Rate") %>%
-    mutate(Sex = factor(Sex, levels = c("All", "F", "M")),
-           `Age group` = factor(`Age group`, levels =
-                                  c("All", "<1", "1-4", "5-14",
-                                    "15-44", "45-64", "65-74", "75+"))) %>%
-    arrange(desc(`Season`), `Age group`, Sex) %>%
+    mutate(Sex = case_when(
+      Sex == "F" ~ "Female",
+      Sex == "M" ~ "Male",
+      TRUE ~ NA_character_
+    )) %>%
+    mutate(`Age Group` = paste0(`Age Group`, " years")) %>%
+    mutate(Sex = factor(Sex, levels = c("Female", "Male")),
+           `Age Group` = factor(`Age Group`, levels =
+                                  c("<1 years", "1-4 years", "5-14 years",
+                                    "15-44 years", "45-64 years", "65-74 years", 
+                                    "75+ years"))) %>%
+    arrange(desc(`Season`), `Age Group`, Sex) %>%
     make_table(add_separator_cols_1dp = c(4),
                filter_cols = c(1,2,3))
 
