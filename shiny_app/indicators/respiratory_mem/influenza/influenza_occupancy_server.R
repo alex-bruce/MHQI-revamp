@@ -20,6 +20,14 @@ altTextServer("influenza_occupancy_modal",
                 tags$li("The x axis is the week ending date."),
                 tags$li("The y axis is the average number of people in hospital.")))
               
+altTextServer("influenza_occupancy_hb_modal",
+              title = "Number of patients with influenza in hospital by Health Board",
+              content = tags$ul(
+                tags$li("This is a plot of the number of patients in hospital with influenza by Health Board."),
+                tags$li("The number of patients are seven day averages taken as a snapshot each Sunday."),
+                tags$li("The x axis is the week ending date."),
+                tags$li("The y axis is the average number of people in hospital.")))
+
 
 # make data table with all the hospital occupancy data in it
 output$influenza_occupancy_table <- renderDataTable({
@@ -66,6 +74,13 @@ output$influenza_occupancy_plot <- renderPlotly({
   
 })
 
+output$influenza_occupancy_hb_plot <- renderPlotly({
+  occupancy_rapid_hb %>%
+    filter(pathogen == "Influenza") %>%
+    filter(Season %in% c("2023-2024", "2024-2025", "2025-2026", "2026-2027")) %>% 
+    create_pathogen_occupancy_hb_linechart()
+  
+})
 
 
 

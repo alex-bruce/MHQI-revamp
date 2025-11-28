@@ -81,13 +81,51 @@ fluidRow(width = 12,
          tagList(h2("Number of inpatients with influenza in hospital by health board")),
          linebreaks(1)),
 
-fluidRow(width=12,
-         box(width = NULL,
-             withNavySpinner(dataTableOutput("influenza_occupancy_hb_table"))),
-         fluidRow(
-           width=12, linebreaks(1))
+fluidRow(
+  pickerInput(
+    inputId = "influenza_occupancy_selected_boards", 
+    label = "Select NHS Health Board(s) of interest:", 
+    choices = sort(unique(occupancy_rapid_hb$health_board)),
+    selected = sort(unique(occupancy_rapid_hb$health_board))[2],  # skips 'National Facility'
+    multiple = TRUE,
+    options = list(
+      `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
+      `live-search` = TRUE,    # Enables search within the dropdown
+      `selected-text-format` = "count > 3" # Shows count if more than 3 selected
+    )
+  )),
+
+fluidRow(
+pickerInput(
+  inputId = "influenza_occupancy_selected_season", 
+  label = "Select season of interest:", 
+  choices = sort(unique(occupancy_rapid_hb$Season)),
+  selected = tail(sort(unique(occupancy_rapid_hb$health_board))),  
+  multiple = TRUE,
+  options = list(
+    `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
+    `live-search` = TRUE,    # Enables search within the dropdown
+    `selected-text-format` = "count > 3" # Shows count if more than 3 selected
+  )
+)),
+
+fluidRow(
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  tagList(linebreaks(1),
+                          altTextUI("influenza_occupancy_hb_modal"),
+                          withNavySpinner(plotlyOutput("influenza_occupancy_hb_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("influenza_occupancy_hb_table"))
+                  ) # tagList
+         ) # tabPanel
          
-),
+  ), # tabBox
+  linebreaks(1)
+), 
 
   # tagList(h2("Seven day average of inpatients with COVID-19 in hospital by NHS Health Board of treatment; week ending")),
   # 
