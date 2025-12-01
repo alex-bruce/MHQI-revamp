@@ -115,38 +115,17 @@ fluidRow(width = 12,
          linebreaks(1)),
 
 fluidRow(
-  pickerInput(
-           inputId = "influenza_adms_selected_boards", 
-           label = "Select NHS Health Board(s) of interest:", 
-           choices = sort(unique(admissions_hb_all_path$health_board_of_treatment)),
-           selected = "NHS Scotland",
-           #selected = sort(unique(admissions_hb_all_path$health_board_of_treatment))[2],  # skips 'National Facility'
-           multiple = TRUE,
-           options = list(
-             `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
-             `live-search` = TRUE,    # Enables search within the dropdown
-             `selected-text-format` = "count > 3" # Shows count if more than 3 selected
-           )
-         )),
-
-fluidRow(
-  pickerInput(
-    inputId = "influenza_adms_selected_seasons", 
-    label = "Select season of interest:", 
-    choices = sort(unique(admissions_hb_all_path$Season)),
-    selected = tail(sort(unique(admissions_hb_all_path$Season)), 1),  # current season
-    multiple = TRUE,
-    options = list(
-      `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
-      `live-search` = TRUE,    # Enables search within the dropdown
-      `selected-text-format` = "count > 3" # Shows count if more than 3 selected
-    )
-  )),
-
-fluidRow(
   tabBox(width = NULL,
          type = "pills",
          tabPanel("Plot",
+                  br(),
+                   pickerInput(
+                      inputId = "influenza_adms_selected_seasons", 
+                      label = "Select season", 
+                      choices = sort(unique(admissions_hb_all_path$Season)),
+                      selected = tail(sort(unique(admissions_hb_all_path$Season)), 1)  # current season
+                      ),
+                    
                   tagList(linebreaks(1),
                           altTextUI("influenza_admissions_hb_modal"),
                           withNavySpinner(plotlyOutput("influenza_admissions_hb_plot")),

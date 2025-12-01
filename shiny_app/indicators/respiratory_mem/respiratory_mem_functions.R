@@ -799,21 +799,43 @@ create_pathogen_adms_age_linechart <- function(data){
 # Create pathogen HB Adms line chart
 create_pathogen_adms_hb_linechart <- function(data){
   
-  yaxis_plots[["title"]] <- "Admission rate per 100k"
-  xaxis_plots[["title"]] <- "Week ending"
+  tooltip_trend <- paste0(#"Season: ", plot_data$Season, "<br>",
+    "Week number: ", data$week_ending, "<br>",
+    "Health Board: ", data$health_board_of_treatment, "<br>",
+    "Admission rate per 100k: ", round(data$rate, 1), "<br>")
+  
+  yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
+  xaxis_plots[["title"]] <- "Week number"
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   
   
   p <- plot_ly(data) %>%
-    add_trace(x = ~week_ending, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
+    add_trace(data = data[data$health_board_of_treatment!= "NHS Scotland", ],
+              x = ~week_ending, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
               type = "scatter", mode = "lines",
               #color = ~age_band,
-              colors = phs_colours(c("phs-blue")),
+              #colors = phs_colours(c("phs-blue")),
               hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
                                      '<b>Health Board</b>: %{text}<br>',
-                                     '<b>Admission rate per 100k</b>: %{y}')
+                                     '<b>Admission rate per 100k</b>: %{y}'),
+              textposition = "none",
+              text = tooltip_trend[data$health_board_of_treatment!= "NHS Scotland"],
+              hoverinfo = "text",
+              visible = "legendonly"
+    ) %>%
+    add_trace(data = data[data$health_board_of_treatment == "NHS Scotland", ],
+              x = ~week_ending, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
+              type = "scatter", mode = "lines",
+              #color = ~age_band,
+              #colors = phs_colours(c("phs-blue")),
+              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+                                     '<b>Health Board</b>: %{text}<br>',
+                                     '<b>Admission rate per 100k</b>: %{y}'),
+              textposition = "none",
+              text = tooltip_trend[data$health_board_of_treatment!= "NHS Scotland"],
+              hoverinfo = "text"
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
