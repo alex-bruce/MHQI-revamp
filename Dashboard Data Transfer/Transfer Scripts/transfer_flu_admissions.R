@@ -53,14 +53,15 @@ g_influenza_admissions <- i_influenza_admissions %>%
                 Year = year,
                 ISOWeek = ISOweek,
                 Season = flu_season) %>%
-  select(Date, Year, ISOWeek, Weekord, Season, FluType, Admissions)
+  select(Date, Year, ISOWeek, Weekord, Season, FluType, Admissions, RatePer100000)
 
 g_influenza_admissions_combined <- g_influenza_admissions %>%
   group_by(Date, Year, ISOWeek, Weekord, Season) %>%
-  summarise(Admissions = sum(Admissions)) %>%
+  summarise(Admissions = sum(Admissions),
+            RatePer100000 = sum(RatePer100000)) %>%
   ungroup() %>%
   mutate(FluType = "Influenza A & B") %>%
-  select(Date, Year, ISOWeek, Weekord, Season, FluType, Admissions)
+  select(Date, Year, ISOWeek, Weekord, Season, FluType, Admissions, RatePer100000)
 
 g_influenza_admissions <- g_influenza_admissions %>%
   bind_rows(g_influenza_admissions_combined) %>%

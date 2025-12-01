@@ -63,6 +63,8 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
                                      h6("hidden text for padding page")
                             )))), # headline
 
+tagList(h2("Rate of acute HMPV hospital admissions in Scotland")),
+
   # fluidRow(width = 12,
   #          tagList(h2("Number of acute adenovirus admissions to hospital"))),
 
@@ -73,7 +75,12 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
                      tagList(linebreaks(1),
                              altTextUI("hmpv_admissions_modal"),
                              withNavySpinner(plotlyOutput("hmpv_admissions_plot")),
-                     )),
+                     ),
+                     fluidRow(column(
+                       width=12, linebreaks(1),
+                       p("*Hospital admissions for the most recent week may be incomplete,",
+                         "and should be treated as provisional and interpreted with caution."),
+                     ))),
             tabPanel("Data",
                      tagList(linebreaks(1),
                              withNavySpinner(dataTableOutput("hmpv_admissions_table"))
@@ -93,6 +100,11 @@ fluidRow(
   tabBox(width = NULL,
          type = "pills",
          tabPanel("Plot",
+                  br(),
+                  pickerInput(inputId = "adm_season_hmpv_age",
+                              label = "Select season",
+                              choices = {admissions_seasons %>%  tail(6) },
+                              selected = {admissions_seasons %>% tail(1)}),
                   tagList(linebreaks(1),
                           altTextUI("hmpv_admissions_age_modal"),
                           withNavySpinner(plotlyOutput("hmpv_admissions_age_plot")),

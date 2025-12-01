@@ -1,73 +1,103 @@
+## Organise parainfluenza admissions data into the right format for the plot and table
 
+
+para_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, para, para_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = para,
+         RatePer100000 = para_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13))
+
+para_adm_seasons <- tail(sort(unique(para_admissions$Season)), 6)
+
+## Plot descriptions
 metadataButtonServer(id="respiratory_para_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
 
 altTextServer("para_admissions_modal",
-              title = "Parainfluenza hospital admissions in Scotland",
-              content = tags$ul(tags$li("This is a plot showing the number of parainfluenza hospital admissions in Scotland."),
+              title = "Weekly rate of parainfluenza hospital admissions in Scotland",
+              content = tags$ul(tags$li("This is a plot showing the weekly rate of parainfluenza hospital admissions in Scotland."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the number of hospital admissions.")))
+                                tags$li("The y axis shows the rate of hospital admissions per 100,000."),
+                                tags$li(glue("There is a trace for each of the following seasons from ", 
+                                             para_adm_seasons[1], " to ", para_adm_seasons[6], ".")),
+                                tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")))
 
 altTextServer("para_admissions_age_modal",
               title = "Parainfluenza hospital admission rate per 100,000 population by age group",
               content = tags$ul(tags$li("This is a plot showing the rate of parainfluenza hospital admission per 100,000 population by age group."),
-                                tags$li("The x axis is the week ending date."),
-                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
-                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
-                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("By default, the plot contains a trace showing the admission rate per 100,000 across all age groups."),
+                                tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 
 # parainfluenza admissions table
+
 output$para_admissions_table <- renderDataTable({
-    all_pathogen_admissions %>%
+  para_admissions %>%
+    filter(Season %in% para_adm_seasons) %>%
     arrange(desc(Date)) %>%
-    select(Season, ISOWeek, Admissions = para) %>%
+    select(Season, ISOWeek, Admissions, RatePer100000) %>%
     mutate(Season = factor(Season),
+           RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
-    rename(`ISO Week` = ISOWeek) %>%
+    rename(`ISO Week` = ISOWeek,
+           `Number of Admissions` = Admissions,
+           `Admission Rate per 100k` = RatePer100000) %>%
     make_table(filter_cols = c(1,2))
 })
+
 
 # parainfluenza admissions by age table
 output$para_admissions_age_table <- renderDataTable({
   age_rate_data_all_path %>%
-    select(week_ending, age_band,
-           rate = para_rate) %>% 
-    #mutate(week_ending = dmy(week_ending)) %>%
-    filter(age_band != "All Ages") %>%
-    mutate(week_ending = as_date(week_ending)) %>% 
-    arrange(desc(week_ending)) %>%
-    rename(`Week Ending` = week_ending,
-           `Age Group` = age_band,
-           `Admission Rate per 100k` = rate) %>%
-    make_table(add_separator_cols_1dp = c(3),
-               filter_cols = c(1,2))
+    add_season() %>% 
+    select(week_ending, age_band, Season,
+           Admissions = para, rate = para_rate) %>% 
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    filter(Season %in% para_adm_seasons) %>% 
+    make_admissions_age_table()
+  
 })
 
 
 # parainfluenza Adms plot
-output$para_admissions_plot <- renderPlotly({
-  all_pathogen_admissions %>%
-    select(Date, Year, ISOWeek, Weekord, Season, Admissions = para) %>% 
-    create_pathogen_adms_linechart()
 
+output$para_admissions_plot <- renderPlotly({
+  para_admissions %>%
+    
+    create_pathogen_adms_linechart()
+  
 })
 
 # parainfluenza Adms by age plot
 output$para_admissions_age_plot <- renderPlotly({
   age_rate_data_all_path %>%
+    add_season() %>%    
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    filter(Season %in% para_adm_seasons) %>% 
     #mutate(week_ending = dmy(week_ending)) %>%
-    filter(age_band != "All Ages") %>% 
+    #filter(age_band != "All Ages") %>% 
     select(week_ending, age_band,
-           rate = para_rate) %>%
+           rate = para_rate, Season) %>%
     mutate(age_band = factor(age_band, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
-                                                   "65-74", "75+"))) %>% 
+                                                  "65-74", "75+", "All Ages"))) %>% 
     arrange(week_ending, age_band) %>%
+    mutate(week = isoweek(week_ending)) %>% 
+    filter(Season == input$adm_season_para_age) %>%
+    #filter(Season == "2024/2025") %>% 
     create_pathogen_adms_age_linechart()
-
+  
 })
 
 # observeEvent(input$respiratory_season,

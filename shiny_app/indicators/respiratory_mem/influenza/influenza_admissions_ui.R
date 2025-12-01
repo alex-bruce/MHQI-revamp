@@ -65,6 +65,8 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
                                      h6("hidden text for padding page")
                             )))), # headline
 
+    tagList(h2("Rate of acute influenza hospital admissions in Scotland")),
+
 #  fluidRow(width = 12,
 #           tagList(h2("Number of acute influenza admissions to hospital"))),
 
@@ -95,6 +97,11 @@ fluidRow(
   tabBox(width = NULL,
          type = "pills",
          tabPanel("Plot",
+                  br(),
+                  pickerInput(inputId = "adm_season_flu_age",
+                              label = "Select season",
+                              choices = {admissions_seasons %>%  tail(6) }, 
+                              selected = {admissions_seasons %>% tail(1)}),
                   tagList(linebreaks(1),
                           altTextUI("influenza_admissions_age_modal"),
                           withNavySpinner(plotlyOutput("influenza_admissions_age_plot")),
@@ -108,6 +115,39 @@ fluidRow(
   ), # tabBox
   linebreaks(1)
 ), # fluidRow
+
+
+tagList(h2("Rate of acute influenza hospital admissions by deprivation category (SIMD)")),
+
+br(),
+
+tabBox(width = NULL, type = "pills",
+       tabPanel("Plot",
+                br(),
+                pickerInput(inputId = "adm_season_flu_simd",
+                            label = "Select season",
+                            choices = {admissions_seasons %>%  tail(6) },
+                            selected = {admissions_seasons %>% tail(1)}),
+                tagList(
+                  linebreaks(1),
+                  altTextUI("influenza_admissions_simd_modal"),
+                  actionButton("btn_modal_simd",
+                               label = "What is SIMD?",
+                               class = "simd-btn",
+                               icon = icon_no_warning_fn("circle-question")
+                  ),
+                  withNavySpinner(
+                    plotlyOutput("influenza_admissions_simd_plot"))
+                )
+       ),
+       tabPanel("Data",
+                tagList(
+                  withNavySpinner(
+                    dataTableOutput("influenza_admissions_simd_table"))
+                )
+       )
+       
+),
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute influenza admissions to hospital by NHS Health Board of Treatment; week ending")),
 #          linebreaks(1)), #fluidRow
