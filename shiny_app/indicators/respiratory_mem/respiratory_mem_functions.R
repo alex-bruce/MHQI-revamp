@@ -814,7 +814,8 @@ create_pathogen_adms_age_linechart <- function(data){
   xaxis_plots[["title"]] <- 'Week Number'
   yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
   xaxis_plots[["dtick"]] <- 2
-  yaxis_plots[["dtick"]] <- 1
+  #yaxis_plots[["dtick"]] <- 1
+  yaxis_plots[["tickformat"]] <- NULL
   xaxis_plots[["range"]] <- list(-0.5, 52.5)
   
   
