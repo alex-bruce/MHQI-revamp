@@ -733,6 +733,7 @@ create_pathogen_adms_linechart <- function(data,
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
   yaxis_plots$tickmode <- "auto"
+  yaxis_plots[["tickformat"]] <- NULL
   
   # xaxis_plots[["showgrid"]] <- FALSE
   # yaxis_plots[["showgrid"]] <- FALSE
