@@ -147,6 +147,7 @@ output$rsv_admissions_hb_plot <- renderPlotly({
   admissions_hb_all_path %>%
     filter(admission_type == "rsv") %>% 
     filter(health_board_of_treatment %in% input$rsv_adms_selected_boards) %>%
+    filter(Season %in% input$rsv_adms_selected_seasons) %>%
     select(week_ending, health_board_of_treatment, rate) %>%
     arrange(week_ending, health_board_of_treatment) %>%
     create_pathogen_adms_hb_linechart()

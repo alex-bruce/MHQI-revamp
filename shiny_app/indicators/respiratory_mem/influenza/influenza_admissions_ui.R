@@ -119,7 +119,8 @@ fluidRow(
            inputId = "influenza_adms_selected_boards", 
            label = "Select NHS Health Board(s) of interest:", 
            choices = sort(unique(admissions_hb_all_path$health_board_of_treatment)),
-           selected = sort(unique(admissions_hb_all_path$health_board_of_treatment))[2],  # skips 'National Facility'
+           selected = "NHS Scotland",
+           #selected = sort(unique(admissions_hb_all_path$health_board_of_treatment))[2],  # skips 'National Facility'
            multiple = TRUE,
            options = list(
              `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
@@ -127,7 +128,20 @@ fluidRow(
              `selected-text-format` = "count > 3" # Shows count if more than 3 selected
            )
          )),
-  
+
+fluidRow(
+  pickerInput(
+    inputId = "influenza_adms_selected_seasons", 
+    label = "Select season of interest:", 
+    choices = sort(unique(admissions_hb_all_path$Season)),
+    selected = tail(sort(unique(admissions_hb_all_path$Season)), 1),  # current season
+    multiple = TRUE,
+    options = list(
+      `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
+      `live-search` = TRUE,    # Enables search within the dropdown
+      `selected-text-format` = "count > 3" # Shows count if more than 3 selected
+    )
+  )),
 
 fluidRow(
   tabBox(width = NULL,
