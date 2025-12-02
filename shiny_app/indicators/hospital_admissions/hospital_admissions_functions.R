@@ -129,6 +129,7 @@ make_hospital_admissions_simd_plot <- function(data){
 
   yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
   xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["dtick"]] <- 2
   xaxis_plots[["range"]] <- list(-0.5, 52.5)
   yaxis_plots[["tickformat"]] <- NULL
   
