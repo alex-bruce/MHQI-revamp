@@ -24,13 +24,13 @@ altTextServer("influenza_admissions_age_modal",
               content = tags$ul(tags$li("This is a plot showing the rate of influenza hospital admission per 100,000 population by age group."),
                                 tags$li("The x axis is the week ending date."),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
-                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
+                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the NHS Scotland Health Boards."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 altTextServer("influenza_admissions_hb_modal",
               title = "Influenza hospital admission rate per 100,000 population by Health Board",
               content = tags$ul(tags$li("This is a plot showing the rate of influenza hospital admission per 100,000 population by Health Board."),
-                                tags$li("The x axis is the week ending date."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39."),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population.")
                                 ))
 
@@ -106,6 +106,7 @@ output$influenza_admissions_hb_table <- renderDataTable({
 output$influenza_admissions_plot <- renderPlotly({
   Influenza_admissions %>%
     filter(FluType == "Influenza A & B") %>%
+    filter(Season %in% flu_adm_seasons) %>% 
     create_pathogen_adms_linechart()
 
 })

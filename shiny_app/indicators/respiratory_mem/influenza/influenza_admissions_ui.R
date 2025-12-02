@@ -122,7 +122,7 @@ fluidRow(
                    pickerInput(
                       inputId = "influenza_adms_selected_seasons", 
                       label = "Select season", 
-                      choices = sort(unique(admissions_hb_all_path$Season)),
+                      choices = tail(sort(unique(admissions_hb_all_path$Season)), 6),
                       selected = tail(sort(unique(admissions_hb_all_path$Season)), 1)  # current season
                       ),
                     

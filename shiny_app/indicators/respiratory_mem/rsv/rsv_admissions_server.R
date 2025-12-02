@@ -28,7 +28,7 @@ altTextServer("rsv_admissions_age_modal",
 altTextServer("rsv_admissions_hb_modal",
               title = "RSV hospital admission rate per 100,000 population by Health Board",
               content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by Health Board."),
-                                tags$li("The x axis is the week ending date."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. "),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population.")
               ))
 
@@ -70,7 +70,7 @@ altTextServer("rsv_los_modal",
 # RSV admissions table
 output$rsv_admissions_table <- renderDataTable({
   RSV_admissions %>%
-    filter(Season %in% flu_adm_seasons) %>%
+    filter(Season %in% rsv_adm_seasons) %>%
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, Admissions) %>%
     mutate(Season = factor(Season),

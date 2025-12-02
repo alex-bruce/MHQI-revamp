@@ -104,7 +104,7 @@ tagList(
                                              pickerInput(
                                                inputId = "hospital_adms_selected_seasons", 
                                                label = "Select season of interest:", 
-                                               choices = sort(unique(admissions_hb_all_path$Season)),
+                                               choices = tail(sort(unique(admissions_hb_all_path$Season)), 3),
                                                selected = tail(sort(unique(admissions_hb_all_path$Season)), 1)  # current season
                                                ),
                                              tagList(linebreaks(1),

@@ -53,6 +53,7 @@ observeEvent(input$glossary,
              })
 
 
+
 # Hospital admissions ----
 
 altTextServer("hospital_admissions_modal",
@@ -80,11 +81,11 @@ altTextServer("hospital_admissions_age_modal",
                                 tags$li("The plot contains a trace showing the admission rate per 100k.")))
 
 altTextServer("hospital_admissions_hb_modal",
-              title = "COVID-19 hospital admission rate per 100,000 population by age group",
-              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by age group."),
-                                tags$li("The x axis is the week ending date."),
+              title = "COVID-19 hospital admission rate per 100,000 population by Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by Health Board."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39."),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
-                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
+                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the NHS Scotland Health Boards."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 
