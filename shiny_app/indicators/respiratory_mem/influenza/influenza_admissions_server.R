@@ -90,14 +90,15 @@ output$influenza_admissions_table <- renderDataTable({
 output$influenza_admissions_hb_table <- renderDataTable({
   admissions_hb_all_path %>%
     filter(admission_type == "flu") %>%
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$influenza_adms_selected_seasons) %>%
     arrange(desc(week_ending)) %>%
     select('Season' = Season,
-           'Week Ending' = week_ending, 
+           'Week number' = week, 
            'Health Board' = health_board_of_treatment,
            'Rate of hospital admissions per 100,000 population' = rate) %>%
     make_table(add_separator_cols_1dp = c(4),
-               filter_cols = c(1,2,3))
+               filter_cols = c(2,3))
 })
 
 
@@ -113,9 +114,10 @@ output$influenza_admissions_plot <- renderPlotly({
 output$influenza_admissions_hb_plot <- renderPlotly({
   admissions_hb_all_path %>%
     filter(admission_type == "flu") %>% 
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$influenza_adms_selected_seasons) %>%
-    select(Season, week_ending, health_board_of_treatment, rate) %>%
-    arrange(Season, week_ending, health_board_of_treatment) %>%
+    select(Season, week, week_ending, health_board_of_treatment, rate) %>%
+    arrange(Season, week, week_ending, health_board_of_treatment) %>%
     create_pathogen_adms_hb_linechart()
 
 })

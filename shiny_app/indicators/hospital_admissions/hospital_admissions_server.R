@@ -268,22 +268,24 @@ output$covid_admissions_age_plot <- renderPlotly({
 output$hospital_admissions_hb_table <- renderDataTable({
   admissions_hb_all_path %>%
     filter(admission_type == "cov") %>%
-    filter(Season %in% input$rsv_adms_selected_seasons) %>%
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
+    filter(Season %in% input$hospital_adms_selected_seasons) %>%
     arrange(desc(week_ending)) %>%
     select('Season' = Season,
-           'Week Ending' = week_ending, 
+           'Week number' = week, 
            'Health Board' = health_board_of_treatment,
            'Rate of hospital admissions per 100,000 population' = rate) %>%
     make_table(add_separator_cols_1dp = c(4),
-               filter_cols = c(1,2,3))
+               filter_cols = c(2,3))
 })
 
 # COVID-19 Adms by HB plot
 output$hospital_admissions_hb_plot <- renderPlotly({
   admissions_hb_all_path %>%
     filter(admission_type == "cov") %>% 
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$hospital_adms_selected_seasons) %>%
-    select(week_ending, health_board_of_treatment, rate) %>%
+    select(week, week_ending, health_board_of_treatment, rate) %>%
     arrange(week_ending, health_board_of_treatment) %>%
     create_pathogen_adms_hb_linechart()
   

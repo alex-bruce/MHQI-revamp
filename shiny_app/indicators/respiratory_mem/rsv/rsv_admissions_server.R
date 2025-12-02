@@ -83,14 +83,15 @@ output$rsv_admissions_table <- renderDataTable({
 output$rsv_admissions_hb_table <- renderDataTable({
   admissions_hb_all_path %>%
     filter(admission_type == "rsv") %>%
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$rsv_adms_selected_seasons) %>%
     arrange(desc(week_ending)) %>%
     select('Season' = Season,
-           'Week Ending' = week_ending, 
+           'Week number' = week, 
            'Health Board' = health_board_of_treatment,
            'Rate of hospital admissions per 100,000 population' = rate) %>%
     make_table(add_separator_cols_1dp = c(4),
-               filter_cols = c(1,2,3))
+               filter_cols = c(2,3))
 })
 
 
@@ -123,7 +124,7 @@ output$rsv_admissions_age_plot <- renderPlotly({
   age_rate_data_all_path %>%
     #mutate(week_ending = dmy(week_ending)) %>%
     filter(age_band != "All Ages") %>% 
-    select(Season, week_ending, age_band,
+    select(week_ending, age_band,
            rate = rsv_rate) %>%
     mutate(age_band = factor(age_band, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
                                                   "65-74", "75+"))) %>% 
@@ -147,8 +148,9 @@ observeEvent(input$respiratory_season,
 output$rsv_admissions_hb_plot <- renderPlotly({
   admissions_hb_all_path %>%
     filter(admission_type == "rsv") %>% 
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$rsv_adms_selected_seasons) %>%
-    select(week_ending, health_board_of_treatment, rate) %>%
+    select(Season, week, week_ending, health_board_of_treatment, rate) %>%
     arrange(week_ending, health_board_of_treatment) %>%
     create_pathogen_adms_hb_linechart()
   

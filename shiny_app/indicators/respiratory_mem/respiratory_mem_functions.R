@@ -799,25 +799,34 @@ create_pathogen_adms_age_linechart <- function(data){
 # Create pathogen HB Adms line chart
 create_pathogen_adms_hb_linechart <- function(data){
   
+  # put weeks in correct order for season
+  week_order <- c(seq(40, 52, 1), seq(1, 39, 1))
+
+  plot_data <- data %>% 
+    mutate(WeekNumber = as.numeric(substr(week, nchar(week) - 1, nchar(week))),
+           WeekNumber = factor(WeekNumber, levels = week_order))
+  
   tooltip_trend <- paste0(#"Season: ", plot_data$Season, "<br>",
-    "Week number: ", data$week_ending, "<br>",
-    "Health Board: ", data$health_board_of_treatment, "<br>",
-    "Admission rate per 100k: ", round(data$rate, 1), "<br>")
+    "Week number: ", plot_data$WeekNumber, "<br>",
+    "Health Board: ", plot_data$health_board_of_treatment, "<br>",
+    "Admission rate per 100k: ", round(plot_data$rate, 1), "<br>")
   
   yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
   xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["dtick"]] <- 2
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   
   
-  p <- plot_ly(data) %>%
-    add_trace(data = data[data$health_board_of_treatment!= "NHS Scotland", ],
-              x = ~week_ending, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
+  
+  p <- plot_ly(plot_data) %>%
+    add_trace(data = plot_data[plot_data$health_board_of_treatment!= "NHS Scotland", ],
+              x = ~WeekNumber, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
               type = "scatter", mode = "lines",
               #color = ~age_band,
               #colors = phs_colours(c("phs-blue")),
-              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
                                      '<b>Health Board</b>: %{text}<br>',
                                      '<b>Admission rate per 100k</b>: %{y}'),
               textposition = "none",
@@ -825,12 +834,12 @@ create_pathogen_adms_hb_linechart <- function(data){
               hoverinfo = "text",
               visible = "legendonly"
     ) %>%
-    add_trace(data = data[data$health_board_of_treatment == "NHS Scotland", ],
-              x = ~week_ending, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
+    add_trace(data = plot_data[plot_data$health_board_of_treatment == "NHS Scotland", ],
+              x = ~WeekNumber, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
               type = "scatter", mode = "lines",
               #color = ~age_band,
               #colors = phs_colours(c("phs-blue")),
-              hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
                                      '<b>Health Board</b>: %{text}<br>',
                                      '<b>Admission rate per 100k</b>: %{y}'),
               textposition = "none",
