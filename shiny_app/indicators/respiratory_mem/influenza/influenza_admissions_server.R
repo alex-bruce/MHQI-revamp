@@ -41,6 +41,13 @@ altTextServer("influenza_admissions_age_modal",
                                 tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
+altTextServer("influenza_admissions_hb_modal",
+              title = "Influenza hospital admission rate per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of influenza hospital admission per 100,000 population by NHS Health Board."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population.")
+                                ))
+
 
 altTextServer("flu_adm_age_sex",
               title = glue("Acute influenza admissions by age and sex in Scotland"),
@@ -117,13 +124,43 @@ output$influenza_admissions_table <- renderDataTable({
 })
 
 
+# Influenza HB admissions table
+output$influenza_admissions_hb_table <- renderDataTable({
+  admissions_hb_all_path %>%
+    filter(admission_type == "flu") %>%
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
+    filter(Season %in% input$influenza_adms_selected_seasons) %>%
+    arrange(desc(week_ending)) %>%
+    select('Season' = Season,
+           'Week number' = week, 
+           'Health Board' = health_board_of_treatment,
+           'Rate of hospital admissions per 100,000 population' = rate) %>%
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(2,3))
+})
+
+
 # Influenza Adms plot
 output$influenza_admissions_plot <- renderPlotly({
   Influenza_admissions %>%
-    #filter(FluType == "Influenza A & B") %>%
+    filter(FluType == "Influenza A & B") %>%
+    filter(Season %in% flu_adm_seasons) %>% 
     create_pathogen_adms_linechart()
 
 })
+
+# Influenza Adms by HB plot
+output$influenza_admissions_hb_plot <- renderPlotly({
+  admissions_hb_all_path %>%
+    filter(admission_type == "flu") %>% 
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
+    filter(Season %in% input$influenza_adms_selected_seasons) %>%
+    select(Season, week, week_ending, health_board_of_treatment, rate) %>%
+    arrange(Season, week, week_ending, health_board_of_treatment) %>%
+    create_pathogen_adms_hb_linechart()
+
+})
+
 
 # Influenza admissions by age table
 output$influenza_admissions_age_table <- renderDataTable({

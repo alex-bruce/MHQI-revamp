@@ -2,6 +2,40 @@
 ###########################
 ### HOSPITAL ADMISSIONS ### ----
 ###########################
+#admissions labels- (matches Respiratory_admissions_summary data set)
+latest_week_admissions_title <-Respiratory_admissions_summary %>%
+  tail(1) %>%
+  select(Date)
+
+# # Convert to the correct format
+latest_week_admissions_title$Date<- format(latest_week_admissions_title $Date, "%d %b %y")
+ 
+# # make it a value
+latest_week_admissions_title <- latest_week_admissions_title$Date
+ 
+previous_week_admissions_title <- Respiratory_admissions_summary %>%
+  filter(CaseDefinition=='RSV') %>%
+  tail(2) %>%
+  filter(Date== min(Date)) %>%
+  select(Date)
+ 
+# # Convert to correct format
+previous_week_admissions_title $Date<- format(previous_week_admissions_title $Date, "%d %b %y")
+ 
+# # make it a value
+previous_week_admissions_title <- previous_week_admissions_title$Date
+ 
+previous_2week_admissions_title <- Respiratory_admissions_summary %>%
+  filter(CaseDefinition=='RSV') %>%
+  tail(3) %>%
+  filter(Date== min(Date)) %>%
+  select(Date)
+ 
+# # Convert to correct format
+previous_2week_admissions_title $Date<- format(previous_2week_admissions_title $Date, "%d %b %y")
+ 
+# # make it a value
+previous_2week_admissions_title <- previous_2week_admissions_title$Date
 
 metadataButtonServer(id="hospital_admissions",
                      panel="COVID-19 hospital admissions",
@@ -17,6 +51,7 @@ observeEvent(input$glossary,
                updateCollapse(session = session, "notes_collapse", open = "Glossary")
 
              })
+
 
 
 # Hospital admissions ----
@@ -79,6 +114,13 @@ altTextServer("hospital_admissions_age_modal",
                                 tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
+altTextServer("hospital_admissions_hb_modal",
+              title = "COVID-19 hospital admission rate per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by NHS Health Board."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39."),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the NHS Scotland Health Boards."),
+                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 
 
@@ -283,11 +325,34 @@ output$covid_admissions_age_plot <- renderPlotly({
   
 })
 
+#### WEEKLY ADMISSIONS BY HEALTH BOARD
 
+# COVID-19 HB admissions table
+output$hospital_admissions_hb_table <- renderDataTable({
+  admissions_hb_all_path %>%
+    filter(admission_type == "cov") %>%
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
+    filter(Season %in% input$hospital_adms_selected_seasons) %>%
+    arrange(desc(week_ending)) %>%
+    select('Season' = Season,
+           'Week number' = week, 
+           'Health Board' = health_board_of_treatment,
+           'Rate of hospital admissions per 100,000 population' = rate) %>%
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(2,3))
+})
 
-
-
-
+# COVID-19 Adms by HB plot
+output$hospital_admissions_hb_plot <- renderPlotly({
+  admissions_hb_all_path %>%
+    filter(admission_type == "cov") %>% 
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
+    filter(Season %in% input$hospital_adms_selected_seasons) %>%
+    select(week, week_ending, health_board_of_treatment, rate) %>%
+    arrange(week_ending, health_board_of_treatment) %>%
+    create_pathogen_adms_hb_linechart()
+  
+})
 
 ### WEEKLY ADMISSIONS BY SIMD ### ----
 
@@ -348,24 +413,21 @@ output$hospital_admissions_simd_plot <- renderPlotly({
 })
 
 
-
-### WEEKLY HB ADMISSIONS Table ### ----
-
-output$hospital_admissions_hb_table <- renderDataTable({
-  Admissions_HB_3wks%>%
-   # filter(WeekEnding %in% adm_hb_dates) %>%
-    rename(HealthBoard=HealthBoardOfTreatment) %>%
-    mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
-    pivot_wider(names_from = WeekEnding,
-                values_from = TotalInfections) %>%
-    mutate(HealthBoard = factor(HealthBoard,
-                                levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
-                                                        "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
-                                                        "NHS Tayside", "NHS Western Isles", "Golden Jubilee National Hospital", "Scotland"))) %>%
-    arrange(HealthBoard) %>%
-    dplyr::rename(`Health Board of treatment` = HealthBoard) %>%
-    make_summary_table(maxrows = 16)
-})
+# output$hospital_admissions_hb_table <- renderDataTable({
+#   Admissions_HB_3wks%>%
+#    # filter(WeekEnding %in% adm_hb_dates) %>%
+#     rename(HealthBoard=HealthBoardOfTreatment) %>%
+#     mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
+#     pivot_wider(names_from = WeekEnding,
+#                 values_from = TotalInfections) %>%
+#     mutate(HealthBoard = factor(HealthBoard,
+#                                 levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
+#                                                         "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
+#                                                         "NHS Tayside", "NHS Western Isles", "Golden Jubilee National Hospital", "Scotland"))) %>%
+#     arrange(HealthBoard) %>%
+#     dplyr::rename(`Health Board of treatment` = HealthBoard) %>%
+#     make_summary_table(maxrows = 16)
+# })
 
 
 ### LENGTH OF STAY ### ----

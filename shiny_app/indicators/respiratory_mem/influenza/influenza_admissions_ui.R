@@ -88,6 +88,7 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
     linebreaks(1)
       ), # fluidRow
 
+
 tagList(h2("Rate of acute influenza hospital admissions by age group")),
 
 #),
@@ -114,6 +115,41 @@ fluidRow(
          
   ), # tabBox
   linebreaks(1)
+), 
+
+fluidRow(width = 12,
+         tagList(h2("Rate of influenza admissions by NHS Health Board of treatment")),
+         linebreaks(1)),
+
+fluidRow(
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  br(),
+                   pickerInput(
+                      inputId = "influenza_adms_selected_seasons", 
+                      label = "Select season", 
+                      choices = tail(sort(unique(admissions_hb_all_path$Season)), 6),
+                      selected = tail(sort(unique(admissions_hb_all_path$Season)), 1)  # current season
+                      ),
+                    
+                  tagList(linebreaks(1),
+                          altTextUI("influenza_admissions_hb_modal"),
+                          withNavySpinner(plotlyOutput("influenza_admissions_hb_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("influenza_admissions_hb_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+) 
+
+
+
+# fluidRow
 ), # fluidRow
 
 
@@ -235,7 +271,7 @@ tabBox(width = NULL, type = "pills",
 ### end LOS section
 
 # Padding out the bottom of the page
-fluidRow(height="200px", width=12, linebreaks(5))
+#fluidRow(height="200px", width=12, linebreaks(5))
 
 )#taglist
 

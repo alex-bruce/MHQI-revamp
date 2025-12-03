@@ -1,3 +1,5 @@
+
+
 metadataButtonServer(id="respiratory_rsv_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
@@ -48,7 +50,12 @@ altTextServer("rsv_admissions_age_modal",
                                 tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
-
+altTextServer("rsv_admissions_hb_modal",
+              title = "RSV hospital admission rate per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by NHS Health Board."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. "),
+                                tags$li("The y axis shows the hospital admission rate per 100,000 population.")
+              ))
 
 
 altTextServer("rsv_adm_age_sex",
@@ -120,6 +127,21 @@ output$rsv_admissions_table <- renderDataTable({
     make_table(filter_cols = c(1,2))
 })
 
+# RSV HB admissions table
+output$rsv_admissions_hb_table <- renderDataTable({
+  admissions_hb_all_path %>%
+    filter(admission_type == "rsv") %>%
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
+    filter(Season %in% input$rsv_adms_selected_seasons) %>%
+    arrange(desc(week_ending)) %>%
+    select('Season' = Season,
+           'Week number' = week, 
+           'Health Board' = health_board_of_treatment,
+           'Rate of hospital admissions per 100,000 population' = rate) %>%
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(2,3))
+})
+
 
 # RSV admissions by age table
 output$rsv_admissions_age_table <- renderDataTable({
@@ -172,22 +194,16 @@ observeEvent(input$respiratory_season,
              }
 )
 
-
-# HB Table
-output$rsv_admissions_hb_table <- renderDataTable({
-  RSV_Admissions_HB_3wks %>%
-   # filter(WeekEnding %in% adm_hb_dates) %>%
-    mutate(WeekEnding = format(WeekEnding, format = "%d %b %y")) %>%
-    select(WeekEnding, HealthBoardOfTreatment,TotalInfections) %>% 
-    pivot_wider(names_from = WeekEnding,
-                values_from = TotalInfections) %>%
-    mutate(HealthBoardOfTreatment = factor(HealthBoardOfTreatment,
-                                           levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
-                                                      "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
-                                                      "NHS Tayside", "NHS Western Isles","Golden Jubilee National Hospital", "Scotland"))) %>%
-    arrange(HealthBoardOfTreatment) %>%
-    dplyr::rename(`Health Board of treatment` = HealthBoardOfTreatment) %>%
-    make_summary_table(maxrows = 16)
+# RSV Adms by HB plot
+output$rsv_admissions_hb_plot <- renderPlotly({
+  admissions_hb_all_path %>%
+    filter(admission_type == "rsv") %>% 
+    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
+    filter(Season %in% input$rsv_adms_selected_seasons) %>%
+    select(Season, week, week_ending, health_board_of_treatment, rate) %>%
+    arrange(week_ending, health_board_of_treatment) %>%
+    create_pathogen_adms_hb_linechart()
+  
 })
 
 ### WEEKLY ADMISSIONS BY SIMD ### ----

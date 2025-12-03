@@ -890,6 +890,70 @@ create_pathogen_adms_age_linechart <- function(data){
   
 }
 
+# Create pathogen HB Adms line chart
+create_pathogen_adms_hb_linechart <- function(data){
+  
+  # put weeks in correct order for season
+  week_order <- c(seq(40, 52, 1), seq(1, 39, 1))
+
+  plot_data <- data %>% 
+    mutate(WeekNumber = as.numeric(substr(week, nchar(week) - 1, nchar(week))),
+           WeekNumber = factor(WeekNumber, levels = week_order))
+  
+  tooltip_trend <- paste0(#"Season: ", plot_data$Season, "<br>",
+    "Week number: ", plot_data$WeekNumber, "<br>",
+    "Health Board: ", plot_data$health_board_of_treatment, "<br>",
+    "Admission rate per 100k: ", round(plot_data$rate, 1), "<br>")
+  
+  yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
+  xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["dtick"]] <- 2
+  xaxis_plots[["range"]] <- list(-0.5, 52.5)
+  
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["tickformat"]] <- NULL
+  
+  
+  
+  p <- plot_ly(plot_data) %>%
+    add_trace(data = plot_data[plot_data$health_board_of_treatment!= "NHS Scotland", ],
+              x = ~WeekNumber, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
+              type = "scatter", mode = "lines",
+              #color = ~age_band,
+              #colors = phs_colours(c("phs-blue")),
+              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
+                                     '<b>Health Board</b>: %{text}<br>',
+                                     '<b>Admission rate per 100k</b>: %{y}'),
+              textposition = "none",
+              text = tooltip_trend[data$health_board_of_treatment!= "NHS Scotland"],
+              hoverinfo = "text",
+              visible = "legendonly"
+    ) %>%
+    add_trace(data = plot_data[plot_data$health_board_of_treatment == "NHS Scotland", ],
+              x = ~WeekNumber, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
+              type = "scatter", mode = "lines",
+              #color = ~age_band,
+              #colors = phs_colours(c("phs-blue")),
+              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
+                                     '<b>Health Board</b>: %{text}<br>',
+                                     '<b>Admission rate per 100k</b>: %{y}'),
+              textposition = "none",
+              text = tooltip_trend[data$health_board_of_treatment!= "NHS Scotland"],
+              hoverinfo = "text"
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
+}
+
+
 # create_pathogen_adms_age_linechart <- function(data){
 #   
 #   yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
