@@ -1,6 +1,6 @@
 tagList(
   fluidRow(width = 12,
-
+           
            metadataButtonUI("cases"),
            linebreaks(1),
            # h1("COVID-19 cases"),
@@ -11,100 +11,163 @@ tagList(
            #   "Additional information can be found on the PHS page for" , tags$a(href = "https://publichealthscotland.scot/our-areas-of-work/conditions-and-diseases/covid-19/",
            #                                                                      "COVID-19"), "."),
            # linebreaks(1)
-           ),
-
-#   fluidRow(width = 12,
-#            tagList(h2("Seven day average trend in wastewater COVID-19"),
-#                    tags$div(class = "headline",
-#                             h3(glue("Figure from week ending {Wastewater %>% tail(1) %>%
-#                 .$Date %>% convert_opendata_date() %>% format('%d %b %y')}")),
-#                 valueBox(value = {Wastewater %>% tail(1) %>%
-#                     .$WastewaterSevenDayAverageMgc %>%
-#                     signif(3) %>%
-#                     paste("Mgc/p/d")},
-#                     subtitle = "COVID-19 wastewater level",
-#                     color = "navy",
-#                     icon = icon_no_warning_fn("faucet-drip")),
-#                 # This text is hidden by css but helps pad the box at the bottom
-#                 h6("hidden text for padding page"))),
-#            linebreaks(1)),
-# 
-# 
-#   fluidRow(
-#     tabBox(width = NULL,
-#            type = "pills",
-#            tabPanel("Plot",
-#                     tagList(linebreaks(1),
-#                             altTextUI("wastewater_modal"),
-#                             withNavySpinner(plotlyOutput("wastewater_plot")),
-#                             fluidRow(column(
-#                               width=12, linebreaks(5),
-#                               p("Wastewater data analyses for COVID-19 are produced by",
-#                                 "PHS Wastewater Analysis Group for the Wastewater Monitoring Programme in Scotland,",
-#                                 "which is operated by Scottish Government in partnership with",
-#                                 "Scottish Water and the Scottish Environment Protection Agency."),
-# 
-#                             )))),
-#            tabPanel("Data",
-#                     tagList(linebreaks(1),
-#                             withNavySpinner(dataTableOutput("wastewater_table"))
-#                     ) # tagList
-#            ) # tabPanel
-# 
-#     ) # tabBox
-#   ), # fluidRow
-# 
-#   fluidRow(
-#     width = 12, br()),
-
-
-fluidRow(width = 12,
-         tagList(h2("COVID-19 percentage test positivity"),
-                 tabBox(width = NULL,
-                        type = "pills",
-                        tabPanel("Plot",
-                                 tagList(linebreaks(1),
-                                         altTextUI("covid_positivity_modal"),
-                                         swabposDefinitionUI("covid_swabpos"),
-                                         withNavySpinner(plotlyOutput("covid_positivity_plot")),
-                                         fluidRow(
-                                           width=12, linebreaks(1)))),
-                        tabPanel("Data",
-                                 tagList(
-                                   withNavySpinner(dataTableOutput("covid_positivity_table"))
-                                 ) # tagList
-                        ) # tabPanel
-                 ) # tabBox
-         ) # tagList
-), #fluidrow
-
-
-
+  ),
+  
+  #   fluidRow(width = 12,
+  #            tagList(h2("Seven day average trend in wastewater COVID-19"),
+  #                    tags$div(class = "headline",
+  #                             h3(glue("Figure from week ending {Wastewater %>% tail(1) %>%
+  #                 .$Date %>% convert_opendata_date() %>% format('%d %b %y')}")),
+  #                 valueBox(value = {Wastewater %>% tail(1) %>%
+  #                     .$WastewaterSevenDayAverageMgc %>%
+  #                     signif(3) %>%
+  #                     paste("Mgc/p/d")},
+  #                     subtitle = "COVID-19 wastewater level",
+  #                     color = "navy",
+  #                     icon = icon_no_warning_fn("faucet-drip")),
+  #                 # This text is hidden by css but helps pad the box at the bottom
+  #                 h6("hidden text for padding page"))),
+  #            linebreaks(1)),
+  # 
+  # 
+  #   fluidRow(
+  #     tabBox(width = NULL,
+  #            type = "pills",
+  #            tabPanel("Plot",
+  #                     tagList(linebreaks(1),
+  #                             altTextUI("wastewater_modal"),
+  #                             withNavySpinner(plotlyOutput("wastewater_plot")),
+  #                             fluidRow(column(
+  #                               width=12, linebreaks(5),
+  #                               p("Wastewater data analyses for COVID-19 are produced by",
+  #                                 "PHS Wastewater Analysis Group for the Wastewater Monitoring Programme in Scotland,",
+  #                                 "which is operated by Scottish Government in partnership with",
+  #                                 "Scottish Water and the Scottish Environment Protection Agency."),
+  # 
+  #                             )))),
+  #            tabPanel("Data",
+  #                     tagList(linebreaks(1),
+  #                             withNavySpinner(dataTableOutput("wastewater_table"))
+  #                     ) # tagList
+  #            ) # tabPanel
+  # 
+  #     ) # tabBox
+  #   ), # fluidRow
+  # 
+  #   fluidRow(
+  #     width = 12, br()),
+  
+  
   fluidRow(width = 12,
-         tagList(h2("Laboratory-confirmed COVID-19 incidence per 100,000 population in Scotland"))),
-
+           tagList(h2("COVID-19 percentage test positivity"),
+                   tabBox(width = NULL,
+                          type = "pills",
+                          tabPanel("Plot",
+                                   tagList(linebreaks(1),
+                                           altTextUI("covid_positivity_modal"),
+                                           swabposDefinitionUI("covid_swabpos"),
+                                           withNavySpinner(plotlyOutput("covid_positivity_plot")),
+                                           fluidRow(
+                                             width=12, linebreaks(1)))),
+                          tabPanel("Data",
+                                   tagList(
+                                     withNavySpinner(dataTableOutput("covid_positivity_table"))
+                                   ) # tagList
+                          ) # tabPanel
+                   ) # tabBox
+           ) # tagList
+  ), #fluidrow
+  
+  
+  
+  # fluidRow(width = 12,
+  #        tagList(h2("Laboratory-confirmed COVID-19 incidence per 100,000 population in Scotland"))),
+  # 
+  # fluidRow(
+  #   tabBox(width = NULL,
+  #          type = "pills",
+  #          tabPanel("Plot",
+  #                   tagList(linebreaks(1),
+  #                           altTextUI("reported_cases_per_100k"),
+  #                           withNavySpinner(plotlyOutput("covid_line_plot")),
+  #                   )),
+  #          tabPanel("Data",
+  #                   tagList(
+  #                     withNavySpinner(dataTableOutput("covid_cases_table"))
+  #                   ) # tagList
+  #          )
+  #          
+  #   ), # tabBox
+  #   linebreaks(1)
+  # ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("Laboratory-confirmed COVID-19 incidence per 100,000 population in Scotland"))),
+  
   fluidRow(
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
                     tagList(linebreaks(1),
-                            altTextUI("reported_cases_per_100k"),
-                            withNavySpinner(plotlyOutput("covid_line_plot")),
+                            altTextUI("covid_mem_modal"),
+                            withNavySpinner(plotlyOutput("covid_mem_plot")),
                     )),
            tabPanel("Data",
-                    tagList(
-                      withNavySpinner(dataTableOutput("covid_cases_table"))
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("covid_mem_table"))
                     ) # tagList
-           )
+           ) # tabPanel
            
     ), # tabBox
     linebreaks(1)
   ), # fluidRow
-
+  
+  fluidRow(width = 12,
+           tagList(h2("Laboratory-confirmed COVID-19 incidence per 100,000 population by NHS Health Board"))),
+  
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("covid_mem_hb_modal"),
+                            withNavySpinner(plotlyOutput("covid_mem_hb_plot", height = "500px")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("covid_mem_hb_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
+  fluidRow(width = 12,
+           tagList(h2("Laboratory-confirmed COVID-19 incidence per 100,000 population by age group"))),
+  
+  fluidRow(
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("covid_mem_age_modal"),
+                            withNavySpinner(plotlyOutput("covid_mem_age_plot")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("covid_mem_age_table"))
+                    ) # tagList
+           ) # tabPanel
+           
+    ), # tabBox
+    linebreaks(1)
+  ), # fluidRow
+  
   # Padding out the bottom of the page
   fluidRow(
     width=12, linebreaks(5))
-
+  
 )#taglist
 
 

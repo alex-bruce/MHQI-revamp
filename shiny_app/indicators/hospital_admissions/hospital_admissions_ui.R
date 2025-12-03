@@ -1,6 +1,12 @@
 
 admissions_hb_all_path <- admissions_hb_all_path %>%
   mutate(Season = gsub("-", "/", Season))
+admissions_seasons <- age_rate_data_all_path %>%
+  add_season() %>%
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>%
+  select(Season) %>%
+  unique() %>%
+  unlist(., use.names=FALSE)
 
 tagList(
   fluidRow(width = 12,
@@ -48,7 +54,8 @@ tagList(
                                                ,
                                             ),
 
-
+                                   tagList(h2("Rate of acute COVID-19 hospital admissions in Scotland")),
+                                   
                            tabBox(width = NULL, type = "pills",
                                   tabPanel("Plot",
                                            tagList(
@@ -58,7 +65,7 @@ tagList(
                                            fluidRow(column(
                                              width=12, linebreaks(1),
                                              p("*Hospital admissions for the most recent week may be incomplete,",
-                                               "and should be treated as provisional and interpreted with caution."),
+                                               "and should be treated as provisional and interpreted with caution.")
                                            ))),
                                   tabPanel("Data",
                                            tagList(
@@ -77,6 +84,11 @@ tagList(
                              tabBox(width = NULL,
                                     type = "pills",
                                     tabPanel("Plot",
+                                             br(),
+                                             pickerInput(inputId = "adm_season_cov_age",
+                                                         label = "Select season",
+                                                         choices = {admissions_seasons %>%  tail(3) },
+                                                         selected = {admissions_seasons %>% tail(1)}),
                                              tagList(linebreaks(1),
                                                      altTextUI("hospital_admissions_age_modal"),
                                                      withNavySpinner(plotlyOutput("covid_admissions_age_plot")),
@@ -138,14 +150,19 @@ tagList(
                            #          box(width = NULL,
                            #              withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))),
                            # ),
-                           
-                           tagList(h2("Weekly number of acute COVID-19 hospital admissions by deprivation category (SIMD)"))
-                           
+
+                           tagList(h2("Rate of acute COVID-19 hospital admissions by deprivation category (SIMD)"))
+
                            ),
                            br(),
                            
                            tabBox(width = NULL, type = "pills",
                                   tabPanel("Plot",
+                                           br(),
+                                           pickerInput(inputId = "adm_season_cov_simd",
+                                                       label = "Select season",
+                                                       choices = {admissions_seasons %>%  tail(3) },
+                                                       selected = {admissions_seasons %>% tail(1)}),
                                            tagList(
                                              linebreaks(1),
                                              altTextUI("hospital_admissions_simd_modal"),

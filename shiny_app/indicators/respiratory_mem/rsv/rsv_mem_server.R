@@ -248,7 +248,7 @@ output$rsv_mem_hb_plot <- renderPlotly({
       TRUE ~ ActivityLevel
     )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
-    create_mem_heatmap(breakdown_variable = "HBCode")
+    create_mem_heatmap(breakdown_variable = "HBName")
 
 })
 

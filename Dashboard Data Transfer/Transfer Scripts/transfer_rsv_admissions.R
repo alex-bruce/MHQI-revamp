@@ -26,7 +26,8 @@ i_rsv_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "
 
 g_rsv_admissions <- i_rsv_admissions %>%
   dplyr::rename(Admissions = Freq_RSV_positives,
-                Date = week_end) %>%
+                Date = week_end,
+                RatePer100000 = Rate_per_100000) %>%
   mutate(date = as.Date(Date)) %>%
   left_join(date_reference) %>%
   mutate(Date = as_date(ceiling_date(as_date(Date), "week",
@@ -34,7 +35,7 @@ g_rsv_admissions <- i_rsv_admissions %>%
   dplyr::rename(Year = year,
                 ISOWeek = ISOweek,
                 Season = flu_season) %>%
-  select(Date, Year, ISOWeek, Weekord, Season, Admissions)
+  select(Date, Year, ISOWeek, Weekord, Season, Admissions, RatePer100000)
 
 
 

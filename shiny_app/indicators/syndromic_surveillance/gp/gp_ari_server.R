@@ -1,30 +1,30 @@
-metadataButtonServer(id="gp_mem",
+metadataButtonServer(id="gp_ari_mem",
                      panel="GP infection activity",
                      parent = session)
 
 # Low threshold
-gp_low_threshold <- Respiratory_GPILI_MEM_Scot %>%
+gp_ari_low_threshold <- Respiratory_GPARI_MEM_Scot %>%
   select(LowThreshold) %>%
   distinct() %>%
   .$LowThreshold %>%
   round_half_up(2)
 
 # Moderate threshold
-gp_moderate_threshold <- Respiratory_GPILI_MEM_Scot %>%
+gp_ari_moderate_threshold <- Respiratory_GPARI_MEM_Scot %>%
   select(MediumThreshold) %>%
   distinct() %>%
   .$MediumThreshold %>%
   round_half_up(2)
 
 # High threshold
-gp_high_threshold <- Respiratory_GPILI_MEM_Scot %>%
+gp_ari_high_threshold <- Respiratory_GPARI_MEM_Scot %>%
   select(HighThreshold) %>%
   distinct() %>%
   .$HighThreshold %>%
   round_half_up(2)
 
 # Extraordinary
-gp_extraordinary_threshold <- Respiratory_GPILI_MEM_Scot %>%
+gp_ari_extraordinary_threshold <- Respiratory_GPARI_MEM_Scot %>%
   select(ExtraordinaryThreshold) %>%
   distinct() %>%
   .$ExtraordinaryThreshold %>%
@@ -45,36 +45,36 @@ gp_extraordinary_threshold <- Respiratory_GPILI_MEM_Scot %>%
 # seasons <- seasons$Season
 
 # Get seasons used in line chart
-gp_seasons <- Respiratory_GPILI_MEM_Scot %>%
+gp_ari_seasons <- Respiratory_GPARI_MEM_Scot %>%
   select(Season) %>%
   arrange(Season) %>%
   distinct() %>%
   tail(6)
-gp_seasons <- gp_seasons$Season
+gp_ari_seasons <- gp_ari_seasons$Season
 
 
 
-altTextServer("gp_mem_modal",
-              title = "GP consultation rates for influenza-like illness (ILI) per 100,000 population",
-              content = tags$ul(tags$li("This is a plot showing the rate of GP consultations per 100,000 population in Scotland."),
+altTextServer("gp_ari_mem_modal",
+              title = "GP consultation rates for acute respiratory infections (ARI) per 100,000 population",
+              content = tags$ul(tags$li("This is a plot showing the rate of GP consultations for ARI per 100,000 population in Scotland."),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the rate of GP consultations for ILI per 100,000 population."),
-                                tags$li(glue("There is a trace for each of the following seasons: ", gp_seasons[1], ", ",
-                                             gp_seasons[2], ", ", gp_seasons[3], ", ", gp_seasons[4], 
-                                             ", ", gp_seasons[5],", and ", gp_seasons[6], ".")),
-                                tags$li(glue("Activity levels for GP consultations for ILI based on MEM thresholds are represented by different coloured panels on the plot. ",
-                                             "The activity levels and MEM thresholds for GP consultations are: ",
-                                             "Baseline (< ", gp_low_threshold, "), ",
-                                             "Low (", gp_low_threshold, "-", gp_moderate_threshold-0.01, "), ",
-                                             "Medium (", gp_moderate_threshold, "-", gp_high_threshold-0.01, "), ",
-                                             "High (", gp_high_threshold, "-", gp_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", gp_extraordinary_threshold, ")."))))
+                                tags$li("The y axis shows the rate of GP consultations for ARI per 100,000 population."),
+                                tags$li(glue("There is a trace for each of the following seasons: ", gp_ari_seasons[1], ", ",
+                                             gp_ari_seasons[2], ", ", gp_ari_seasons[3], ", ", gp_ari_seasons[4], 
+                                             ", ", gp_ari_seasons[5],", and ", gp_ari_seasons[6], ".")),
+                                tags$li(glue("Activity levels for GP consultations for ARI based on MEM thresholds are represented by different coloured panels on the plot. ",
+                                             "The activity levels and MEM thresholds for GP ARI consultations are: ",
+                                             "Baseline (< ", gp_ari_low_threshold, "), ",
+                                             "Low (", gp_ari_low_threshold, "-", gp_ari_moderate_threshold-0.01, "), ",
+                                             "Medium (", gp_ari_moderate_threshold, "-", gp_ari_high_threshold-0.01, "), ",
+                                             "High (", gp_ari_high_threshold, "-", gp_ari_extraordinary_threshold-0.01, "), and ",
+                                             "Very High (>= ", gp_ari_extraordinary_threshold, ")."))))
 
-altTextServer("gp_mem_hb_modal",
-              title = "GP consultation rates for influenza-like illness (ILI) per 100,000 population by NHS Health Board",
-              content = tags$ul(tags$li(glue("This is a plot showing the rate of GP consultations for ILI per 100,000 population by NHS Health Board for seasons ",
-                                             gp_seasons[5], " and ", gp_seasons[6], ".")),
+altTextServer("gp_ari_mem_hb_modal",
+              title = "GP consultation rates for acute respiratory infections (ARI) per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li(glue("This is a plot showing the rate of GP consultations for ARI per 100,000 population by NHS Health Board for seasons ",
+                                             gp_ari_seasons[5], " and ", gp_ari_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the NHS Health Board."),
@@ -88,10 +88,10 @@ altTextServer("gp_mem_hb_modal",
                                                href="https://www.publichealthscotland.scot/publications/show-all-releases?id=102486"))))
 
 
-altTextServer("gp_mem_age_modal",
-              title = "GP consultation rates for influenza-like illness (ILI) per 100,000 population by age group",
-              content = tags$ul(tags$li(glue("This is a plot showing the rate of GP consultations for ILI infection per 100,000 population by age group for seasons ",
-                                             gp_seasons[5], " and ", gp_seasons[6], ".")),
+altTextServer("gp_ari_mem_age_modal",
+              title = "GP consultation rates for acute respiratory infections (ARI) per 100,000 population by age group",
+              content = tags$ul(tags$li(glue("This is a plot showing the rate of GP consultations for ARI per 100,000 population by age group for seasons ",
+                                             gp_ari_seasons[5], " and ", gp_ari_seasons[6], ".")),
                                 tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis shows the age group."),
@@ -106,9 +106,9 @@ altTextServer("gp_mem_age_modal",
 
 
 # GP MEM table
-output$gp_mem_table <- renderDataTable({
-  Respiratory_GPILI_MEM_Scot %>%
-    filter(Season %in% gp_seasons) %>%
+output$gp_ari_mem_table <- renderDataTable({
+  Respiratory_GPARI_MEM_Scot %>%
+    filter(Season %in% gp_ari_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, RatePer100000, ActivityLevel) %>%
     mutate(ActivityLevel = case_when(
@@ -127,9 +127,9 @@ output$gp_mem_table <- renderDataTable({
 })
 
 # GP MEM by HB table
-output$gp_mem_hb_table <- renderDataTable({
-  Respiratory_GPILI_MEM_HB %>%
-    filter(Season %in% gp_seasons) %>%
+output$gp_ari_mem_hb_table <- renderDataTable({
+  Respiratory_GPARI_MEM_HB %>%
+    filter(Season %in% gp_ari_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
     mutate(ActivityLevel = case_when(
@@ -150,9 +150,9 @@ output$gp_mem_hb_table <- renderDataTable({
 })
 
 # GP MEM by Age table
-output$gp_mem_age_table <- renderDataTable({
-  Respiratory_GPILI_MEM_Age %>%
-    filter(Season %in% gp_seasons) %>%
+output$gp_ari_mem_age_table <- renderDataTable({
+  Respiratory_GPARI_MEM_Age %>%
+    filter(Season %in% gp_ari_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
     mutate(ActivityLevel = case_when(
@@ -174,20 +174,20 @@ output$gp_mem_age_table <- renderDataTable({
 
 
 # GP MEM plot
-output$gp_mem_plot <- renderPlotly({
-  Respiratory_GPILI_MEM_Scot %>%
+output$gp_ari_mem_plot <- renderPlotly({
+  Respiratory_GPARI_MEM_Scot %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
       ActivityLevel == "Extraordinary" ~ "Very High",
       TRUE ~ ActivityLevel
     )) %>%
     create_mem_linechart()
-
+  
 })
 
 # GP MEM by HB plot
-output$gp_mem_hb_plot <- renderPlotly({
-  Respiratory_GPILI_MEM_HB %>%
+output$gp_ari_mem_hb_plot <- renderPlotly({
+  Respiratory_GPARI_MEM_HB %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
       ActivityLevel == "Extraordinary" ~ "Very High",
@@ -195,13 +195,13 @@ output$gp_mem_hb_plot <- renderPlotly({
     )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "HBCode")
-
+  
 })
 
 
 # GP MEM by Age plot
-output$gp_mem_age_plot <- renderPlotly({
-  Respiratory_GPILI_MEM_Age %>%
+output$gp_ari_mem_age_plot <- renderPlotly({
+  Respiratory_GPARI_MEM_Age %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
       ActivityLevel == "Extraordinary" ~ "Very High",
@@ -209,7 +209,7 @@ output$gp_mem_age_plot <- renderPlotly({
     )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "AgeGroup")
-
+  
 })
 
 

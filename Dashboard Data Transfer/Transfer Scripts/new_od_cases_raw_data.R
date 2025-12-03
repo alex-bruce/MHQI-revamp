@@ -4,11 +4,11 @@
 
 #file paths are loaded from 000_File_paths.R
 
-#1. CASES-----------------------------------------------------------------------
+#CASES-----------------------------------------------------------------------
 
-#1a. Non COVID-19 respiratory---------------------------------------------------
+#1. Non COVID-19 respiratory---------------------------------------------------
 
-##read in all files at once from input folder and create df list----
+##SCOTLAND, HB, Age Sex----
 resp_filenames <- c("scotland", "agegp_sex", "hb")
 
 resp_files<-
@@ -19,7 +19,34 @@ resp_files<-
 
 ##agegp_sex: seasons are in a diffrent format, correcting it
 resp_files[[2]]<-resp_files[[2]] %>% 
-  mutate(season = paste0(substr(season,1,5), substr(season,8,9)))
+  mutate(season = paste0(substr(season,1,5), substr(season,8,9)))%>%
+  mutate(sex=recode(sex,"F"="Female",
+                    "M"="Male")) %>% 
+  mutate(agegp = recode(agegp,
+                        "gunder1" = "<1",
+                        "g1to4" = "1 to 4",
+                        "g5to14" = "5 to 14",
+                        "g15to44" = "15 to 44",
+                        "g45to64" = "45 to 64",
+                        "g65to74" = "65 to 74",
+                        "g75plus" = "75+"),
+         agegp = factor(agegp,
+                        levels = c("<1", "1 to 4", "5 to 14", "15 to 44", 
+                                   "45 to 64", "65 to 74", "75+"))) 
+
+##HB: Keeping only FLU,RSV
+resp_files[[3]]<-resp_files[[3]] %>% 
+  filter(pathogen %in% c("Influenza A (Any Subtype)","Influenza B",
+                         "Influenza (A or B)","RSV")) %>%
+  mutate(HBcode = recode(HealthBoard,
+                         "AA" = "S08000015","BR" = "S08000016",
+                         "DG" = "S08000017","FF" = "S08000029",
+                         "FV" = "S08000019","GC" = "S08000031",
+                         "GR" = "S08000020","HG" = "S08000022",
+                         "LN" = "S08000032","LO" = "S08000024",
+                         "OR" = "S08000025","SH" = "S08000026",
+                         "TY" = "S08000030","WI" = "S08000028"),
+         HBName = paste0("NHS ", phsmethods::match_area(HBcode))) 
 
 #filtering pathogens and seasons
 resp_files2<-map(resp_files,
@@ -51,6 +78,8 @@ i_non_covid_simd_past<-
     paste0(file_paths$Data$Respiratory_ECOSS_folder,
            "/Historic Linelists/Historic_ECOSS_Episodes.parquet")
   ) %>% 
+  #Keep only RSV and Influenza
+  filter(Organism %in% c("Influenza","RSV")) %>% 
   select(CHI,SpecimenDate,ECOSSID,Organism,Type,Result,
          PostCode,Year,ISOweek,FluSeason)
 
@@ -58,6 +87,8 @@ i_non_covid_simd_curr_season<-
   arrow::read_parquet(
     paste0(file_paths$Data$Respiratory_ECOSS_folder,
            "Linelists/Single Detection Episodes/RespViral_CurrSeason_Episodes_report.parquet")) %>% 
+  #Keep only RSV and Influenza
+  filter(Organism %in% c("Influenza","RSV")) %>% 
   select(CHI,SpecimenDate,ECOSSID,Organism,Type,Result,PostCode,Year,ISOweek,FluSeason)
 
 
@@ -85,10 +116,38 @@ i_non_covid_simd<-rbind(i_non_covid_simd_past,i_non_covid_simd_curr_season) %>%
   merge(ref_simd_lookup,by="PostCode",all.x=TRUE) %>% 
   mutate(SIMD=if_else(is.na(SIMD),"Unknown",SIMD)) %>% 
   count(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,
-        Pathogen,SIMD, name = "NumberCasesPerWeek")  
+        Pathogen,SIMD, name = "NumberCasesPerWeek") %>% 
+  #limit upto current week
+  filter(ISOyear != od_isoyear |
+          (ISOyear == od_isoyear & ISOweek <= od_isoweek))
 
 
-#1b. COVID 19 ------------------------------------------------------------------
+## Extract population to calculate COVID19 rates----
+### Scotland----
+ref_pop_scotland<-i_non_covid_scotland %>% 
+  select(Season=season, ISOyear=year, ISOweek=week,
+         WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending,
+         Population=Pop) %>% 
+  distinct()
+
+### Age Sex----
+ref_pop_age_sex<-i_non_covid_agegp_sex %>% 
+  select(Season=season, ISOyear=year, ISOweek=week,
+         WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending,
+         AgeGroup=agegp,Sex=sex,
+         Population=Pop) %>%
+  distinct()
+
+### HB----
+ref_pop_hb<-i_non_covid_hb %>% 
+  select(Season=season, ISOyear=year, ISOweek=week,
+         WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending,
+         HBName,HBcode,
+         Population=Pop) %>%
+  distinct()
+
+
+#2. COVID 19 ------------------------------------------------------------------
 #directly from transfer respiratory script
 
 i_covid19_all_cases_tests_data<-
@@ -98,7 +157,7 @@ i_covid19_all_cases_tests_data<-
          test_type,test_result, subject_sex, submitted_subject_sex,
          age, date_reporting, date_test_received_at_bi,
          test_result_record_source,episode_number_deduplicated, episode_derived_case_type) %>% 
-  filter(specimen_date>="2020-02-24") %>% 
+  filter(specimen_date>="2020-02-24" & specimen_date <=od_sunday) %>% 
   # filter(!(reporting_health_board %in% c("UK (not resident in Scotland)",
   #                                        "Outside UK","No Fixed Abode"))&
   #          !is.na(reporting_health_board)) %>%

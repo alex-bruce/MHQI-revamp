@@ -38,11 +38,47 @@ write.csv(g_respiratory_admissions, glue(output_folder, "all_pathogen_admissions
 rm(i_respiratory_admissions, g_respiratory_admissions)
 
 
+## Admissions by age
 i_respiratory_age_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "age_rate_data_all_path.csv")))
 
 write.csv(i_respiratory_age_admissions, glue(output_folder, "age_rate_data_all_path.csv"))
 
 rm(i_respiratory_age_admissions)
+
+## Admissions by SIMD
+i_respiratory_simd_admissions <- read_csv(paste0(file_paths$Data$Dashboard_input_folder,
+                  od_admsn_date," - simd summary - all path.csv")) %>% 
+  select(WeekEnding=date,everything())
+
+covid19_flu_rsv_simd_admissions<-
+  i_respiratory_simd_admissions %>% 
+  pivot_longer(cols = c(starts_with("Total"),ends_with("rate"))) %>% 
+  mutate(parameter=str_extract_all(name, "Total"),
+         parameter=as.character(parameter),
+         parameter=if_else(parameter!="Total","Rate",parameter)) %>% 
+  rename(Pathogen=name, Population=pop) %>% 
+  mutate(Pathogen=str_remove_all(Pathogen,"Total_"),
+         Pathogen=str_remove_all(Pathogen,"_rate")) %>% 
+  mutate(Pathogen=recode(Pathogen,
+                         "cov"="COVID-19",
+                         "flu"="Influenza (All)",
+                         "rsv"="RSV")) %>% 
+  pivot_wider(names_from = parameter,values_from = value) %>% 
+  rename(NumberOfAdmissions=Total, RateOfAdmissions=Rate) %>% 
+  mutate(RateOfAdmissions=round(RateOfAdmissions,digits = 1)) %>% 
+  select(WeekEnding, Pathogen,SIMD=simd,NumberOfAdmissions,RateOfAdmissions,
+         Population) %>% 
+  arrange(WeekEnding,Pathogen,SIMD) %>% 
+  mutate(ProvisionalFlag = case_when(
+    WeekEnding > (report_date-10) ~ 1,
+    TRUE ~ 0)) %>% 
+  mutate(WeekEnding=str_remove_all(WeekEnding,"-"))
+
+
+write.csv(covid19_flu_rsv_simd_admissions, glue(output_folder, "admissions_simd_Cov_flu_RSV.csv"), row.names = FALSE)
+
+rm(covid19_flu_rsv_simd_admissions)
+
 
 
 i_respiratory_hb_admissions <- read_csv_with_options(match_base_filename(glue(input_data, " - hb summary - all path.csv")))

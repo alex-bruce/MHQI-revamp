@@ -72,7 +72,7 @@ latest_week_occupancy_title <- occupancy_rapid %>%
   .$Date
 
 previous_week_occupancy_title <- occupancy_rapid %>%
-  tail(4) %>%
+  tail(6) %>%
   select(Date) %>%
   filter(Date == min(Date)) %>%
   mutate(Date = format(Date, "%d %b %y")) %>%
@@ -215,7 +215,8 @@ colnames(hosp_adms_intro)[3] <- paste("Rate of admissions per 100,000 population
 # colnames(covid_inpatients_intro)[2] <- paste("Seven day average number (", as.character(previous_week_occupancy_title),")")
 
 inpatients_intro <- occupancy_rapid %>%
-  tail(6) %>%
+  tail(10) %>%
+  filter(pathogen %in% c("COVID-19", "Influenza", "RSV")) %>% 
   mutate(flag= if_else(Date == max(Date),"Latest Week", "Previous Week")) %>% #add flags
   select(pathogen, flag, sevenday_ave_inpatients) %>%
   pivot_wider(names_from = flag, values_from = sevenday_ave_inpatients) %>%

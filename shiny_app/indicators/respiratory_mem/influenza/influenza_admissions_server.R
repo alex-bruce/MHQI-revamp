@@ -3,28 +3,42 @@ metadataButtonServer(id="respiratory_influenza_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
+Influenza_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, flu, flu_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = flu,
+         RatePer100000 = flu_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13)) 
 
 # Get recent seasons
 flu_adm_seasons <- tail(sort(unique(Influenza_admissions$Season)), 6)
 
 
 altTextServer("influenza_admissions_modal",
-              title = "Influenza hospital admissions in Scotland",
-              content = tags$ul(tags$li("This is a plot showing the number of influenza hospital admissions in Scotland."),
+              title = "Weekly rate of influenza hospital admissions in Scotland",
+              content = tags$ul(tags$li("This is a plot showing the weekly rate of influenza hospital admissions in Scotland."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the number of hospital admissions."),
-                                tags$li(glue("There is a trace for each of the following season from ", 
-                                             flu_adm_seasons[1], " to ", flu_adm_seasons[6], "."))
+                                tags$li("The y axis shows the rate of hospital admissions per 100,000."),
+                                tags$li(glue("There is a trace for each of the following seasons from ", 
+                                             flu_adm_seasons[1], " to ", flu_adm_seasons[6], ".")),
+                                tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")
               )
 )
 
 altTextServer("influenza_admissions_age_modal",
               title = "Influenza hospital admission rate per 100,000 population by age group",
               content = tags$ul(tags$li("This is a plot showing the rate of influenza hospital admission per 100,000 population by age group."),
-                                tags$li("The x axis is the week ending date."),
-                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
-                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the NHS Scotland Health Boards."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("By default, the plot contains a trace showing the admission rate per 100,000 across all age groups."),
+                                tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 altTextServer("influenza_admissions_hb_modal",
@@ -72,16 +86,40 @@ altTextServer("flu_los_modal",
                         "The bar sections are ordered from smallest length of stay to largest",
                         "length of stay from bottom to top.") ))
 
+altTextServer("influenza_admissions_simd_modal",
+              title = "Influenza hospital admission rate per 100,000 population by deprivation category (SIMD)",
+              content = tags$ul(tags$li("This is a plot showing the rate of influenza hospital admission per 100,000 population by SIMD deprivation category
+                                        for the selected season."),
+                                tags$li("SIMD is a relative measure of deprivation across small areas in Scotland.",
+                                        "There are equal numbers of data zones in each of the five categories.",
+                                        "SIMD 1 contains the 20% most deprived zones and SIMD 5 contains the 20%",
+                                        "least deprived zones. See the",
+                                        tags$a("Scottish government website (external link)",
+                                               href="https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/"),
+                                        "for more information."),
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),                                  tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("The plot contains a trace for each of the SIMD categories. SIMD 1 is",
+                                        "highlighted in red and SIMD 5 in blue. The other categories are in grey."),
+                                # tags$li("There have been several peaks throughout the pandemic, notably in",
+                                #         "Apr 2020, Oct 2020, Jan 2021, Jul 2021, Sep 2021,",
+                                #         "Jan 2022, Mar 2022, Jun 2022, Jan 2023 and Mar 2023.")
+              )
+)
+
 # Influenza admissions table
 output$influenza_admissions_table <- renderDataTable({
   Influenza_admissions %>%
-    filter(FluType == "Influenza A & B") %>%
+    #filter(FluType == "Influenza A & B") %>%
     filter(Season %in% flu_adm_seasons) %>%
     arrange(desc(Date)) %>%
-    select(Season, ISOWeek, Admissions) %>%
+    select(Season, ISOWeek, Admissions, RatePer100000) %>%
     mutate(Season = factor(Season),
+           RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
-    rename(`ISO Week` = ISOWeek) %>%
+    rename(`ISO Week` = ISOWeek,
+           `Number of Admissions` = Admissions,
+           `Admission Rate per 100k` = RatePer100000) %>%
     make_table(filter_cols = c(1,2))
 })
 
@@ -127,30 +165,32 @@ output$influenza_admissions_hb_plot <- renderPlotly({
 # Influenza admissions by age table
 output$influenza_admissions_age_table <- renderDataTable({
   age_rate_data_all_path %>%
-    select(week_ending, age_band,
-           rate = flu_rate) %>% 
-    #mutate(week_ending = dmy(week_ending)) %>%
-    filter(age_band != "All Ages") %>%
-    mutate(week_ending = as_date(week_ending)) %>% 
-    arrange(desc(week_ending)) %>%
-    rename(`Week Ending` = week_ending,
-           `Age Group` = age_band,
-           `Admission Rate per 100k` = rate) %>%
-    make_table(add_separator_cols_1dp = c(3),
-               filter_cols = c(1,2))
+    add_season() %>% 
+    select(week_ending, age_band, Season,
+           Admissions = flu, rate = flu_rate) %>% 
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    filter(Season %in% flu_adm_seasons) %>% 
+    make_admissions_age_table()
+  
 })
 
 
 # Influenza Adms by age plot
 output$influenza_admissions_age_plot <- renderPlotly({
   age_rate_data_all_path %>%
+    add_season() %>%    
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    filter(Season %in% flu_adm_seasons) %>% 
     #mutate(week_ending = dmy(week_ending)) %>%
-    filter(age_band != "All Ages") %>% 
+    #filter(age_band != "All Ages") %>% 
     select(week_ending, age_band,
-           rate = flu_rate) %>%
+           rate = flu_rate, Season) %>%
     mutate(age_band = factor(age_band, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
-                                                  "65-74", "75+"))) %>% 
+                                                  "65-74", "75+", "All Ages"))) %>% 
     arrange(week_ending, age_band) %>%
+    mutate(week = isoweek(week_ending)) %>% 
+    filter(Season == input$adm_season_flu_age) %>%
+    #filter(Season == "2024/2025") %>% 
     create_pathogen_adms_age_linechart()
   
 })
@@ -182,6 +222,46 @@ output$flu_admissions_hb_table <- renderDataTable({
     dplyr::rename(`Health Board of treatment` = HealthBoardOfTreatment) %>%
     make_summary_table(maxrows = 16)
 })
+
+### WEEKLY ADMISSIONS BY SIMD ### ----
+
+
+### Modal links
+observeEvent(input$btn_modal_simd, { showModal(simd_modal) })
+
+# Table
+output$influenza_admissions_simd_table <- renderDataTable({
+  admissions_simd_Cov_flu_RSV %>% 
+    filter(Pathogen == "Influenza (All)") %>%
+    arrange(desc(WeekEnding)) %>%
+    mutate(WeekEnding = convert_opendata_date(WeekEnding),
+           SIMD = factor(SIMD),
+           ProvisionalFlag = factor(recode(ProvisionalFlag, "1" = "p", "0" = ""))) %>%
+    select(WeekEnding, SIMD, NumberOfAdmissions, RateOfAdmissions, ProvisionalFlag) %>%
+    dplyr::rename(`Week ending` = WeekEnding,
+                  `Number of admissions` = NumberOfAdmissions,
+                  `Admission Rate per 100k` = RateOfAdmissions,
+                  `Is data provisional (p)?` = ProvisionalFlag) %>%
+    make_table(add_separator_cols = c(3),
+               filter_cols = c(2,5))
+})
+
+
+
+# Plot
+output$influenza_admissions_simd_plot <- renderPlotly({
+  admissions_simd_Cov_flu_RSV %>% 
+    filter(Pathogen == "Influenza (All)") %>%
+    mutate(week_ending = ymd(WeekEnding)) %>% 
+    add_season() %>%    
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    mutate(week = isoweek(week_ending)) %>% 
+    filter(Season == input$adm_season_flu_simd) %>%
+    make_hospital_admissions_simd_plot()
+  
+})
+
+
 
 #-----------------------#
 #### Flu adm pyramid ####

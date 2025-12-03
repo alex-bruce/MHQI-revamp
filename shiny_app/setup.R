@@ -264,6 +264,19 @@ euromomo_mem_age_groups_full <- c("0-4 years", "5-14 years", "15-64 years",
 # Set date data goes up to - previous Sunday
 data_recent_date <- floor_date(as.Date(Deployment_Date, format = "%d %B %Y"), "week") %>% format("%d %B %Y")
 
+## Function to add seasons into tables (used in admissions script)
+
+add_season <- function(input_data) {
+  input_data %>%
+    mutate(week_start = week_ending - 6,
+           week = ISOweek::ISOweek(week_ending),
+           Season = case_when(str_sub(week, start = -2) < 40 ~
+                                (paste(as.numeric(str_sub(week, end = 4)) -1 , "-",
+                                       as.numeric(str_sub(week, end = 4)), sep="")),
+                              TRUE ~ (paste(as.numeric(str_sub(week, end = 4)),
+                                            "-", as.numeric(str_sub(week, end = 4)) + 1, sep=""))))
+}
+
 # Read in shapefile
 # 
 # Sys.setenv("GDAL_DATA" = "/usr/gdal34/share/gdal")
