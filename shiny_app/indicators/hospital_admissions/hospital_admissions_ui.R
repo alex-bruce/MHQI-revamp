@@ -1,3 +1,7 @@
+
+admissions_hb_all_path <- admissions_hb_all_path %>%
+  mutate(Season = gsub("-", "/", Season))
+
 tagList(
   fluidRow(width = 12,
            metadataButtonUI("hospital_admissions"),
@@ -103,7 +107,7 @@ tagList(
                                              br(),
                                              pickerInput(
                                                inputId = "hospital_adms_selected_seasons", 
-                                               label = "Select season of interest:", 
+                                               label = "Select season", 
                                                choices = tail(sort(unique(admissions_hb_all_path$Season)), 3),
                                                selected = tail(sort(unique(admissions_hb_all_path$Season)), 1)  # current season
                                                ),

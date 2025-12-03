@@ -81,8 +81,8 @@ altTextServer("hospital_admissions_age_modal",
                                 tags$li("The plot contains a trace showing the admission rate per 100k.")))
 
 altTextServer("hospital_admissions_hb_modal",
-              title = "COVID-19 hospital admission rate per 100,000 population by Health Board",
-              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by Health Board."),
+              title = "COVID-19 hospital admission rate per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by NHS Health Board."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39."),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
                                 tags$li("The plot contains a trace showing the admission rate per 100k for each of the NHS Scotland Health Boards."),

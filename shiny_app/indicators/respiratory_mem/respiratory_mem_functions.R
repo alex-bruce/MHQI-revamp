@@ -814,9 +814,11 @@ create_pathogen_adms_hb_linechart <- function(data){
   yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
+  xaxis_plots[["range"]] <- list(-0.5, 52.5)
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["tickformat"]] <- NULL
   
   
   

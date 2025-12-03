@@ -26,8 +26,8 @@ altTextServer("rsv_admissions_age_modal",
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 altTextServer("rsv_admissions_hb_modal",
-              title = "RSV hospital admission rate per 100,000 population by Health Board",
-              content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by Health Board."),
+              title = "RSV hospital admission rate per 100,000 population by NHS Health Board",
+              content = tags$ul(tags$li("This is a plot showing the rate of RSV hospital admission per 100,000 population by NHS Health Board."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. "),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population.")
               ))
