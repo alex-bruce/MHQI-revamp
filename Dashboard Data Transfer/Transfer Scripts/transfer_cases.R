@@ -92,8 +92,75 @@ covid_cases_weekly <- g_cases_weekly %>%
 write_csv(covid_cases_weekly, glue(output_folder, "covid_cases_weekly.csv"))
 
 
+#### CASES BY AGE AND SEX ----
 
+# Read in input data
+i_cases_agesex <- read_csv_with_options(glue(input_data, 
+                                      "{format(report_date-1, format='%Y-%m-%d')}_covid_cases_agesex_season.csv"))
 
+# Latest season and year
+season <- max(i_cases_agesex$season)
+season_year <- substr(season,1,4)
 
+# Read in population lookup
 
+pop_year = 2024# use to filter through entire script, only need to update 1 line when Pop Est files updated
+
+gpd_base_path<-"/conf/linkage/output/lookups/Unicode/"
+
+base_hb_population <- readRDS(glue(gpd_base_path,"Populations/Estimates/HB2019_pop_est_1981_{pop_year}.rds"))%>%
+  mutate(sex=if_else(sex_name=="F", "Female", "Male"))
+
+# Create age groups and calc population sizes
+pop_agegroup_sex <- base_hb_population %>%
+  mutate(age_group = case_when(
+    age < 1 ~ "<1 years",
+    age >= 1 & age <= 4 ~ "1-4 years",
+    age >= 5 & age <= 14 ~ "5-14 years",
+    age >= 15 & age <= 44 ~ "15-44 years",
+    age >= 45 & age <= 64 ~ "45-64 years",
+    age >= 65 & age <= 74 ~ "65-74 years",
+    age >= 75 ~ "75+ years",
+  )) %>%
+  group_by(year, age_group, sex) %>%
+  summarise(pop = sum(pop)) %>%
+  ungroup()
+
+# Latest year in pop lookup
+latest_year <- max(pop_agegroup_sex$year)
+
+# If latest_year < season_year, duplicate rows for each missing year
+if (latest_year < season_year) {
+  
+  # Filter rows for the latest year
+  latest_data <- pop_agegroup_sex %>% 
+    filter(year == latest_year)
+  
+  # Create new rows for each missing year up to season_year
+  new_rows <- lapply((latest_year + 1):season_year, function(y) {
+    latest_data %>% mutate(year = y)
+  }) %>% bind_rows()
+  
+  # Append new rows to the original dataset
+  pop_agegroup_sex <- bind_rows(pop_agegroup_sex, new_rows)
+  
+  message("New season data added for years: ", paste((latest_year + 1):season_year, collapse = ", "))
+  
+} else {
+  message("No new season data needed. Either already present or not yet due.")
+}
+
+# Create season variable
+pop_agegroup_sex <- pop_agegroup_sex %>%
+  mutate(season = paste0(year, "/", year+1)) %>%
+  select(season, sex, age_group, pop)
+
+# Join on populations
+# Calculate rates
+g_cases_agesex <- i_cases_agesex %>%
+  left_join(pop_agegroup_sex) %>%
+  mutate(rate = round_half_up((cases/pop)*100000,1))
+
+# Save
+write_csv(g_cases_agesex, glue(output_folder, "covid_cases_agesex_season.csv"))
 

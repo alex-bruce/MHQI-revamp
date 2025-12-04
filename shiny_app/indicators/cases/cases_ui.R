@@ -164,6 +164,37 @@ tagList(
     linebreaks(1)
   ), # fluidRow
   
+  fluidRow(
+    tagList(h2(glue("Laboratory-confirmed COVID-19 cases by age and sex in Scotland")),
+            
+            tabBox(width = NULL,
+                   type = "pills",
+                   tabPanel("Plot",
+                            tagList(
+                              linebreaks(1),
+                              # adding selection for flu subtype
+                              fluidRow(
+                                column(4, pickerInput("covid_respiratory_season",
+                                                      label = "Select a season",
+                                                      choices = {covid_cases_agesex_season %>% 
+                                                          filter(season >= "2023/2024") %>%
+                                                          .$season %>% unique()},
+                                                      selected = {covid_cases_agesex_season %>% 
+                                                          filter(season >= "2023/2024") %>%
+                                                          .$season %>% unique()})
+                                )
+                              ),
+                              altTextUI("covid_age_sex"),
+                              withNavySpinner(plotlyOutput("covid_age_sex_pyramid_plot"))
+                            ) # tagList
+                   ), # tabPanel
+                   tabPanel("Data",
+                            withNavySpinner(dataTableOutput("covid_age_sex_pyramid_table")))
+            ) # tabbox
+    ), # tagList
+    linebreaks(1)
+  ),
+  
   # Padding out the bottom of the page
   fluidRow(
     width=12, linebreaks(5))

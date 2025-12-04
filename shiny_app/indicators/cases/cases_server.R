@@ -365,3 +365,69 @@ output$covid_mem_age_plot <- renderPlotly({
 })
 
 
+### AGE/SEX BY SEASON ----
+
+altTextServer("covid_age_sex",
+              title = glue("Laboratory-confirmed COVID-19 cases by age and/or sex in Scotland"),
+              content = tags$ul(
+                tags$li(glue("This is a pyramid plot of rate per 100,000 population of laboratory-confirmed COVID-19 cases in Scotland by age and sex.")),
+                tags$li("The information is displayed for a selected season."),
+                tags$li("Weekly rate data for age and sex on a weekly basis are available on ",
+                        "the PHS Open Data platform ",
+                        tags$a(href="https://www.opendata.nhs.scot/dataset/viral-respiratory-diseases-including-influenza-and-covid-19-data-in-scotland",
+                               "Viral Respiratory Diseases (Including Influenza and COVID-19) Data in Scotland page (external website).", 
+                               target="_blank")),
+                tags$li("The y axis shows the age group. The left side of the y axis corresponds to females and the right side to males."),
+                tags$li("For the x axis the plot shows rate per 100,000 population.")
+                # tags$li("The youngest and oldest groups have the highest rates of illness.")
+              )
+)
+
+# pyramid plot that shows the breakdown by age and sex
+output$covid_age_sex_pyramid_plot = renderPlotly({
+  covid_cases_agesex_season %>% 
+    filter(season == input$covid_respiratory_season) %>%
+    rename(Season = season,
+           AgeGroup = age_group,
+           Sex = sex,
+           Rate = rate) %>%
+    mutate(Sex = substr(Sex,1,1)) %>%
+    mutate(AgeGroup = gsub(" years", "", AgeGroup)) %>%
+    make_age_sex_pyramid_plot()#respiratory functions
+})
+
+# Flu by age/sex/age and sex
+output$covid_age_sex_pyramid_table = renderDataTable({
+  
+  covid_cases_agesex_season %>% 
+    filter(season >= "2023/2024") %>%
+    mutate(season = factor(season)) %>%
+    arrange(desc(season), age_group, sex) %>%
+    dplyr::rename("Season" = "season",
+                  "Age Group" = "age_group",
+                  "Sex" = "sex",
+                  "Rate per 100,000 population" = "rate") %>%
+    mutate(Sex = factor(Sex, levels = c("Female", "Male")),
+           `Age Group` = factor(`Age Group`, levels =
+                                  c("<1 years", "1-4 years", "5-14 years",
+                                    "15-44 years", "45-64 years", "65-74 years", 
+                                    "75+ years"))) %>%
+    arrange(desc(`Season`), `Age Group`, Sex) %>%
+    select(Season, `Age Group`, Sex, `Rate per 100,000 population`) %>%
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(1,2,3))
+  
+})
+
+
+observeEvent(input$covid_respiratory_season,
+             {
+               updatePickerInput(session, inputId = "covid_respiratory_date",
+                                 choices = {Respiratory_AllData %>% filter(Season == input$covid_respiratory_season) %>%
+                                     .$Date %>% unique() %>% as.Date() %>% format("%d %b %y")},
+                                 selected = {Respiratory_AllData %>% filter(Season == input$covid_respiratory_season) %>%
+                                     .$Date %>% max() %>% as.Date() %>% format("%d %b %y")})
+               
+             }
+)
+

@@ -234,6 +234,21 @@ for(filename in filenames) {
              scotland_by_age_sex_season_flag = 1)
 
     assign(glue("{filename}_flu_season_total"), df5)
+    
+    df6 <- df1 %>%
+      filter(pathogen == "rsv") %>%
+      group_by(season, pop, measure, breakdown, flu_nonflu, pathogen, organism, agegp, sex) %>%
+      summarise(date = max(date),
+                count = sum(count)) %>%
+      ungroup() %>%
+      mutate(rate = round_half_up((count/pop)*100000, 2),
+             countQF = "d",
+             rateQF = "d",
+             pathogen = "RSV Season Total",
+             organism = "RSV Season Total",
+             scotland_by_age_sex_season_flag = 1)
+    
+    assign(glue("{filename}_rsv_season_total"), df6)
 
   }
 
@@ -255,7 +270,8 @@ g_resp_data <- bind_rows(
   sex_flu_total,
   agegp_sex_flu_total,
   hb_flu_total,
-  agegp_sex_flu_season_total) %>%
+  agegp_sex_flu_season_total,
+  agegp_sex_rsv_season_total) %>%
   mutate(count = as.numeric(count),
          agegp = factor(agegp,
                         levels = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+"))
@@ -793,6 +809,6 @@ rm(cases_scotland, case_rates_scotland, case_rates_hb, case_rates_age,
 rm(cases_scotland_template, case_rates_hb_template, case_rates_sex_template,
    case_rates_age_template, case_rates_age_sex_template)
 rm(case_rates_scotland_mem, case_rates_hb_mem, case_rates_age_mem)
-rm(df1,df2, df3, df4, df5, temp_data)
+rm(df1,df2, df3, df4, df5, df6, temp_data)
 
 

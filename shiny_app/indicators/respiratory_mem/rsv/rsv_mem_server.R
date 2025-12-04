@@ -268,4 +268,80 @@ output$rsv_mem_age_plot <- renderPlotly({
 })
 
 
+altTextServer("rsv_age_sex",
+              title = glue("Laboratory-confirmed RSV cases by age and/or sex in Scotland"),
+              content = tags$ul(
+                tags$li(glue("This is a pyramid plot of rate per 100,000 population of laboratory-confirmed RSV cases in Scotland by age and sex.")),
+                tags$li("The information is displayed for a selected season."),
+                tags$li("Weekly rate data for age and sex on a weekly basis are available on ",
+                        "the PHS Open Data platform ",
+                        tags$a(href="https://www.opendata.nhs.scot/dataset/viral-respiratory-diseases-including-influenza-and-covid-19-data-in-scotland",
+                               "Viral Respiratory Diseases (Including Influenza and COVID-19) Data in Scotland page (external website).", 
+                               target="_blank")),
+                tags$li("The y axis shows the age group. The left side of the y axis corresponds to females and the right side to males."),
+                tags$li("For the x axis the plot shows rate per 100,000 population.")
+                # tags$li("The youngest and oldest groups have the highest rates of illness.")
+              )
+)
+
+# pyramid plot that shows the breakdown by age and sex
+output$rsv_age_sex_pyramid_plot = renderPlotly({
+  Respiratory_AllData %>%
+    filter(Pathogen == "RSV Season Total") %>%
+    filter(Season %in% recent_six_seasons) %>%
+    mutate(Season = gsub("/", "/20", Season)) %>%
+    mutate(Rate = round_half_up(Rate,1)) %>%
+    filter(scotland_by_age_sex_season_flag == 1,
+           # scotland_by_age_sex_flag == 1,
+           Season == input$rsv_respiratory_season) %>%
+    make_age_sex_pyramid_plot()#respiratory functions
+  
+})
+
+# Flu by age/sex/age and sex
+output$rsv_age_sex_pyramid_table = renderDataTable({
+  
+  flu_age_sex_pyramid_table <- Respiratory_AllData %>%
+    filter(Pathogen == "RSV Season Total") %>%
+    filter(Season %in% recent_six_seasons) %>%
+    mutate(Season = gsub("/", "/20", Season)) %>%
+    filter(scotland_by_age_sex_season_flag == 1) %>%
+    select(Season, AgeGroup, Sex, Rate) %>%
+    mutate(Season = factor(Season)) %>%
+    mutate(Rate = round_half_up(Rate,1)) %>%
+    arrange(desc(Season), AgeGroup, Sex) %>%
+    dplyr::rename("Season" = "Season",
+                  "Age Group" = "AgeGroup",
+                  "Rate per 100,000 population" = "Rate") %>%
+    mutate(Sex = case_when(
+      Sex == "F" ~ "Female",
+      Sex == "M" ~ "Male",
+      TRUE ~ NA_character_
+    )) %>%
+    mutate(`Age Group` = paste0(`Age Group`, " years")) %>%
+    mutate(Sex = factor(Sex, levels = c("Female", "Male")),
+           `Age Group` = factor(`Age Group`, levels =
+                                  c("<1 years", "1-4 years", "5-14 years",
+                                    "15-44 years", "45-64 years", "65-74 years", 
+                                    "75+ years"))) %>%
+    arrange(desc(`Season`), `Age Group`, Sex) %>%
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(1,2,3))
+  
+})
+
+
+observeEvent(input$rsv_respiratory_season,
+             {
+               updatePickerInput(session, inputId = "rsv_respiratory_date",
+                                 choices = {Respiratory_AllData %>% filter(Season == input$rsv_respiratory_season) %>%
+                                     .$Date %>% unique() %>% as.Date() %>% format("%d %b %y")},
+                                 selected = {Respiratory_AllData %>% filter(Season == input$rsv_respiratory_season) %>%
+                                     .$Date %>% max() %>% as.Date() %>% format("%d %b %y")})
+               
+             }
+)
+
+
+
 
