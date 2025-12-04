@@ -143,7 +143,7 @@ output$influenza_admissions_hb_table <- renderDataTable({
 # Influenza Adms plot
 output$influenza_admissions_plot <- renderPlotly({
   Influenza_admissions %>%
-    filter(FluType == "Influenza A & B") %>%
+    #filter(FluType == "Influenza A & B") %>%
     filter(Season %in% flu_adm_seasons) %>% 
     create_pathogen_adms_linechart()
 

@@ -46,8 +46,8 @@ write.csv(i_respiratory_age_admissions, glue(output_folder, "age_rate_data_all_p
 rm(i_respiratory_age_admissions)
 
 ## Admissions by SIMD
-i_respiratory_simd_admissions <- read_csv(paste0(file_paths$Data$Dashboard_input_folder,
-                  od_admsn_date," - simd summary - all path.csv")) %>% 
+i_respiratory_simd_admissions <- read_csv_with_options(match_base_filename(glue(input_data,
+                                                                                  " - simd summary - all path.csv"))) %>% 
   select(WeekEnding=date,everything())
 
 covid19_flu_rsv_simd_admissions<-
