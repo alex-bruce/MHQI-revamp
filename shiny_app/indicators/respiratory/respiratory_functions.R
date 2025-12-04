@@ -341,7 +341,7 @@ make_age_sex_pyramid_plot <- function(data, title = NULL) {
             text = ~paste0("<b>Season</b>: ", Season, "\n",
                            "<b>Sex</b>: ", Sex, "\n",
                            "<b>Age Group</b>: ", AgeGroup, "\n",
-                           "<b>Rate per 100,000</b>: ", format(abs(Rate), big.mark=",")),
+                           "<b>Rate per 100,000 population</b>: ", format(abs(Rate), big.mark=",")),
             hoverinfo = "text",
             #hovertemplate = "%{text}",
             colors = phs_colours(c("phs-purple", "phs-magenta"))) %>%
@@ -349,7 +349,7 @@ make_age_sex_pyramid_plot <- function(data, title = NULL) {
       xaxis = list(
         tickvals = xaxis_breaks,
         ticktext = abs(xaxis_breaks),
-        title = "Rate per 100,000",
+        title = "Rate per 100,000 population",
         showline = TRUE,
         linecolor = 'black',
         range = c(-max(data$Rate), max(data$Rate))

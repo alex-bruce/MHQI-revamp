@@ -168,9 +168,9 @@ fluidRow(
                               column(4, pickerInput("rsv_respiratory_season",
                                                     label = "Select a season",
                                                     choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
-                                                        .$Season %>% unique() %>% tail(6)},
+                                                        .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(6)},
                                                     selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
-                                                        .$Season %>% unique() %>% tail(1)})
+                                                        .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(1)})
                               )
                             ),
                             altTextUI("rsv_age_sex"),
