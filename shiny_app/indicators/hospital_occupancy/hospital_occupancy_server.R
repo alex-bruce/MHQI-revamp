@@ -28,6 +28,19 @@ altTextServer("hospital_occupancy_modal",
               )
 )
 
+altTextServer("hospital_occupancy_hb_modal",
+              title = "Number of patients with COVID-19 in hospital by Health Board",
+              content = tags$ul(
+                tags$li("This is a plot of the number of patients in hospital with COVID-19 by Health Board."),
+                tags$li("The number of patients are seven day averages taken as a snapshot each Sunday."),
+                tags$li("The x axis is the date, commencing 08 Sep 2020."),
+                tags$li("The y axis is the average number of people in hospital."),
+                tags$li("The data table also supplies the number of patients in hospital with COVID-19",
+                        "as at the Sunday of each week.")
+              )
+)
+
+
 altTextServer("icu_occupancy_modal",
               title = "Number of patients with COVID-19 in ICU",
               content = tags$ul(
@@ -67,27 +80,13 @@ covid_occupancy_recent_week <- occupancy_covid %>%
 # the Occupancy_Weekly_Hospital_HB has two dates, an numeric 'open data' version, formatted as a number, 
 # and a date-formatted WeekEnding
 output$hospital_occupancy_table <- renderDataTable({
-  occupancy_covid %>%
-    arrange(desc(WeekEnding)) %>% 
-    select('Week ending' = WeekEnding,
-           'Number of patients in hospital' = HospitalOccupancy,
-           `7 day average`= SevenDayAverage) %>%
-    make_table(.,
-                add_separator_cols=NULL, # Column indices to add thousand separators to
-                add_percentage_cols = NULL, # with % symbol and 2dp
-                maxrows=10,
-                order_by_firstcol="desc"
-               )
-
-})
-
-output$hospital_occupancy_hb_table <- renderDataTable({
-  occupancy_covid_hb %>%
-    arrange(desc(WeekEnding)) %>% 
-    select('Week ending' = WeekEnding,
-           'Health board' = health_board,
-           'Number of patients in hospital' = HospitalOccupancy,
-           `7 day average`= SevenDayAverage) %>%
+  occupancy_rapid %>%
+    filter(pathogen == "COVID-19") %>% 
+    arrange(desc(Date)) %>% 
+    select('Season' = Season,
+           'Week' = week,
+           'Number of patients in hospital' = bed_occupancy,
+           `7 day average of number of patients in hospital`= sevenday_ave_inpatients) %>%
     make_table(.,
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
@@ -97,6 +96,25 @@ output$hospital_occupancy_hb_table <- renderDataTable({
   
 })
 
+output$hospital_occupancy_hb_table <- renderDataTable({
+  occupancy_rapid_hb %>%
+    filter(pathogen == "COVID-19") %>% 
+    filter(health_board != "Golden Jubilee National Hospital") %>%
+    filter(Season %in% input$hospital_occupancy_selected_seasons) %>%
+    arrange(desc(Date)) %>% 
+    select('Season' = Season,
+           'Week' = week,
+           'Health board' = health_board,
+           `7 day average of number of patients in hospital`= sevenday_ave_inpatients) %>%
+    make_table(.,
+               add_separator_cols=NULL, # Column indices to add thousand separators to
+               add_percentage_cols = NULL, # with % symbol and 2dp
+               maxrows=15,
+               order_by_firstcol="desc",
+               filter_cols = c(1,2, 3)
+    )
+  
+})
 
 # make data table with all the hospital occupancy health board data in it
 # HB Table (uses weekly values)
@@ -137,8 +155,19 @@ output$hospital_occupancy_hb_table <- renderDataTable({
 # })
 
 output$hospital_occupancy_plot <- renderPlotly({
+  occupancy_rapid %>%
+    filter(pathogen == "COVID-19") %>%
+    filter(Season %in% tail(sort(unique(occupancy_rapid$Season)), 6)) %>%
+    create_pathogen_occupancy_linechart()
+  
+})
 
-  make_occupancy_plots(occupancy_covid,  occupancy = "hospital")
+output$hospital_occupancy_hb_plot <- renderPlotly({
+  occupancy_rapid_hb %>%
+    filter(pathogen == "COVID-19") %>%
+    filter(health_board != "Golden Jubilee National Hospital") %>%
+    filter(Season %in% input$hospital_occupancy_selected_seasons) %>%
+    create_pathogen_occupancy_hb_linechart()
 
 })
 

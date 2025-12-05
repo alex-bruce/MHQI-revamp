@@ -34,14 +34,16 @@ output$influenza_occupancy_table <- renderDataTable({
   occupancy_rapid %>%
     filter(pathogen == "Influenza") %>% 
     arrange(desc(Date)) %>% 
-    select('Week ending' = Date,
+    select('Season' = Season,
+           'Week ending' = Date,
            'Number of patients in hospital' = bed_occupancy,
            `7 day average`= sevenday_ave_inpatients) %>%
     make_table(.,
                 add_separator_cols=NULL, # Column indices to add thousand separators to
                 add_percentage_cols = NULL, # with % symbol and 2dp
                 maxrows=10,
-                order_by_firstcol="desc"
+                order_by_firstcol="desc",
+                filter_cols = c(1,2, 3)
                )
 
 })
@@ -49,16 +51,19 @@ output$influenza_occupancy_table <- renderDataTable({
 output$influenza_occupancy_hb_table <- renderDataTable({
   occupancy_rapid_hb %>%
     filter(pathogen == "Influenza") %>% 
-   # mutate(Date = as_date("dd/mm/yyyy")) %>% 
+    filter(health_board != "Golden Jubilee National Hospital") %>%
+    filter(Season %in% input$influenza_occupancy_selected_seasons) %>%
     arrange(desc(Date)) %>% 
-    select('Week ending' = Date,
+    select('Season' = Season,
+           'Week' = week,
            'Health board' = health_board,
            `7 day average of number of patients in hospital`= sevenday_ave_inpatients) %>%
     make_table(.,
                add_separator_cols=NULL, # Column indices to add thousand separators to
                add_percentage_cols = NULL, # with % symbol and 2dp
-               maxrows=10,
-               order_by_firstcol="desc"
+               maxrows=15,
+               order_by_firstcol="desc",
+               filter_cols = c(1,2, 3)
     )
   
 })
@@ -69,7 +74,7 @@ output$influenza_occupancy_hb_table <- renderDataTable({
 output$influenza_occupancy_plot <- renderPlotly({
   occupancy_rapid %>%
     filter(pathogen == "Influenza") %>%
-    filter(Season %in% c("2023-2024", "2024-2025", "2025-2026", "2026-2027")) %>% 
+    filter(Season %in% tail(sort(unique(occupancy_rapid_hb$Season)), 3)) %>%
     create_pathogen_occupancy_linechart()
   
 })
@@ -77,7 +82,8 @@ output$influenza_occupancy_plot <- renderPlotly({
 output$influenza_occupancy_hb_plot <- renderPlotly({
   occupancy_rapid_hb %>%
     filter(pathogen == "Influenza") %>%
-    filter(Season %in% c("2023-2024", "2024-2025", "2025-2026", "2026-2027")) %>% 
+    filter(health_board != "Golden Jubilee National Hospital") %>%
+    filter(Season %in% input$influenza_occupancy_selected_seasons) %>%
     create_pathogen_occupancy_hb_linechart()
   
 })

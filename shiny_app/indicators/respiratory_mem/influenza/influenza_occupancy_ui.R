@@ -82,37 +82,16 @@ fluidRow(width = 12,
          linebreaks(1)),
 
 fluidRow(
-  pickerInput(
-    inputId = "influenza_occupancy_selected_boards", 
-    label = "Select NHS Health Board(s) of interest:", 
-    choices = sort(unique(occupancy_rapid_hb$health_board)),
-    selected = sort(unique(occupancy_rapid_hb$health_board))[2],  # skips 'National Facility'
-    multiple = TRUE,
-    options = list(
-      `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
-      `live-search` = TRUE,    # Enables search within the dropdown
-      `selected-text-format` = "count > 3" # Shows count if more than 3 selected
-    )
-  )),
-
-fluidRow(
-pickerInput(
-  inputId = "influenza_occupancy_selected_season", 
-  label = "Select season of interest:", 
-  choices = sort(unique(occupancy_rapid_hb$Season)),
-  selected = tail(sort(unique(occupancy_rapid_hb$health_board))),  
-  multiple = TRUE,
-  options = list(
-    `actions-box` = TRUE,    # Adds Select All / Deselect All buttons
-    `live-search` = TRUE,    # Enables search within the dropdown
-    `selected-text-format` = "count > 3" # Shows count if more than 3 selected
-  )
-)),
-
-fluidRow(
   tabBox(width = NULL,
          type = "pills",
          tabPanel("Plot",
+                  br(),
+                  pickerInput(
+                    inputId = "influenza_occupancy_selected_seasons", 
+                    label = "Select season", 
+                    choices = tail(sort(unique(occupancy_rapid_hb$Season)), 3),
+                    selected = tail(sort(unique(occupancy_rapid_hb$Season)), 1)  # current season
+                  ),
                   tagList(linebreaks(1),
                           altTextUI("influenza_occupancy_hb_modal"),
                           withNavySpinner(plotlyOutput("influenza_occupancy_hb_plot")),

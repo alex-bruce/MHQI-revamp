@@ -1110,6 +1110,7 @@ create_pathogen_occupancy_hb_linechart <- function(data,
   # Wrangle data
   data = data %>%
     filter(ISOWeek != 53) %>%
+    filter(health_board != "Golden Jubilee National Hospital") %>% 
     select(Season, ISOWeek, Weekord, Value, health_board) %>%
     arrange(Season, Weekord) %>%
     mutate(ISOWeek = as.character(ISOWeek),
@@ -1129,7 +1130,7 @@ create_pathogen_occupancy_hb_linechart <- function(data,
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["title"]] <- y_axis_title
-  
+  yaxis_plots[["tickformat"]] <- NULL
   # xaxis_plots[["showgrid"]] <- FALSE
   # yaxis_plots[["showgrid"]] <- FALSE
   
@@ -1138,53 +1139,45 @@ create_pathogen_occupancy_hb_linechart <- function(data,
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$Season,
                             "<br>", "Week number: ", data$ISOWeek,
-                            "<br>", "Number: ", data$Value))
+                            "<br>", "Health Board: ", data$health_board,
+                            "<br>", "Number of people in hospital\n (7 day average) :", data$Value))
   
   # Create plot
-  pathogen_occupancy_hb_linechart = data %>%
-    plot_ly(x = ~ISOWeek,
-            y = ~Value,
-            split = ~health_board, 
-            #text = ~health_board,
-            textposition = "none",
-            text = tooltip_trend,
-            hoverinfo = "text",
-            color = ~health_board,
-            type="scatter",
-            mode="lines",
-            line = list(width = 5),
-            colors = flu_hosp_adms_colours) %>%
-    layout(yaxis = yaxis_plots,
-           xaxis = xaxis_plots,
-           margin = list(b = 100, t = 5),
-           paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10"),
-           legend = list(y = 0.5,
-                         yanchor = 'middle')
+  pathogen_occupancy_hb_linechart <- plot_ly(data) %>% 
+    add_trace(data = data[data$health_board != "NHS Scotland", ],
+              x = ~ISOWeek, y = ~Value, split = ~health_board, text = ~health_board,
+              type = "scatter", mode = "lines",
+              #color = ~age_band,
+              #colors = phs_colours(c("phs-blue")),
+              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
+                                     '<b>Health Board</b>: %{text}<br>',
+                                     '<b>Number of people in hospital\n (7 day average) </b>: %{y}'),
+              textposition = "none",
+              text = tooltip_trend[data$health_board!= "NHS Scotland"],
+              hoverinfo = "text",
+              visible = "legendonly"
     ) %>%
+    
+    add_trace(data = data[data$health_board == "NHS Scotland", ],
+              x = ~ISOWeek, y = ~Value, split = ~health_board, text = ~health_board,
+              type = "scatter", mode = "lines",
+              #color = ~age_band,
+              #colors = phs_colours(c("phs-blue")),
+              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
+                                     '<b>Health Board</b>: %{text}<br>',
+                                     '<b>Number of people in hospital\n (7 day average) </b>: %{y}'),
+              textposition = "none",
+              text = tooltip_trend[data$health_board == "NHS Scotland"],
+              hoverinfo = "text"
+    ) %>%
+    layout(margin = list(b = 100, t = 5),
+           yaxis = yaxis_plots, xaxis = xaxis_plots,
+           legend = list(x = 100, y = 0.5),
+           paper_bgcolor = phs_colours("phs-liberty-10"),
+           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
-  
-  
-  # For first week of new season (week 40), add in a marker
-  if(nrow(data_curr_season) == 1){
-    
-    pathogen_occupancy_hb_linechart <- pathogen_occupancy_hb_linechart %>%
-      add_trace(data = data_curr_season,
-                x = ~ISOWeek,
-                y = ~Value,
-                split = ~health_board,
-               # text = ~health_board,
-                showlegend = F,
-                color = ~health_board,
-                #colors = "#FF0000",
-                type = "scatter",
-                mode = 'markers',
-                textposition = "none",
-                text = tooltip_trend,
-                hoverinfo = "text")
-  }
-  
+
   return(pathogen_occupancy_hb_linechart)
   
 }

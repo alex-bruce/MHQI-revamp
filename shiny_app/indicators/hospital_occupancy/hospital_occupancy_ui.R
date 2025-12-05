@@ -82,20 +82,31 @@ fluidRow(width = 12,
          tagList(h2("Number of inpatients with COVID-19 in hospital by health board")),
          linebreaks(1)),
 
-fluidRow(width=12,
-         box(width = NULL,
-             withNavySpinner(dataTableOutput("hospital_occupancy_hb_table"))),
-         fluidRow(
-           width=12, linebreaks(1))
-         
-),
-
-
 fluidRow(
-  br()),
-
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  br(),
+                  pickerInput(
+                    inputId = "hospital_occupancy_selected_seasons", 
+                    label = "Select season", 
+                    choices = tail(sort(unique(occupancy_rapid_hb$Season)), 3),
+                    selected = tail(sort(unique(occupancy_rapid_hb$Season)), 1)  # current season
+                  ),
+                  tagList(linebreaks(1),
+                          altTextUI("hospital_occupancy_hb_modal"),
+                          withNavySpinner(plotlyOutput("hospital_occupancy_hb_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("hospital_occupancy_hb_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+), 
 ) # taglist
-
 
   
 
