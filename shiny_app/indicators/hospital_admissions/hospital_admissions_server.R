@@ -119,7 +119,7 @@ altTextServer("hospital_admissions_hb_modal",
               content = tags$ul(tags$li("This is a plot showing the rate of COVID-19 hospital admission per 100,000 population by NHS Health Board."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39."),
                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
-                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the NHS Scotland Health Boards."),
+                                tags$li("The plot contains a trace showing the admission rate per 100,000 population for each of the NHS Scotland Health Boards."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 
@@ -332,14 +332,16 @@ output$hospital_admissions_hb_table <- renderDataTable({
   admissions_hb_all_path %>%
     filter(admission_type == "cov") %>%
     filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
-    filter(Season %in% input$hospital_adms_selected_seasons) %>%
-    arrange(desc(week_ending)) %>%
-    select('Season' = Season,
-           'Week number' = week, 
-           'Health Board' = health_board_of_treatment,
+    filter(Season >= "2023/2024") %>%
+    arrange(desc(week_ending), health_board_of_treatment) %>%
+    mutate(health_board_of_treatment = factor(health_board_of_treatment)) %>%
+    select('Week ending' = week_ending, 
+           'NHS Health Board' = health_board_of_treatment,
+           'Number of hospital admissions' = n,
            'Rate of hospital admissions per 100,000 population' = rate) %>%
     make_table(add_separator_cols_1dp = c(4),
-               filter_cols = c(2,3))
+               add_separator_cols = c(3),
+               filter_cols = c(1,2))
 })
 
 # COVID-19 Adms by HB plot

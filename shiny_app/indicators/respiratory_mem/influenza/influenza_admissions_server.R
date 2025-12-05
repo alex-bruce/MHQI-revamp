@@ -129,14 +129,16 @@ output$influenza_admissions_hb_table <- renderDataTable({
   admissions_hb_all_path %>%
     filter(admission_type == "flu") %>%
     filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
-    filter(Season %in% input$influenza_adms_selected_seasons) %>%
-    arrange(desc(week_ending)) %>%
-    select('Season' = Season,
-           'Week number' = week, 
-           'Health Board' = health_board_of_treatment,
+    filter(Season %in% flu_adm_seasons) %>%
+    arrange(desc(week_ending), health_board_of_treatment) %>%
+    mutate(health_board_of_treatment = factor(health_board_of_treatment)) %>%
+    select('Week ending' = week_ending, 
+           'NHS Health Board' = health_board_of_treatment,
+           'Number of hospital admissions' = n,
            'Rate of hospital admissions per 100,000 population' = rate) %>%
     make_table(add_separator_cols_1dp = c(4),
-               filter_cols = c(2,3))
+               add_separator_cols = c(3),
+               filter_cols = c(1,2))
 })
 
 

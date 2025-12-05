@@ -1,6 +1,4 @@
 
-admissions_hb_all_path <- admissions_hb_all_path %>%
-  mutate(Season = gsub("-", "/", Season))
 admissions_seasons <- age_rate_data_all_path %>%
   add_season() %>%
   mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>%
