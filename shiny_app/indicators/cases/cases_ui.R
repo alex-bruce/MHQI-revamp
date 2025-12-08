@@ -1,3 +1,10 @@
+cov_cases_seasons <- 
+  Respiratory_Pathogens_Test_Positivity_by_Age %>% 
+  filter(pathogen == "Covid-19") %>% 
+  select(season) %>% 
+  unique() %>% 
+  tail(3)
+  
 tagList(
   fluidRow(width = 12,
            
@@ -72,6 +79,32 @@ tagList(
                           tabPanel("Data",
                                    tagList(
                                      withNavySpinner(dataTableOutput("covid_positivity_table"))
+                                   ) # tagList
+                          ) # tabPanel
+                   ) # tabBox
+           ) # tagList
+  ), #fluidrow
+  
+  
+  fluidRow(width = 12,
+           tagList(h2("COVID-19 percentage test positivity by age"),
+                   tabBox(width = NULL,
+                          type = "pills",
+                          tabPanel("Plot",
+                                   br(),
+                                   pickerInput(inputId = "test_pos_cov_age",
+                                               label = "Select season",
+                                               choices = {cov_cases_seasons %>% tail(3) },
+                                               selected = {cov_cases_seasons %>% tail(1)}),
+                                   tagList(linebreaks(1),
+                                           altTextUI("covid_positivity_age_modal"),
+                                           swabposDefinitionUI("covid_age_swabpos"),
+                                           withNavySpinner(plotlyOutput("covid_positivity_age_plot")),
+                                           fluidRow(
+                                             width=12, linebreaks(1)))),
+                          tabPanel("Data",
+                                   tagList(
+                                     withNavySpinner(dataTableOutput("covid_positivity_age_table"))
                                    ) # tagList
                           ) # tabPanel
                    ) # tabBox
