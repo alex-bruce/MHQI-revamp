@@ -51,6 +51,8 @@ output$flu_positivity_age_table <- renderDataTable({
   Respiratory_Pathogens_Test_Positivity_by_Age %>%
     filter(pathogen == "Influenza (A or B)") %>%
     filter(season %in% unlist(tail(flu_cases_seasons, 6))) %>%
+    mutate(agegrp = case_when(is.na(agegrp) ~ "Unknown",
+                              TRUE ~ agegrp)) %>% 
     dplyr::rename(`Year` = year,
                   `Season` = season,
                   `ISO Week` = ISOweek,

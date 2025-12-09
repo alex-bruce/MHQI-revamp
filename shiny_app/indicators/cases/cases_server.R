@@ -62,6 +62,8 @@ output$covid_positivity_age_table <- renderDataTable({
   Respiratory_Pathogens_Test_Positivity_by_Age %>%
     filter(pathogen == "Covid-19") %>%
     filter(season %in% unlist(tail(cov_cases_seasons, 3))) %>%
+    mutate(agegrp = case_when(is.na(agegrp) ~ "Unknown",
+                              TRUE ~ agegrp)) %>% 
     dplyr::rename(`Year` = year,
                   `Season` = season,
                   `ISO Week` = ISOweek,
