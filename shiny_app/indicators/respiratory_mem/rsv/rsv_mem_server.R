@@ -34,6 +34,47 @@ output$rsv_positivity_plot <- renderPlotly({
   
 })
 
+## Test positivity by age
+
+altTextServer("rsv_positivity_age_modal",
+              title = "RSV test positivity by age group",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of RSV testing across Scotland by age."),
+                                tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
+                                tags$li("The y axis is test positivity rate."),
+                                tags$li("By default, the plot contains a trace showing the admission rate per 100,000 across all age groups."),
+                                tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
+                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")
+              )
+)
+
+output$rsv_positivity_age_table <- renderDataTable({
+  Respiratory_Pathogens_Test_Positivity_by_Age %>%
+    filter(pathogen == "RSV") %>%
+    filter(season %in% unlist(tail(rsv_cases_seasons, 6))) %>%
+    mutate(agegrp = case_when(is.na(agegrp) ~ "Unknown",
+                              TRUE ~ agegrp)) %>% 
+    dplyr::rename(`Year` = year,
+                  `Season` = season,
+                  `ISO Week` = ISOweek,
+                  `Age Group` = agegrp,
+                  `Total Samples` = total_samples,
+                  `Positive Samples` = positive_count,
+                  `Test Positivity (%)` = positivity_percentage) %>%
+    select(`Year`, `ISO Week`, `Age Group`, `Total Samples`, `Positive Samples`, `Test Positivity (%)`) %>%
+    arrange(desc(`Year`), desc(`ISO Week`)) %>%
+    make_table(add_separator_cols = c(2), order_by_firstcol = "desc")
+})
+
+
+output$rsv_positivity_age_plot <- renderPlotly({
+  Respiratory_Pathogens_Test_Positivity_by_Age %>% 
+    filter(pathogen == "RSV") %>% 
+    filter(season == input$test_pos_rsv_age) %>%
+    create_positivity_age_chart()
+  
+})
+
+
 
 # Low threshold
 rsv_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%

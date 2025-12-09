@@ -1,3 +1,10 @@
+flu_cases_seasons <- 
+  Respiratory_Pathogens_Test_Positivity_by_Age %>% 
+  filter(pathogen == "Influenza (A or B)") %>% 
+  select(season) %>% 
+  unique() %>% 
+  tail(6)
+
 tagList(
   fluidRow(width = 12,
 
@@ -62,6 +69,32 @@ tagList(
                           tabPanel("Data",
                                    tagList(
                                      withNavySpinner(dataTableOutput("influenza_positivity_table"))
+                                   ) # tagList
+                          ) # tabPanel
+                   ) # tabBox
+           ) # tagList
+  ), #fluidrow
+  
+  
+  fluidRow(width = 12,
+           tagList(h2("Influenza percentage test positivity by age"),
+                   tabBox(width = NULL,
+                          type = "pills",
+                          tabPanel("Plot",
+                                   br(),
+                                   pickerInput(inputId = "test_pos_flu_age",
+                                               label = "Select season",
+                                               choices = {flu_cases_seasons %>% tail(6) },
+                                               selected = {flu_cases_seasons %>% tail(1)}),
+                                   tagList(linebreaks(1),
+                                           altTextUI("flu_positivity_age_modal"),
+                                           swabposDefinitionUI("flu_age_swabpos"),
+                                           withNavySpinner(plotlyOutput("flu_positivity_age_plot")),
+                                           fluidRow(
+                                             width=12, linebreaks(1)))),
+                          tabPanel("Data",
+                                   tagList(
+                                     withNavySpinner(dataTableOutput("flu_positivity_age_table"))
                                    ) # tagList
                           ) # tabPanel
                    ) # tabBox

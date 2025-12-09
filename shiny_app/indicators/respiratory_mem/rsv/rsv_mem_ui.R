@@ -1,3 +1,10 @@
+rsv_cases_seasons <- 
+  Respiratory_Pathogens_Test_Positivity_by_Age %>% 
+  filter(pathogen == "RSV") %>% 
+  select(season) %>% 
+  unique() %>% 
+  tail(6)
+
 # create values for headline boxes
 
 rsv_cases_recent_week <- Respiratory_Scot %>%
@@ -85,6 +92,34 @@ tagList(
            ) # tagList
   ), #fluidrow
 
+  
+  
+  fluidRow(width = 12,
+           tagList(h2("RSV percentage test positivity by age"),
+                   tabBox(width = NULL,
+                          type = "pills",
+                          tabPanel("Plot",
+                                   br(),
+                                   pickerInput(inputId = "test_pos_rsv_age",
+                                               label = "Select season",
+                                               choices = {rsv_cases_seasons %>% tail(6)},
+                                               selected = {rsv_cases_seasons %>% tail(1)}),
+                                   tagList(linebreaks(1),
+                                           altTextUI("rsv_positivity_age_modal"),
+                                           swabposDefinitionUI("rsv_age_swabpos"),
+                                           withNavySpinner(plotlyOutput("rsv_positivity_age_plot")),
+                                           fluidRow(
+                                             width=12, linebreaks(1)))),
+                          tabPanel("Data",
+                                   tagList(
+                                     withNavySpinner(dataTableOutput("rsv_positivity_age_table"))
+                                   ) # tagList
+                          ) # tabPanel
+                   ) # tabBox
+           ) # tagList
+  ), #fluidrow
+  
+  
   fluidRow(width = 12,
            tagList(h2("Laboratory-confirmed RSV incidence per 100,000 population in Scotland"))),
 

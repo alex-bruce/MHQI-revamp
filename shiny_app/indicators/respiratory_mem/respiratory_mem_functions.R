@@ -1889,11 +1889,12 @@ create_test_pos_seasons_linechart <- function(data, pathogen_type){
   yaxis_plots[["title"]] <- "Test positivity (%)"
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
+  xaxis_plots[["range"]] <- list(-0.5, 52.5)
   
   # Line below hashed to remove slider
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
-  yaxis_plots[["ticksuffix"]] <- "%"
+  #yaxis_plots[["ticksuffix"]] <- "%"
   
   p <- plot_ly(data) %>%
     add_trace(x = ~ISOweek, y = ~positivity_percentage, split = ~season, #text=~season,
