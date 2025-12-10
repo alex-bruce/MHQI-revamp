@@ -441,24 +441,26 @@ output$cov_los_title <- renderUI({h3(glue("COVID-19 length of stay by age group 
 
 
 # Plot
-output$cov_los_plot<- renderPlotly({
-  cov_los_weekly_plot <- Length_of_Stay_Season %>%
-    filter(admission_type == "cov") %>% 
-    filter(Season == input$los_season_cov) %>%
+output$cov_los_plot <- renderPlotly({
+  avg_cov_los_plot <- Average_Length_of_Stay %>% 
+    filter(Pathogen == "COVID-19",
+           Season == input$los_season_cov) %>% 
     make_hospital_admissions_los_plot()
 
 })
+
 # Table
 output$cov_los_table <- renderDataTable({
-  cov_los_weekly_table <-Length_of_Stay_Season %>% 
-    filter(admission_type == "cov") %>% 
-    filter(Season == input$los_season_cov) %>%
-    mutate(`Length of stay` = factor(LengthOfStay,
-                                     levels = c("1 day or less",
-                                                "2-3 days", "4-5 days",
-                                                "6-7 days", "8+ days"))) %>% 
-    select(Season, 'Age group' = AgeGroup,'Length of stay',
-           'Percent' = PercentageOfAdmissions) })
+  avg_cov_los_table <- Average_Length_of_Stay %>% 
+    filter(Pathogen == "COVID-19") %>% #,
+#           Season == input$los_season_cov) %>% 
+    mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),
+           AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "15 to 44", "45 to 64",  
+           "5 to 14", "65 to 74", "75+", "All Ages"))) %>% 
+    arrange(desc(Season), AgeGroup) %>% 
+    select(Season, 'Age group' = AgeGroup, 'Average Length of stay' = AverageLengthOfStay)
+
+})
 
 
 ######################

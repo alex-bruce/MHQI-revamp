@@ -165,48 +165,62 @@ make_hospital_admissions_simd_plot <- function(data){
 # Hospital Admissions LOS plot
 
 make_hospital_admissions_los_plot <- function(data){
-  table <- data %>%
-    # mutate(Percent = ProportionOfAdmission*100) %>%
-    select(Pathogen, AgeGroup, LengthOfStay, PercentageOfAdmissions, Season) %>%
-    # dplyr::rename(`Age group` = AgeGroup,
-    #               `Length of stay` = LengthOfStay) %>% 
-    #filter(`Season` == input$season) %>%
-    mutate(LengthOfStay = factor(LengthOfStay,
-                                     levels = c("1 day or less",
-                                                "2-3 days", "4-5 days",
-                                                "6-7 days", "8+ days")))
+  table <- data 
   
   tooltip_trend <- paste0("Season: ", table$Season, "<br>",
                           "Age group: ", table$AgeGroup, "<br>",
-                          "Length of stay: ", table$LengthOfStay, "<br>",
-                          "Percent: ",table$PercentageOfAdmissions, "%")
+                          "Average Length of Stay: ", round(table$AverageLengthOfStay, 2), " days<br>",
+                          #,
+                          "95% CI: ", round(table$ci_lower, 2), " - ", round(table$ci_upper, 2), " days")
+  
   
   xaxis_plots[["title"]] <- 'Age group'
   yaxis_plots[["title"]] <- 'Percentage of admissions'
   yaxis_plots[["ticksuffix"]] <- "%"
  
   p <- table %>%
-    plot_ly(x = ~AgeGroup,
-            y = ~PercentageOfAdmissions,
-            color = ~LengthOfStay,
-            type = 'bar',
-            colors = paste(phs_palettes$`main-blues`),
-            text = tooltip_trend,
-            hoverinfo = "text",
-            marker = list(line = list(width=.5, color = 'rgb(0,0,0)'))
+    plot_ly(
+      x = ~AgeGroup,
+      y = ~AverageLengthOfStay,
+      type = 'scatter',
+      mode = 'markers',
+      text = tooltip_trend,
+      hoverinfo = "text",
+      marker = list(size = 15, color = "#3F3685")
+      , error_y = list(
+        type = "data",
+        symmetric = FALSE,
+        array = ~ci_upper - AverageLengthOfStay,
+        arrayminus = ~AverageLengthOfStay - ci_lower,
+        color = "black",
+        thickness = 1.5,
+        width = 5)
+          ) %>%
+    layout(
+      yaxis = list(
+        title = "Average Length of Stay (days)",
+        showgrid = FALSE,
+        zeroline = FALSE,
+        showline = TRUE,
+        linecolor = "black",
+        linewidth = 1
+      ),
+      xaxis = list(
+        title = "Age Groups",
+        showgrid = FALSE,
+        zeroline = FALSE,
+        showline = TRUE,
+        linecolor = "black",
+        linewidth = 1
+      ),
+      paper_bgcolor = phs_colours("phs-liberty-10"),
+      plot_bgcolor = phs_colours("phs-liberty-10"),
+      margin = list(b = 80, t = 5)
     ) %>%
-    layout(barmode = "stack",
-           yaxis = yaxis_plots,
-           xaxis = xaxis_plots,
-           legend = list(xanchor = "center", yanchor = "top",
-                         x = 0.5, y = -0.6, 
-                         orientation = 'h', traceorder = 'normal'),
-           paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
-    # leaving only save plot button
-    config(displaylogo = F, displayModeBar = TRUE,
-           modeBarButtonsToRemove = bttn_remove )
-   # return(p)
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  return(p)
   
 }
 

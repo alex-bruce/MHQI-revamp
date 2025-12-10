@@ -215,9 +215,10 @@ tagList(
                            ##### LOS section
                            tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
                                    #  temporary caveat for no LOS information
-                                   tagList("Public Health Scotland have paused reporting of the Length",
-                                           "of Stay of acute COVID-19 hospital admissions as we undertake developments",
-                                           "to include this analysis for other respiratory pathogens.")),
+                                   # tagList("Public Health Scotland have paused reporting of the Length",
+                                   #         "of Stay of acute COVID-19 hospital admissions as we undertake developments",
+                                   #         "to include this analysis for other respiratory pathogens.")
+                                   ),
                            
                            
                            # tagList(h2("Length of stay of acute COVID-19 hospital admissions"),
@@ -245,25 +246,26 @@ tagList(
                            #                 h6("hidden text for padding page"))
                            #         ),
                            # br(), 
-                           # tabBox( width = NULL, type = "pills",
-                           #         tabPanel("Plot",
-                           #                  tagList(uiOutput("cov_los_title")),
-                           #                  tagList(h5("Use the drop-down menu to select a season."),
-                           #                         pickerInput(inputId = "los_season_cov",
-                           #                                     label = "Select season",
-                           #                                     choices = admission_seasons,
-                           #                                     selected = "2024/2025"),
-                           #                         altTextUI("cov_los_modal"),
-                           #                         withNavySpinner( plotlyOutput("cov_los_plot")),
-                           #                         #linebreaks(1)
-                           #                         )), #taglist
-                           #        tabPanel("Data",
-                           #                 tagList(linebreaks(1),
-                           #                         withNavySpinner(dataTableOutput("cov_los_table")) )
-                           #        ) # tabPanel
-                           #        )#tabbox
-                           ### end LOS section
-                  )#tabbox
+                           tabBox( width = NULL, type = "pills",
+                                   tabPanel("Plot",
+                                            tagList(uiOutput("cov_los_title")),
+                                            tagList(h5("Use the drop-down menu to select a season."),
+                                                    pickerInput(inputId = "los_season_cov",
+                                                                label = "Select season",
+                                                                choices = admission_seasons,
+                                                                selected = "2024/2025"),
+                                                    altTextUI("cov_los_modal"),
+                                                    withNavySpinner( plotlyOutput("cov_los_plot")),
+                                                    #linebreaks(1)
+                                            )), #taglist
+                                   tabPanel("Data",
+                                            tagList(linebreaks(1),
+                                                    withNavySpinner(dataTableOutput("cov_los_table")) )
+                                   ) # tabPanel
+                           )#tabbox
+                           ###
+### end LOS section
+                  )#tabPanel
   ), #fluid row
   
   
