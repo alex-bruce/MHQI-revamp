@@ -73,6 +73,10 @@ g_cases_age_filtered <- g_cases_age_sex_all %>%
 # create intermediate cumulative age/sex profiles 
 
 # 1 cumulative by age and sex using age_group_scotland grouping
+# (code immediately below is to ensure matching 'age_group' variable names to enable left_join)
+pop_agegroup_sex2 <- pop_agegroup_sex %>%
+  rename(agegroup = age_group)
+
 g_agegroup_sex_cumulative<-g_cases_age_filtered  %>% 
   group_by(agegroup_scotland, sex) %>% 
   summarise(TotalPositive=sum(daily_positive)) %>% 
@@ -80,7 +84,7 @@ g_agegroup_sex_cumulative<-g_cases_age_filtered  %>%
   rename(agegroup=agegroup_scotland) %>% 
   arrange(agegroup, sex) %>% 
   filter(sex!="Unknown"& agegroup!="Unknown") %>% 
-      left_join(pop_agegroup_sex, by=(c("agegroup", "sex")))%>% 
+      left_join(pop_agegroup_sex2, by=(c("agegroup", "sex")))%>% 
   mutate(location_code=("Scotland")) 
 
 #  2 cumulative by age and COMBINED SEX using age_group_scotland grouping
