@@ -62,9 +62,9 @@ tagList(
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("rsv_occupancy_modal"),
-                            withNavySpinner(plotlyOutput("rsv_occupancy_plot")),
-                            fluidRow(
-                              width=12, linebreaks(4))
+                            withNavySpinner(plotlyOutput("rsv_occupancy_plot"))#,
+                            # fluidRow(
+                            #   width=12, linebreaks(4))
                     ) # taglist
            ), # tabpanel
 
@@ -78,7 +78,7 @@ tagList(
   ), # fluid row
 
 fluidRow(width = 12,
-         tagList(h2("Number of inpatients with RSV in hospital by health board")),
+         tagList(h2("Number of patients with RSV in hospital by NHS Health Board")),
          linebreaks(1)),
 
 fluidRow(

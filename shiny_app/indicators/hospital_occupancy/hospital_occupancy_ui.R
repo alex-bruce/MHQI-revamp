@@ -63,9 +63,9 @@ tagList(
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("hospital_occupancy_modal"),
-                            withNavySpinner(plotlyOutput("hospital_occupancy_plot")),
-                            fluidRow(
-                              width=12, linebreaks(4))
+                            withNavySpinner(plotlyOutput("hospital_occupancy_plot"))#,
+                            # fluidRow(
+                            #   width=12, linebreaks(4))
                     ) # taglist
            ), # tabpanel
 
@@ -79,7 +79,7 @@ tagList(
   ), # fluid row
 
 fluidRow(width = 12,
-         tagList(h2("Number of inpatients with COVID-19 in hospital by health board")),
+         tagList(h2("Number of inpatients with COVID-19 in hospital by NHS Health Board")),
          linebreaks(1)),
 
 fluidRow(

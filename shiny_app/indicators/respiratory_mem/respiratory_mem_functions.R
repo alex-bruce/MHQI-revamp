@@ -1010,7 +1010,7 @@ create_pathogen_occupancy_linechart <- function(data,
                                            #rate_dp = 2,
                                            #seasons = NULL,
                                            value_variable = "sevenday_ave_inpatients",
-                                           y_axis_title = "Number of people in hospital\n (7 day average)") {
+                                           y_axis_title = "Number of patients in hospital\n (7 day average)") {
   
   # Rename value variable
   data <- data %>%
@@ -1022,8 +1022,7 @@ create_pathogen_occupancy_linechart <- function(data,
     filter(ISOWeek != 53) %>%
     select(Season, ISOWeek, Weekord, Value) %>%
     arrange(Season, Weekord) %>%
-    mutate(ISOWeek = as.character(ISOWeek),
-           ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
+    mutate(ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
   
   # Seasons in data
   seasons <- unique(data$Season)
@@ -1048,7 +1047,7 @@ create_pathogen_occupancy_linechart <- function(data,
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$Season,
                             "<br>", "Week number: ", data$ISOWeek,
-                            "<br>", "Number: ", data$Value))
+                            "<br>", "Number of patients in hospital (7 day average): ", data$Value))
   
   # Create plot
   pathogen_occupancy_linechart = data %>%
@@ -1097,15 +1096,33 @@ create_pathogen_occupancy_linechart <- function(data,
 
 # Create pathogeb occupancy HB line chart
 create_pathogen_occupancy_hb_linechart <- function(data,
-                                                #rate_dp = 2,
-                                                #seasons = NULL,
-                                                value_variable = "sevenday_ave_inpatients",
-                                                y_axis_title = "Number of people in hospital\n (7 day average)") {
+                                                   #rate_dp = 2,
+                                                   #seasons = NULL,
+                                                   value_variable = "sevenday_ave_inpatients",
+                                                   y_axis_title = "Number of patients in hospital\n (7 day average)") {
   
   # Rename value variable
   data <- data %>%
     rename(Value = value_variable)
   
+  # Define a named color vector
+  hb_colours <- c(
+    "NHS Scotland" = "black",
+    "NHS Ayrshire and Arran" = "#12436D",
+    "NHS Borders" = "#94AABD",
+    "NHS Dumfries and Galloway" = "#28A197",
+    "NHS Fife" = "#B4DEDB",
+    "NHS Forth Valley" = "#801650",
+    "NHS Grampian" = "#CCA2B9",
+    "NHS Greater Glasgow and Clyde" = "#F46A25",
+    "NHS Highland" = "#FBC3A8",
+    "NHS Lanarkshire" = "#3D3D3D",
+    "NHS Lothian" = "#A8A8A8",
+    "NHS Orkney" = "#3E8ECC",
+    "NHS Shetland" = "#A8CCE8",
+    "NHS Tayside" = "#3F085C",
+    "NHS Western Isles" = "#A285D1"
+  )
   
   # Wrangle data
   data = data %>%
@@ -1113,7 +1130,7 @@ create_pathogen_occupancy_hb_linechart <- function(data,
     filter(health_board != "Golden Jubilee National Hospital") %>% 
     select(Season, ISOWeek, Weekord, Value, health_board) %>%
     arrange(Season, Weekord) %>%
-    mutate(ISOWeek = as.character(ISOWeek),
+    mutate(#ISOWeek = as.character(ISOWeek),
            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
   
   # Seasons in data
@@ -1139,19 +1156,20 @@ create_pathogen_occupancy_hb_linechart <- function(data,
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$Season,
                             "<br>", "Week number: ", data$ISOWeek,
-                            "<br>", "Health Board: ", data$health_board,
-                            "<br>", "Number of people in hospital\n (7 day average) :", data$Value))
+                            "<br>", "NHS Health Board: ", data$health_board,
+                            "<br>", "Number of patients in hospital\n (7 day average) :", data$Value))
   
   # Create plot
   pathogen_occupancy_hb_linechart <- plot_ly(data) %>% 
     add_trace(data = data[data$health_board != "NHS Scotland", ],
-              x = ~ISOWeek, y = ~Value, split = ~health_board, text = ~health_board,
+              x = ~ISOWeek, y = ~Value, color = ~health_board, text = ~health_board,
+              colors = hb_colours,
               type = "scatter", mode = "lines",
               #color = ~age_band,
               #colors = phs_colours(c("phs-blue")),
               hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
-                                     '<b>Health Board</b>: %{text}<br>',
-                                     '<b>Number of people in hospital\n (7 day average) </b>: %{y}'),
+                                     '<b>NHS Health Board</b>: %{text}<br>',
+                                     '<b>Number of patients in hospital\n (7 day average) </b>: %{y}'),
               textposition = "none",
               text = tooltip_trend[data$health_board!= "NHS Scotland"],
               hoverinfo = "text",
@@ -1159,12 +1177,13 @@ create_pathogen_occupancy_hb_linechart <- function(data,
     ) %>%
     
     add_trace(data = data[data$health_board == "NHS Scotland", ],
-              x = ~ISOWeek, y = ~Value, split = ~health_board, text = ~health_board,
+              x = ~ISOWeek, y = ~Value, color = ~health_board, text = ~health_board,
+              colors = hb_colours,
               type = "scatter", mode = "lines",
               #color = ~age_band,
               #colors = phs_colours(c("phs-blue")),
               hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
-                                     '<b>Health Board</b>: %{text}<br>',
+                                     '<b>NHS Health Board</b>: %{text}<br>',
                                      '<b>Number of people in hospital\n (7 day average) </b>: %{y}'),
               textposition = "none",
               text = tooltip_trend[data$health_board == "NHS Scotland"],
@@ -1177,72 +1196,10 @@ create_pathogen_occupancy_hb_linechart <- function(data,
            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
-
+  
   return(pathogen_occupancy_hb_linechart)
   
 }
-
-
-create_cari_age_linechart2 <- function(data){
-  
-  yaxis_plots[["title"]] <- "Test positivity (%)"
-  xaxis_plots[["title"]] <- "Week ending"
-  
-  #xaxis_plots[["rangeslider"]] <- list(type = "date")
-  yaxis_plots[["fixedrange"]] <- FALSE
-  yaxis_plots[["ticksuffix"]] <- "%"
-  # yaxis_plots[["rangemode"]] <- "tozero"
-  # yaxis_plots[["tickmode"]] <- "auto"
-  
-  
-  # Define a named color vector
-  age_colours <- c(
-    "All ages" = "#A8A8A8",
-    "0-4 years" = "#12436D",
-    "5-14 years" = "#28A197",
-    "15-44 years" = "#801650",
-    "45-64 years" = "#F46A25",
-    "65-74 years" = "#3F085C",
-    "75+ years" = "#3E8ECC"
-  )
-  
-  p <- plot_ly(data) %>%
-    # add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~AgeGroup, text=~AgeGroup,
-    #           type="scatter", mode="lines",
-    #           color=~AgeGroup,
-    #           colors=age_colours,
-    #           hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
-    #                                  '<b>Age group</b>: %{text}<br>',
-    #                                  '<b>Test positivity</b>: %{y}')
-    # ) %>%
-    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~AgeGroup, #text=~HBName,
-              type="scatter", mode="lines",
-              color=~AgeGroup,
-              colors=age_colours,
-              text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
-                             "<b>Age group</b>: ", AgeGroup, "\n",
-                             "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
-                             "<b>Number of samples</b>: ", format(TotalSamples, big.mark=","), "\n",
-                             "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
-                             "<b>95% confidence interval</b>: ", round_half_up(SwabPositivityLCL,1),
-                             "% - ", round_half_up(SwabPositivityUCL,1), "%"),
-              hovertemplate = "%{text}",
-              showlegend = TRUE
-    ) %>%
-    layout(margin = list(b = 100, t = 5),
-           yaxis = yaxis_plots, xaxis = xaxis_plots,
-           legend = list(x = 100, y = 0.5),
-           paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10"),
-           showlegend = TRUE) %>%
-    
-    config(displaylogo = FALSE, displayModeBar = TRUE,
-           modeBarButtonsToRemove = bttn_remove)
-  
-  return(p)
-  
-}
-
 
 
 create_cari_hb_linechart <- function(data){
