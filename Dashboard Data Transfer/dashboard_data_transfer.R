@@ -238,7 +238,7 @@ source("Transfer Scripts/transfer_weekly_simd_cases_od.R")
 source("Transfer Scripts/transfer_ethnicity_open_data.R")
 
 #### Open data care home times series
-source("Transfer Scripts/transfer_carehome_timeseries_od.R")
+#source("Transfer Scripts/transfer_carehome_timeseries_od.R")
 
 ####  Open data weekly covid hospital admissions & occupancy for open data
 ####  PLUS Open data weekly Respiratory flu and RSV hospital admissions
