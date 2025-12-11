@@ -900,10 +900,13 @@ create_pathogen_adms_hb_linechart <- function(data){
     mutate(WeekNumber = as.numeric(substr(week, nchar(week) - 1, nchar(week))),
            WeekNumber = factor(WeekNumber, levels = week_order))
   
+  plot_data <- plot_data %>%
+    mutate(rate = round_half_up(rate,1))
+  
   tooltip_trend <- paste0(#"Season: ", plot_data$Season, "<br>",
     "Week number: ", plot_data$WeekNumber, "<br>",
-    "Health Board: ", plot_data$health_board_of_treatment, "<br>",
-    "Admission rate per 100k: ", round(plot_data$rate, 1), "<br>")
+    "NHS Health Board: ", plot_data$health_board_of_treatment, "<br>",
+    "Admission rate per 100,000 population: ", round_half_up(plot_data$rate, 1), "<br>")
   
   yaxis_plots[["title"]] <- "Rate of hospital admissions<br>per 100,000 population"
   xaxis_plots[["title"]] <- "Week number"
@@ -914,33 +917,52 @@ create_pathogen_adms_hb_linechart <- function(data){
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["tickformat"]] <- NULL
   
+  # Define a named color vector
+  hb_colours <- c(
+    "Scotland" = "black",
+    "NHS Ayrshire and Arran" = "#12436D",
+    "NHS Borders" = "#94AABD",
+    "NHS Dumfries and Galloway" = "#28A197",
+    "NHS Fife" = "#B4DEDB",
+    "NHS Forth Valley" = "#801650",
+    "NHS Grampian" = "#CCA2B9",
+    "NHS Greater Glasgow and Clyde" = "#F46A25",
+    "NHS Highland" = "#FBC3A8",
+    "NHS Lanarkshire" = "#3D3D3D",
+    "NHS Lothian" = "#A8A8A8",
+    "NHS Orkney" = "#3E8ECC",
+    "NHS Shetland" = "#A8CCE8",
+    "NHS Tayside" = "#3F085C",
+    "NHS Western Isles" = "#A285D1"
+  )
+  
   
   
   p <- plot_ly(plot_data) %>%
-    add_trace(data = plot_data[plot_data$health_board_of_treatment!= "NHS Scotland", ],
+    add_trace(data = plot_data[plot_data$health_board_of_treatment!= "Scotland", ],
               x = ~WeekNumber, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
               type = "scatter", mode = "lines",
-              #color = ~age_band,
-              #colors = phs_colours(c("phs-blue")),
+              color = ~health_board_of_treatment,
+              colors = hb_colours,
               hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
-                                     '<b>Health Board</b>: %{text}<br>',
-                                     '<b>Admission rate per 100k</b>: %{y}'),
+                                     '<b>NHS Health Board</b>: %{text}<br>',
+                                     '<b>Admission rate per 100,000 population</b>: %{y}'),
               textposition = "none",
-              text = tooltip_trend[data$health_board_of_treatment!= "NHS Scotland"],
-              hoverinfo = "text",
+              # text = tooltip_trend[data$health_board_of_treatment!= "Scotland"],
+              # hoverinfo = "text",
               visible = "legendonly"
     ) %>%
-    add_trace(data = plot_data[plot_data$health_board_of_treatment == "NHS Scotland", ],
+    add_trace(data = plot_data[plot_data$health_board_of_treatment == "Scotland", ],
               x = ~WeekNumber, y = ~rate, split = ~health_board_of_treatment, text = ~health_board_of_treatment,
               type = "scatter", mode = "lines",
-              #color = ~age_band,
-              #colors = phs_colours(c("phs-blue")),
+              color = ~health_board_of_treatment,
+              colors = hb_colours,
               hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
-                                     '<b>Health Board</b>: %{text}<br>',
-                                     '<b>Admission rate per 100k</b>: %{y}'),
-              textposition = "none",
-              text = tooltip_trend[data$health_board_of_treatment!= "NHS Scotland"],
-              hoverinfo = "text"
+                                     '<b>NHS Health Board</b>: %{text}<br>',
+                                     '<b>Admission rate per 100,000 population</b>: %{y}'),
+              textposition = "none"#,
+              # text = tooltip_trend[data$health_board_of_treatment!= "Scotland"],
+              # hoverinfo = "text"
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,

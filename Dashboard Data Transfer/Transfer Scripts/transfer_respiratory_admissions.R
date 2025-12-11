@@ -102,10 +102,12 @@ g_respiratory_hb_admissions <- g_respiratory_hb_admissions %>%
                               "NHS SHETLAND" = "NHS Shetland",
                               "NHS TAYSIDE" = "NHS Tayside",
                               "NHS WESTERN ISLES" = "NHS Western Isles",
-                              "NATIONAL FACILITY" = "Golden Jubilee National Hospital"))
+                              "NHS Scotland" = "Scotland",
+                              "NATIONAL FACILITY" = "Golden Jubilee National Hospital")) %>%
+  mutate(Season = gsub("-", "/", Season))
 
 
-write.csv(i_respiratory_hb_admissions, glue(output_folder, "admissions_hb_all_path.csv"), row.names = FALSE)
+write.csv(g_respiratory_hb_admissions, glue(output_folder, "admissions_hb_all_path.csv"), row.names = FALSE)
 
 three_sunday_dates <- data.frame(week_ending=seq(as.Date("2018-10-07"), as.Date(od_date-1), "week")) %>%
   # mutate(WeekEnding= format(strptime(WeekEnding, format = "%Y-%m-%d")) ) %>%
