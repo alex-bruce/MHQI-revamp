@@ -178,9 +178,32 @@ tabBox(width = NULL, type = "pills",
                   withNavySpinner(
                     dataTableOutput("influenza_admissions_simd_table"))
                 )
-       )
+       ),
        
 ),
+
+##### LOS section
+tagList(h2("Average length of stay of acute influenza hospital admissions"),
+        tabBox( width = NULL, type = "pills",
+                tabPanel("Plot",
+                         #tagList(uiOutput("flu_los_title")),
+                         tagList(h5("Use the drop-down menu to select a season."),
+                                 pickerInput(inputId = "los_season_flu",
+                                             label = "Select season",
+                                             choices = admission_seasons,
+                                             selected = tail(admission_seasons, 1)),
+                                 altTextUI("flu_los_modal"),
+                                 withNavySpinner( plotlyOutput("flu_los_plot")),
+                                 #linebreaks(1)
+                         )), #taglist
+                tabPanel("Data",
+                         tagList(linebreaks(1),
+                                 withNavySpinner(dataTableOutput("flu_los_table")) )
+                ) # tabPanel
+        )#tabbox
+        ###
+        ### end LOS section
+        
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute influenza admissions to hospital by NHS Health Board of Treatment; week ending")),
 #          linebreaks(1)), #fluidRow
@@ -269,7 +292,12 @@ tabBox(width = NULL, type = "pills",
 
 # Padding out the bottom of the page
 #fluidRow(height="200px", width=12, linebreaks(5))
+),
+
+# Padding out the bottom of the page
+fluidRow(height="200px", width=12, linebreaks(5))
 
 )#taglist
+
 
 

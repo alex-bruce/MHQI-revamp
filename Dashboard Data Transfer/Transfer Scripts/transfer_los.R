@@ -3,6 +3,16 @@
 #i_los_season <- read_csv_with_options(match_base_filename(glue(input_data, "los_season.csv")))
 i_avg_los <-   read_csv_with_options(match_base_filename(glue(input_data, "avg_los_ci.csv")))
 
+
+#avg los by age, by season for dashboard#
+g_avg_los <- i_avg_los %>% 
+  rename(AgeGroup = los_age_band,
+         TotalLengthOfStay = total_los,
+         AverageLengthOfStay = avg_los)
+write.csv(g_avg_los, glue(output_folder, "Average_Length_of_Stay.csv"), row.names=FALSE)
+
+rm(i_avg_los, g_avg_los)
+
 #  los by week ending 
 # g_los_weekly <- i_los_weekly %>%
 #   mutate(PercentageOfAdmissions =  round_half_up(ProportionOfAdmissions*100, 1),
@@ -20,6 +30,7 @@ i_avg_los <-   read_csv_with_options(match_base_filename(glue(input_data, "avg_l
 # 
 # write.csv(g_los_weekly, glue(output_folder, "Length_of_Stay_Weekly.csv"), row.names=FALSE)
 # 
+#
 # # los by season # 
 # g_los_season <- i_los_season %>% 
 #   rename(ProportionOfAdmissions=ProportionOfAdmission) %>% 
@@ -27,12 +38,4 @@ i_avg_los <-   read_csv_with_options(match_base_filename(glue(input_data, "avg_l
 #   arrange(Pathogen, Season, AgeGroup, LengthOfStay)
 # 
 # write.csv(g_los_season, glue(output_folder, "Length_of_Stay_Season.csv"), row.names=FALSE)
-
-#avg los #
-g_avg_los <- i_avg_los %>% 
-  rename(AgeGroup = los_age_band,
-         TotalLengthOfStay = total_los,
-         AverageLengthOfStay = avg_los)
-write.csv(g_avg_los, glue(output_folder, "Average_Length_of_Stay.csv"), row.names=FALSE)
-
-rm(i_avg_los, g_avg_los)#i_los_weekly, g_los_weekly,g_los_season, i_los_season, )
+#rm(i_los_weekly, g_los_weekly,g_los_season, i_los_season, )

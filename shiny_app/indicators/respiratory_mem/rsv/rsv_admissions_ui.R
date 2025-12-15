@@ -215,50 +215,34 @@ tabBox(width = NULL, type = "pills",
 # ),
 
 ##### LOS section
-# tagList(h2("Length of stay of acute RSV hospital admissions"),
-#         tags$div(class = "headline",
-#                  h3(glue("Median length of stay of acute RSV hospital admissions for 4 week period {los_date_start %>% format('%d %b %y')} to {los_date_end%>% format('%d %b %y')} ")),
-#                  valueBox(value = glue("{Length_of_Stay_Median %>% 
-#                                        filter(AgeGroup == 'All Ages') %>% 
-#                                        filter(Pathogen =='rsv') %>%
-#                                        .$MedianLengthOfStay %>% round_half_up(1)} days"),
-#                           subtitle = glue("All ages"),
-#                           color = "navy",
-#                           icon = icon_no_warning_fn("clock")),# valuebox
-#                  valueBox(value = glue("{rsv_los_median_min$MedianLengthOfStay %>%
-#                                        round_half_up(1)} days"),
-#                           subtitle = glue("Shortest median stay ({rsv_los_median_min$AgeGroup})"),
-#                           color = "navy",
-#                           icon = icon_no_warning_fn("clock")),# value box
-#                  valueBox(value = glue("{rsv_los_median_max$MedianLengthOfStay %>%
-#                                        round_half_up(1)} days"),
-#                           subtitle = glue("Longest median stay ({rsv_los_median_max$AgeGroup})"),
-#                           color = "navy",
-#                           icon = icon_no_warning_fn("clock")),
-#                  # This text is hidden by css but helps pad the box at the bottom
-#                  h6("hidden text for padding page"))
-# ),
-# br(),
-# 
-# tabBox(width = NULL, type = "pills",
-#        tabPanel("Plot",
-#                 tagList(uiOutput("rsv_los_title")),
-#                 tagList(h5("Use the drop-down menu to select a season."),
-#                         pickerInput(inputId = "los_season_rsv",
-#                                     label = "Select season",
-#                                     choices = admission_seasons,
-#                                     selected = "2024/2025"),
-#                         altTextUI("rsv_los_modal"),
-#                         withNavySpinner(plotlyOutput("rsv_los_plot") ),
-#                         )),
-#        tabPanel("Data",
-#                 tagList(linebreaks(1),
-#                         withNavySpinner(dataTableOutput("rsv_los_table")) )) # tabPanel
-# ),#tabbox
-### end LOS section
+tagList(h2("Average length of stay of acute RSV hospital admissions"),
+        tabBox( width = NULL, type = "pills",
+                tabPanel("Plot",
+                         #tagList(uiOutput("rsv_los_title")),
+                         tagList(h5("Use the drop-down menu to select a season."),
+                                 pickerInput(inputId = "los_season_rsv",
+                                             label = "Select season",
+                                             choices = admission_seasons,
+                                             selected = tail(admission_seasons, 1)),
+                                 altTextUI("rsv_los_modal"),
+                                 withNavySpinner( plotlyOutput("rsv_los_plot")),
+                                 #linebreaks(1)
+                         )), #taglist
+                tabPanel("Data",
+                         tagList(linebreaks(1),
+                                 withNavySpinner(dataTableOutput("rsv_los_table")) )
+                ) # tabPanel
+        )#tabbox
+        ###
+        ### end LOS section
 
 # Padding out the bottom of the page
 #fluidRow(height="200px", width=12, linebreaks(5))
+),
+
+# Padding out the bottom of the page
+fluidRow(height="200px", width=12, linebreaks(5))
 
 )#taglist
+
 
