@@ -1094,18 +1094,20 @@ create_pathogen_occupancy_linechart <- function(data,
   
 }
 
-# Create pathogeb occupancy HB line chart
+
 create_pathogen_occupancy_hb_linechart <- function(data,
-                                                   #rate_dp = 2,
-                                                   #seasons = NULL,
                                                    value_variable = "sevenday_ave_inpatients",
                                                    y_axis_title = "Number of patients in hospital\n (7 day average)") {
   
-  # Rename value variable
-  data <- data %>%
-    rename(Value = value_variable)
+  # Define the desired ISO week ordering (numeric)
+  mem_isoweeks <- c(40:52, 1:39)
+  mem_isoweeks_chr <- as.character(mem_isoweeks)
   
-  # Define a named color vector
+  # Rename the value column when provided as a string
+  data <- data %>%
+    dplyr::rename(Value = !!rlang::sym(value_variable))
+  
+  # NHS colours
   hb_colours <- c(
     "NHS Scotland" = "black",
     "NHS Ayrshire and Arran" = "#12436D",
@@ -1124,80 +1126,157 @@ create_pathogen_occupancy_hb_linechart <- function(data,
     "NHS Western Isles" = "#A285D1"
   )
   
-  # Wrangle data
-  data = data %>%
-    filter(ISOWeek != 53) %>%
-    filter(health_board != "Golden Jubilee National Hospital") %>% 
-    select(Season, ISOWeek, Weekord, Value, health_board) %>%
-    arrange(Season, Weekord) %>%
-    mutate(#ISOWeek = as.character(ISOWeek),
-           ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
+  # ---- Data wrangling: numeric x with custom order ----
+  data <- data %>%
+    dplyr::filter(ISOWeek != 53,
+                  health_board != "Golden Jubilee National Hospital") %>%
+    dplyr::select(Season, ISOWeek, Weekord, Value, health_board) %>%
+    dplyr::arrange(Season, Weekord) %>%
+    dplyr::mutate(
+      # Numeric position in the desired order (1..52)
+      ISOWeek_idx = match(ISOWeek, mem_isoweeks),
+      # Keep week label for tooltips
+      ISOWeek_lab = as.character(ISOWeek)
+    )
   
-  # Seasons in data
-  seasons <- unique(data$Season)
+  # ---- Axes: numeric x with full tick labels for 40..52,1..39 ----
   
-  # Current season data only
-  data_curr_season <- data %>%
-    filter(Season %in% seasons[length(seasons)])
+  tick_positions <- seq(1, length(mem_isoweeks), by = 2)         # 1,3,5,...,51
+  tick_labels    <- mem_isoweeks_chr[tick_positions]      
   
-  xaxis_plots[["title"]] <- "Week number"
-  xaxis_plots[["dtick"]] <- 2
-  xaxis_plots[["range"]] <- c(0,52)
+  
+  xaxis_plots <- list(
+    title    = "Week number",
+    type     = "linear",
+    tickmode = "array",
+    tickvals = tick_positions,
+    ticktext = tick_labels,         # "40","41",...,"39"
+    range    = c(1, length(mem_isoweeks)) # ensures full sequence is shown
+  )
+  
+  yaxis_plots <- list(
+    fixedrange = FALSE,
+    title = y_axis_title,
+    tickformat = NULL,
+    range = c(0, NA)  # Always start at zero
+  )
+  
+  # Tooltip text
+  tooltip_trend <- paste0(
+    "Season: ", data$Season,
+    "<br>", "Week number: ", data$ISOWeek_lab,
+    "<br>", "NHS Health Board: ", data$health_board,
+    "<br>", "Number of patients in hospital\n (7 day average) : ", data$Value
+  )
+  
+  # ---- Plot: use numeric x (ISOWeek_idx) ----
+  pathogen_occupancy_hb_linechart <- plotly::plot_ly(data) %>%
+    plotly::add_trace(
+      data = data[data$health_board != "NHS Scotland", ],
+      x = ~ISOWeek_idx, y = ~Value, color = ~health_board,
+      colors = hb_colours,
+      type = "scatter", mode = "lines",
+     text = ~health_board,                      # used in hovertemplate as %{text}
+     customdata = data$ISOWeek_lab[data$health_board != "NHS Scotland"], # %{customdata}
+     hovertemplate = paste0(
+       '<b>Week number</b>: %{customdata}<br>',
+       '<b>NHS Health Board</b>: %{text}<br>',
+       '<b>Number of patients in hospital\n (7 day average) </b>: %{y}'
+     ),
+     hoverinfo = "text",
+     visible = "legendonly"
+    ) %>%
+    plotly::add_trace(
+      data = data[data$health_board == "NHS Scotland", ],
+      x = ~ISOWeek_idx, y = ~Value, color = ~health_board,
+      colors = hb_colours,
+      type = "scatter", mode = "lines",
+      text = ~health_board,
+      customdata = data$ISOWeek_lab[data$health_board == "NHS Scotland"],
+      hovertemplate = paste0(
+        '<b>Week number</b>: %{customdata}<br>',
+        '<b>NHS Health Board</b>: %{text}<br>',
+        '<b>Number of people in hospital\n (7 day average) </b>: %{y}'
+      ),
+      hoverinfo = "text"
+    ) %>%
+    plotly::layout(
+      margin = list(b = 100, t = 5),
+      yaxis = yaxis_plots, xaxis = xaxis_plots,
+      legend = list(x = 0.99, y = 0.5),
+      paper_bgcolor = phs_colours("phs-liberty-10"),
+      plot_bgcolor = phs_colours("phs-liberty-10")
+    ) %>%
+    plotly::config(
+      displaylogo = FALSE, 
+      displayModeBar = TRUE,
+      modeBarButtonsToRemove = bttn_remove
+    )
+  
+  return(pathogen_occupancy_hb_linechart)
+}
+
+
+
+
+
+create_cari_age_linechart2 <- function(data){
+  
+  yaxis_plots[["title"]] <- "Test positivity (%)"
+  xaxis_plots[["title"]] <- "Week ending"
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
-  yaxis_plots[["title"]] <- y_axis_title
-  yaxis_plots[["tickformat"]] <- NULL
-  # xaxis_plots[["showgrid"]] <- FALSE
-  # yaxis_plots[["showgrid"]] <- FALSE
+  yaxis_plots[["ticksuffix"]] <- "%"
+  # yaxis_plots[["rangemode"]] <- "tozero"
+  # yaxis_plots[["tickmode"]] <- "auto"
   
   
+  # Define a named color vector
+  age_colours <- c(
+    "All ages" = "#A8A8A8",
+    "0-4 years" = "#12436D",
+    "5-14 years" = "#28A197",
+    "15-44 years" = "#801650",
+    "45-64 years" = "#F46A25",
+    "65-74 years" = "#3F085C",
+    "75+ years" = "#3E8ECC"
+  )
   
-  #Text for tooltip
-  tooltip_trend <- c(paste0("Season: ", data$Season,
-                            "<br>", "Week number: ", data$ISOWeek,
-                            "<br>", "NHS Health Board: ", data$health_board,
-                            "<br>", "Number of patients in hospital\n (7 day average) :", data$Value))
-  
-  # Create plot
-  pathogen_occupancy_hb_linechart <- plot_ly(data) %>% 
-    add_trace(data = data[data$health_board != "NHS Scotland", ],
-              x = ~ISOWeek, y = ~Value, color = ~health_board, text = ~health_board,
-              colors = hb_colours,
-              type = "scatter", mode = "lines",
-              #color = ~age_band,
-              #colors = phs_colours(c("phs-blue")),
-              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
-                                     '<b>NHS Health Board</b>: %{text}<br>',
-                                     '<b>Number of patients in hospital\n (7 day average) </b>: %{y}'),
-              textposition = "none",
-              text = tooltip_trend[data$health_board!= "NHS Scotland"],
-              hoverinfo = "text",
-              visible = "legendonly"
-    ) %>%
-    
-    add_trace(data = data[data$health_board == "NHS Scotland", ],
-              x = ~ISOWeek, y = ~Value, color = ~health_board, text = ~health_board,
-              colors = hb_colours,
-              type = "scatter", mode = "lines",
-              #color = ~age_band,
-              #colors = phs_colours(c("phs-blue")),
-              hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
-                                     '<b>NHS Health Board</b>: %{text}<br>',
-                                     '<b>Number of people in hospital\n (7 day average) </b>: %{y}'),
-              textposition = "none",
-              text = tooltip_trend[data$health_board == "NHS Scotland"],
-              hoverinfo = "text"
+  p <- plot_ly(data) %>%
+    # add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~AgeGroup, text=~AgeGroup,
+    #           type="scatter", mode="lines",
+    #           color=~AgeGroup,
+    #           colors=age_colours,
+    #           hovertemplate = paste0('<b>Week ending</b>: %{x}<br>',
+    #                                  '<b>Age group</b>: %{text}<br>',
+    #                                  '<b>Test positivity</b>: %{y}')
+    # ) %>%
+    add_trace(x = ~WeekEnding, y = ~SwabPositivity, split = ~AgeGroup, #text=~HBName,
+              type="scatter", mode="lines",
+              color=~AgeGroup,
+              colors=age_colours,
+              text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
+                             "<b>Age group</b>: ", AgeGroup, "\n",
+                             "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
+                             "<b>Number of samples</b>: ", format(TotalSamples, big.mark=","), "\n",
+                             "<b>Test positivity</b>: ", round_half_up(SwabPositivity,1), "%\n",
+                             "<b>95% confidence interval</b>: ", round_half_up(SwabPositivityLCL,1),
+                             "% - ", round_half_up(SwabPositivityUCL,1), "%"),
+              hovertemplate = "%{text}",
+              showlegend = TRUE
     ) %>%
     layout(margin = list(b = 100, t = 5),
            yaxis = yaxis_plots, xaxis = xaxis_plots,
            legend = list(x = 100, y = 0.5),
            paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+           plot_bgcolor = phs_colours("phs-liberty-10"),
+           showlegend = TRUE) %>%
+    
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
   
-  return(pathogen_occupancy_hb_linechart)
+  return(p)
   
 }
 
