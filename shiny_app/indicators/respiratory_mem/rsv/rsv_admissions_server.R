@@ -81,6 +81,8 @@ altTextServer("rsv_los_modal",
                 tags$li("This is a plot of the average length of stay in hospital",
                         "for acute RSV hospital admissions for individuals within different age groups 
                         for a given respiratory season."),
+                tags$li("Length of stay is calculated as the difference between the discharge date and",
+                        "the date of admission in days."),
                 tags$li("There is a drop down above the chart which allows you to select",
                         "the respiratory season for plotting. The default is the current season."),
                 tags$li("The x axis shows a break down of admissions by age groups: Under 1, 1-4, 5-14, 15-44,
@@ -291,6 +293,13 @@ output$rsv_admissions_simd_plot <- renderPlotly({
 # # los plot reactive title
 output$rsv_los_title <- renderUI({h3(glue("RSV length of stay by age group in Season ",
                                           input$los_season_rsv))})
+
+recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
+
+output$rsv_los_text <- renderText({
+  if (input$los_season_rsv == tail(admission_seasons, 1)) {
+    paste("*The plot for the current season only covers the period from ISO week 40 to ISO week ",recent_ISO_week, ".", sep="")
+  } } )
 
 # Plot
 output$rsv_los_plot <- renderPlotly({

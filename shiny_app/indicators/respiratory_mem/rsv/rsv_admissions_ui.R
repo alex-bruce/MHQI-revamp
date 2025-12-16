@@ -227,7 +227,11 @@ tagList(h2("Average length of stay of acute RSV hospital admissions"),
                                  altTextUI("rsv_los_modal"),
                                  withNavySpinner( plotlyOutput("rsv_los_plot")),
                                  #linebreaks(1)
-                         )), #taglist
+                         ),
+                         fluidRow(column(
+                           width=12, linebreaks(1),
+                           textOutput("rsv_los_text")
+                         ))), #taglist
                 tabPanel("Data",
                          tagList(linebreaks(1),
                                  withNavySpinner(dataTableOutput("rsv_los_table")) )

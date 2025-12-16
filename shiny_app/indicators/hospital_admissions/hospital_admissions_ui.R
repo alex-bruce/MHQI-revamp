@@ -252,7 +252,11 @@ tagList(
                                                     altTextUI("cov_los_modal"),
                                                     withNavySpinner( plotlyOutput("cov_los_plot")),
                                                     #linebreaks(1)
-                                            )), #taglist
+                                            ),
+                                            fluidRow(column(
+                                              width=12, linebreaks(1),
+                                              textOutput("cov_los_text")
+                                            ))), #taglist
                                    tabPanel("Data",
                                             tagList(linebreaks(1),
                                                     withNavySpinner(dataTableOutput("cov_los_table")) )

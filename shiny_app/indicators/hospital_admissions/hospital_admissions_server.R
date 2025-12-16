@@ -151,6 +151,8 @@ altTextServer("cov_los_modal",
               content = tags$ul(
                 tags$li("This is a plot of the average length of stay in hospital",
                         "for acute COVID-19 hospital admissions for individuals within different age groups for a given respiratory season."),
+                tags$li("Length of stay is calculated as the difference between the discharge date and",
+                        "the date of admission in days."),
                 tags$li("There is a drop down above the chart which allows you to select",
                         "the respiratory season for plotting. The default is the current season."),
                 tags$li("The x axis shows a break down of admissions by age groups: Under 1, 1-4, 5-14, 15-44,
@@ -437,8 +439,13 @@ output$cov_los_title <- renderUI({h3(glue("COVID-19 length of stay by age group 
                                                         input$los_season_cov))})
 # 
 # output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases over time by subtype in ",
-#                                                         input$respiratory_select_healthboard))})
+#       
+recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
 
+output$cov_los_text <- renderText({
+  if (input$los_season_cov == tail(admission_seasons, 1)) {
+    paste("*The plot for the current season only covers the period from ISO week 40 to ISO week ",recent_ISO_week, ".", sep="")
+  } } )
 
 # Plot
 output$cov_los_plot <- renderPlotly({

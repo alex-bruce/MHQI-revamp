@@ -195,7 +195,11 @@ tagList(h2("Average length of stay of acute influenza hospital admissions"),
                                  altTextUI("flu_los_modal"),
                                  withNavySpinner( plotlyOutput("flu_los_plot")),
                                  #linebreaks(1)
-                         )), #taglist
+                         ),
+                         fluidRow(column(
+                           width=12, linebreaks(1),
+                           textOutput("flu_los_text")
+                         ))), #taglist
                 tabPanel("Data",
                          tagList(linebreaks(1),
                                  withNavySpinner(dataTableOutput("flu_los_table")) )
