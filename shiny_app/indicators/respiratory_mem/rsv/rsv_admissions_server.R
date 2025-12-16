@@ -76,20 +76,23 @@ altTextServer("rsv_adm_age_sex",
 
 
 altTextServer("rsv_los_modal",
-              title = "Length of stay of acute RSV hospital admissions",
+              title = "Average length of stay of acute RSV hospital admissions",
               content = tags$ul(
-                tags$li("This is a plot of the distribution of lengths of stay in hospital",
-                        "for acute RSV hospital admissions by respiratory season."),
+                tags$li("This is a plot of the average length of stay in hospital",
+                        "for acute RSV hospital admissions for individuals within different age groups 
+                        for a given respiratory season."),
+                tags$li("Length of stay is calculated as the difference between the discharge date and",
+                        "the date of admission in days."),
                 tags$li("There is a drop down above the chart which allows you to select",
                         "the respiratory season for plotting. The default is the current season."),
-                tags$li("The legend shows five categories for length of stay: 1 day or less;",
-                        "2-3 days, 4-5 days, 6-7 days, 8+ days. See the metadata tab for further detail."),
-                tags$li("The x axis shows a break down of admissions by age groups: 0-17, 18-64, 65-74, 75+ and finally by All ages."),
-                tags$li("The y axis is the percentage of admissions in a given age group category."),
-                tags$li("The plot is a stacked bar chart, where the",
-                        "sections of vertical bars correspond to different length of stay categories.",
-                        "The bar sections are ordered from smallest length of stay to largest",
-                        "length of stay from bottom to top.") ))
+                tags$li("The x axis shows a break down of admissions by age groups: Under 1, 1-4, 5-14, 15-44,
+                        45-64, 65-74, 75+ and finally for all ages combined."),
+                tags$li("The y axis is the average length of stay for admissions within a given age group category."),
+                tags$li("For each age group category, the 95% confidence interval (CI) for the average length of stay is
+                        also shown. The CI represents a range of plausible values for the average length of stay and 
+                        can provide a sense of how much variation there is within the underlying data."),
+                tags$li("CIs will generally be wider when they are calculated based on less data 
+                        (e.g. for an incomplete season).") ))
 
 altTextServer("rsv_admissions_simd_modal",
               title = "RSV hospital admission rate per 100,000 population by deprivation category (SIMD)",
@@ -288,6 +291,42 @@ output$rsv_admissions_simd_plot <- renderPlotly({
 #--------------------------#
 ### LENGTH OF STAY ### ----
 #-------------------------#
+
+# # los plot reactive title
+output$rsv_los_title <- renderUI({h3(glue("RSV length of stay by age group in Season ",
+                                          input$los_season_rsv))})
+
+recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
+
+output$rsv_los_text <- renderText({
+  if (input$los_season_rsv == tail(admission_seasons, 1)) {
+    paste("*The plot for the current season only covers the period from ISO week 40 to ISO week ",recent_ISO_week, ".", sep="")
+  } } )
+
+# Plot
+output$rsv_los_plot <- renderPlotly({
+  avg_rsv_los_plot <- Average_Length_of_Stay %>% 
+    mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
+                                                  "65 to 74", "75+", "All Ages"))) %>% 
+    filter(Pathogen == "RSV",
+           Season == input$los_season_rsv) %>% 
+    make_hospital_admissions_los_plot()
+  
+})
+
+# Table
+output$rsv_los_table <- renderDataTable({
+  avg_rsv_los_table <- Average_Length_of_Stay %>% 
+    filter(Pathogen == "RSV") %>% #,
+    #           Season == input$los_season_rsv) %>% 
+    mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),
+           AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
+                                                  "65 to 74", "75+", "All Ages"))) %>% 
+    arrange(desc(Season), AgeGroup) %>% 
+    select(Season, 'Age group' = AgeGroup, 'Average Length of stay' = AverageLengthOfStay)
+  
+})
+
 # 
 # # los plot reactive title
 # output$rsv_los_title <- renderUI({h3(glue("RSV length of stay by age group in Season ",

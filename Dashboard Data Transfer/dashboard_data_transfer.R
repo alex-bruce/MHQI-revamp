@@ -153,7 +153,7 @@ source("Transfer Scripts/transfer_cases.R")
 source("Transfer Scripts/transfer_admissions.R")
 
 ##### Length of Stay
-# source("Transfer Scripts/transfer_los.R")
+ source("Transfer Scripts/transfer_los.R")
 
 ##### Vaccine Wastage
 # source("Transfer Scripts/transfer_vacc_wastage.R")
@@ -305,6 +305,7 @@ source("Transfer Scripts/new_od_cases_outputs.R")
 ##ADMISSIONS----
 source("Transfer Scripts/new_od_admissions_raw_data.R")
 source("Transfer Scripts/new_od_admissions_outputs.R")
+source("Transfer Scripts/new_od_los_outputs.R")
 
 ##TESTS----
 source("Transfer Scripts/new_od_tests_raw_data.R")
