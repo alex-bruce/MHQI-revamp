@@ -309,11 +309,18 @@ output$influenza_admissions_simd_plot <- renderPlotly({
  output$flu_los_title <- renderUI({h3(glue("Influenza length of stay by age group in Season ",
                                            input$los_season_flu))})
 
-recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
+#recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
+
+flu_los_recent_ISO_week <- Influenza_admissions %>%
+  arrange(Date) %>%
+  tail(2) %>%
+  head(1) %>%
+  .$ISOWeek
+
 
 output$flu_los_text <- renderText({
   if (input$los_season_flu == tail(admission_seasons, 1)) {
-    paste("*The plot for the current season only covers the period from ISO week 40 to ISO week ",recent_ISO_week, ".", sep="")
+    paste("*The plot for the current season covers the period from ISO week 40 to ISO week ",flu_los_recent_ISO_week, ".", sep="")
   } } )
 
 # Plot
