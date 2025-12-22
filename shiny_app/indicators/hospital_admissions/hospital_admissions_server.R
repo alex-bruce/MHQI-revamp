@@ -442,11 +442,17 @@ output$cov_los_title <- renderUI({h3(glue("COVID-19 length of stay by age group 
 # 
 # output$respiratory_over_time_title <- renderUI({h3(glue("Influenza cases over time by subtype in ",
 #       
-recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
+#recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
+
+cov_los_recent_ISO_week <- Cov_admissions %>%
+  arrange(Date) %>%
+  tail(2) %>%
+  head(1) %>%
+  .$ISOWeek
 
 output$cov_los_text <- renderText({
   if (input$los_season_cov == tail(admission_seasons, 1)) {
-    paste("*The plot for the current season only covers the period from ISO week 40 to ISO week ",recent_ISO_week, ".", sep="")
+    paste("*The plot for the current season covers the period from ISO week 40 to ISO week ",cov_los_recent_ISO_week, ".", sep="")
   } } )
 
 # Plot

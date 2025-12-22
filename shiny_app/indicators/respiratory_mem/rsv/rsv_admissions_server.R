@@ -296,11 +296,17 @@ output$rsv_admissions_simd_plot <- renderPlotly({
 output$rsv_los_title <- renderUI({h3(glue("RSV length of stay by age group in Season ",
                                           input$los_season_rsv))})
 
-recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
+#recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
+
+rsv_los_recent_ISO_week <- RSV_admissions %>%
+  arrange(Date) %>%
+  tail(2) %>%
+  head(1) %>%
+  .$ISOWeek
 
 output$rsv_los_text <- renderText({
   if (input$los_season_rsv == tail(admission_seasons, 1)) {
-    paste("*The plot for the current season only covers the period from ISO week 40 to ISO week ",recent_ISO_week, ".", sep="")
+    paste("*The plot for the current season covers the period from ISO week 40 to ISO week ", rsv_los_recent_ISO_week, ".", sep="")
   } } )
 
 # Plot
