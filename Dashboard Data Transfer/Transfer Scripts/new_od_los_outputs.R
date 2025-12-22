@@ -26,5 +26,5 @@ head(avg_los_weekly_od)
 
 write_csv(avg_los_weekly_od,
           paste0(file_paths$Outputs$Output_folder,
-                 "Admissions_Weekly_LOS_by_Age_",
+                 "ALOS_COVID19_FLU_RSV_by_Agegroup_",
                  od_report_date,".csv"))
