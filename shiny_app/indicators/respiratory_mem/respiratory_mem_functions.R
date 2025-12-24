@@ -1109,7 +1109,7 @@ create_pathogen_occupancy_hb_linechart <- function(data,
   
   # NHS colours
   hb_colours <- c(
-    "NHS Scotland" = "black",
+    "Scotland" = "black",
     "NHS Ayrshire and Arran" = "#12436D",
     "NHS Borders" = "#94AABD",
     "NHS Dumfries and Galloway" = "#28A197",
@@ -1156,6 +1156,7 @@ create_pathogen_occupancy_hb_linechart <- function(data,
   
   yaxis_plots <- list(
     fixedrange = FALSE,
+    rangemode = "tozero",
     title = y_axis_title,
     tickformat = NULL,
     range = c(0, NA)  # Always start at zero
@@ -1166,37 +1167,37 @@ create_pathogen_occupancy_hb_linechart <- function(data,
     "Season: ", data$Season,
     "<br>", "Week number: ", data$ISOWeek_lab,
     "<br>", "NHS Health Board: ", data$health_board,
-    "<br>", "Number of patients in hospital\n (7 day average) : ", data$Value
+    "<br>", "Number of patients in hospital\n(7 day average) : ", data$Value
   )
   
   # ---- Plot: use numeric x (ISOWeek_idx) ----
   pathogen_occupancy_hb_linechart <- plotly::plot_ly(data) %>%
     plotly::add_trace(
-      data = data[data$health_board != "NHS Scotland", ],
+      data = data[data$health_board != "Scotland", ],
       x = ~ISOWeek_idx, y = ~Value, color = ~health_board,
       colors = hb_colours,
       type = "scatter", mode = "lines",
      text = ~health_board,                      # used in hovertemplate as %{text}
-     customdata = data$ISOWeek_lab[data$health_board != "NHS Scotland"], # %{customdata}
+     customdata = data$ISOWeek_lab[data$health_board != "Scotland"], # %{customdata}
      hovertemplate = paste0(
        '<b>Week number</b>: %{customdata}<br>',
        '<b>NHS Health Board</b>: %{text}<br>',
-       '<b>Number of patients in hospital\n (7 day average) </b>: %{y}'
+       '<b>Number of patients in hospital\n(7 day average) </b>: %{y}'
      ),
      hoverinfo = "text",
      visible = "legendonly"
     ) %>%
     plotly::add_trace(
-      data = data[data$health_board == "NHS Scotland", ],
+      data = data[data$health_board == "Scotland", ],
       x = ~ISOWeek_idx, y = ~Value, color = ~health_board,
       colors = hb_colours,
       type = "scatter", mode = "lines",
       text = ~health_board,
-      customdata = data$ISOWeek_lab[data$health_board == "NHS Scotland"],
+      customdata = data$ISOWeek_lab[data$health_board == "Scotland"],
       hovertemplate = paste0(
         '<b>Week number</b>: %{customdata}<br>',
         '<b>NHS Health Board</b>: %{text}<br>',
-        '<b>Number of people in hospital\n (7 day average) </b>: %{y}'
+        '<b>Number of patients in hospital\n(7 day average) </b>: %{y}'
       ),
       hoverinfo = "text"
     ) %>%

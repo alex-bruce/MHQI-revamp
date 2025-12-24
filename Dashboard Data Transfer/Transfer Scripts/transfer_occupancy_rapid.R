@@ -3,6 +3,9 @@
 
 i_rapid_occupancy <- read_csv_with_options(match_base_filename(glue(input_data, "occupancy_rapid.csv")))
 
+i_rapid_occupancy <- i_rapid_occupancy %>%
+  mutate(Season = gsub("-", "/", Season))
+
 write.csv(i_rapid_occupancy, glue(output_folder, "occupancy_rapid.csv"), row.names = FALSE)
 
 i_hb_occupancy <- read_csv(glue(output_folder, "Occupancy_Weekly_Hospital_HB.csv"))
@@ -46,8 +49,12 @@ i_rapid_occupancy_hb <- read_csv_with_options(match_base_filename(glue(input_dat
          "NHS SHETLAND" = "NHS Shetland",
          "NHS TAYSIDE" = "NHS Tayside",
          "NHS WESTERN ISLES" = "NHS Western Isles",
-         "NATIONAL FACILITY" = "Golden Jubilee National Hospital")
+         "NATIONAL FACILITY" = "Golden Jubilee National Hospital",
+         "NHS Scotland" = "Scotland")
          )
+
+i_rapid_occupancy_hb <- i_rapid_occupancy_hb %>%
+  mutate(Season = gsub("-", "/", Season))
 
 write.csv(i_rapid_occupancy_hb, glue(output_folder, "occupancy_rapid_hb.csv"), row.names = FALSE)
 
