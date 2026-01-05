@@ -22,7 +22,9 @@ occupancy_rapid_rsv_flu_covid19_scotland<-
          Pathogen,
          BedOccupancy=bed_occupancy,
          SevenDayAverageInpatients=sevenday_ave_inpatients
-  ) 
+  ) %>% 
+  #add a filter to limit data from 2023 October to match with LOS file
+  filter(WeekBeginning>="2023-10-02")
 
 ###write csv----
 message("Writing Occupancy_RAPID_weekly_COVID19_FLU_RSV_scotland file")
@@ -69,8 +71,11 @@ occupancy_covid19_rsv_flu_hb<-
   select(Season, ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
          HBName,HBcode,HBQF,BedOccupancy,SevenDayAverageInpatients) %>%
   arrange(WeekBeginning,Pathogen,HBQF) %>% 
+  #add a filter to limit data from 2023 October to match with LOS file
+  filter(WeekBeginning>="2023-10-02") %>% 
   mutate(WeekBeginning=str_remove_all(WeekBeginning,"-"),
          WeekEnding=str_remove_all(WeekEnding,"-"))
+  
 
 
 ###write csv----
