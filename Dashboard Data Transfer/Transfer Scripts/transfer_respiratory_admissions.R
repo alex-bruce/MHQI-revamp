@@ -38,12 +38,111 @@ write.csv(g_respiratory_admissions, glue(output_folder, "all_pathogen_admissions
 rm(i_respiratory_admissions, g_respiratory_admissions)
 
 
+## Admissions by age
 i_respiratory_age_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "age_rate_data_all_path.csv")))
 
-write.csv(i_respiratory_age_admissions, glue(output_folder, "age_rate_data_all_path.csv"), row.names = FALSE)
+write.csv(i_respiratory_age_admissions, glue(output_folder, "age_rate_data_all_path.csv"))
 
 rm(i_respiratory_age_admissions)
 
+## Admissions by SIMD
+i_respiratory_simd_admissions <- read_csv_with_options(match_base_filename(glue(input_data,
+                                                                                  " - simd summary - all path.csv"))) %>% 
+  select(WeekEnding=date,everything())
+
+covid19_flu_rsv_simd_admissions<-
+  i_respiratory_simd_admissions %>% 
+  pivot_longer(cols = c(starts_with("Total"),ends_with("rate"))) %>% 
+  mutate(parameter=str_extract_all(name, "Total"),
+         parameter=as.character(parameter),
+         parameter=if_else(parameter!="Total","Rate",parameter)) %>% 
+  rename(Pathogen=name, Population=pop) %>% 
+  mutate(Pathogen=str_remove_all(Pathogen,"Total_"),
+         Pathogen=str_remove_all(Pathogen,"_rate")) %>% 
+  mutate(Pathogen=recode(Pathogen,
+                         "cov"="COVID-19",
+                         "flu"="Influenza (All)",
+                         "rsv"="RSV")) %>% 
+  pivot_wider(names_from = parameter,values_from = value) %>% 
+  rename(NumberOfAdmissions=Total, RateOfAdmissions=Rate) %>% 
+  mutate(RateOfAdmissions=round(RateOfAdmissions,digits = 1)) %>% 
+  select(WeekEnding, Pathogen,SIMD=simd,NumberOfAdmissions,RateOfAdmissions,
+         Population) %>% 
+  arrange(WeekEnding,Pathogen,SIMD) %>% 
+  mutate(ProvisionalFlag = case_when(
+    WeekEnding > (report_date-10) ~ 1,
+    TRUE ~ 0)) %>% 
+  mutate(WeekEnding=str_remove_all(WeekEnding,"-"))
+
+
+write.csv(covid19_flu_rsv_simd_admissions, glue(output_folder, "admissions_simd_Cov_flu_RSV.csv"), row.names = FALSE)
+
+rm(covid19_flu_rsv_simd_admissions)
+
+
+
+i_respiratory_hb_admissions <- read_csv_with_options(match_base_filename(glue(input_data, " - hb summary - all path.csv")))
+
+g_respiratory_hb_admissions <- i_respiratory_hb_admissions[, -1] 
+
+g_respiratory_hb_admissions <- g_respiratory_hb_admissions %>% 
+  mutate(week_ending = as_date(week_ending)) %>% 
+  mutate(health_board_of_treatment = recode(health_board_of_treatment,
+                              "NHS AYRSHIRE AND ARRAN" = "NHS Ayrshire and Arran",
+                              "NHS BORDERS" = "NHS Borders",
+                              "NHS DUMFRIES AND GALLOWAY" = "NHS Dumfries and Galloway",
+                              "NHS FIFE" = "NHS Fife",
+                              "NHS FORTH VALLEY" = "NHS Forth Valley",
+                              "NHS GRAMPIAN" = "NHS Grampian",
+                              "NHS GREATER GLASGOW AND CLYDE" = "NHS Greater Glasgow and Clyde",
+                              "NHS HIGHLAND" = "NHS Highland",
+                              "NHS LANARKSHIRE" = "NHS Lanarkshire",
+                              "NHS LOTHIAN" = "NHS Lothian",
+                              "NHS ORKNEY" = "NHS Orkney",
+                              "NHS SHETLAND" = "NHS Shetland",
+                              "NHS TAYSIDE" = "NHS Tayside",
+                              "NHS WESTERN ISLES" = "NHS Western Isles",
+                              "NHS Scotland" = "Scotland",
+                              "NATIONAL FACILITY" = "Golden Jubilee National Hospital")) %>%
+  mutate(Season = gsub("-", "/", Season))
+
+
+write.csv(g_respiratory_hb_admissions, glue(output_folder, "admissions_hb_all_path.csv"), row.names = FALSE)
+
+three_sunday_dates <- data.frame(week_ending=seq(as.Date("2018-10-07"), as.Date(od_date-1), "week")) %>%
+  # mutate(WeekEnding= format(strptime(WeekEnding, format = "%Y-%m-%d")) ) %>%
+  slice_tail(n = 3)
+
+HealthBoardName= data.frame(health_board_of_treatment=c("NHS Ayrshire and Arran", 
+                                                        "NHS Borders",
+                                                        "NHS Dumfries and Galloway","NHS Fife",
+                                                        "NHS Forth Valley","NHS Grampian",
+                                                        "NHS Greater Glasgow and Clyde",
+                                                        "NHS Highland",
+                                                        "NHS Lanarkshire",
+                                                        "NHS Lothian",
+                                                        "NHS Orkney",
+                                                        "NHS Shetland",
+                                                        "NHS Tayside",
+                                                        "NHS Western Isles",
+                                                        "Golden Jubilee National Hospital"))
+
+pathogens = data.frame(admission_type = c("cov", "flu", "rsv",  "rhino", "coron", "para", "adeno", "hmpv", "mpn"))
+
+hb_last_three_weeks <- expand.grid(health_board_of_treatment=unique(HealthBoardName$health_board_of_treatment),
+                                   week_ending=unique(three_sunday_dates$week_ending),
+                                   admission_type = unique(pathogens$admission_type),
+                                   KEEP.OUT.ATTRS = FALSE,
+                                   stringsAsFactors = FALSE)
+
+g_respiratory_hb_admissions_3wks <- hb_last_three_weeks %>%
+  left_join(g_respiratory_hb_admissions, by=c("health_board_of_treatment","week_ending", "admission_type")) %>% 
+  select(-c("NRS_population_estimate", "n")) %>% 
+  replace_na(list(n = 0, rate = 0))
+
+write.csv(g_respiratory_hb_admissions_3wks, glue(output_folder, "admissions_hb_all_path_3wks.csv"), row.names = FALSE)
+
+rm(i_respiratory_hb_admissions, g_respiratory_hb_admissions, g_respiratory_hb_admissions_3wks)
 
 #### RSV healthboard admissions
 #i_rsv_hb_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "admissions_rsv_hb.csv")))

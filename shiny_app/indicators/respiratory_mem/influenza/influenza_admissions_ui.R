@@ -57,11 +57,15 @@ tagList(
                                         label = "Go to glossary",
                                         icon = icon_no_warning_fn("paper-plane")
                                     )),
-
+# p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
+#   "reporting Scotland level admissions for COVID-19,",
+#   "Influenza and RSV, due to low levels of hospital admissions."),
 
                                                                       # This text is hidden by css but helps pad the box at the bottom
                                      h6("hidden text for padding page")
                             )))), # headline
+
+    tagList(h2("Rate of acute influenza hospital admissions in Scotland")),
 
 #  fluidRow(width = 12,
 #           tagList(h2("Number of acute influenza admissions to hospital"))),
@@ -84,6 +88,7 @@ tagList(
     linebreaks(1)
       ), # fluidRow
 
+
 tagList(h2("Rate of acute influenza hospital admissions by age group")),
 
 #),
@@ -93,6 +98,11 @@ fluidRow(
   tabBox(width = NULL,
          type = "pills",
          tabPanel("Plot",
+                  br(),
+                  pickerInput(inputId = "adm_season_flu_age",
+                              label = "Select season",
+                              choices = {admissions_seasons %>%  tail(6) }, 
+                              selected = {admissions_seasons %>% tail(1)}),
                   tagList(linebreaks(1),
                           altTextUI("influenza_admissions_age_modal"),
                           withNavySpinner(plotlyOutput("influenza_admissions_age_plot")),
@@ -105,7 +115,99 @@ fluidRow(
          
   ), # tabBox
   linebreaks(1)
+), 
+
+fluidRow(width = 12,
+         tagList(h2("Rate of influenza admissions by NHS Health Board of treatment")),
+         linebreaks(1)),
+
+fluidRow(
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  br(),
+                   pickerInput(
+                      inputId = "influenza_adms_selected_seasons", 
+                      label = "Select season", 
+                      choices = tail(sort(unique(admissions_hb_all_path$Season)), 6),
+                      selected = tail(sort(unique(admissions_hb_all_path$Season)), 1)  # current season
+                      ),
+                    
+                  tagList(linebreaks(1),
+                          altTextUI("influenza_admissions_hb_modal"),
+                          withNavySpinner(plotlyOutput("influenza_admissions_hb_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("influenza_admissions_hb_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+
+# fluidRow
 ), # fluidRow
+
+
+tagList(h2("Rate of acute influenza hospital admissions by deprivation category (SIMD)")),
+
+br(),
+
+tabBox(width = NULL, type = "pills",
+       tabPanel("Plot",
+                br(),
+                pickerInput(inputId = "adm_season_flu_simd",
+                            label = "Select season",
+                            choices = {admissions_seasons %>%  tail(6) },
+                            selected = {admissions_seasons %>% tail(1)}),
+                tagList(
+                  linebreaks(1),
+                  altTextUI("influenza_admissions_simd_modal"),
+                  actionButton("btn_modal_simd",
+                               label = "What is SIMD?",
+                               class = "simd-btn",
+                               icon = icon_no_warning_fn("circle-question")
+                  ),
+                  withNavySpinner(
+                    plotlyOutput("influenza_admissions_simd_plot"))
+                )
+       ),
+       tabPanel("Data",
+                tagList(
+                  withNavySpinner(
+                    dataTableOutput("influenza_admissions_simd_table"))
+                )
+       ),
+       
+),
+
+##### LOS section
+tagList(h2("Average length of stay of acute influenza hospital admissions"),
+        tabBox( width = NULL, type = "pills",
+                tabPanel("Plot",
+                         #tagList(uiOutput("flu_los_title")),
+                         tagList(h5("Use the drop-down menu to select a season."),
+                                 pickerInput(inputId = "los_season_flu",
+                                             label = "Select season",
+                                             choices = admission_seasons,
+                                             selected = tail(admission_seasons, 1)),
+                                 altTextUI("flu_los_modal"),
+                                 withNavySpinner( plotlyOutput("flu_los_plot")),
+                                 #linebreaks(1)
+                         ),
+                         fluidRow(column(
+                           width=12, linebreaks(1),
+                           textOutput("flu_los_text")
+                         ))), #taglist
+                tabPanel("Data",
+                         tagList(linebreaks(1),
+                                 withNavySpinner(dataTableOutput("flu_los_table")) )
+                ) # tabPanel
+        )#tabbox
+        ###
+        ### end LOS section
+        
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute influenza admissions to hospital by NHS Health Board of Treatment; week ending")),
 #          linebreaks(1)), #fluidRow
@@ -193,8 +295,13 @@ fluidRow(
 ### end LOS section
 
 # Padding out the bottom of the page
+#fluidRow(height="200px", width=12, linebreaks(5))
+),
+
+# Padding out the bottom of the page
 fluidRow(height="200px", width=12, linebreaks(5))
 
 )#taglist
+
 
 

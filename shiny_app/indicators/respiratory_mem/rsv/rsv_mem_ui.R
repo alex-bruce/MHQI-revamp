@@ -1,3 +1,10 @@
+rsv_cases_seasons <- 
+  Respiratory_Pathogens_Test_Positivity_by_Age %>% 
+  filter(pathogen == "RSV") %>% 
+  select(season) %>% 
+  unique() %>% 
+  tail(6)
+
 # create values for headline boxes
 
 rsv_cases_recent_week <- Respiratory_Scot %>%
@@ -85,6 +92,34 @@ tagList(
            ) # tagList
   ), #fluidrow
 
+  
+  
+  fluidRow(width = 12,
+           tagList(h2("RSV percentage test positivity by age"),
+                   tabBox(width = NULL,
+                          type = "pills",
+                          tabPanel("Plot",
+                                   br(),
+                                   pickerInput(inputId = "test_pos_rsv_age",
+                                               label = "Select season",
+                                               choices = {rsv_cases_seasons %>% tail(6)},
+                                               selected = {rsv_cases_seasons %>% tail(1)}),
+                                   tagList(linebreaks(1),
+                                           altTextUI("rsv_positivity_age_modal"),
+                                           swabposDefinitionUI("rsv_age_swabpos"),
+                                           withNavySpinner(plotlyOutput("rsv_positivity_age_plot")),
+                                           fluidRow(
+                                             width=12, linebreaks(1)))),
+                          tabPanel("Data",
+                                   tagList(
+                                     withNavySpinner(dataTableOutput("rsv_positivity_age_table"))
+                                   ) # tagList
+                          ) # tabPanel
+                   ) # tabBox
+           ) # tagList
+  ), #fluidrow
+  
+  
   fluidRow(width = 12,
            tagList(h2("Laboratory-confirmed RSV incidence per 100,000 population in Scotland"))),
 
@@ -110,29 +145,28 @@ fluidRow(width = 12,
          tagList(h2("Laboratory-confirmed RSV incidence per 100,000 population by NHS Health Board"))),
 
 fluidRow(
-  p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
-    "impact of different testing practices by board on incidence rates and implications for smaller board areas ",
-    "specifically as they relate to the calculation of activity threshold levels."),
-  linebreaks(1)
-),
-
-  # fluidRow(
-  #   tabBox(width = NULL,
-  #          type = "pills",
-  #          tabPanel("Plot",
-  #                   tagList(linebreaks(1),
-  #                           altTextUI("rsv_mem_hb_modal"),
-  #                           withNavySpinner(plotlyOutput("rsv_mem_hb_plot")),
-  #                   )),
-  #          tabPanel("Data",
-  #                   tagList(linebreaks(1),
-  #                           withNavySpinner(dataTableOutput("rsv_mem_hb_table"))
-  #                   ) # tagList
-  #          ) # tabPanel
-  # 
-  #   ), # tabBox
+  #   p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
+  #     "impact of different testing practices by board on incidence rates and implications for smaller board areas ",
+  #     "specifically as they relate to the calculation of activity threshold levels."),
   #   linebreaks(1)
-  # ), # fluidRow
+  # ),
+  
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  tagList(linebreaks(1),
+                          altTextUI("rsv_mem_hb_modal"),
+                          withNavySpinner(plotlyOutput("rsv_mem_hb_plot", height = "500px")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("rsv_mem_hb_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+), # fluidRow
 
 
   fluidRow(width = 12,
@@ -154,6 +188,36 @@ fluidRow(
 
     ), # tabBox
     linebreaks(1)
-  )#, # fluidRow
+  ), # fluidRow
+
+fluidRow(
+  tagList(h2(glue("Laboratory-confirmed RSV cases by age and sex in Scotland")),
+
+          tabBox(width = NULL,
+                 type = "pills",
+                 tabPanel("Plot",
+                          tagList(
+                            linebreaks(1),
+                            # adding selection for flu subtype
+                            fluidRow(
+                              column(4, pickerInput("rsv_respiratory_season",
+                                                    label = "Select a season",
+                                                    choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
+                                                        .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(6)},
+                                                    selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
+                                                        .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(1)})
+                              )
+                            ),
+                            altTextUI("rsv_age_sex"),
+                            withNavySpinner(plotlyOutput("rsv_age_sex_pyramid_plot"))
+                          ) # tagList
+                 ), # tabPanel
+                 tabPanel("Data",
+                          withNavySpinner(dataTableOutput("rsv_age_sex_pyramid_table")))
+          ) # tabbox
+  ), # tagList
+  linebreaks(1)
+)
+
 
 )

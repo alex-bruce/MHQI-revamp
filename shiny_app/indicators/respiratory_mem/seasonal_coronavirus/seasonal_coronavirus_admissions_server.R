@@ -1,74 +1,104 @@
+## Organise adenovirus admissions data into the right format for the plot and table
 
+
+coron_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, coron, coron_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = coron,
+         RatePer100000 = coron_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13))
+
+coron_adm_seasons <- tail(sort(unique(coron_admissions$Season)), 6)
+
+## Plot descriptions
 metadataButtonServer(id="respiratory_seasonal_coronavirus_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
-
 altTextServer("seasonal_coronavirus_admissions_modal",
-              title = "Seasonal coronavirus hospital admissions in Scotland",
-              content = tags$ul(tags$li("This is a plot showing the number of seasonal coronavirus hospital admissions in Scotland."),
+              title = "Weekly rate of seasonal coronavirus hospital admissions in Scotland",
+              content = tags$ul(tags$li("This is a plot showing the weekly rate of seasonal coronavirus hospital admissions in Scotland."),
                                 tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
                                         "Week 40 is typically the start of October and when the winter respiratory season starts."),
-                                tags$li("The y axis shows the number of hospital admissions.")))
+                                tags$li("The y axis shows the rate of hospital admissions per 100,000."),
+                                tags$li(glue("There is a trace for each of the following seasons from ", 
+                                             coron_adm_seasons[1], " to ", coron_adm_seasons[6], ".")),
+                                tags$li("Hospital admissions for the most recent week may be incomplete, and should be treated as provisional and interpreted with caution")))
+
 
 altTextServer("seasonal_coronavirus_admissions_age_modal",
               title = "Seasonal coronavirus hospital admission rate per 100,000 population by age group",
               content = tags$ul(tags$li("This is a plot showing the rate of seasonal coronavirus hospital admission per 100,000 population by age group."),
-                                tags$li("The x axis is the week ending date."),
-                                tags$li("The y axis shows the hospital admission rate per 100,000 population."),
-                                tags$li("The plot contains a trace showing the admission rate per 100k for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),
-                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
+                                tags$li("The x axis shows the ISO week of admission, from week 40 to week 39. ",
+                                        "Week 40 is typically the start of October and when the winter respiratory season starts."),                                 tags$li("The y axis shows the hospital admission rate per 100,000 population."),
+                                tags$li("By default, the plot contains a trace showing the admission rate per 100,000 across all age groups."),
+                                tags$li("Traces can be added for each of the following age groups: <1 years, 1-4 years, 5-14 years, 15-44 years, 45-64 years, 65-74 years, and 75+ years."),                                tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 
 # seasonal_coronavirus admissions table
 output$seasonal_coronavirus_admissions_table <- renderDataTable({
-    all_pathogen_admissions %>%
+  coron_admissions %>%
+    filter(Season %in% coron_adm_seasons) %>%
     arrange(desc(Date)) %>%
-    select(Season, ISOWeek, Admissions = coron) %>%
+    select(Season, ISOWeek, Admissions, RatePer100000) %>%
     mutate(Season = factor(Season),
+           RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
-    rename(`ISO Week` = ISOWeek) %>%
+    rename(`ISO Week` = ISOWeek,
+           `Number of Admissions` = Admissions,
+           `Admission Rate per 100k` = RatePer100000) %>%
     make_table(filter_cols = c(1,2))
 })
+
 
 # seasonal_coronavirus admissions by age table
 output$seasonal_coronavirus_admissions_age_table <- renderDataTable({
   age_rate_data_all_path %>%
-    select(week_ending, age_band,
-           rate = coron_rate) %>% 
-    mutate(week_ending = dmy(week_ending)) %>%
-    filter(age_band != "All Ages") %>%
-    mutate(week_ending = as_date(week_ending)) %>% 
-    arrange(desc(week_ending)) %>%
-    rename(`Week Ending` = week_ending,
-           `Age Group` = age_band,
-           `Admission Rate per 100k` = rate) %>%
-    make_table(add_separator_cols_1dp = c(3),
-               filter_cols = c(1,2))
+    add_season() %>% 
+    select(week_ending, age_band, Season,
+           Admissions = coron, rate = coron_rate) %>% 
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    filter(Season %in% coron_adm_seasons) %>% 
+    make_admissions_age_table()
+  
 })
-
 
 # seasonal_coronavirus Adms plot
-output$seasonal_coronavirus_admissions_plot <- renderPlotly({
-  all_pathogen_admissions %>%
-    select(Date, Year, ISOWeek, Weekord, Season, Admissions = coron) %>% 
-    create_pathogen_adms_linechart()
 
+output$seasonal_coronavirus_admissions_plot <- renderPlotly({
+  coron_admissions %>%
+    
+    create_pathogen_adms_linechart()
+  
 })
+
 
 # seasonal_coronavirus Adms by age plot
 output$seasonal_coronavirus_admissions_age_plot <- renderPlotly({
   age_rate_data_all_path %>%
-    mutate(week_ending = dmy(week_ending)) %>%
-    filter(age_band != "All Ages") %>% 
+    add_season() %>%    
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    filter(Season %in% coron_adm_seasons) %>% 
+    #mutate(week_ending = dmy(week_ending)) %>%
+    #filter(age_band != "All Ages") %>% 
     select(week_ending, age_band,
-           rate = coron_rate) %>%
+           rate = coron_rate, Season) %>%
     mutate(age_band = factor(age_band, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
-                                                   "65-74", "75+"))) %>% 
+                                                  "65-74", "75+", "All Ages"))) %>% 
     arrange(week_ending, age_band) %>%
+    mutate(week = isoweek(week_ending)) %>% 
+    filter(Season == input$adm_season_coron_age) %>%
+    #filter(Season == "2024/2025") %>% 
     create_pathogen_adms_age_linechart()
-
+  
 })
+
 
 # observeEvent(input$respiratory_season,
 #              {

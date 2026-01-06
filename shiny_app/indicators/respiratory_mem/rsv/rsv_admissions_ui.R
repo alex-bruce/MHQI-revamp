@@ -53,7 +53,9 @@ tagList(
                                      label = "Go to glossary",
                                      icon = icon_no_warning_fn("paper-plane")
                                     )),
-
+# p("Between 22 May and October 2025, Public Health Scotland (PHS) will be",
+#   "reporting Scotland level admissions for COVID-19,",
+#   "Influenza and RSV, due to low levels of hospital admissions."),
                                      # This text is hidden by css but helps pad the box at the bottom
                                      h6("hidden text for padding page"),
 
@@ -61,6 +63,7 @@ tagList(
 
 #  fluidRow(width = 12,
 #           tagList(h2("Number of acute RSV admissions to hospital"))),
+            tagList(h2("Rate of acute RSV hospital admissions in Scotland")),
 
   fluidRow(
     tabBox(width = NULL,
@@ -80,6 +83,7 @@ tagList(
     linebreaks(1)
   ), # fluidRow
 
+
 tagList(h2("Rate of acute RSV hospital admissions by age group")),
 
 #),
@@ -89,6 +93,11 @@ fluidRow(
   tabBox(width = NULL,
          type = "pills",
          tabPanel("Plot",
+                  br(),
+                  pickerInput(inputId = "adm_season_rsv_age",
+                              label = "Select season",
+                              choices = {admissions_seasons %>%  tail(6) },
+                              selected = {admissions_seasons %>% tail(1)}),
                   tagList(linebreaks(1),
                           altTextUI("rsv_admissions_age_modal"),
                           withNavySpinner(plotlyOutput("rsv_admissions_age_plot")),
@@ -101,7 +110,71 @@ fluidRow(
          
   ), # tabBox
   linebreaks(1)
+),
+
+fluidRow(width = 12,
+         tagList(h2("Rate of RSV admissions by NHS Health Board of treatment")),
+         linebreaks(1)),
+
+fluidRow(
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  br(),
+                  pickerInput(
+                    inputId = "rsv_adms_selected_seasons", 
+                    label = "Select season", 
+                    choices = tail(sort(unique(admissions_hb_all_path$Season)), 6),
+                    selected = tail(sort(unique(admissions_hb_all_path$Season)), 1)  # current season
+                  ),
+                  
+                  tagList(linebreaks(1),
+                          altTextUI("rsv_admissions_hb_modal"),
+                          withNavySpinner(plotlyOutput("rsv_admissions_hb_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("rsv_admissions_hb_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+
+# fluidRow
 ), # fluidRow
+
+tagList(h2("Rate of acute RSV hospital admissions by deprivation category (SIMD)")),
+
+br(),
+
+tabBox(width = NULL, type = "pills",
+       tabPanel("Plot",
+                br(),
+                pickerInput(inputId = "adm_season_rsv_simd",
+                            label = "Select season",
+                            choices = {admissions_seasons %>%  tail(6) },
+                            selected = {admissions_seasons %>% tail(1)}),
+                tagList(
+                  linebreaks(1),
+                  altTextUI("rsv_admissions_simd_modal"),
+                  actionButton("btn_modal_simd",
+                               label = "What is SIMD?",
+                               class = "simd-btn",
+                               icon = icon_no_warning_fn("circle-question")
+                  ),
+                  withNavySpinner(
+                    plotlyOutput("rsv_admissions_simd_plot"))
+                )
+       ),
+       tabPanel("Data",
+                tagList(
+                  withNavySpinner(
+                    dataTableOutput("rsv_admissions_simd_table"))
+                )
+       )
+       
+),
 # 
 # fluidRow(width = 12,
 #          tagList(h2("Number of acute RSV admissions to hospital by NHS Health Board of Treatment; week ending")),
@@ -142,50 +215,38 @@ fluidRow(
 # ),
 
 ##### LOS section
-# tagList(h2("Length of stay of acute RSV hospital admissions"),
-#         tags$div(class = "headline",
-#                  h3(glue("Median length of stay of acute RSV hospital admissions for 4 week period {los_date_start %>% format('%d %b %y')} to {los_date_end%>% format('%d %b %y')} ")),
-#                  valueBox(value = glue("{Length_of_Stay_Median %>% 
-#                                        filter(AgeGroup == 'All Ages') %>% 
-#                                        filter(Pathogen =='rsv') %>%
-#                                        .$MedianLengthOfStay %>% round_half_up(1)} days"),
-#                           subtitle = glue("All ages"),
-#                           color = "navy",
-#                           icon = icon_no_warning_fn("clock")),# valuebox
-#                  valueBox(value = glue("{rsv_los_median_min$MedianLengthOfStay %>%
-#                                        round_half_up(1)} days"),
-#                           subtitle = glue("Shortest median stay ({rsv_los_median_min$AgeGroup})"),
-#                           color = "navy",
-#                           icon = icon_no_warning_fn("clock")),# value box
-#                  valueBox(value = glue("{rsv_los_median_max$MedianLengthOfStay %>%
-#                                        round_half_up(1)} days"),
-#                           subtitle = glue("Longest median stay ({rsv_los_median_max$AgeGroup})"),
-#                           color = "navy",
-#                           icon = icon_no_warning_fn("clock")),
-#                  # This text is hidden by css but helps pad the box at the bottom
-#                  h6("hidden text for padding page"))
-# ),
-# br(),
-# 
-# tabBox(width = NULL, type = "pills",
-#        tabPanel("Plot",
-#                 tagList(uiOutput("rsv_los_title")),
-#                 tagList(h5("Use the drop-down menu to select a season."),
-#                         pickerInput(inputId = "los_season_rsv",
-#                                     label = "Select season",
-#                                     choices = admission_seasons,
-#                                     selected = "2024/2025"),
-#                         altTextUI("rsv_los_modal"),
-#                         withNavySpinner(plotlyOutput("rsv_los_plot") ),
-#                         )),
-#        tabPanel("Data",
-#                 tagList(linebreaks(1),
-#                         withNavySpinner(dataTableOutput("rsv_los_table")) )) # tabPanel
-# ),#tabbox
-### end LOS section
+tagList(h2("Average length of stay of acute RSV hospital admissions"),
+        tabBox( width = NULL, type = "pills",
+                tabPanel("Plot",
+                         #tagList(uiOutput("rsv_los_title")),
+                         tagList(h5("Use the drop-down menu to select a season."),
+                                 pickerInput(inputId = "los_season_rsv",
+                                             label = "Select season",
+                                             choices = admission_seasons,
+                                             selected = tail(admission_seasons, 1)),
+                                 altTextUI("rsv_los_modal"),
+                                 withNavySpinner( plotlyOutput("rsv_los_plot")),
+                                 #linebreaks(1)
+                         ),
+                         fluidRow(column(
+                           width=12, linebreaks(1),
+                           textOutput("rsv_los_text")
+                         ))), #taglist
+                tabPanel("Data",
+                         tagList(linebreaks(1),
+                                 withNavySpinner(dataTableOutput("rsv_los_table")) )
+                ) # tabPanel
+        )#tabbox
+        ###
+        ### end LOS section
+
+# Padding out the bottom of the page
+#fluidRow(height="200px", width=12, linebreaks(5))
+),
 
 # Padding out the bottom of the page
 fluidRow(height="200px", width=12, linebreaks(5))
 
 )#taglist
+
 

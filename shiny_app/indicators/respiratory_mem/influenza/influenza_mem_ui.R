@@ -1,3 +1,10 @@
+flu_cases_seasons <- 
+  Respiratory_Pathogens_Test_Positivity_by_Age %>% 
+  filter(pathogen == "Influenza (A or B)") %>% 
+  select(season) %>% 
+  unique() %>% 
+  tail(6)
+
 tagList(
   fluidRow(width = 12,
 
@@ -68,6 +75,32 @@ tagList(
            ) # tagList
   ), #fluidrow
   
+  
+  fluidRow(width = 12,
+           tagList(h2("Influenza percentage test positivity by age"),
+                   tabBox(width = NULL,
+                          type = "pills",
+                          tabPanel("Plot",
+                                   br(),
+                                   pickerInput(inputId = "test_pos_flu_age",
+                                               label = "Select season",
+                                               choices = {flu_cases_seasons %>% tail(6) },
+                                               selected = {flu_cases_seasons %>% tail(1)}),
+                                   tagList(linebreaks(1),
+                                           altTextUI("flu_positivity_age_modal"),
+                                           swabposDefinitionUI("flu_age_swabpos"),
+                                           withNavySpinner(plotlyOutput("flu_positivity_age_plot")),
+                                           fluidRow(
+                                             width=12, linebreaks(1)))),
+                          tabPanel("Data",
+                                   tagList(
+                                     withNavySpinner(dataTableOutput("flu_positivity_age_table"))
+                                   ) # tagList
+                          ) # tabPanel
+                   ) # tabBox
+           ) # tagList
+  ), #fluidrow
+  
   fluidRow(width = 12,
            tagList(h2("Laboratory-confirmed influenza incidence per 100,000 population in Scotland"))),
 
@@ -94,27 +127,27 @@ tagList(
    
 
    fluidRow(
-     p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
-       "impact of different testing practices by board on incidence rates and implications for smaller board areas ",
-       "specifically as they relate to the calculation of activity threshold levels."),
-     linebreaks(1)
-     ),
-  #   tabBox(width = NULL,
-  #          type = "pills",
-  #          tabPanel("Plot",
-  #                   tagList(linebreaks(1),
-  #                           altTextUI("influenza_mem_hb_modal"),
-  #                           withNavySpinner(plotlyOutput("influenza_mem_hb_plot")),
-  #                   )),
-  #          tabPanel("Data",
-  #                   tagList(linebreaks(1),
-  #                           withNavySpinner(dataTableOutput("influenza_mem_hb_table"))
-  #                   ) # tagList
-  #          ) # tabPanel
-  # 
-  #   ), # tabBox
-  #  linebreaks(1)
-   #), # fluidRow
+     # p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
+     #   "impact of different testing practices by board on incidence rates and implications for smaller board areas ",
+     #   "specifically as they relate to the calculation of activity threshold levels."),
+     # linebreaks(1)
+     # ),
+    tabBox(width = NULL,
+           type = "pills",
+           tabPanel("Plot",
+                    tagList(linebreaks(1),
+                            altTextUI("influenza_mem_hb_modal"),
+                            withNavySpinner(plotlyOutput("influenza_mem_hb_plot", height = "500px")),
+                    )),
+           tabPanel("Data",
+                    tagList(linebreaks(1),
+                            withNavySpinner(dataTableOutput("influenza_mem_hb_table"))
+                    ) # tagList
+           ) # tabPanel
+
+    ), # tabBox
+   linebreaks(1)
+  ), # fluidRow
 
 
   fluidRow(width = 12,
@@ -148,12 +181,12 @@ tagList(
                               linebreaks(1),
                               # adding selection for flu subtype
                               fluidRow(
-                                column(4, pickerInput("respiratory_season",
+                                column(4, pickerInput("flu_respiratory_season",
                                                       label = "Select a season",
                                                       choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
-                                                          .$Season %>% unique()},
+                                                          .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(6)},
                                                       selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
-                                                          .$Season %>% unique() %>% tail(1)})
+                                                          .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(1)})
                                 )
                                 # column(4, pickerInput("respiratory_date",
                                 #                       label = "Select date",

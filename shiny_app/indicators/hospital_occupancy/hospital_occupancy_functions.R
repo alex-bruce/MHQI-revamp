@@ -34,9 +34,9 @@ make_occupancy_plots <- function(data, occupancy) {
       add_lines_and_notes(dataframe = data,
                           ycol = "HospitalOccupancy",
                           xs= c("2025-09-28"),
-                          notes=c("Inpatient data source changed to RAPID from 28 September 2023"),
+                          notes=c("Inpatient data source changed to RAPID from 28 September 2025"),
                           colors=c(phs_colours("phs-graphite"))) %>% 
-      layout(legend = list(xanchor = "center", x = 0.5, y = -0.5, orientation = 'h'))
+      layout(legend = list(xanchor = "center", x = 0.5, y = -0.2, orientation = 'h'))
 
 
 
@@ -60,7 +60,7 @@ make_occupancy_plots <- function(data, occupancy) {
                  linetype = ~ICULengthOfStay,
                  linetypes = c("dash", "solid")) %>%
       add_trace(type = 'scatter', mode = 'lines') %>%
-      layout(legend = list(xanchor = "center", x = 0.5, y = -0.5, orientation = 'h'))
+      layout(legend = list(xanchor = "center", x = 0.5, y = -0.2, orientation = 'h'))
   }
 
   p <- p %>%

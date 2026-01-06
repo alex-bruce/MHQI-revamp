@@ -8,7 +8,8 @@ if(is.na(utils::packageDate("pacman"))) install.packages("pacman")
 if (!pacman::p_isinstalled("friendlyloader")){pacman::p_install_gh("RosalynLP/friendlyloader")}
 
 pacman::p_load(dplyr, magrittr, glue, openxlsx, lubridate, ISOweek,
-               janitor, stringr, data.table, stats, zoo, tidyr, readxl, readr, friendlyloader, phsopendata)
+               janitor, stringr, data.table, stats, zoo, tidyr, readxl, 
+               readr, friendlyloader, phsopendata, rjson, purrr)
 
 # Setting permisisons for files outputted
 Sys.umask("006")
@@ -152,7 +153,7 @@ source("Transfer Scripts/transfer_cases.R")
 source("Transfer Scripts/transfer_admissions.R")
 
 ##### Length of Stay
-# source("Transfer Scripts/transfer_los.R")
+ source("Transfer Scripts/transfer_los.R")
 
 ##### Vaccine Wastage
 # source("Transfer Scripts/transfer_vacc_wastage.R")
@@ -180,10 +181,13 @@ source("Transfer Scripts/transfer_covid_wastewater_ca.R")
 source("Transfer Scripts/transfer_covid_wastewater_ind.R")
 
 #### Occupancy - Board submissions
-source("Transfer Scripts/transfer_occupancy.R")
+#source("Transfer Scripts/transfer_occupancy.R")
 
 #### Occupancy - RAPID methdd
 source("Transfer Scripts/transfer_occupancy_rapid.R")
+
+#### Occupancy - UKHSA file
+source("Transfer Scripts/transfer_ukhsa_occupancy.R")
 
 #### Respiratory
 source("Transfer Scripts/transfer_respiratory.R")
@@ -198,11 +202,14 @@ source("Transfer Scripts/transfer_respiratory_euromomo.R")
 #### Respiratory NHS24 - MEM
 source("Transfer Scripts/transfer_respiratory_nhs24_mem.R")
 
-#### Respiratory GP - MEM
-source("Transfer Scripts/transfer_respiratory_gp_mem.R")
+#### Respiratory GP ILI - MEM
+source("Transfer Scripts/transfer_respiratory_gp_ili_mem.R")
+
+#### Respiratory GP ARI - MEM
+source("Transfer Scripts/transfer_respiratory_gp_ari_mem.R")
 
 #### All respiratory pathogen admissions
-source("Transfer Scripts/transer_respiratory_admissions.R")
+source("Transfer Scripts/transfer_respiratory_admissions.R")
 
 #### Influenza Hospital Admissions
 source("Transfer Scripts/transfer_flu_admissions.R")
@@ -231,7 +238,7 @@ source("Transfer Scripts/transfer_weekly_simd_cases_od.R")
 source("Transfer Scripts/transfer_ethnicity_open_data.R")
 
 #### Open data care home times series
-source("Transfer Scripts/transfer_carehome_timeseries_od.R")
+#source("Transfer Scripts/transfer_carehome_timeseries_od.R")
 
 ####  Open data weekly covid hospital admissions & occupancy for open data
 ####  PLUS Open data weekly Respiratory flu and RSV hospital admissions
@@ -254,4 +261,74 @@ rm(od_date, od_report_date,od_archive_date ,od_sunday,od_sunday_minus_7,
 # currently switched off until need for pivotted files are confirmed
 
 #source("Transfer Scripts/transfer_UKHSA_admissions.R")
+
+#############################
+## NEW Open Data transfers ##
+#############################
+
+# Set the name of the new destination directory
+new_od_dir <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/new/")
+
+# Create the new destination directory for archive steps
+if (!dir.exists(new_od_dir)) {
+  dir.create(new_od_dir)
+}
+
+# Read in Date reference file
+date_reference<-readRDS(paste0("/conf/C19_Test_and_Protect/Analyst Space/Nipuni (Analyst Space)/",
+                               "Open_Data_Transfer_Respiratory/Data/Respiratory_date_reference_V2.Rds"))
+
+# HB lookup
+HB <- readRDS(paste0("/conf/C19_Test_and_Protect/Analyst Space/Nipuni (Analyst Space)/",
+                     "Open_Data_Transfer_Respiratory/Data/HB_lookup.RDS"))
+
+# CA lookup
+CA_lookup <- readRDS(paste0("/conf/C19_Test_and_Protect/Analyst Space/Nipuni (Analyst Space)/",
+                            "Open_Data_Transfer_Respiratory/Data/CA_lookup.rds"))
+
+# File paths
+file_paths <- fromJSON(file = "Transfer Scripts/new_od_file_paths.json")
+
+#### Read in text automation df
+source("Transfer Scripts/new_od_text_automation_df.R")
+
+#### Read in text automation df
+source("Transfer Scripts/new_od_reference_files.R")
+
+#### Read in all combinations df
+source("Transfer Scripts/new_od_all_combinations_df.R")
+
+#### Cases
+source("Transfer Scripts/new_od_cases_raw_data.R")
+source("Transfer Scripts/new_od_cases_outputs.R")
+
+##ADMISSIONS----
+source("Transfer Scripts/new_od_admissions_raw_data.R")
+source("Transfer Scripts/new_od_admissions_outputs.R")
+source("Transfer Scripts/new_od_los_outputs.R")
+
+##TESTS----
+source("Transfer Scripts/new_od_tests_raw_data.R")
+source("Transfer Scripts/new_od_tests_outputs.R")
+
+##OCCUPANCY----
+source("Transfer Scripts/new_od_occupancy_outputs.R")
+
+##CARI----
+source("Transfer Scripts/new_od_cari_outputs.R")
+
+##*Below files are directly from previous OD outputs saved in od_outputs folder----
+
+##WASTEWATER----
+source("Transfer Scripts/new_od_wastewater_outputs.R")
+
+##CARE Home----
+#source("Transfer Scripts/new_od_care_home_outputs.R")
+
+
+#################################### *********** ###############################
+
+
+
+
 

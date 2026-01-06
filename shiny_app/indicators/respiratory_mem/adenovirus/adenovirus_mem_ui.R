@@ -36,9 +36,10 @@ tagList(
   fluidRow(width = 12,
            tagList(h2("Laboratory-confirmed adenovirus incidence per 100,000 population by NHS Health Board"))),
   fluidRow(
-    p("Public Health Scotland have paused reporting of NHS Board-specific activity data as we investigate the ",
-      "impact of different testing practices by board on incidence rates and implications for smaller board areas ",
-      "specifically as they relate to the calculation of activity threshold levels."),
+    p("Public Health Scotland have paused reporting of NHS Board-specific activity data for pathogens which do not have ",
+      "uniform testing policies across different Health Board areas. This is because different testing practices by Health Board may ",
+      "have an impact on incidence rates and therefore has implications for smaller Health Board areas, particularly for ",
+      "calculation of activity threshold levels."),
     linebreaks(1)
   ),
   # fluidRow(

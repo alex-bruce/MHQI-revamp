@@ -23,6 +23,7 @@ library(R.utils)
 library(lubridate)
 library(png)
 library(tidyr)
+library(readxl)
 
 # Load core functions ----
 source("functions/core_functions.R")
@@ -85,14 +86,19 @@ if (config::get()$online){
 
 # Creating variable for latest week for headlines
 
-# Admissions and ICU
-admissions_headlines <- get_threeweek_admissions_figures(df = Admissions,
-                                                         sumcol = "TotalInfections",
-                                                         datecol="AdmissionDate")
+# # Admissions and ICU
+# admissions_headlines <- get_threeweek_admissions_figures(df = Admissions,
+#                                                          sumcol = "TotalInfections",
+#                                                          datecol="AdmissionDate")
 
 icu_headlines <- get_threeweek_admissions_figures(df = ICU,
                                                   sumcol = "NewCovidAdmissionsPerDay",
                                                   datecol="DateFirstICUAdmission")
+
+# Admissions
+admissions_headlines <- all_pathogen_admissions %>%
+  select(Date, cov) %>%
+  tail(3)
 
 # occupancy_headlines <- get_threeweek_occupancy_figures(df = Occupancy_Hospital,
 #                                                        datecol = "Date")
@@ -198,7 +204,7 @@ prev_week_iso <- lubridate::isoweek(Respiratory_Summary_Totals$DatePreviousWeek[
 # season values
 all_seasons <- unique(Respiratory_AllData$Season)
 recent_six_seasons <- tail(all_seasons,6)
-admission_seasons <- unique(Length_of_Stay_Season$Season)
+admission_seasons <- unique(Average_Length_of_Stay$Season)
 
 # Static legend for MEM plots
 mem_legend <- readPNG("www/MEM_legend_liberty10.PNG", native = FALSE, info = FALSE)
@@ -256,7 +262,20 @@ euromomo_mem_age_groups_full <- c("0-4 years", "5-14 years", "15-64 years",
                                   "65+ years", "All Ages")
 
 # Set date data goes up to - previous Sunday
-data_recent_date <- floor_date(today(), "week") %>% format("%d %B %Y")
+data_recent_date <- floor_date(as.Date(Deployment_Date, format = "%d %B %Y"), "week") %>% format("%d %B %Y")
+
+## Function to add seasons into tables (used in admissions script)
+
+add_season <- function(input_data) {
+  input_data %>%
+    mutate(week_start = week_ending - 6,
+           week = ISOweek::ISOweek(week_ending),
+           Season = case_when(str_sub(week, start = -2) < 40 ~
+                                (paste(as.numeric(str_sub(week, end = 4)) -1 , "-",
+                                       as.numeric(str_sub(week, end = 4)), sep="")),
+                              TRUE ~ (paste(as.numeric(str_sub(week, end = 4)),
+                                            "-", as.numeric(str_sub(week, end = 4)) + 1, sep=""))))
+}
 
 # Read in shapefile
 # 
