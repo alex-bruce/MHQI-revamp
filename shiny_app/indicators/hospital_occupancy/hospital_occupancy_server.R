@@ -24,9 +24,9 @@ altTextServer("hospital_occupancy_modal",
 )
 
 altTextServer("hospital_occupancy_hb_modal",
-              title = "Number of patients with COVID-19 in hospital by NHS Health Board",
+              title = "Number of patients with COVID-19 in hospital by NHS Health Board of treatment",
               content = tags$ul(
-                tags$li("This is a plot of the number of patients in hospital with COVID-19 by NHS Health Board."),
+                tags$li("This is a plot of the number of patients in hospital with COVID-19 by NHS Health Board of treatment."),
                 tags$li("The number of patients are seven day averages taken as a snapshot each Sunday."),
                 tags$li("The x axis is the week number."),
                 tags$li("The y axis is the seven day average number of patients in hospital.")

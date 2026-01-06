@@ -78,7 +78,7 @@ tagList(
   ), # fluid row
 
 fluidRow(width = 12,
-         tagList(h2("Number of inpatients with influenza in hospital by NHS Health Board")),
+         tagList(h2("Number of inpatients with influenza in hospital by NHS Health Board of treatment")),
          linebreaks(1)),
 
 fluidRow(
