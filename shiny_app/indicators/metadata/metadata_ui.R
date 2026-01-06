@@ -127,6 +127,7 @@ tagList(h1("Metadata"),
                                                      tags$li("Patients stopped being included after 10 days in hospital, or 10 days after first testing positive if this 
                                                              was after admission (this definition first applied to COVID-19 from May 2023).")
                                                    ),
+                                                   p("Health Board analyses are based on NHS Health Board of treatment."),
                                                    p(strong("Source: Rapid and Preliminary Inpatient Data (RAPID), Electronic Communication of Surveillance in Scotland (ECOSS), 
                                                             NHS Health Boards (for COVID-19 data prior to October 2025)")),
                                                    br()),

@@ -49,7 +49,6 @@ tagList(
                             color = "navy",
                             icon = icon_no_warning_fn("calendar-week")),
                             h4("*Snapshot as at a Sunday"),
-p("Between 22 May and October 2025, Public Health Scotland (PHS) will be reporting Scotland level admissions for COVID-19, Influenza and RSV, due to low levels of hospital admissions."),
                             # This text is hidden by css but helps pad the box at the bottom
                             h6("hidden text for padding page")),
 
@@ -63,9 +62,9 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be reporti
            tabPanel("Plot",
                     tagList(linebreaks(1),
                             altTextUI("influenza_occupancy_modal"),
-                            withNavySpinner(plotlyOutput("influenza_occupancy_plot")),
-                            fluidRow(
-                              width=12, linebreaks(1))
+                            withNavySpinner(plotlyOutput("influenza_occupancy_plot"))#,
+                            # fluidRow(
+                            #   width=12, linebreaks(4))
                     ) # taglist
            ), # tabpanel
 
@@ -77,6 +76,35 @@ p("Between 22 May and October 2025, Public Health Scotland (PHS) will be reporti
     ) #tabbox
 
   ), # fluid row
+
+fluidRow(width = 12,
+         tagList(h2("Number of inpatients with influenza in hospital by NHS Health Board of treatment")),
+         linebreaks(1)),
+
+fluidRow(
+  tabBox(width = NULL,
+         type = "pills",
+         tabPanel("Plot",
+                  br(),
+                  pickerInput(
+                    inputId = "influenza_occupancy_selected_seasons", 
+                    label = "Select season", 
+                    choices = tail(sort(unique(occupancy_rapid_hb$Season)), 3),
+                    selected = tail(sort(unique(occupancy_rapid_hb$Season)), 1)  # current season
+                  ),
+                  tagList(linebreaks(1),
+                          altTextUI("influenza_occupancy_hb_modal"),
+                          withNavySpinner(plotlyOutput("influenza_occupancy_hb_plot")),
+                  )),
+         tabPanel("Data",
+                  tagList(linebreaks(1),
+                          withNavySpinner(dataTableOutput("influenza_occupancy_hb_table"))
+                  ) # tagList
+         ) # tabPanel
+         
+  ), # tabBox
+  linebreaks(1)
+), 
 
   # tagList(h2("Seven day average of inpatients with COVID-19 in hospital by NHS Health Board of treatment; week ending")),
   # 

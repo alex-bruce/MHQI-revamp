@@ -1222,7 +1222,7 @@ create_pathogen_occupancy_linechart <- function(data,
                                            #rate_dp = 2,
                                            #seasons = NULL,
                                            value_variable = "sevenday_ave_inpatients",
-                                           y_axis_title = "Number of people in hospital\n (7 day average)") {
+                                           y_axis_title = "Number of patients in hospital\n (7 day average)") {
   
   # Rename value variable
   data <- data %>%
@@ -1234,8 +1234,7 @@ create_pathogen_occupancy_linechart <- function(data,
     filter(ISOWeek != 53) %>%
     select(Season, ISOWeek, Weekord, Value) %>%
     arrange(Season, Weekord) %>%
-    mutate(ISOWeek = as.character(ISOWeek),
-           ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
+    mutate(ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
   
   # Seasons in data
   seasons <- unique(data$Season)
@@ -1260,7 +1259,7 @@ create_pathogen_occupancy_linechart <- function(data,
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$Season,
                             "<br>", "Week number: ", data$ISOWeek,
-                            "<br>", "Number: ", data$Value))
+                            "<br>", "Number of patients in hospital (7 day average): ", data$Value))
   
   # Create plot
   pathogen_occupancy_linechart = data %>%
@@ -1307,7 +1306,132 @@ create_pathogen_occupancy_linechart <- function(data,
   
 }
 
-    
+
+create_pathogen_occupancy_hb_linechart <- function(data,
+                                                   value_variable = "sevenday_ave_inpatients",
+                                                   y_axis_title = "Number of patients in hospital\n (7 day average)") {
+  
+  # Define the desired ISO week ordering (numeric)
+  mem_isoweeks <- c(40:52, 1:39)
+  mem_isoweeks_chr <- as.character(mem_isoweeks)
+  
+  # Rename the value column when provided as a string
+  data <- data %>%
+    dplyr::rename(Value = !!rlang::sym(value_variable))
+  
+  # NHS colours
+  hb_colours <- c(
+    "Scotland" = "black",
+    "NHS Ayrshire and Arran" = "#12436D",
+    "NHS Borders" = "#94AABD",
+    "NHS Dumfries and Galloway" = "#28A197",
+    "NHS Fife" = "#B4DEDB",
+    "NHS Forth Valley" = "#801650",
+    "NHS Grampian" = "#CCA2B9",
+    "NHS Greater Glasgow and Clyde" = "#F46A25",
+    "NHS Highland" = "#FBC3A8",
+    "NHS Lanarkshire" = "#3D3D3D",
+    "NHS Lothian" = "#A8A8A8",
+    "NHS Orkney" = "#3E8ECC",
+    "NHS Shetland" = "#A8CCE8",
+    "NHS Tayside" = "#3F085C",
+    "NHS Western Isles" = "#A285D1"
+  )
+  
+  # ---- Data wrangling: numeric x with custom order ----
+  data <- data %>%
+    dplyr::filter(ISOWeek != 53,
+                  health_board != "Golden Jubilee National Hospital") %>%
+    dplyr::select(Season, ISOWeek, Weekord, Value, health_board) %>%
+    dplyr::arrange(Season, Weekord) %>%
+    dplyr::mutate(
+      # Numeric position in the desired order (1..52)
+      ISOWeek_idx = match(ISOWeek, mem_isoweeks),
+      # Keep week label for tooltips
+      ISOWeek_lab = as.character(ISOWeek)
+    )
+  
+  # ---- Axes: numeric x with full tick labels for 40..52,1..39 ----
+  
+  tick_positions <- seq(1, length(mem_isoweeks), by = 2)         # 1,3,5,...,51
+  tick_labels    <- mem_isoweeks_chr[tick_positions]      
+  
+  
+  xaxis_plots <- list(
+    title    = "Week number",
+    type     = "linear",
+    tickmode = "array",
+    tickvals = tick_positions,
+    ticktext = tick_labels,         # "40","41",...,"39"
+    range    = c(1, length(mem_isoweeks)) # ensures full sequence is shown
+  )
+  
+  yaxis_plots <- list(
+    fixedrange = FALSE,
+    rangemode = "tozero",
+    title = y_axis_title,
+    tickformat = NULL,
+    range = c(0, NA)  # Always start at zero
+  )
+  
+  # Tooltip text
+  tooltip_trend <- paste0(
+    "Season: ", data$Season,
+    "<br>", "Week number: ", data$ISOWeek_lab,
+    "<br>", "NHS Health Board: ", data$health_board,
+    "<br>", "Number of patients in hospital\n(7 day average) : ", data$Value
+  )
+  
+  # ---- Plot: use numeric x (ISOWeek_idx) ----
+  pathogen_occupancy_hb_linechart <- plotly::plot_ly(data) %>%
+    plotly::add_trace(
+      data = data[data$health_board != "Scotland", ],
+      x = ~ISOWeek_idx, y = ~Value, color = ~health_board,
+      colors = hb_colours,
+      type = "scatter", mode = "lines",
+     text = ~health_board,                      # used in hovertemplate as %{text}
+     customdata = data$ISOWeek_lab[data$health_board != "Scotland"], # %{customdata}
+     hovertemplate = paste0(
+       '<b>Week number</b>: %{customdata}<br>',
+       '<b>NHS Health Board</b>: %{text}<br>',
+       '<b>Number of patients in hospital\n(7 day average) </b>: %{y}'
+     ),
+     hoverinfo = "text",
+     visible = "legendonly"
+    ) %>%
+    plotly::add_trace(
+      data = data[data$health_board == "Scotland", ],
+      x = ~ISOWeek_idx, y = ~Value, color = ~health_board,
+      colors = hb_colours,
+      type = "scatter", mode = "lines",
+      text = ~health_board,
+      customdata = data$ISOWeek_lab[data$health_board == "Scotland"],
+      hovertemplate = paste0(
+        '<b>Week number</b>: %{customdata}<br>',
+        '<b>NHS Health Board</b>: %{text}<br>',
+        '<b>Number of patients in hospital\n(7 day average) </b>: %{y}'
+      ),
+      hoverinfo = "text"
+    ) %>%
+    plotly::layout(
+      margin = list(b = 100, t = 5),
+      yaxis = yaxis_plots, xaxis = xaxis_plots,
+      legend = list(x = 0.99, y = 0.5),
+      paper_bgcolor = phs_colours("phs-liberty-10"),
+      plot_bgcolor = phs_colours("phs-liberty-10")
+    ) %>%
+    plotly::config(
+      displaylogo = FALSE, 
+      displayModeBar = TRUE,
+      modeBarButtonsToRemove = bttn_remove
+    )
+  
+  return(pathogen_occupancy_hb_linechart)
+}
+
+
+
+
 
 create_cari_age_linechart2 <- function(data){
   
@@ -1368,7 +1492,6 @@ create_cari_age_linechart2 <- function(data){
   return(p)
   
 }
-
 
 
 create_cari_hb_linechart <- function(data){
