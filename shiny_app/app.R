@@ -157,8 +157,7 @@ ui <- fluidPage(
                                        "Influenza can be caught all year round but is more common in the winter months.",
                                        "There are two main types of influenza virus: Types A and B. The influenza A and B viruses that", 
                                        "routinely spread in people (human influenza viruses) are responsible for seasonal flu epidemics", 
-                                       "each year. Current subtypes of influenza A viruses found in people are influenza A(H1N1) and", 
-                                       "influenza A(H3N2) viruses. Currently circulating influenza B viruses mostly belong to B/Victoria."),
+                                       "each year."),
                                      linebreaks(1),
                                      radioGroupButtons("influenza_select", status = "home",
 

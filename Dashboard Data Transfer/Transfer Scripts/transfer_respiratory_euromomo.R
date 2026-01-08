@@ -38,7 +38,7 @@ df <- df %>%
          WeekEnding = as.Date(Date),
          WeekBeginning = as.Date(Date) - 6,
          ActivityLevel = factor(ActivityLevel, levels = c("Baseline", "Low",
-                                                          "Moderate", "High", "Extraordinary"))) %>%
+                                                          "Medium", "High", "Very High"))) %>%
   rename(Year = Isoyear,
          ISOWeek = Isoweek,
          ZScore = Zscore, 
