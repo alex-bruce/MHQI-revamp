@@ -8,7 +8,7 @@ altTextServer("rsv_cari_modal",
               content = tags$ul(tags$li("This is a plot showing the test positivity rate of RSV infection in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
-                                tags$li("The solid purple line is the specified test positivity rate and the lighter purple area around the line indicates the confidence interval."),
+                                tags$li("The solid black line is the specified test positivity rate and the lighter purple area around the line indicates the confidence interval."),
                                 tags$li("The bottom of the light purple shaded area represents the lower confidence interval and the top of the area represents the upper confidence interval.")))
 
 altTextServer("rsv_cari_age_modal",

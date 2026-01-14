@@ -25,11 +25,11 @@ rsv_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
 # CARI HB data
 rsv_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
   filter(Pathogen == 'Respiratory Syncytial Virus') %>%
-  filter(HBName != "Scotland") %>%
+  #filter(HBName != "Scotland") %>%
   mutate(SwabPositivity = as.numeric(SwabPositivity),
          SwabPositivityLCL = as.numeric(SwabPositivityLCL),
-         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
-#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
 
 # CARI Age data
 rsv_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
