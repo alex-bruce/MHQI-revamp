@@ -52,7 +52,7 @@ tagList(
                                                ,
                                             ),
 
-                                   tagList(h2("Rate of acute COVID-19 hospital admissions in Scotland")),
+                                   tagList(h2("Rate of acute COVID-19 hospital admissions per 100,000 population in Scotland")),
                                    
                            tabBox(width = NULL, type = "pills",
                                   tabPanel("Plot",
@@ -74,11 +74,11 @@ tagList(
                            
                            
                            
-                           tagList(h2("Rate of acute COVID-19 hospital admissions by age group")),
+                           tagList(h2("Rate of acute COVID-19 hospital admissions per 100,000 population by age group")),
                            
                            #),
-                           br(),
-                           fluidRow(
+                           #br(),
+                           #fluidRow(
                              tabBox(width = NULL,
                                     type = "pills",
                                     tabPanel("Plot",
@@ -98,19 +98,19 @@ tagList(
                                     ) # tabPanel
                                     
                              ), # tabBox
-                             linebreaks(1)
-                           ), 
+                             linebreaks(1),
+                           #), 
                            
-                           fluidRow(width = 12,
-                                    tagList(h2("Rate of COVID-19 admissions by NHS Health Board of treatment")),
-                                    linebreaks(1)),
+                           #fluidRow(width = NULL,
+                                    tagList(h2("Rate of COVID-19 admissions per 100,000 population by NHS Health Board of treatment")),
+                                    #linebreaks(1),#),
                            
                           
                            
                            
                              
                            
-                           fluidRow(
+                          # fluidRow(
                              tabBox(width = NULL,
                                     type = "pills",
                                     tabPanel("Plot",
@@ -133,7 +133,8 @@ tagList(
                                     
                              ), # tabBox
                              linebreaks(1)
-                           ), 
+                          # ), 
+                          ,
                            
                            
                            
@@ -149,10 +150,10 @@ tagList(
                            #              withNavySpinner(dataTableOutput("hospital_admissions_hb_table"))),
                            # ),
 
-                           tagList(h2("Rate of acute COVID-19 hospital admissions by deprivation category (SIMD)"))
+                           tagList(h2("Rate of acute COVID-19 hospital admissions per 100,000 population by deprivation category (SIMD)"))
 
                            ),
-                           br(),
+                          # br(),
                            
                            tabBox(width = NULL, type = "pills",
                                   tabPanel("Plot",

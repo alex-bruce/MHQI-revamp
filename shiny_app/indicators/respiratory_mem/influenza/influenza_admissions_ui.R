@@ -65,7 +65,7 @@ tagList(
                                      h6("hidden text for padding page")
                             )))), # headline
 
-    tagList(h2("Rate of acute influenza hospital admissions in Scotland")),
+    fluidRow(width = 12,tagList(h2("Rate of acute influenza hospital admissions per 100,000 population in Scotland"))),
 
 #  fluidRow(width = 12,
 #           tagList(h2("Number of acute influenza admissions to hospital"))),
@@ -89,10 +89,10 @@ tagList(
       ), # fluidRow
 
 
-tagList(h2("Rate of acute influenza hospital admissions by age group")),
+    fluidRow(width=12, tagList(h2("Rate of acute influenza hospital admissions per 100,000 population by age group"))),
 
 #),
-br(),
+#br(),
 
 fluidRow(
   tabBox(width = NULL,
@@ -118,8 +118,7 @@ fluidRow(
 ), 
 
 fluidRow(width = 12,
-         tagList(h2("Rate of influenza admissions by NHS Health Board of treatment")),
-         linebreaks(1)),
+         tagList(h2("Rate of influenza admissions per 100,000 population by NHS Health Board of treatment"))),
 
 fluidRow(
   tabBox(width = NULL,
@@ -150,9 +149,9 @@ fluidRow(
 ), # fluidRow
 
 
-tagList(h2("Rate of acute influenza hospital admissions by deprivation category (SIMD)")),
+tagList(h2("Rate of acute influenza hospital admissions per 100,000 population by deprivation category (SIMD)")),
 
-br(),
+#br(),
 
 tabBox(width = NULL, type = "pills",
        tabPanel("Plot",

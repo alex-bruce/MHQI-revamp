@@ -101,7 +101,8 @@ tagList(
                                        ) # column
                                      ), # fluidRow
                                      altTextUI("respiratory_by_season_modal"),
-                                     withNavySpinner(plotlyOutput("respiratory_by_season_plot"))
+                                     withNavySpinner(plotlyOutput("respiratory_by_season_plot")),
+                                     br()
                                    ) # tagList
                           ), # tabPanel
                           tabPanel("Data",

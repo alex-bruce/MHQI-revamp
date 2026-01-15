@@ -80,9 +80,7 @@ tagList(
                                    tagList(linebreaks(1),
                                            altTextUI("rsv_positivity_modal"),
                                            swabposDefinitionUI("rsv_swabpos"),
-                                           withNavySpinner(plotlyOutput("rsv_positivity_plot")),
-                                           fluidRow(
-                                             width=12, linebreaks(1)))),
+                                           withNavySpinner(plotlyOutput("rsv_positivity_plot")))),
                           tabPanel("Data",
                                    tagList(
                                      withNavySpinner(dataTableOutput("rsv_positivity_table"))
@@ -107,9 +105,7 @@ tagList(
                                    tagList(linebreaks(1),
                                            altTextUI("rsv_positivity_age_modal"),
                                            swabposDefinitionUI("rsv_age_swabpos"),
-                                           withNavySpinner(plotlyOutput("rsv_positivity_age_plot")),
-                                           fluidRow(
-                                             width=12, linebreaks(1)))),
+                                           withNavySpinner(plotlyOutput("rsv_positivity_age_plot")))),
                           tabPanel("Data",
                                    tagList(
                                      withNavySpinner(dataTableOutput("rsv_positivity_age_table"))

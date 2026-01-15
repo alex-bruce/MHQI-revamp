@@ -59,7 +59,7 @@ create_euromomo_mem_linechart <- function(data,
   
   xaxis_plots[["title"]] <- "Week number"
   xaxis_plots[["dtick"]] <- 2
-  xaxis_plots[["range"]] <- c(-1,52)
+  xaxis_plots[["range"]] <- c(0,52)
   
   #xaxis_plots[["rangeslider"]] <- list(type = "date")
   yaxis_plots[["fixedrange"]] <- FALSE
@@ -217,7 +217,7 @@ create_euromomo_mem_linechart <- function(data,
             xref = "paper",  
             yref = "paper",  
             x = 0.5,  
-            y = -0.32,  
+            y = -0.35,  
             sizex = 0.4,  
             sizey = 0.3,  
             xanchor="center",  

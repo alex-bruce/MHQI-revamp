@@ -62,8 +62,8 @@ tagList(
                                                                       # This text is hidden by css but helps pad the box at the bottom
                                      h6("hidden text for padding page")
                             )))), # headline
-
-tagList(h2("Rate of acute HMPV hospital admissions in Scotland")),
+  fluidRow(width = 12,
+         tagList(h2("Rate of acute HMPV hospital admissions per 100,000 population in Scotland"))),
 
   # fluidRow(width = 12,
   #          tagList(h2("Number of acute adenovirus admissions to hospital"))),
@@ -91,10 +91,10 @@ tagList(h2("Rate of acute HMPV hospital admissions in Scotland")),
      linebreaks(1)
        ), # fluidRow
 
-tagList(h2("Rate of acute HMPV hospital admissions by age group")),
+  fluidRow(width=12, tagList(h2("Rate of acute HMPV hospital admissions per 100,000 population by age group"))),
 
 #),
-br(),
+#br(),
 
 fluidRow(
   tabBox(width = NULL,

@@ -74,8 +74,7 @@ tagList(
                                            altTextUI("covid_positivity_modal"),
                                            swabposDefinitionUI("covid_swabpos"),
                                            withNavySpinner(plotlyOutput("covid_positivity_plot")),
-                                           fluidRow(
-                                             width=12, linebreaks(1)))),
+                                           )),
                           tabPanel("Data",
                                    tagList(
                                      withNavySpinner(dataTableOutput("covid_positivity_table"))
@@ -100,8 +99,7 @@ tagList(
                                            altTextUI("covid_positivity_age_modal"),
                                            swabposDefinitionUI("covid_age_swabpos"),
                                            withNavySpinner(plotlyOutput("covid_positivity_age_plot")),
-                                           fluidRow(
-                                             width=12, linebreaks(1)))),
+                                           )),
                           tabPanel("Data",
                                    tagList(
                                      withNavySpinner(dataTableOutput("covid_positivity_age_table"))
