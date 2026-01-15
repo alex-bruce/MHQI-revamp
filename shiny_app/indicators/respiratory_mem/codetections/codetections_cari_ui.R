@@ -15,7 +15,7 @@ tagList(
            tagList(h2("CARI - Proportion of positive samples that are co-detections by age group"))),
   
   fluidRow(
-    selectInput("codetection_cari_selected_age", "Select age group(s) of interest:", 
+    pickerInput("codetection_cari_selected_age", "Select age group(s) of interest:", 
                 choices = sort(unique(codetection_cari_age$AgeGroup)),
                 selected = sort(unique(codetection_cari_age$AgeGroup))[1],
                 multiple = TRUE),

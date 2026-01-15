@@ -36,3 +36,30 @@ swabposDefinitionUI <- function(id) {
   
   
 }
+
+
+
+
+#### CARI DEFINITION ####
+# in the dashboard "Swab positivity"  now referred to as "Test positivity", 
+cariDefinitionUI <- function(id) {
+  ns <- NS(id)
+  
+  summaryButtonUI(ns("cari_definition"),
+                  title = "What is CARI?",
+                  content = paste("CARI surveillance is a sentinel community surveillance programme monitoring COVID-19, ",
+                                  "influenza A and B, Respiratory Syncytial Virus (RSV), adenovirus, coronavirus (non-COVID19),", 
+                                  "human metapneumovirus (HMPV), rhinovirus, parainfluenza and Mycoplasma pneumoniae. The ",
+                                  "programme is open to GP practices across all NHS Boards in Scotland. To become a sentinel site,", 
+                                  "GP practices voluntarily opt into the CARI programme. Patients in the community who consult a ",
+                                  "sentinel GP practice with respiratory symptoms and who meet the case definition for acute ",
+                                  "respiratory infection (ARI) are recruited, consented, and tested for the CARI programme."),
+                  placement = "bottom",
+                  label = "What is CARI?",
+                  icon = "circle-question",
+                  class = "plotinfo-btn"
+  )
+  
+  
+}
+

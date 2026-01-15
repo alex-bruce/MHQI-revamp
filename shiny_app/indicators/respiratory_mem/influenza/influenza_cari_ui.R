@@ -25,11 +25,11 @@ influenza_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
 # CARI HB data
 influenza_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
   filter(Pathogen == 'Influenza') %>%
-  filter(HBName != "Scotland") %>%
+  #filter(HBName != "Scotland") %>%
   mutate(SwabPositivity = as.numeric(SwabPositivity),
          SwabPositivityLCL = as.numeric(SwabPositivityLCL),
-         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
-#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
 
 # CARI Age data
 influenza_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
@@ -121,7 +121,7 @@ tagList(
            tagList(h2("CARI - Test positivity for Influenza by age group"))),
   
   fluidRow(
-    selectInput("influenza_cari_selected_age", "Select age group(s) of interest:", 
+    pickerInput("influenza_cari_selected_age", "Select age group(s) of interest:", 
                 choices = sort(unique(influenza_cari_age$AgeGroup)),
                 selected = sort(unique(influenza_cari_age$AgeGroup))[1],
                 multiple = TRUE),
@@ -148,7 +148,7 @@ tagList(
   
   fluidRow(
     width = 12,
-    selectInput("influenza_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+    pickerInput("influenza_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
                 choices = sort(unique(influenza_cari_hb$HBName)),
                 selected = sort(unique(influenza_cari_hb$HBName))[1],
                 multiple = TRUE),
@@ -175,7 +175,7 @@ tagList(
            tagList(h2("CARI - Test positivity for Influenza by type/subtype"))),
   
   fluidRow(
-    selectInput("flu_cari_selected_subtype1", "Select type/subtype(s):", 
+    pickerInput("flu_cari_selected_subtype1", "Select type/subtype(s):", 
                 choices = sort(unique(flu_cari_subtype$Pathogen)),
                 selected = sort(unique(flu_cari_subtype$Pathogen))[1],
                 multiple = TRUE),

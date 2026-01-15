@@ -1157,7 +1157,7 @@ create_cari_linechart <- function(data){
               type = "scatter",
               mode = "lines",
               name = "Test positivity",
-              line = list(color = phsstyles::phs_colours("phs-purple")),
+              line = list(color = "black"),
               showlegend = TRUE,
               text = ~paste0("<b>Week ending</b>: ", format(WeekEnding, "%d %b %y"), "\n",
                              "<b>Number of positive samples</b>: ", format(PositiveSamples, big.mark=","), "\n",
@@ -1447,7 +1447,7 @@ create_cari_age_linechart2 <- function(data){
   
   # Define a named color vector
   age_colours <- c(
-    "All ages" = "#A8A8A8",
+    "All ages" = "black",
     "0-4 years" = "#12436D",
     "5-14 years" = "#28A197",
     "15-44 years" = "#801650",
@@ -1505,7 +1505,7 @@ create_cari_hb_linechart <- function(data){
   
   # Define a named color vector
   hb_colours <- c(
-  # "Scotland" = "black",
+    "Scotland" = "black",
     "NHS Ayrshire & Arran" = "#12436D",
     "NHS Borders" = "#94AABD",
     "NHS Dumfries & Galloway" = "#28A197",
@@ -1740,18 +1740,18 @@ create_cari_subtype_linechart <- function(data){
   
   # Define a named color vector
   subtype_colours <- c(
-    "Type A and B" = "#12436D",
+    "Type A and B" = "black",
     "Type A" = "#28A197",
     "Type A (H1N1)" = "#801650",
     "Type A (H3N2)" = "#F46A25",
     "Type A (not subtyped)" = "#3F085C",
     "Type B" = "#3E8ECC",
-    "HPIV" = "#12436D",
+    "HPIV" = "black",
     "HPIV-1" = "#28A197",
     "HPIV-2" = "#801650",
     "HPIV-3" = "#F46A25",
     "HPIV-4" = "#3F085C",
-    "Seasonal Coronavirus (non-COVID-19)" = "#12436D",
+    "Seasonal Coronavirus (non-COVID-19)" = "black",
     "HCoV-229e (alpha)" = "#28A197",
     "HCoV-OC43 (beta)" = "#801650", 
     "HCoV-NL63 (alpha)" = "#F46A25",

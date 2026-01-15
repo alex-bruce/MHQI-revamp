@@ -25,11 +25,11 @@ mycoplasma_pneumoniae_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
 # CARI HB data
 mpn_cari_hb <- Respiratory_Pathogens_CARI_HB %>% 
   filter(Pathogen == 'Mycoplasma Pneumoniae') %>%
-  filter(HBName != "Scotland") %>%
+  #filter(HBName != "Scotland") %>%
   mutate(SwabPositivity = as.numeric(SwabPositivity),
          SwabPositivityLCL = as.numeric(SwabPositivityLCL),
-         SwabPositivityUCL = as.numeric(SwabPositivityUCL))
-#mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
+         SwabPositivityUCL = as.numeric(SwabPositivityUCL)) %>%
+  mutate(HBName = factor(HBName, levels = c("Scotland", setdiff(Respiratory_Pathogens_CARI_HB$HBName, "Scotland"))))
 
 # CARI Age data
 mpn_cari_age <- Respiratory_Pathogens_CARI_Age %>% 
@@ -102,7 +102,7 @@ tagList(
            tagList(h2("CARI - Test positivity for MPN by age group"))),
   
   fluidRow(
-    selectInput("mpn_cari_selected_age", "Select age group(s) of interest:", 
+    pickerInput("mpn_cari_selected_age", "Select age group(s) of interest:", 
                 choices = sort(unique(mpn_cari_age$AgeGroup)),
                 selected = sort(unique(mpn_cari_age$AgeGroup))[1],
                 multiple = TRUE),
@@ -129,7 +129,7 @@ tagList(
   
   fluidRow(
     width = 12,
-    selectInput("mpn_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+    pickerInput("mpn_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
                 choices = sort(unique(mpn_cari_hb$HBName)),
                 selected = sort(unique(mpn_cari_hb$HBName))[1],
                 multiple = TRUE),
