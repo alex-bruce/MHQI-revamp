@@ -20,7 +20,7 @@ tagList(
            linebreaks(1)), #fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("Number and rate of laboratory-confirmed respiratory pathogen cases (week ending)")),
+           tagList(h2("Number and rate per 100,000 population of laboratory-confirmed respiratory pathogen cases (week ending)")),
            linebreaks(1)), #fluidRow
 
   fluidRow(width=12,
@@ -52,7 +52,7 @@ tagList(
   ), #fluidRow
 
   fluidRow(width = 12,
-           tagList(h2("Number and rate of acute hospital admissions due to each pathogen (week ending)")),
+           tagList(h2("Number and rate per 100,000 population of acute hospital admissions due to each pathogen (week ending)")),
            linebreaks(1)), #fluidRow
 
   fluidRow(width=12,
@@ -67,9 +67,10 @@ tagList(
                altTextUI("adms_summary_modal"),
                withNavySpinner(
                  plotlyOutput("hosp_adms_intro_plot")),
-           fluidRow(
-             width=12, 
-             linebreaks(1)))
+           # fluidRow(
+           #   width=12, 
+           #   linebreaks(1))
+           )
   ), #fluidRow
 
  fluidRow(width = 12,

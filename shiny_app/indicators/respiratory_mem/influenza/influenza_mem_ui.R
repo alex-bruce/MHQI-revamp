@@ -63,9 +63,7 @@ tagList(
                                    tagList(linebreaks(1),
                                            altTextUI("influenza_positivity_modal"),
                                            swabposDefinitionUI("influenza_swabpos"),
-                                           withNavySpinner(plotlyOutput("influenza_positivity_plot")),
-                                           fluidRow(
-                                             width=12, linebreaks(1)))),
+                                           withNavySpinner(plotlyOutput("influenza_positivity_plot")))),
                           tabPanel("Data",
                                    tagList(
                                      withNavySpinner(dataTableOutput("influenza_positivity_table"))
@@ -89,9 +87,7 @@ tagList(
                                    tagList(linebreaks(1),
                                            altTextUI("flu_positivity_age_modal"),
                                            swabposDefinitionUI("flu_age_swabpos"),
-                                           withNavySpinner(plotlyOutput("flu_positivity_age_plot")),
-                                           fluidRow(
-                                             width=12, linebreaks(1)))),
+                                           withNavySpinner(plotlyOutput("flu_positivity_age_plot")))),
                           tabPanel("Data",
                                    tagList(
                                      withNavySpinner(dataTableOutput("flu_positivity_age_table"))

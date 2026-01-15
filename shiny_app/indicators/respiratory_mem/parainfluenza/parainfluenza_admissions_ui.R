@@ -65,7 +65,7 @@ tagList(
 
   # fluidRow(width = 12,
   #          tagList(h2("Number of acute adenovirus admissions to hospital"))),
-tagList(h2("Rate of acute parainfluenza hospital admissions in Scotland")),
+fluidRow(width=12, tagList(h2("Rate of acute parainfluenza hospital admissions per 100,000 population in Scotland"))),
 
    fluidRow(
      tabBox(width = NULL,
@@ -90,10 +90,10 @@ tagList(h2("Rate of acute parainfluenza hospital admissions in Scotland")),
      linebreaks(1)
        ), # fluidRow
 
-tagList(h2("Rate of acute parainfluenza hospital admissions by age group")),
+fluidRow(width=12, tagList(h2("Rate of acute parainfluenza hospital admissions per 100,000 population by age group"))),
 
 #),
-br(),
+#br(),
 
 fluidRow(
   tabBox(width = NULL,
