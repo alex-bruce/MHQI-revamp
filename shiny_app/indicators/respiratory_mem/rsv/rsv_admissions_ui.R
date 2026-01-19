@@ -12,13 +12,13 @@ rsv_admissions_recent_week <- RSV_admissions %>%
   head(1)
 
 tagList(
-  fluidRow(width = 12,
-
-           metadataButtonUI("respiratory_rsv_admissions"),
-           linebreaks(1),
-           #h1("RSV Hospital Admissions"),
-           #linebreaks(1)
-           ),
+  # fluidRow(width = 12,
+  # 
+  #          metadataButtonUI("respiratory_rsv_admissions"),
+  #          linebreaks(1),
+  #          #h1("RSV Hospital Admissions"),
+  #          #linebreaks(1)
+  #          ),
 
   fluidRow(width = 12,
            tabPanel(stringr::str_to_sentence("influenza"),

@@ -7,12 +7,12 @@ admissions_seasons <- age_rate_data_all_path %>%
   unlist(., use.names=FALSE)
 
 tagList(
-  fluidRow(width = 12,
-           metadataButtonUI("hospital_admissions"),
-           linebreaks(1),
-           #h1("Acute COVID-19 hospital admissions"),
-           #linebreaks(1)
-           ),
+  # fluidRow(width = 12,
+  #          metadataButtonUI("hospital_admissions"),
+  #          linebreaks(1),
+  #          #h1("Acute COVID-19 hospital admissions"),
+  #          #linebreaks(1)
+  #          ),
 
   fluidRow(width = 12,
                   tabPanel("Acute hospital admissions",

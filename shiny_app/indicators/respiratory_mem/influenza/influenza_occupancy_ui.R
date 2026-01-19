@@ -15,12 +15,12 @@ influenza_occupancy_recent_week <- occupancy_rapid %>%
 
 
 tagList(
-  fluidRow(width = 12,
-           metadataButtonUI("hospital_occupancy"),
-           linebreaks(1),
-           #h1("Hospital occupancy (inpatients)"),
-           #linebreaks(1)
-           ),
+  # fluidRow(width = 12,
+  #          metadataButtonUI("hospital_occupancy"),
+  #          linebreaks(1),
+  #          #h1("Hospital occupancy (inpatients)"),
+  #          #linebreaks(1)
+  #          ),
 
 
 #headline values are created in the setup script, occupancy updated to use the weekly HB values, filtered to Scotland

@@ -1,7 +1,7 @@
 tagList(
   fluidRow(width = 12,
            
-           metadataButtonUI("nhs24_mem"),
+           #metadataButtonUI("nhs24_mem"),
            # linebreaks(1),
            h1("NHS24 Calls for Respiratory Symptoms"),
            p("NHS24 is a telephone service operated by NHS Scotland to triage patients with an urgent,",

@@ -1,7 +1,7 @@
 tagList(
   fluidRow(width = 12,
            
-           metadataButtonUI("gp_ari_mem"),
+           #metadataButtonUI("gp_ari_mem"),
            #linebreaks(1),
            h2("GP Consultations for Acute Respiratory Infections (ARI)"),
            p("Acute respiratory infection (ARI) diagnoses by General Practitioners (GP) are recommended ",
