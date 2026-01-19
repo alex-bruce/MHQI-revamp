@@ -1,9 +1,9 @@
 tagList(
-  fluidRow(width = 12,
-
-           metadataButtonUI("respiratory_rhinovirus_mem"),
-           linebreaks(1),
-),
+#   fluidRow(width = 12,
+# 
+#            metadataButtonUI("respiratory_rhinovirus_mem"),
+#            linebreaks(1),
+# ),
 
   fluidRow(width = 12,
            tagList(h2("Laboratory-confirmed rhinovirus incidence per 100,000 population in Scotland"))),

@@ -1,10 +1,10 @@
 tagList(
   div(
 
-    fluidRow(width = 12,
-             linebreaks(1),
-             metadataButtonUI("download"),
-             h1("Open data")),
+    # fluidRow(width = 12,
+    #          linebreaks(1),
+    #          metadataButtonUI("download"),
+    #          h1("Open data")),
     
     fluidRow(width = 12,
              withNavySpinner(uiOutput("download_open_data")),

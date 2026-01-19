@@ -14,13 +14,13 @@ coron_admissions_recent_week <- all_pathogen_admissions %>%
 
 
 tagList(
-  fluidRow(width = 12,
-
-           metadataButtonUI("respiratory_seasonal_coronavirus_admissions"),
-           linebreaks(1),
-           #h1("Influenza Hospital Admissions"),
-           #linebreaks(1)
-           ),
+  # fluidRow(width = 12,
+  # 
+  #          metadataButtonUI("respiratory_seasonal_coronavirus_admissions"),
+  #          linebreaks(1),
+  #          #h1("Influenza Hospital Admissions"),
+  #          #linebreaks(1)
+  #          ),
 
   fluidRow(width = 12,
            tabPanel(stringr::str_to_sentence("Seasonal coronavirus"),
