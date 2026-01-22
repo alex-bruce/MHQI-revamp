@@ -203,8 +203,8 @@ covid_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   .$LowThreshold %>%
   round_half_up(2)
 
-# Moderate threshold
-covid_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+# Medium threshold
+covid_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Covid-19") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -219,12 +219,12 @@ covid_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   .$HighThreshold %>%
   round_half_up(2)
 
-# Extraordinary
-covid_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+# Very High
+covid_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Covid-19") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 ### National ----
@@ -239,10 +239,10 @@ altTextServer("covid_mem_modal",
                                 tags$li(glue("Activity levels for COVID-19 based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for COVID-19 are: ",
                                              "Baseline (< ", covid_low_threshold, "), ",
-                                             "Low (", covid_low_threshold, "-", covid_moderate_threshold-0.01, "), ",
-                                             "Medium (", covid_moderate_threshold, "-", covid_high_threshold-0.01, "), ",
-                                             "High (", covid_high_threshold, "-", covid_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", covid_extraordinary_threshold, ").")),
+                                             "Low (", covid_low_threshold, "-", covid_medium_threshold-0.01, "), ",
+                                             "Medium (", covid_medium_threshold, "-", covid_high_threshold-0.01, "), ",
+                                             "High (", covid_high_threshold, "-", covid_very_high_threshold-0.01, "), and ",
+                                             "Very High (>= ", covid_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes.")))
 

@@ -84,7 +84,7 @@ influenza_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-influenza_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+influenza_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Influenza") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -100,11 +100,11 @@ influenza_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-influenza_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+influenza_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Influenza") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -146,10 +146,10 @@ altTextServer("influenza_mem_modal",
                                 tags$li(glue("Activity levels for influenza based on MEM thresholds are represented by different coloured panels on the plot. ",
                                         "The activity levels and MEM thresholds for influenza are: ",
                                         "Baseline (< ", influenza_low_threshold, "), ",
-                                        "Low (", influenza_low_threshold, "-", influenza_moderate_threshold-0.01, "), ",
-                                        "Medium (", influenza_moderate_threshold, "-", influenza_high_threshold-0.01, "), ",
-                                        "High (", influenza_high_threshold, "-", influenza_extraordinary_threshold-0.01, "), and ",
-                                        "Very High (>= ", influenza_extraordinary_threshold, ").")),
+                                        "Low (", influenza_low_threshold, "-", influenza_medium_threshold-0.01, "), ",
+                                        "Medium (", influenza_medium_threshold, "-", influenza_high_threshold-0.01, "), ",
+                                        "High (", influenza_high_threshold, "-", influenza_very_high_threshold-0.01, "), and ",
+                                        "Very High (>= ", influenza_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))

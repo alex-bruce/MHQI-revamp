@@ -12,7 +12,7 @@ mycoplasma_pneumoniae_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-mycoplasma_pneumoniae_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+mycoplasma_pneumoniae_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Mycoplasma Pneumoniae") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -28,11 +28,11 @@ mycoplasma_pneumoniae_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-mycoplasma_pneumoniae_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+mycoplasma_pneumoniae_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Mycoplasma Pneumoniae") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -77,10 +77,10 @@ altTextServer("mycoplasma_pneumoniae_mem_modal",
                                 tags$li(glue("Activity levels for Mycoplasma pneumoniae based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for Mycoplasma pneumoniae are: ",
                                              "Baseline (< ", mycoplasma_pneumoniae_low_threshold, "), ",
-                                             "Low (", mycoplasma_pneumoniae_low_threshold, "-", mycoplasma_pneumoniae_moderate_threshold-0.01, "), ",
-                                             "Medium (", mycoplasma_pneumoniae_moderate_threshold, "-", mycoplasma_pneumoniae_high_threshold-0.01, "), ",
-                                             "High (", mycoplasma_pneumoniae_high_threshold, "-", mycoplasma_pneumoniae_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", mycoplasma_pneumoniae_extraordinary_threshold, ").")),
+                                             "Low (", mycoplasma_pneumoniae_low_threshold, "-", mycoplasma_pneumoniae_medium_threshold-0.01, "), ",
+                                             "Medium (", mycoplasma_pneumoniae_medium_threshold, "-", mycoplasma_pneumoniae_high_threshold-0.01, "), ",
+                                             "High (", mycoplasma_pneumoniae_high_threshold, "-", mycoplasma_pneumoniae_very_high_threshold-0.01, "), and ",
+                                             "Very High (>= ", mycoplasma_pneumoniae_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))

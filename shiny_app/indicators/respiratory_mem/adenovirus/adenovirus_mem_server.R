@@ -12,7 +12,7 @@ adenovirus_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-adenovirus_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+adenovirus_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Adenovirus") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -28,11 +28,11 @@ adenovirus_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-adenovirus_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+adenovirus_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Adenovirus") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -74,10 +74,10 @@ altTextServer("adenovirus_mem_modal",
                                 tags$li(glue("Activity levels for adenovirus based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for adenovirus are: ",
                                              "Baseline (< ", adenovirus_low_threshold, "), ",
-                                             "Low (", adenovirus_low_threshold, "-", adenovirus_moderate_threshold-0.01, "), ",
-                                             "Medium (", adenovirus_moderate_threshold, "-", adenovirus_high_threshold-0.01, "), ",
-                                             "High (", adenovirus_high_threshold, "-", adenovirus_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", adenovirus_extraordinary_threshold, ").")),
+                                             "Low (", adenovirus_low_threshold, "-", adenovirus_medium_threshold-0.01, "), ",
+                                             "Medium (", adenovirus_medium_threshold, "-", adenovirus_high_threshold-0.01, "), ",
+                                             "High (", adenovirus_high_threshold, "-", adenovirus_very_high_threshold-0.01, "), and ",
+                                             "Very High (>= ", adenovirus_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))

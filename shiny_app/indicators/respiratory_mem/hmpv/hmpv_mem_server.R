@@ -12,7 +12,7 @@ hmpv_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-hmpv_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+hmpv_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Human Metapneumovirus") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -28,11 +28,11 @@ hmpv_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-hmpv_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+hmpv_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Human Metapneumovirus") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -73,10 +73,10 @@ altTextServer("hmpv_mem_modal",
                                 tags$li(glue("Activity levels for HMPV based on MEM thresholds are represented by different coloured panels on the plot. ",
                                         "The activity levels and MEM thresholds for HMPV are: ",
                                         "Baseline (< ", hmpv_low_threshold, "), ",
-                                        "Low (", hmpv_low_threshold, "-", hmpv_moderate_threshold-0.01, "), ",
-                                        "Medium (", hmpv_moderate_threshold, "-", hmpv_high_threshold-0.01, "), ",
-                                        "High (", hmpv_high_threshold, "-", hmpv_extraordinary_threshold-0.01, "), and ",
-                                        "Very High (>= ", hmpv_extraordinary_threshold, ").")),
+                                        "Low (", hmpv_low_threshold, "-", hmpv_medium_threshold-0.01, "), ",
+                                        "Medium (", hmpv_medium_threshold, "-", hmpv_high_threshold-0.01, "), ",
+                                        "High (", hmpv_high_threshold, "-", hmpv_very_high_threshold-0.01, "), and ",
+                                        "Very High (>= ", hmpv_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))

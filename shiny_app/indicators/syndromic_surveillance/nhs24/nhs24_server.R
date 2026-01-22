@@ -10,7 +10,7 @@ nhs24_low_threshold <- Respiratory_NHS24_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-nhs24_moderate_threshold <- Respiratory_NHS24_MEM_Scot %>%
+nhs24_medium_threshold <- Respiratory_NHS24_MEM_Scot %>%
   select(MediumThreshold) %>%
   distinct() %>%
   .$MediumThreshold %>%
@@ -24,10 +24,10 @@ nhs24_high_threshold <- Respiratory_NHS24_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-nhs24_extraordinary_threshold <- Respiratory_NHS24_MEM_Scot %>%
-  select(ExtraordinaryThreshold) %>%
+nhs24_very_high_threshold <- Respiratory_NHS24_MEM_Scot %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -66,10 +66,10 @@ altTextServer("nhs24_mem_modal",
                                 tags$li(glue("Activity levels for NHS24 calls based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for NHS24 calls are: ",
                                              "Baseline (< ", nhs24_low_threshold, "), ",
-                                             "Low (", nhs24_low_threshold, "-", nhs24_moderate_threshold-0.01, "), ",
-                                             "Medium (", nhs24_moderate_threshold, "-", nhs24_high_threshold-0.01, "), ",
-                                             "High (", nhs24_high_threshold, "-", nhs24_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", nhs24_extraordinary_threshold, ")."))))
+                                             "Low (", nhs24_low_threshold, "-", nhs24_medium_threshold-0.01, "), ",
+                                             "Medium (", nhs24_medium_threshold, "-", nhs24_high_threshold-0.01, "), ",
+                                             "High (", nhs24_high_threshold, "-", nhs24_very_high_threshold-0.01, "), and ",
+                                             "Very High (>= ", nhs24_very_high_threshold, ")."))))
 
 altTextServer("nhs24_mem_hb_modal",
               title = "Percentage of NHS24 calls for respiratory symptoms by NHS Health Board",

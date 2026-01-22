@@ -10,7 +10,7 @@ gp_low_threshold <- Respiratory_GPILI_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-gp_moderate_threshold <- Respiratory_GPILI_MEM_Scot %>%
+gp_medium_threshold <- Respiratory_GPILI_MEM_Scot %>%
   select(MediumThreshold) %>%
   distinct() %>%
   .$MediumThreshold %>%
@@ -24,10 +24,10 @@ gp_high_threshold <- Respiratory_GPILI_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-gp_extraordinary_threshold <- Respiratory_GPILI_MEM_Scot %>%
-  select(ExtraordinaryThreshold) %>%
+gp_very_high_threshold <- Respiratory_GPILI_MEM_Scot %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -66,10 +66,10 @@ altTextServer("gp_mem_modal",
                                 tags$li(glue("Activity levels for GP consultations for ILI based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for GP ILI consultations are: ",
                                              "Baseline (< ", gp_low_threshold, "), ",
-                                             "Low (", gp_low_threshold, "-", gp_moderate_threshold-0.01, "), ",
-                                             "Medium (", gp_moderate_threshold, "-", gp_high_threshold-0.01, "), ",
-                                             "High (", gp_high_threshold, "-", gp_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", gp_extraordinary_threshold, ")."))))
+                                             "Low (", gp_low_threshold, "-", gp_medium_threshold-0.01, "), ",
+                                             "Medium (", gp_medium_threshold, "-", gp_high_threshold-0.01, "), ",
+                                             "High (", gp_high_threshold, "-", gp_very_high_threshold-0.01, "), and ",
+                                             "Very High (>= ", gp_very_high_threshold, ")."))))
 
 altTextServer("gp_mem_hb_modal",
               title = "GP consultation rates for influenza-like illness (ILI) per 100,000 population by NHS Health Board",

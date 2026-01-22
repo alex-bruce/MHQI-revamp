@@ -10,7 +10,7 @@ gp_ari_low_threshold <- Respiratory_GPARI_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-gp_ari_moderate_threshold <- Respiratory_GPARI_MEM_Scot %>%
+gp_ari_medium_threshold <- Respiratory_GPARI_MEM_Scot %>%
   select(MediumThreshold) %>%
   distinct() %>%
   .$MediumThreshold %>%
@@ -24,10 +24,10 @@ gp_ari_high_threshold <- Respiratory_GPARI_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-gp_ari_extraordinary_threshold <- Respiratory_GPARI_MEM_Scot %>%
-  select(ExtraordinaryThreshold) %>%
+gp_ari_very_high_threshold <- Respiratory_GPARI_MEM_Scot %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -66,10 +66,10 @@ altTextServer("gp_ari_mem_modal",
                                 tags$li(glue("Activity levels for GP consultations for ARI based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for GP ARI consultations are: ",
                                              "Baseline (< ", gp_ari_low_threshold, "), ",
-                                             "Low (", gp_ari_low_threshold, "-", gp_ari_moderate_threshold-0.01, "), ",
-                                             "Medium (", gp_ari_moderate_threshold, "-", gp_ari_high_threshold-0.01, "), ",
-                                             "High (", gp_ari_high_threshold, "-", gp_ari_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", gp_ari_extraordinary_threshold, ")."))))
+                                             "Low (", gp_ari_low_threshold, "-", gp_ari_medium_threshold-0.01, "), ",
+                                             "Medium (", gp_ari_medium_threshold, "-", gp_ari_high_threshold-0.01, "), ",
+                                             "High (", gp_ari_high_threshold, "-", gp_ari_very_high_threshold-0.01, "), and ",
+                                             "Very High (>= ", gp_ari_very_high_threshold, ")."))))
 
 altTextServer("gp_ari_mem_hb_modal",
               title = "GP consultation rates for acute respiratory infections (ARI) per 100,000 population by NHS Health Board",

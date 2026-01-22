@@ -58,7 +58,7 @@ create_mem_linechart <- function(data,
     filter(ISOWeek != 53) %>%
     filter(Season %in% seasons) %>%
     select(Season, ISOWeek, Weekord, Value, ActivityLevel, LowThreshold,
-           MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
+           MediumThreshold, HighThreshold, VeryHighThreshold) %>%
     arrange(Season, Weekord) %>%
     mutate(ISOWeek = as.character(ISOWeek),
            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
@@ -78,9 +78,9 @@ create_mem_linechart <- function(data,
   # Get thresholds
   baseline_max <- unique(data$LowThreshold)
   low_max <- unique(data$MediumThreshold)
-  moderate_max <- unique(data$HighThreshold)
-  high_max <- unique(data$ExtraordinaryThreshold)
-  extraordinary_max <- max(pretty(c(data$Value, 1.1*high_max)), na.rm = T)
+  medium_max <- unique(data$HighThreshold)
+  high_max <- unique(data$VeryHighThreshold)
+  very_high_max <- max(pretty(c(data$Value, 1.1*high_max)), na.rm = T)
   
   #Text for tooltip
   tooltip_trend <- c(paste0("Season: ", data$Season,
@@ -176,7 +176,7 @@ create_mem_linechart <- function(data,
                   x1 = 52,
                   xref = "x",
                   y0 = low_max,#+0.00001,
-                  y1 = moderate_max,
+                  y1 = medium_max,
                   yref = "y",
                   layer = "below"),
              list(type = "rect",
@@ -186,7 +186,7 @@ create_mem_linechart <- function(data,
                   x0 = -1,
                   x1 = 52,
                   xref = "x",
-                  y0 = moderate_max,#+0.00001,
+                  y0 = medium_max,#+0.00001,
                   y1 = high_max,
                   yref = "y",
                   layer = "below"),
@@ -198,7 +198,7 @@ create_mem_linechart <- function(data,
                   x1 = 52,
                   xref = "x",
                   y0 = high_max,#+0.00001,
-                  y1 = extraordinary_max,
+                  y1 = very_high_max,
                   yref = "y",
                   layer = "below")
            ))
