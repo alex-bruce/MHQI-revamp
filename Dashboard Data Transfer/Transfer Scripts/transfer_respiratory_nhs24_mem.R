@@ -71,7 +71,7 @@ for (filename1 in filenames1){
              WeekBeginning = as.Date(Date) - 6,
              #Pathogen = str_to_title(Pathogen),
              ActivityLevel = factor(ActivityLevel, levels = c("Baseline", "Low",
-                                                              "Medium", "High", "Very High"))) %>%
+                                                              "Medium", "High", "Very high"))) %>%
       rename(ISOWeek = Week,
              Percentage = Rate) %>%
       select(-Date, -Measure)

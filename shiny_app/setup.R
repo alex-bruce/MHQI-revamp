@@ -213,7 +213,7 @@ mem_legend <- readPNG("www/MEM_legend_liberty10.PNG", native = FALSE, info = FAL
 euromomo_age_mem_legend <- readPNG("www/Euromomo_age_MEM_legend_liberty10.PNG", native = FALSE, info = FALSE)
 
 # Activity levels
-activity_levels <- c("Baseline", "Low", "Medium", "High", "Very High")
+activity_levels <- c("Baseline", "Low", "Medium", "High", "Very high")
 
 # Colours for thresholds
 activity_level_colours <- c("#FDE725FF", "#5DC863FF", "#21908CFF", "#3B528BFF", "#440154FF")
