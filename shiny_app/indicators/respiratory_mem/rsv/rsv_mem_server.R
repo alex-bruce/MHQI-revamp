@@ -85,7 +85,7 @@ rsv_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-rsv_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+rsv_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Respiratory Syncytial Virus") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -101,11 +101,11 @@ rsv_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-rsv_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+rsv_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Respiratory Syncytial Virus") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -147,10 +147,10 @@ altTextServer("rsv_mem_modal",
                                 tags$li(glue("Activity levels for RSV based on MEM thresholds are represented by different coloured panels on the plot. ",
                                         "The activity levels and MEM thresholds for RSV are: ",
                                         "Baseline (< ", rsv_low_threshold, "), ",
-                                        "Low (", rsv_low_threshold, "-", rsv_moderate_threshold-0.01, "), ",
-                                        "Medium (", rsv_moderate_threshold, "-", rsv_high_threshold-0.01, "), ",
-                                        "High (", rsv_high_threshold, "-",rsv_extraordinary_threshold-0.01, "), and ",
-                                        "Very High (>= ", rsv_extraordinary_threshold, ").")),
+                                        "Low (", rsv_low_threshold, "-", rsv_medium_threshold-0.01, "), ",
+                                        "Medium (", rsv_medium_threshold, "-", rsv_high_threshold-0.01, "), ",
+                                        "High (", rsv_high_threshold, "-",rsv_very_high_threshold-0.01, "), and ",
+                                        "Very High (>= ", rsv_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))

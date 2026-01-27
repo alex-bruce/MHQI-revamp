@@ -11,7 +11,7 @@ parainfluenza_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-parainfluenza_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+parainfluenza_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Parainfluenza Virus") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -27,11 +27,11 @@ parainfluenza_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-parainfluenza_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+parainfluenza_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Parainfluenza Virus") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -73,10 +73,10 @@ altTextServer("parainfluenza_mem_modal",
                                 tags$li(glue("Activity levels for parainfluenza based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for parainfluenza are: ",
                                              "Baseline (< ", parainfluenza_low_threshold, "), ",
-                                             "Low (", parainfluenza_low_threshold, "-", parainfluenza_moderate_threshold-0.01, "), ",
-                                             "Medium (", parainfluenza_moderate_threshold, "-", parainfluenza_high_threshold-0.01, "), ",
-                                             "High (", parainfluenza_high_threshold, "-", parainfluenza_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", parainfluenza_extraordinary_threshold, ").")),
+                                             "Low (", parainfluenza_low_threshold, "-", parainfluenza_medium_threshold-0.01, "), ",
+                                             "Medium (", parainfluenza_medium_threshold, "-", parainfluenza_high_threshold-0.01, "), ",
+                                             "High (", parainfluenza_high_threshold, "-", parainfluenza_very_high_threshold-0.01, "), and ",
+                                             "Very High (>= ", parainfluenza_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))

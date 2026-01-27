@@ -570,9 +570,9 @@ case_rates_scotland_mem <- cases_scotland_template %>%
          Weekord = weekord,
          ActivityLevel = activity_level,
          LowThreshold = low_threshold,
-         MediumThreshold = moderate_threshold,
+         MediumThreshold = medium_threshold,
          HighThreshold = high_threshold,
-         ExtraordinaryThreshold = extraordinary_threshold,
+         VeryHighThreshold = very_high_threshold,
          RatePer100000 = rate,
          Pathogen = organism) %>%
   mutate(Season = paste0(substr(Season, 1, 5), "20", substr(Season, 6, 7))) %>%
@@ -585,7 +585,7 @@ case_rates_scotland_mem <- cases_scotland_template %>%
                            "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus",
                            "Covid-19" = "Covid-19")) %>%
   select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, Pathogen, RatePer100000,
-         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
+         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, VeryHighThreshold) %>%
   arrange(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, Pathogen)
 
 # Weekly case rates and MEM by pathogen and HB
@@ -604,9 +604,9 @@ case_rates_hb_mem <- case_rates_hb_template %>%
          Weekord = weekord,
          ActivityLevel = activity_level,
          LowThreshold = low_threshold,
-         MediumThreshold = moderate_threshold,
+         MediumThreshold = medium_threshold,
          HighThreshold = high_threshold,
-         ExtraordinaryThreshold = extraordinary_threshold,
+         VeryHighThreshold = very_high_threshold,
          RatePer100000 = rate,
          Pathogen = organism) %>%
   mutate(Season = paste0(substr(Season, 1, 5), "20", substr(Season, 6, 7))) %>%
@@ -619,7 +619,7 @@ case_rates_hb_mem <- case_rates_hb_template %>%
                            "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus",
                            "Covid-19" = "Covid-19")) %>%
   select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, HBCode, HB, HBName, Pathogen, RatePer100000,
-         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
+         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, VeryHighThreshold) %>%
   arrange(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, HBCode, HB, HBName, Pathogen)
 
 
@@ -645,9 +645,9 @@ case_rates_age_mem <- case_rates_age_template %>%
          Weekord = weekord,
          ActivityLevel = activity_level,
          LowThreshold = low_threshold,
-         MediumThreshold = moderate_threshold,
+         MediumThreshold = medium_threshold,
          HighThreshold = high_threshold,
-         ExtraordinaryThreshold = extraordinary_threshold,
+         VeryHighThreshold = very_high_threshold,
          RatePer100000 = rate,
          Pathogen = organism) %>%
   mutate(Season = paste0(substr(Season, 1, 5), "20", substr(Season, 6, 7))) %>%
@@ -660,7 +660,7 @@ case_rates_age_mem <- case_rates_age_template %>%
                            "Seasonal coronavirus (Non-SARS-CoV-2)" = "Coronavirus",
                            "Covid-19" = "Covid-19")) %>%
   select(WeekBeginning, WeekEnding, Season, Year, ISOWeek, Weekord, AgeGroup, Pathogen, RatePer100000,
-         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, ExtraordinaryThreshold) %>%
+         ActivityLevel, LowThreshold, MediumThreshold, HighThreshold, VeryHighThreshold) %>%
   bind_rows(case_rates_scotland_mem) %>%
   mutate(AgeGroup = ifelse(is.na(AgeGroup), "All Ages", AgeGroup)) %>%
   mutate(AgeGroup = factor(AgeGroup, levels = c("< 1 years", "1-4 years", "5-14 years", "15-44 years",

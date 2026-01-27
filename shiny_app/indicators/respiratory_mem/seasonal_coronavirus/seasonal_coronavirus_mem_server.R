@@ -12,7 +12,7 @@ seasonal_coronavirus_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-seasonal_coronavirus_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+seasonal_coronavirus_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Coronavirus") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -28,11 +28,11 @@ seasonal_coronavirus_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-seasonal_coronavirus_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+seasonal_coronavirus_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Coronavirus") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -74,10 +74,10 @@ altTextServer("seasonal_coronavirus_mem_modal",
                                 tags$li(glue("Activity levels for seasonal coronavirus based on MEM thresholds are represented by different coloured panels on the plot. ",
                                              "The activity levels and MEM thresholds for seasonal coronavirus are: ",
                                              "Baseline (< ", seasonal_coronavirus_low_threshold, "), ",
-                                             "Low (", seasonal_coronavirus_low_threshold, "-", seasonal_coronavirus_moderate_threshold-0.01, "), ",
-                                             "Medium (", seasonal_coronavirus_moderate_threshold, "-", seasonal_coronavirus_high_threshold-0.01, "), ",
-                                             "High (", seasonal_coronavirus_high_threshold, "-", seasonal_coronavirus_extraordinary_threshold-0.01, "), and ",
-                                             "Very High (>= ", seasonal_coronavirus_extraordinary_threshold, ").")),
+                                             "Low (", seasonal_coronavirus_low_threshold, "-", seasonal_coronavirus_medium_threshold-0.01, "), ",
+                                             "Medium (", seasonal_coronavirus_medium_threshold, "-", seasonal_coronavirus_high_threshold-0.01, "), ",
+                                             "High (", seasonal_coronavirus_high_threshold, "-", seasonal_coronavirus_very_high_threshold-0.01, "), and ",
+                                             "Very High (>= ", seasonal_coronavirus_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))

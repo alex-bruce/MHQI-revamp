@@ -12,7 +12,7 @@ rhinovirus_low_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Moderate threshold
-rhinovirus_moderate_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+rhinovirus_medium_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Rhinovirus") %>%
   select(MediumThreshold) %>%
   distinct() %>%
@@ -28,11 +28,11 @@ rhinovirus_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   round_half_up(2)
 
 # Extraordinary
-rhinovirus_extraordinary_threshold <- Respiratory_Pathogens_MEM_Scot %>%
+rhinovirus_very_high_threshold <- Respiratory_Pathogens_MEM_Scot %>%
   filter(Pathogen == "Rhinovirus") %>%
-  select(ExtraordinaryThreshold) %>%
+  select(VeryHighThreshold) %>%
   distinct() %>%
-  .$ExtraordinaryThreshold %>%
+  .$VeryHighThreshold %>%
   round_half_up(2)
 
 # # Get seasons used in line chart
@@ -74,10 +74,10 @@ altTextServer("rhinovirus_mem_modal",
                                 tags$li(glue("Activity levels for rhinovirus based on MEM thresholds are represented by different coloured panels on the plot. ",
                                         "The activity levels and MEM thresholds for rhinovirus are: ",
                                         "Baseline (< ", rhinovirus_low_threshold, "), ",
-                                        "Low (", rhinovirus_low_threshold, "-", rhinovirus_moderate_threshold-0.01, "), ",
-                                        "Medium (", rhinovirus_moderate_threshold, "-", rhinovirus_high_threshold-0.01, "), ",
-                                        "High (", rhinovirus_high_threshold, "-", rhinovirus_extraordinary_threshold-0.01, "), and ",
-                                        "Very High (>= ", rhinovirus_extraordinary_threshold, ").")),
+                                        "Low (", rhinovirus_low_threshold, "-", rhinovirus_medium_threshold-0.01, "), ",
+                                        "Medium (", rhinovirus_medium_threshold, "-", rhinovirus_high_threshold-0.01, "), ",
+                                        "High (", rhinovirus_high_threshold, "-", rhinovirus_very_high_threshold-0.01, "), and ",
+                                        "Very High (>= ", rhinovirus_very_high_threshold, ").")),
                                 tags$li("By November 2023, all Community Acute Respiratory Infection (CARI) data were removed from the",
                                         "overall number of laboratory-confirmed episodes. Changes to activity level thresholds for other",
                                         "respiratory pathogens were minimal. Influenza activity level thresholds were not affected by this exclusion.")))
