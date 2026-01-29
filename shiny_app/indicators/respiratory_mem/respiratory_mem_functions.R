@@ -1028,7 +1028,7 @@ make_adms_summary_plot <- function(data){
     "Mycoplasma Pneumoniae" = "#3F085C",
     "Parainfluenza" = "#A285D1",
     "Rhinovirus" = "#A8CCE8",
-    "Seasonal Coronavirus (non COVID-19)" = "#3E8ECC"
+    "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"
   )
   
   p <- plot_ly(data) %>% 
