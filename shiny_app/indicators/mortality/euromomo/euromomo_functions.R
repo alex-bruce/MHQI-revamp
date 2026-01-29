@@ -141,7 +141,7 @@ create_euromomo_mem_linechart <- function(data,
               color = ~SeasonDelay,
               type="scatter",
               mode="lines",
-              line = list(width = 5),
+#              line = list(width = 5),
               linetype = ~SeasonDelay,
               linetypes = c("solid", "solid", "solid", "solid", "dot"),
               colors = euromomo_mem_line_colours) %>%
