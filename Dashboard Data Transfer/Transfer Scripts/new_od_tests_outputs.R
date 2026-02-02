@@ -35,26 +35,29 @@ RSV_scotland_tests<-RSV_scotland_tests_a %>%
 
 
 ##1b.COVID 19----
-covid_allsamples_scotland_tests<-i_covid19_PCR_data_raw %>% 
-  group_by(ISOweek_beginning,ISOweek_ending) %>% 
-  summarise(TotalSamples=n())
+# covid_allsamples_scotland_tests<-i_covid19_PCR_data_raw %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending) %>% 
+#   summarise(TotalSamples=n())
+# 
+# covid_positives_scotland_tests<-i_covid19_PCR_data_raw %>% 
+#   filter(test_result=="Positive") %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending) %>% 
+#   summarise(PositiveCount=n())
+# 
+# COVID19_scotland_tests<-
+#   merge(covid_positives_scotland_tests,
+#         covid_allsamples_scotland_tests,
+#         all = TRUE) %>% 
+#   rename(WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending) %>% 
+#   merge(season_week %>% 
+#           filter(WeekBeginning >= COVID_19_start_date$WeekBeginning),
+#         by=c("WeekBeginning","WeekEnding")) %>% 
+#   mutate(Pathogen="COVID-19",
+#          PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
+#          PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage))
 
-covid_positives_scotland_tests<-i_covid19_PCR_data_raw %>% 
-  filter(test_result=="Positive") %>% 
-  group_by(ISOweek_beginning,ISOweek_ending) %>% 
-  summarise(PositiveCount=n())
-
-COVID19_scotland_tests<-
-  merge(covid_positives_scotland_tests,
-        covid_allsamples_scotland_tests,
-        all = TRUE) %>% 
-  rename(WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending) %>% 
-  merge(season_week %>% 
-          filter(WeekBeginning >= COVID_19_start_date$WeekBeginning),
-        by=c("WeekBeginning","WeekEnding")) %>% 
-  mutate(Pathogen="COVID-19",
-         PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
-         PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage))
+# Scotland
+COVID19_scotland_tests <- od_tests_file$Scotland
 
 ##final df : flu,rsv, covid tests scotland level----
 
@@ -119,27 +122,29 @@ flu_rsv_agGP_tests_b<-flu_rsv_agGP_tests_a %>%
          PositivityPercentage)
 
 ##2b.COVID-19----
-covid_allsamples_agegroup_tests<-i_covid19_PCR_data_raw %>% 
-  group_by(ISOweek_beginning,ISOweek_ending,AgeGroup) %>% 
-  summarise(TotalSamples=n())
+# covid_allsamples_agegroup_tests<-i_covid19_PCR_data_raw %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending,AgeGroup) %>% 
+#   summarise(TotalSamples=n())
+# 
+# covid_positives_agegroup_tests<-i_covid19_PCR_data_raw %>%
+#   filter(test_result=="Positive") %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending,AgeGroup) %>% 
+#   summarise(PositiveCount=n())
+# 
+# covid19_agegroup_tests<-merge(covid_positives_agegroup_tests,
+#                               covid_allsamples_agegroup_tests,
+#                               all = TRUE) %>% 
+#   rename(WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending) %>% 
+#   merge(season_week %>% 
+#           filter(WeekBeginning>=COVID_19_start_date$WeekBeginning),
+#         all=TRUE) %>% 
+#   mutate(PositiveCount=if_else(is.na(PositiveCount),0,PositiveCount),
+#          TotalSamples=if_else(is.na(TotalSamples),0,TotalSamples)) %>% 
+#   mutate(PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
+#          PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage)) %>% 
+#   mutate(Pathogen="COVID-19")
 
-covid_positives_agegroup_tests<-i_covid19_PCR_data_raw %>%
-  filter(test_result=="Positive") %>% 
-  group_by(ISOweek_beginning,ISOweek_ending,AgeGroup) %>% 
-  summarise(PositiveCount=n())
-
-covid19_agegroup_tests<-merge(covid_positives_agegroup_tests,
-                              covid_allsamples_agegroup_tests,
-                              all = TRUE) %>% 
-  rename(WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending) %>% 
-  merge(season_week %>% 
-          filter(WeekBeginning>=COVID_19_start_date$WeekBeginning),
-        all=TRUE) %>% 
-  mutate(PositiveCount=if_else(is.na(PositiveCount),0,PositiveCount),
-         TotalSamples=if_else(is.na(TotalSamples),0,TotalSamples)) %>% 
-  mutate(PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
-         PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage)) %>% 
-  mutate(Pathogen="COVID-19")
+covid19_agegroup_tests <- od_tests_file$Agegroup_Sex
 
 ##final df: covid,rsv,flu by agegroup----
 covid19_flu_rsv_ageGroup_tests<-
@@ -171,55 +176,57 @@ write_csv(covid19_flu_rsv_ageGroup_tests %>%
 #3.HB--------------------------------------------------
 
 ##3b. COVID-19----
-covid_allsamples_hb_tests<-i_covid19_PCR_data_raw %>% 
-  group_by(ISOweek_beginning,ISOweek_ending,reporting_health_board) %>% 
-  summarise(TotalSamples=n())
+# covid_allsamples_hb_tests<-i_covid19_PCR_data_raw %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending,reporting_health_board) %>% 
+#   summarise(TotalSamples=n())
+# 
+# covid_positives_hb_tests<-i_covid19_PCR_data_raw %>%
+#   filter(test_result=="Positive") %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending,reporting_health_board) %>% 
+#   summarise(PositiveCount=n())
+# 
+# covid19_hb_tests_a<-merge(covid_positives_hb_tests,
+#                           covid_allsamples_hb_tests,
+#                           all = TRUE) %>% 
+#   filter(ISOweek_beginning>=min(covid_positives_hb_tests$ISOweek_beginning)) %>% 
+#   mutate(HBcode = recode(reporting_health_board,
+#                          "Ayrshire and Arran" = "S08000015","Borders" = "S08000016",
+#                          "Dumfries and Galloway" = "S08000017",
+#                          "Fife" = "S08000029",
+#                          "Forth Valley" = "S08000019",
+#                          "Greater Glasgow and Clyde" = "S08000031",
+#                          "Grampian" = "S08000020","Highland" = "S08000022",
+#                          "Lanarkshire" = "S08000032","Lothian" = "S08000024",
+#                          "Orkney" = "S08000025","Shetland" = "S08000026",
+#                          "Tayside" = "S08000030","Western Isles" = "S08000028"),
+#          HBName = paste0("NHS ", phsmethods::match_area(HBcode))) %>% 
+#   select(-reporting_health_board) %>% 
+#   rename(WeekBeginning=ISOweek_beginning,
+#          WeekEnding=ISOweek_ending)
+# 
+# covid19_hb_tests_b<-covid19_hb_tests_a %>% 
+#   merge(season_week %>% 
+#           filter(WeekBeginning>=COVID_19_start_date$WeekBeginning),
+#         all=TRUE) %>% 
+#   mutate(PositiveCount=if_else(is.na(PositiveCount),0,PositiveCount),
+#          TotalSamples=if_else(is.na(TotalSamples),0,TotalSamples)) %>% 
+#   mutate(PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
+#          PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage)) %>% 
+#   mutate(Pathogen="COVID-19")
+# 
+# ##final df: covid hb----
+# covid19_hb_tests<-covid19_hb_tests_b%>% 
+#   rbind(COVID_FLU_RSV_scotland_tests %>% 
+#           filter(Pathogen=="COVID-19") %>% 
+#           mutate(HBName="Scotland") %>%
+#           rename(HBcode=Country) ) %>% 
+#   mutate(HBQF=if_else(HBName=="Scotland","d","")) %>% 
+#   select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
+#          HBName,HBcode,HBQF,PositiveCountPCR=PositiveCount,
+#          TotalSamplesPCR=TotalSamples,PositivityPercentage) %>% 
+#   arrange(WeekBeginning,HBQF)
 
-covid_positives_hb_tests<-i_covid19_PCR_data_raw %>%
-  filter(test_result=="Positive") %>% 
-  group_by(ISOweek_beginning,ISOweek_ending,reporting_health_board) %>% 
-  summarise(PositiveCount=n())
-
-covid19_hb_tests_a<-merge(covid_positives_hb_tests,
-                          covid_allsamples_hb_tests,
-                          all = TRUE) %>% 
-  filter(ISOweek_beginning>=min(covid_positives_hb_tests$ISOweek_beginning)) %>% 
-  mutate(HBcode = recode(reporting_health_board,
-                         "Ayrshire and Arran" = "S08000015","Borders" = "S08000016",
-                         "Dumfries and Galloway" = "S08000017",
-                         "Fife" = "S08000029",
-                         "Forth Valley" = "S08000019",
-                         "Greater Glasgow and Clyde" = "S08000031",
-                         "Grampian" = "S08000020","Highland" = "S08000022",
-                         "Lanarkshire" = "S08000032","Lothian" = "S08000024",
-                         "Orkney" = "S08000025","Shetland" = "S08000026",
-                         "Tayside" = "S08000030","Western Isles" = "S08000028"),
-         HBName = paste0("NHS ", phsmethods::match_area(HBcode))) %>% 
-  select(-reporting_health_board) %>% 
-  rename(WeekBeginning=ISOweek_beginning,
-         WeekEnding=ISOweek_ending)
-
-covid19_hb_tests_b<-covid19_hb_tests_a %>% 
-  merge(season_week %>% 
-          filter(WeekBeginning>=COVID_19_start_date$WeekBeginning),
-        all=TRUE) %>% 
-  mutate(PositiveCount=if_else(is.na(PositiveCount),0,PositiveCount),
-         TotalSamples=if_else(is.na(TotalSamples),0,TotalSamples)) %>% 
-  mutate(PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
-         PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage)) %>% 
-  mutate(Pathogen="COVID-19")
-
-##final df: covid hb----
-covid19_hb_tests<-covid19_hb_tests_b%>% 
-  rbind(COVID_FLU_RSV_scotland_tests %>% 
-          filter(Pathogen=="COVID-19") %>% 
-          mutate(HBName="Scotland") %>%
-          rename(HBcode=Country) ) %>% 
-  mutate(HBQF=if_else(HBName=="Scotland","d","")) %>% 
-  select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
-         HBName,HBcode,HBQF,PositiveCountPCR=PositiveCount,
-         TotalSamplesPCR=TotalSamples,PositivityPercentage) %>% 
-  arrange(WeekBeginning,HBQF)
+covid19_hb_tests <- od_tests_file$HB
 
 ##write csv----
 message("Writing Tests_COVID19_by_HB file")
@@ -235,40 +242,42 @@ write_csv(covid19_hb_tests %>%
 
 ##4b. COVID-19----
 
-i_covid19_SIMD_tests<-
-  i_covid19_PCR_data_raw %>% 
-  rename(PostCode=postcode) %>% 
-  merge(ref_simd_lookup,by="PostCode",all.x = TRUE) %>% 
-  mutate(SIMD=if_else(is.na(SIMD),"Unknown",SIMD))
+# i_covid19_SIMD_tests<-
+#   i_covid19_PCR_data_raw %>% 
+#   rename(PostCode=postcode) %>% 
+#   merge(ref_simd_lookup,by="PostCode",all.x = TRUE) %>% 
+#   mutate(SIMD=if_else(is.na(SIMD),"Unknown",SIMD))
+# 
+# 
+# covid_allsamples_simd_tests<-i_covid19_SIMD_tests %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending,SIMD) %>% 
+#   summarise(TotalSamples=n())
+# 
+# covid_positives_simd_tests<-i_covid19_SIMD_tests %>%
+#   filter(test_result=="Positive") %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending,SIMD) %>% 
+#   summarise(PositiveCount=n())
+# 
+# 
+# covid19_simd_tests<-merge(covid_positives_simd_tests,
+#                           covid_allsamples_simd_tests,
+#                           all = TRUE) %>% 
+#   rename(WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending) %>% 
+#   merge(season_week %>% 
+#           filter(WeekBeginning>=COVID_19_start_date$WeekBeginning),
+#         all=TRUE) %>% 
+#   mutate(PositiveCount=if_else(is.na(PositiveCount),0,PositiveCount),
+#          TotalSamples=if_else(is.na(TotalSamples),0,TotalSamples)) %>% 
+#   mutate(PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
+#          PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage)) %>% 
+#   mutate(Pathogen="COVID-19",
+#          Country="S92000003") %>% 
+#   select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Country,Pathogen,
+#          SIMD,PositiveCountPCR=PositiveCount,
+#          TotalSamplesPCR=TotalSamples,PositivityPercentage) %>% 
+#   arrange(WeekBeginning)
 
-
-covid_allsamples_simd_tests<-i_covid19_SIMD_tests %>% 
-  group_by(ISOweek_beginning,ISOweek_ending,SIMD) %>% 
-  summarise(TotalSamples=n())
-
-covid_positives_simd_tests<-i_covid19_SIMD_tests %>%
-  filter(test_result=="Positive") %>% 
-  group_by(ISOweek_beginning,ISOweek_ending,SIMD) %>% 
-  summarise(PositiveCount=n())
-
-
-covid19_simd_tests<-merge(covid_positives_simd_tests,
-                          covid_allsamples_simd_tests,
-                          all = TRUE) %>% 
-  rename(WeekBeginning=ISOweek_beginning, WeekEnding=ISOweek_ending) %>% 
-  merge(season_week %>% 
-          filter(WeekBeginning>=COVID_19_start_date$WeekBeginning),
-        all=TRUE) %>% 
-  mutate(PositiveCount=if_else(is.na(PositiveCount),0,PositiveCount),
-         TotalSamples=if_else(is.na(TotalSamples),0,TotalSamples)) %>% 
-  mutate(PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
-         PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage)) %>% 
-  mutate(Pathogen="COVID-19",
-         Country="S92000003") %>% 
-  select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Country,Pathogen,
-         SIMD,PositiveCountPCR=PositiveCount,
-         TotalSamplesPCR=TotalSamples,PositivityPercentage) %>% 
-  arrange(WeekBeginning)
+covid19_simd_tests <- od_tests_file$SIMD
 
 ##write csv----
 message("Writing Tests_COVID19_by_SIMD file")
@@ -283,50 +292,51 @@ write_csv(covid19_simd_tests %>% mutate(WeekBeginning=str_remove_all(WeekBeginni
 #5.LA--------------------------------------------------
 
 ##3b. COVID-19----
-covid_allsamples_la_tests<-i_covid19_PCR_data_raw %>% 
-  group_by(ISOweek_beginning,ISOweek_ending,local_authority) %>% 
-  summarise(TotalSamples=n())
+# covid_allsamples_la_tests<-i_covid19_PCR_data_raw %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending,local_authority) %>% 
+#   summarise(TotalSamples=n())
+# 
+# covid_positives_la_tests<-i_covid19_PCR_data_raw %>%
+#   filter(test_result=="Positive") %>% 
+#   group_by(ISOweek_beginning,ISOweek_ending,local_authority) %>% 
+#   summarise(PositiveCount=n())
+# 
+# covid19_la_tests_a<-merge(covid_positives_la_tests,
+#                           covid_allsamples_la_tests,
+#                           all = TRUE) %>% 
+#   filter(ISOweek_beginning>=min(covid_positives_hb_tests$ISOweek_beginning))%>% 
+#   merge(CA_lookup,by="local_authority",all=TRUE) %>% 
+#   rename(WeekBeginning=ISOweek_beginning,
+#          WeekEnding=ISOweek_ending) %>% 
+#   rename(LAname=local_authority,
+#          LAcode=ca2019)
+# 
+# covid19_la_tests_b<-covid19_la_tests_a %>% 
+#   merge(season_week %>% 
+#           filter(WeekBeginning>=COVID_19_start_date$WeekBeginning),
+#         all=TRUE) %>% 
+#   mutate(PositiveCount=if_else(is.na(PositiveCount),0,PositiveCount),
+#          TotalSamples=if_else(is.na(TotalSamples),0,TotalSamples)) %>% 
+#   mutate(PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
+#          PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage)) %>% 
+#   mutate(Pathogen="COVID-19") %>% 
+#   select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
+#          LAname,LAcode,PositiveCount,TotalSamples,PositivityPercentage) %>% 
+#   arrange(WeekBeginning)
+# 
+# 
+# covid19_la_tests<-rbind(covid19_la_tests_b,
+#                         COVID19_scotland_tests %>% 
+#                           mutate(LAname="Scotland",
+#                                  LAcode="S92000003")) %>% 
+#   mutate(LAQF=if_else(LAname=="Scotland","d",""),
+#          LAcode=if_else(LAname=="Unknown","Unknown",LAcode)) %>% 
+#   arrange(WeekBeginning,LAQF) %>% 
+#   relocate(LAQF,.after=LAcode) %>% 
+#   rename(PositiveCountPCR=PositiveCount,
+#          TotalSamplesPCR=TotalSamples)
 
-covid_positives_la_tests<-i_covid19_PCR_data_raw %>%
-  filter(test_result=="Positive") %>% 
-  group_by(ISOweek_beginning,ISOweek_ending,local_authority) %>% 
-  summarise(PositiveCount=n())
-
-covid19_la_tests_a<-merge(covid_positives_la_tests,
-                          covid_allsamples_la_tests,
-                          all = TRUE) %>% 
-  filter(ISOweek_beginning>=min(covid_positives_hb_tests$ISOweek_beginning))%>% 
-  merge(CA_lookup,by="local_authority",all=TRUE) %>% 
-  rename(WeekBeginning=ISOweek_beginning,
-         WeekEnding=ISOweek_ending) %>% 
-  rename(LAname=local_authority,
-         LAcode=ca2019)
-
-covid19_la_tests_b<-covid19_la_tests_a %>% 
-  merge(season_week %>% 
-          filter(WeekBeginning>=COVID_19_start_date$WeekBeginning),
-        all=TRUE) %>% 
-  mutate(PositiveCount=if_else(is.na(PositiveCount),0,PositiveCount),
-         TotalSamples=if_else(is.na(TotalSamples),0,TotalSamples)) %>% 
-  mutate(PositivityPercentage=as.numeric(round((PositiveCount/TotalSamples)*100,digits = 1)),
-         PositivityPercentage=if_else(is.na(PositivityPercentage),0,PositivityPercentage)) %>% 
-  mutate(Pathogen="COVID-19") %>% 
-  select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
-         LAname,LAcode,PositiveCount,TotalSamples,PositivityPercentage) %>% 
-  arrange(WeekBeginning)
-
-
-covid19_la_tests<-rbind(covid19_la_tests_b,
-                        COVID19_scotland_tests %>% 
-                          mutate(LAname="Scotland",
-                                 LAcode="S92000003")) %>% 
-  mutate(LAQF=if_else(LAname=="Scotland","d",""),
-         LAcode=if_else(LAname=="Unknown","Unknown",LAcode)) %>% 
-  arrange(WeekBeginning,LAQF) %>% 
-  relocate(LAQF,.after=LAcode) %>% 
-  rename(PositiveCountPCR=PositiveCount,
-         TotalSamplesPCR=TotalSamples)
-
+covid19_la_tests <- od_tests_file$LA
 
 ##write csv----
 message("Writing Tests_COVID19_by_LA file")
@@ -343,15 +353,24 @@ write_csv(covid19_la_tests %>%
 rm(RSV_agGp_tests_a,RSV_agGp_tests_b,RSV_scotland_tests,
    RSV_scotland_tests_a,
    RSV_all_AgeGp_pos,Flu_AorB_AgeGp_pos,Flu_AorB_Scotland_pos,
-   FLU_agGp_tests_a,FLU_scotland_tests_a,covid_19_simd_cases,
-   covid_allsamples_agegroup_tests,covid_allsamples_hb_tests,
-   covid_allsamples_la_tests,covid_allsamples_scotland_tests,
-   covid_allsamples_simd_tests,covid_positives_agegroup_tests,
-   covid19_flu_rsv_ageGroup_tests,covid_positives_hb_tests,
-   covid_positives_la_tests,covid_positives_simd_tests,
-   covid19_agegroup_tests,covid19_hb_tests,covid19_hb_tests_a,
-   covid19_hb_tests_b,covid19_la_tests,covid19_la_tests_a,
-   covid19_la_tests_b,covid19_simd_tests,COVID19_scotland_tests)
+   FLU_agGp_tests_a,FLU_scotland_tests_a,
+   #covid_19_simd_cases,
+   #covid_allsamples_agegroup_tests,covid_allsamples_hb_tests,
+   #covid_allsamples_la_tests,
+   #covid_allsamples_scotland_tests,
+   #covid_allsamples_simd_tests,covid_positives_agegroup_tests,
+   covid19_flu_rsv_ageGroup_tests,
+   #covid_positives_hb_tests,
+   #covid_positives_la_tests,
+   #covid_positives_simd_tests,
+   covid19_agegroup_tests,covid19_hb_tests,
+   #covid19_hb_tests_a, covid19_hb_tests_b,
+   covid19_la_tests,
+   #covid19_la_tests_a,
+   #covid19_la_tests_b,
+   covid19_simd_tests,COVID19_scotland_tests)
+
+rm(od_tests_file)
 
 gc()
 

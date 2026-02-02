@@ -18,19 +18,22 @@ noncovid_scotland_cases<-i_non_covid_scotland %>%
 
 
 ##1b.COVID-19----
-covid_19_scotland_cases <- i_covid_cases_raw%>%
-  #weekly cases
-  group_by(WeekBeginning,WeekEnding)%>%
-  summarise(NumberCasesPerWeek = sum(flag_episode)) %>% 
-  #Add pop reference to calculate rate
-  merge(ref_pop_scotland,by=c("WeekBeginning","WeekEnding")) %>%
-  mutate(RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
-                                 digits = 1)) %>% 
-  ungroup() %>% 
-  #matching columns
-  mutate(Pathogen="COVID-19") %>% 
-  select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,
-         Pathogen,NumberCasesPerWeek,RateCasesPerWeek,Population)
+# covid_19_scotland_cases <- i_covid_cases_raw%>%
+#   #weekly cases
+#   group_by(WeekBeginning,WeekEnding)%>%
+#   summarise(NumberCasesPerWeek = sum(flag_episode)) %>% 
+#   #Add pop reference to calculate rate
+#   merge(ref_pop_scotland,by=c("WeekBeginning","WeekEnding")) %>%
+#   mutate(RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
+#                                  digits = 1)) %>% 
+#   ungroup() %>% 
+#   #matching columns
+#   mutate(Pathogen="COVID-19") %>% 
+#   select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,
+#          Pathogen,NumberCasesPerWeek,RateCasesPerWeek,Population)
+
+# Scotland cases
+covid_19_scotland_cases <- od_cases_file$Scotland
 
 ## final df-Scotland level combined----
 all_resp_scotland_cases<-rbind(noncovid_scotland_cases,covid_19_scotland_cases) %>% 
@@ -105,72 +108,75 @@ noncovid_agegrp_sex_cases<-
 
 #####-----####-  
 
-##2b.COVID-19----
-covid_19_agegroup_sex_cases_a <- i_covid_cases_raw%>%
-  group_by(WeekBeginning,WeekEnding,Sex,AgeGroup) %>% 
-  summarise(NumberCasesPerWeek=sum(flag_episode)) %>% 
-  #add population data to calculate rate
-  #no unknown population references
-  merge(ref_pop_age_sex %>%
-          select(-c(Season,ISOyear,ISOweek)) %>% 
-          filter(WeekBeginning >="2020-02-24"),all=TRUE) %>% 
-  #add ISO year, Season, ISOweek, pathogen variables
-  merge(df_template_agegroup_sex %>% 
-          filter(Pathogen=="COVID-19" &
-                   WeekBeginning >="2020-02-24" &
-                   Sex!="Total" & AgeGroup !="Total"),
-        all=TRUE) %>% 
-  mutate(RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
-                                digits = 1),
-         NumberCasesPerWeek=replace_na(NumberCasesPerWeek,0)) %>% 
-  relocate(RateCasesPerWeek,.before = Population) %>% 
-  relocate(c(Season,ISOyear,ISOweek),.before = WeekBeginning) %>% 
-  relocate(Pathogen,.before = Sex)
+# ##2b.COVID-19----
+# covid_19_agegroup_sex_cases_a <- i_covid_cases_raw%>%
+#   group_by(WeekBeginning,WeekEnding,Sex,AgeGroup) %>% 
+#   summarise(NumberCasesPerWeek=sum(flag_episode)) %>% 
+#   #add population data to calculate rate
+#   #no unknown population references
+#   merge(ref_pop_age_sex %>%
+#           select(-c(Season,ISOyear,ISOweek)) %>% 
+#           filter(WeekBeginning >="2020-02-24"),all=TRUE) %>% 
+#   #add ISO year, Season, ISOweek, pathogen variables
+#   merge(df_template_agegroup_sex %>% 
+#           filter(Pathogen=="COVID-19" &
+#                    WeekBeginning >="2020-02-24" &
+#                    Sex!="Total" & AgeGroup !="Total"),
+#         all=TRUE) %>% 
+#   mutate(RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
+#                                 digits = 1),
+#          NumberCasesPerWeek=replace_na(NumberCasesPerWeek,0)) %>% 
+#   relocate(RateCasesPerWeek,.before = Population) %>% 
+#   relocate(c(Season,ISOyear,ISOweek),.before = WeekBeginning) %>% 
+#   relocate(Pathogen,.before = Sex)
+# 
+# 
+# ###Creating totals rows----
+# #Sex total--
+# covid_19_agegroup_sex_cases_b<-covid_19_agegroup_sex_cases_a %>% 
+#   group_by(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,Sex) %>% 
+#   summarise(Population=sum(Population,na.rm = TRUE),
+#             NumberCasesPerWeek=sum(NumberCasesPerWeek),
+#             RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
+#                                    digits = 1)) %>% 
+#   mutate(AgeGroup="Total")
+# 
+# #Age group totals--
+# covid_19_agegroup_sex_cases_c<-covid_19_agegroup_sex_cases_a %>% 
+#   group_by(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,AgeGroup) %>% 
+#   summarise(Population=sum(Population,na.rm = TRUE),
+#             NumberCasesPerWeek=sum(NumberCasesPerWeek),
+#             RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
+#                                    digits = 1)) %>% 
+#   mutate(Sex="Total")
+# 
+# 
+# #Weekly total--
+# covid_19_agegroup_sex_cases_d<-covid_19_scotland_cases %>%
+#   mutate(Sex="Total",
+#          AgeGroup="Total")
+# 
+# 
+# ###covid cases by agegroup and sex final df----
+# covid_19_agegroup_sex_cases<-
+#   rbind(covid_19_agegroup_sex_cases_a,covid_19_agegroup_sex_cases_b,
+#         covid_19_agegroup_sex_cases_c,covid_19_agegroup_sex_cases_d) %>%
+#   mutate(AgeGroup = factor(AgeGroup,
+#                            levels = c("<1", "1 to 4", "5 to 14", "15 to 44", 
+#                                       "45 to 64", "65 to 74", "75+","Unknown","Total"))) %>% 
+#   arrange(WeekBeginning,Sex,AgeGroup) %>%
+#   mutate(NumberCasesPerWeek=if_else(is.na(NumberCasesPerWeek),
+#                                     0,NumberCasesPerWeek),
+#          #QF columns
+#          AgeGroupQF= if_else(AgeGroup=="Total","d",""),
+#          SexQF= if_else(Sex=="Total","d","")) %>% 
+#   relocate(SexQF,.after = Sex) %>% 
+#   relocate(AgeGroupQF,.after = AgeGroup)  %>% 
+#   relocate(c(Season,ISOyear,ISOweek),.before =WeekBeginning) %>% 
+#   relocate(Pathogen,.after = WeekEnding) 
 
-
-###Creating totals rows----
-#Sex total--
-covid_19_agegroup_sex_cases_b<-covid_19_agegroup_sex_cases_a %>% 
-  group_by(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,Sex) %>% 
-  summarise(Population=sum(Population,na.rm = TRUE),
-            NumberCasesPerWeek=sum(NumberCasesPerWeek),
-            RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
-                                   digits = 1)) %>% 
-  mutate(AgeGroup="Total")
-
-#Age group totals--
-covid_19_agegroup_sex_cases_c<-covid_19_agegroup_sex_cases_a %>% 
-  group_by(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,AgeGroup) %>% 
-  summarise(Population=sum(Population,na.rm = TRUE),
-            NumberCasesPerWeek=sum(NumberCasesPerWeek),
-            RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
-                                   digits = 1)) %>% 
-  mutate(Sex="Total")
-
-
-#Weekly total--
-covid_19_agegroup_sex_cases_d<-covid_19_scotland_cases %>%
-  mutate(Sex="Total",
-         AgeGroup="Total")
-
-
-###covid cases by agegroup and sex final df----
-covid_19_agegroup_sex_cases<-
-  rbind(covid_19_agegroup_sex_cases_a,covid_19_agegroup_sex_cases_b,
-        covid_19_agegroup_sex_cases_c,covid_19_agegroup_sex_cases_d) %>%
-  mutate(AgeGroup = factor(AgeGroup,
-                           levels = c("<1", "1 to 4", "5 to 14", "15 to 44", 
-                                      "45 to 64", "65 to 74", "75+","Unknown","Total"))) %>% 
-  arrange(WeekBeginning,Sex,AgeGroup) %>%
-  mutate(NumberCasesPerWeek=if_else(is.na(NumberCasesPerWeek),
-                                    0,NumberCasesPerWeek),
-         #QF columns
-         AgeGroupQF= if_else(AgeGroup=="Total","d",""),
-         SexQF= if_else(Sex=="Total","d","")) %>% 
-  relocate(SexQF,.after = Sex) %>% 
-  relocate(AgeGroupQF,.after = AgeGroup)  %>% 
-  relocate(c(Season,ISOyear,ISOweek),.before =WeekBeginning) %>% 
-  relocate(Pathogen,.after = WeekEnding) 
+# Agegroup, Sex
+covid_19_agegroup_sex_cases <- od_cases_file$Agegroup_Sex
 
 ## final df-Cases by agegroup and sex combined----
 all_resp_by_ageGroup_sex_cases<-rbind(covid_19_agegroup_sex_cases,
@@ -223,41 +229,43 @@ noncovid_hb_cases<-rbind(noncovid_hb_cases_a,noncovid_hb_cases_b) %>%
 
 ##3b.COVID 19----
 
-covid_19_hb_cases_a<-i_covid_cases_raw %>% 
-  group_by(WeekBeginning,WeekEnding,reporting_health_board) %>% 
-  summarise(NumberCasesPerWeek=sum(flag_episode)) %>% 
-  mutate(HBcode = recode(reporting_health_board,
-                         "Ayrshire and Arran" = "S08000015",
-                         "Borders" = "S08000016",
-                         "Dumfries and Galloway" = "S08000017",
-                         "Fife" = "S08000029",
-                         "Forth Valley" = "S08000019",
-                         "Greater Glasgow and Clyde" = "S08000031",
-                         "Grampian" = "S08000020",
-                         "Highland" = "S08000022",
-                         "Lanarkshire" = "S08000032",
-                         "Lothian" = "S08000024",
-                         "Orkney" = "S08000025",
-                         "Shetland" = "S08000026",
-                         "Tayside" = "S08000030",
-                         "Western Isles" = "S08000028"),
-         HBName = paste0("NHS ", phsmethods::match_area(HBcode))) %>%
-  merge(ref_pop_hb) %>% 
-  mutate(RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
-                                digits = 1)) %>% 
-  mutate(Pathogen="COVID-19")%>% 
-  select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
-         HBcode,HBName,NumberCasesPerWeek,RateCasesPerWeek,Population) 
+# covid_19_hb_cases_a<-i_covid_cases_raw %>% 
+#   group_by(WeekBeginning,WeekEnding,reporting_health_board) %>% 
+#   summarise(NumberCasesPerWeek=sum(flag_episode)) %>% 
+#   mutate(HBcode = recode(reporting_health_board,
+#                          "Ayrshire and Arran" = "S08000015",
+#                          "Borders" = "S08000016",
+#                          "Dumfries and Galloway" = "S08000017",
+#                          "Fife" = "S08000029",
+#                          "Forth Valley" = "S08000019",
+#                          "Greater Glasgow and Clyde" = "S08000031",
+#                          "Grampian" = "S08000020",
+#                          "Highland" = "S08000022",
+#                          "Lanarkshire" = "S08000032",
+#                          "Lothian" = "S08000024",
+#                          "Orkney" = "S08000025",
+#                          "Shetland" = "S08000026",
+#                          "Tayside" = "S08000030",
+#                          "Western Isles" = "S08000028"),
+#          HBName = paste0("NHS ", phsmethods::match_area(HBcode))) %>%
+#   merge(ref_pop_hb) %>% 
+#   mutate(RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
+#                                 digits = 1)) %>% 
+#   mutate(Pathogen="COVID-19")%>% 
+#   select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
+#          HBcode,HBName,NumberCasesPerWeek,RateCasesPerWeek,Population) 
+# 
+# #Scotland level counts to create QF column
+# covid_19_hb_cases_b<-covid_19_scotland_cases%>% 
+#   mutate(HBcode="S92000003",
+#          HBName="Scotland")
+# 
+# ###COVID 19 cases by hb final df----
+# covid_19_hb_cases<-rbind(covid_19_hb_cases_a, 
+#                          covid_19_hb_cases_b)
 
-#Scotland level counts to create QF column
-covid_19_hb_cases_b<-covid_19_scotland_cases%>% 
-  mutate(HBcode="S92000003",
-         HBName="Scotland")
-
-###COVID 19 cases by hb final df----
-covid_19_hb_cases<-rbind(covid_19_hb_cases_a, 
-                         covid_19_hb_cases_b)
-
+# HB
+covid_19_hb_cases <- od_cases_file$HB
 
 ##final df-Cases by HB ----
 all_resp_by_hb_cases<-rbind(covid_19_hb_cases,noncovid_hb_cases) %>% 
@@ -303,21 +311,24 @@ noncovid_simd_cases<-
                                     NumberCasesPerWeek))
 
 ##4b.COVID-19----
-covid_19_simd_cases<-i_covid_cases_raw %>% 
-  select(WeekBeginning,WeekEnding,
-         PostCode,flag_episode) %>% 
-  #Link SIMD
-  merge(ref_simd_lookup,by="PostCode",
-        all.x = TRUE) %>% 
-  mutate(SIMD=if_else(is.na(SIMD),"Unknown",SIMD)) %>% 
-  group_by(WeekBeginning,WeekEnding,SIMD) %>% 
-  summarise(NumberCasesPerWeek=sum(flag_episode)) %>% #Cases by SIMD
-  #Add missing weeks
-  merge(df_template_simd %>% 
-          filter(Pathogen=="COVID-19" & WeekBeginning >="2020-02-24"),
-        by=c("WeekBeginning","WeekEnding","SIMD"),all=TRUE) %>% 
-  mutate(NumberCasesPerWeek=if_else(is.na(NumberCasesPerWeek),0,
-                                    NumberCasesPerWeek))
+# covid_19_simd_cases<-i_covid_cases_raw %>% 
+#   select(WeekBeginning,WeekEnding,
+#          PostCode,flag_episode) %>% 
+#   #Link SIMD
+#   merge(ref_simd_lookup,by="PostCode",
+#         all.x = TRUE) %>% 
+#   mutate(SIMD=if_else(is.na(SIMD),"Unknown",SIMD)) %>% 
+#   group_by(WeekBeginning,WeekEnding,SIMD) %>% 
+#   summarise(NumberCasesPerWeek=sum(flag_episode)) %>% #Cases by SIMD
+#   #Add missing weeks
+#   merge(df_template_simd %>% 
+#           filter(Pathogen=="COVID-19" & WeekBeginning >="2020-02-24"),
+#         by=c("WeekBeginning","WeekEnding","SIMD"),all=TRUE) %>% 
+#   mutate(NumberCasesPerWeek=if_else(is.na(NumberCasesPerWeek),0,
+#                                     NumberCasesPerWeek))
+
+# SIMD
+covid_19_simd_cases <- od_cases_file$SIMD
 
 ##final df - Cases by SIMD----
 all_resp_by_simd_cases<-rbind(noncovid_simd_cases,covid_19_simd_cases) %>% 
@@ -350,46 +361,49 @@ write_csv(all_resp_by_simd_cases,
 ##############################################################################-
 
 #5.Local authority----
-covid_19_la_cases_a<-i_covid_cases_raw %>% 
-  group_by(WeekBeginning,WeekEnding,
-           local_authority) %>% 
-  summarise(NumberCasesPerWeek=sum(flag_episode)) %>% 
-  merge(CA_lookup,by="local_authority",
-        all=TRUE) %>% 
-  merge(season_week,by=c("WeekBeginning","WeekEnding")) %>% 
-  mutate(Pathogen="COVID-19") %>% 
-  select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,
-         Pathogen,LAname=local_authority,
-         LAcode=ca2019,NumberCasesPerWeek) %>% 
-  #add population and calculate rate
-  merge(ref_pop_la %>% select(-ISOyear),all.x=TRUE) %>%
-  mutate(RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
-                                digits = 1))
-  
-covid_19_la_cases_b<-covid_19_scotland_cases %>% 
-  mutate(LAname="Scotland",
-         LAcode="S92000003")
+# covid_19_la_cases_a<-i_covid_cases_raw %>% 
+#   group_by(WeekBeginning,WeekEnding,
+#            local_authority) %>% 
+#   summarise(NumberCasesPerWeek=sum(flag_episode)) %>% 
+#   merge(CA_lookup,by="local_authority",
+#         all=TRUE) %>% 
+#   merge(season_week,by=c("WeekBeginning","WeekEnding")) %>% 
+#   mutate(Pathogen="COVID-19") %>% 
+#   select(Season,ISOyear,ISOweek,WeekBeginning,WeekEnding,
+#          Pathogen,LAname=local_authority,
+#          LAcode=ca2019,NumberCasesPerWeek) %>% 
+#   #add population and calculate rate
+#   merge(ref_pop_la %>% select(-ISOyear),all.x=TRUE) %>%
+#   mutate(RateCasesPerWeek=round((NumberCasesPerWeek/Population)*100000,
+#                                 digits = 1))
+#   
+# covid_19_la_cases_b<-covid_19_scotland_cases %>% 
+#   mutate(LAname="Scotland",
+#          LAcode="S92000003")
+# 
+# covid_19_la_cases<-rbind(covid_19_la_cases_a,covid_19_la_cases_b) %>% 
+#   #add missing LAs
+#   merge(df_template_la %>% 
+#           rename(LAname=local_authority,
+#                  LAcode=ca2019) %>% 
+#           filter(WeekBeginning >= min(covid_19_la_cases_a$WeekBeginning) ),
+#         all=TRUE) %>% 
+#   #add missing population
+#   merge(ref_pop_la %>% select(-ISOyear),all.x=TRUE) %>% 
+#   mutate(NumberCasesPerWeek=replace_na(NumberCasesPerWeek,0),
+#          RateCasesPerWeek=if_else(is.na(RateCasesPerWeek) &
+#                                     LAname!="Unknown",0,RateCasesPerWeek),
+#          LAQF=if_else(LAname=="Scotland","d",""),
+#          LAcode=if_else(LAname=="Unknown","Unknown",LAcode)) %>% 
+#   relocate(LAQF,.after = LAcode) %>% 
+#   arrange(WeekBeginning,LAQF) %>% 
+#   relocate(c(LAcode,LAQF),.after = LAname) %>% 
+#   relocate(Population,.after = RateCasesPerWeek) %>% 
+#   mutate(WeekBeginning=str_remove_all(WeekBeginning,"-"),
+#          WeekEnding=str_remove_all(WeekEnding,"-"))
 
-covid_19_la_cases<-rbind(covid_19_la_cases_a,covid_19_la_cases_b) %>% 
-  #add missing LAs
-  merge(df_template_la %>% 
-          rename(LAname=local_authority,
-                 LAcode=ca2019) %>% 
-          filter(WeekBeginning >= min(covid_19_la_cases_a$WeekBeginning) ),
-        all=TRUE) %>% 
-  #add missing population
-  merge(ref_pop_la %>% select(-ISOyear),all.x=TRUE) %>% 
-  mutate(NumberCasesPerWeek=replace_na(NumberCasesPerWeek,0),
-         RateCasesPerWeek=if_else(is.na(RateCasesPerWeek) &
-                                    LAname!="Unknown",0,RateCasesPerWeek),
-         LAQF=if_else(LAname=="Scotland","d",""),
-         LAcode=if_else(LAname=="Unknown","Unknown",LAcode)) %>% 
-  relocate(LAQF,.after = LAcode) %>% 
-  arrange(WeekBeginning,LAQF) %>% 
-  relocate(c(LAcode,LAQF),.after = LAname) %>% 
-  relocate(Population,.after = RateCasesPerWeek) %>% 
-  mutate(WeekBeginning=str_remove_all(WeekBeginning,"-"),
-         WeekEnding=str_remove_all(WeekEnding,"-"))
+# LA
+covid_19_la_cases <- od_cases_file$LA
 
 ##Write csv----
 message("Writing Cases_COVID19_by_LA file")
@@ -405,18 +419,24 @@ write_csv(covid_19_la_cases,
 rm(noncovid_scotland_cases,covid_19_scotland_cases,all_resp_scotland_cases,
    noncovid_agegrp_sex_cases_a,noncovid_agegrp_sex_cases_b,
    noncovid_agegrp_sex_cases_c,noncovid_agegrp_sex_cases_d,
-   noncovid_agegrp_sex_cases,covid_19_agegroup_sex_cases_a,
-   covid_19_agegroup_sex_cases_b,covid_19_agegroup_sex_cases_c,
-   covid_19_agegroup_sex_cases_d,covid_19_agegroup_sex_cases,
+   noncovid_agegrp_sex_cases,#covid_19_agegroup_sex_cases_a,
+   # covid_19_agegroup_sex_cases_b,covid_19_agegroup_sex_cases_c,
+   # covid_19_agegroup_sex_cases_d,
+   covid_19_agegroup_sex_cases,
    all_resp_by_ageGroup_sex_cases,noncovid_hb_cases_a,noncovid_hb_cases_b,
-   noncovid_hb_cases,covid_19_hb_cases_a,covid_19_hb_cases_b,
+   noncovid_hb_cases,
+   #covid_19_hb_cases_a,covid_19_hb_cases_b,
    covid_19_hb_cases,all_resp_by_hb_cases,i_non_covid_simd,flu_all_simd_cases,
    noncovid_simd_cases,all_resp_by_simd_cases,
-   covid_19_la_cases_a,covid_19_la_cases_b,covid_19_la_cases)
+   #covid_19_la_cases_a,covid_19_la_cases_b,
+   covid_19_la_cases, covid_19_simd_cases)
 
 rm(resp_filenames,resp_files,resp_files2,i_non_covid_agegp_sex,
    i_non_covid_hb,i_non_covid_scotland,
-   i_non_covid_simd_curr_season,i_non_covid_simd_past,
-   i_covid_cases_raw)
+   i_non_covid_simd_curr_season,i_non_covid_simd_past#,
+  # i_covid_cases_raw
+   )
+
+rm(od_cases_file)
 
 gc()
