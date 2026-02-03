@@ -53,7 +53,7 @@ make_table <- function(input_data_table,
                        add_separator_cols = NULL, # with , separator and 0dp
                        add_separator_cols_1dp = NULL, # with , separator and 1dp
                        add_separator_cols_2dp = NULL, # with , separator and 2dp,
-                       add_percentage_cols = NULL, # with % symbol and 2dp
+                       add_percentage_cols = NULL, # with % symbol and 1dp
                        maxrows = 14, # max rows displayed on page
                        order_by_firstcol = NULL, # asc, desc or NULL
                        filter_cols = NULL, # columns to have filters for

@@ -475,7 +475,8 @@ output$cov_los_table <- renderDataTable({
            AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
            "65 to 74", "75+", "All Ages"))) %>% 
     arrange(desc(Season), AgeGroup) %>% 
-    select(Season, 'Age group' = AgeGroup, 'Average Length of stay' = AverageLengthOfStay)
+    select(Season, 'Age group' = AgeGroup, 'Average Length of stay' = AverageLengthOfStay) %>%
+    make_table(add_separator_cols_1dp = c(3))
 
 })
 

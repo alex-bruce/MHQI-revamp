@@ -33,7 +33,9 @@ output$covid_positivity_table <- renderDataTable({
                   `Test Positivity (%)` = positivity_percentage) %>%
     select(`Year`, `ISO Week`, `Total Samples`, `Positive Samples`, `Test Positivity (%)`) %>%
     arrange(desc(`Year`), desc(`ISO Week`)) %>%
-    make_table(add_separator_cols = c(2), order_by_firstcol = "desc")
+    make_table(add_separator_cols = c(2,3,4),
+               add_separator_cols_1dp = c(5),
+               order_by_firstcol = "desc")
 })
 
 output$covid_positivity_plot <- renderPlotly({
@@ -73,7 +75,9 @@ output$covid_positivity_age_table <- renderDataTable({
                   `Test Positivity (%)` = positivity_percentage) %>%
     select(`Year`, `ISO Week`, `Age Group`, `Total Samples`, `Positive Samples`, `Test Positivity (%)`) %>%
     arrange(desc(`Year`), desc(`ISO Week`)) %>%
-    make_table(add_separator_cols = c(2), order_by_firstcol = "desc")
+    make_table(add_separator_cols = c(2,4,5),
+               add_separator_cols_1dp = c(6),
+               order_by_firstcol = "desc")
 })
 
 
