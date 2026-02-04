@@ -130,7 +130,9 @@ output$respiratory_over_time_table <- renderDataTable ({
                     "Number of cases" = Count,
                     !!quo_name(stringr::str_to_title("subtype") ) := "Organism",
                     "Rate per 100,000" = Rate) %>%
-      make_table(filter_cols = c(2))
+      make_table(filter_cols = c(2),
+                 add_separator_cols = c(5),
+                 add_separator_cols_1dp = c(6))
     
   } else {
     Respiratory_AllData %>%
@@ -171,7 +173,9 @@ output$respiratory_by_season_table <- renderDataTable ({
              Week = factor(Week, levels = c(1:53)),
              Season = factor(Season, levels = unique(Season))) %>%
       dplyr::rename(`ISO week` = Week) %>%
-      make_table(filter_cols = c(1,2,3))
+      make_table(filter_cols = c(1,2,3),
+                 add_separator_cols = c(4),
+                 add_separator_cols_1dp = c(5))
 
   } else {
 
