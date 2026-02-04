@@ -506,6 +506,7 @@ make_admissions_age_table <- function(data) {
            `Age Group` = age_band,
            `Number of Admissions` = Admissions,
            `Admission Rate per 100k` = rate) %>% 
-    make_table(add_separator_cols_1dp = c(4),
+    make_table(add_separator_cols = c(3),
+               add_separator_cols_1dp = c(4),
                filter_cols = c(1,2))
 }
