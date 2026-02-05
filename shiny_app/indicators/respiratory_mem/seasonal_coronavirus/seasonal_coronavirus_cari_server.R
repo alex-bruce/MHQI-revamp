@@ -56,7 +56,8 @@ output$seasonal_coronavirus_cari_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table()
+    make_table(add_separator_cols = c(2,3),
+               add_separator_cols_1dp = c(4,5,6))
 })
 
 # CARI - Seasonal Coronavirus swabpos by age table
@@ -74,7 +75,9 @@ output$seasonal_coronavirus_cari_age_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table(filter_cols = c(2))
+    make_table(filter_cols = c(2),
+               add_separator_cols = c(3,4),
+               add_separator_cols_1dp = c(5,6,7))
 })
 
 # CARI - Overall Seasonal Coronavirus swabpos plot
@@ -109,7 +112,9 @@ output$seasonal_coronavirus_cari_age_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols = c(3,4),
+               add_separator_cols_1dp = c(5,6,7))
 })
 
 # CARI - seasonal_coronavirus swabpos by age plot
@@ -142,7 +147,9 @@ output$seasonal_coronavirus_cari_hb_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols = c(3,4),
+               add_separator_cols_1dp = c(5,6,7))
 })
 
 
@@ -161,7 +168,9 @@ output$seasonal_coronavirus_cari_subtype1_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols = c(3,4),
+               add_separator_cols_1dp = c(5,6,7))
 })
 
 # CARI - Overall seasonal_coronavirus swabpos table
@@ -177,7 +186,8 @@ output$seasonal_coronavirus_cari_subtype2_table <- renderDataTable({
     rename(`Week Ending` = WeekEnding,
            `Type` = Pathogen,
            `Positive Samples` = PositiveSamples) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols = c(3))
 })
 
 
