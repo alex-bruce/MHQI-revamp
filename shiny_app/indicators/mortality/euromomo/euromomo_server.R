@@ -99,7 +99,7 @@ output$euromomo_mem_table <- renderDataTable({
            `Z-score` = ZScore,
            `Activity Level` = ActivityLevel,
            `Reporting delay?` = ReportingDelay) %>%
-    make_table(add_separator_cols_2dp = c(3),
+    make_table(add_separator_cols_1dp = c(3),
                filter_cols = c(1,2,4,5))
 })
 
@@ -130,7 +130,7 @@ output$euromomo_mem_age_table <- renderDataTable({
            `Age group` = AgeGroup,
            `Activity Level` = ActivityLevel,
            `Reporting delay?` = ReportingDelay) %>%
-    make_table(add_separator_cols_2dp = c(4),
+    make_table(add_separator_cols_1dp = c(4),
                filter_cols = c(1,2,3,5,6))
 })
 
