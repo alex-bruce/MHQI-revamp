@@ -130,7 +130,7 @@ output$respiratory_over_time_table <- renderDataTable ({
                     "Number of cases" = Count,
                     !!quo_name(stringr::str_to_title("subtype") ) := "Organism",
                     "Rate per 100,000" = Rate) %>%
-      make_table(filter_cols = c(2),
+      make_table(filter_cols = c(1,2,3,4),
                  add_separator_cols = c(5),
                  add_separator_cols_1dp = c(6))
     
