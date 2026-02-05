@@ -20,7 +20,7 @@ add_cell_border <- function(x0, x1, y0, y1, border_col = "white") {
 
 # Create MEM line chart
 create_mem_linechart <- function(data,
-                                 rate_dp = 2,
+                                 rate_dp = 1,
                                  seasons = NULL,
                                  value_variable = "RatePer100000",
                                  y_axis_title = "Rate per 100,000 population") {
@@ -249,7 +249,7 @@ create_mem_linechart <- function(data,
 
 # Create MEM heatmaps
 create_mem_heatmap <- function(data = df,
-                               rate_dp = 2,
+                               rate_dp = 1,
                                include_text_annotation = F,
                                text_annotation_dp = 1,
                                breakdown_variable = "HBName",
