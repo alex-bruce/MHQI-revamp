@@ -4,40 +4,40 @@ metadataButtonServer(id="respiratory_seasonal_coronavirus_cari",
                      parent = session)
 
 altTextServer("seasonal_coronavirus_cari_modal",
-              title = "CARI - Test positivity for Seasonal Coronavirus",
-              content = tags$ul(tags$li("This is a plot showing the test positivity rate of Seasonal Coronavirus infection in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              title = "CARI - Test positivity for seasonal coronavirus",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of seasonal coronavirus infection in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
                                 tags$li("The solid black line is the specified test positivity rate and the lighter purple area around the line indicates the confidence interval."),
                                 tags$li("The bottom of the light purple shaded area represents the lower confidence interval and the top of the area represents the upper confidence interval.")))
 
 altTextServer("seasonal_coronavirus_cari_age_modal",
-              title = "CARI - Test positivity for Seasonal Coronavirus by age group",
-              content = tags$ul(tags$li("This is a plot showing the test positivity rate of Seasonal Coronavirus infection by age group in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              title = "CARI - Test positivity for seasonal coronavirus by age group",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of seasonal coronavirus infection by age group in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
                                 tags$li("The plot contains a trace showing the test positivity rate for for the selected age group(s)."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 altTextServer("seasonal_coronavirus_cari_hb_modal",
-              title = "CARI - Test positivity for Seasonal Coronavirus by NHS Health Board",
-              content = tags$ul(tags$li("This is a plot showing the test positivity rate of Seasonal Coronavirus infection by NHS Health Board in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              title = "CARI - Test positivity for seasonal coronavirus by NHS Health Board",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of seasonal coronavirus infection by NHS Health Board in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
                                 tags$li("The plot contains a trace showing the test positivity rate for the selected NHS Health Board(s)."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 altTextServer("seasonal_coronavirus_cari_subtype1_modal",
-              title = "CARI - Test positivity for Seasonal Coronavirus by type",
-              content = tags$ul(tags$li("This is a plot showing the test positivity rate of Seasonal Coronavirus infection by type in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              title = "CARI - Test positivity for seasonal coronavirus by type",
+              content = tags$ul(tags$li("This is a plot showing the test positivity rate of seasonal coronavirus infection by type in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the test positivity rate."),
                                 tags$li("The plot contains a trace showing the test positivity rate for the selected type(s)."),
                                 tags$li("Each trace can be hidden/unhidden by clicking on the relevant age group from the legend on the right of the chart.")))
 
 altTextServer("seasonal_coronavirus_cari_subtype2_modal",
-              title = "CARI - Number of positive samples by Seasonal Coronavirus type",
-              content = tags$ul(tags$li("This is a plot showing the number of positive samples for each Seasonal Coronavirus type in the Community Acute Respiratory Infection (CARI) surveillance programme."),
+              title = "CARI - Number of positive samples by seasonal coronavirus type",
+              content = tags$ul(tags$li("This is a plot showing the number of positive samples for each seasonal coronavirus type in the Community Acute Respiratory Infection (CARI) surveillance programme."),
                                 tags$li("The x axis is the week ending date, starting 09 October 2022."),
                                 tags$li("The y axis is the number of positive samples."),
                                 tags$li("The plot contains a stacked bar showing the number of positive samples for each type."),

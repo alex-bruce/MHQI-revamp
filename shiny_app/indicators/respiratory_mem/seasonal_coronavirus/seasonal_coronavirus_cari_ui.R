@@ -45,13 +45,13 @@ seasonal_coronavirus_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
   mutate(WeekBeginning = as.Date(WeekBeginning),
          WeekEnding = as.Date(WeekEnding)) %>%
   mutate(Pathogen = case_when(
-    Pathogen == "Seasonal Coronavirus (non-COVID-19)" ~ "Seasonal Coronavirus (non-COVID-19)",
+    Pathogen == "Seasonal Coronavirus (non-COVID-19)" ~ "Seasonal coronavirus (non-COVID-19)",
     Pathogen == "Seasonal Coronavirus (non-COVID-19) - 229e" ~ "HCoV-229e (alpha)",
     Pathogen == "Seasonal Coronavirus (non-COVID-19) - OC43" ~ "HCoV-OC43 (beta)",
     Pathogen == "Seasonal Coronavirus (non-COVID-19) - NL63" ~ "HCoV-NL63 (alpha)",
     Pathogen == "Seasonal Coronavirus (non-COVID-19) - Untyped" ~ "Untyped",
   )) %>%
-  mutate(Pathogen = factor(Pathogen, levels = c("Seasonal Coronavirus (non-COVID-19)", 
+  mutate(Pathogen = factor(Pathogen, levels = c("Seasonal coronavirus (non-COVID-19)", 
                                                 "HCoV-229e (alpha)",
                                                 "HCoV-NL63 (alpha)", 
                                                 "HCoV-OC43 (beta)",
@@ -76,7 +76,7 @@ tagList(
   fluidRow(width = 12,
            tabPanel(stringr::str_to_sentence("seasonal_coronavirus"),
                     # headline figures for the week in Scotland
-                    tagList(h2(glue("Seasonal Coronavirus test positivity in the Community Acute Respiratory Infection (CARI) sentinel surveillance programme")),
+                    tagList(h2(glue("Seasonal coronavirus test positivity in the Community Acute Respiratory Infection (CARI) sentinel surveillance programme")),
                             tags$div(class = "headline",
                                      br(),
                                      # previous week total number
@@ -100,7 +100,7 @@ tagList(
 
 
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Seasonal Coronavirus"))),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus"))),
 
   fluidRow(
     tabBox(width = NULL,
@@ -123,7 +123,7 @@ tagList(
   ), # fluidRow
 
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by age group"))),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by age group"))),
   
   fluidRow(
     pickerInput("seasonal_coronavirus_cari_selected_age", "Select age group(s) of interest:", 
@@ -149,7 +149,7 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by NHS Health Board"))),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by NHS Health Board"))),
   
   fluidRow(
     width = 12,
@@ -177,7 +177,7 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by type"))),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by type"))),
   
   fluidRow(
     pickerInput("seasonal_coronavirus_cari_selected_subtype1", "Select type(s):", 
@@ -204,7 +204,7 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Number of positive samples by Seasonal Coronavirus type"))),
+           tagList(h2("CARI - Number of positive samples by seasonal coronavirus type"))),
   
   fluidRow(
     tabBox(width = NULL,
