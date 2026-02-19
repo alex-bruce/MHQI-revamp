@@ -1751,10 +1751,10 @@ create_cari_subtype_linechart <- function(data){
     "HPIV-2" = "#801650",
     "HPIV-3" = "#F46A25",
     "HPIV-4" = "#3F085C",
-    "Seasonal Coronavirus (non-COVID-19)" = "black",
+    "Seasonal coronavirus (non-COVID-19)" = "black",
     "HCoV-229e (alpha)" = "#28A197",
-    "HCoV-OC43 (beta)" = "#801650", 
-    "HCoV-NL63 (alpha)" = "#F46A25",
+    "HCoV-NL63 (alpha)" = "#801650",
+    "HCoV-OC43 (beta)" = "#F46A25", 
     "Untyped" = "#3F085C"
   )
 
