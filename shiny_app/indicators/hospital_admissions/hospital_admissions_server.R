@@ -469,8 +469,7 @@ output$cov_los_plot <- renderPlotly({
 # Table
 output$cov_los_table <- renderDataTable({
   avg_cov_los_table <- Average_Length_of_Stay %>% 
-    filter(Pathogen == "COVID-19") %>% #,
-#           Season == input$los_season_cov) %>% 
+    filter(Pathogen == "COVID-19") %>% 
     mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),
            AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
            "65 to 74", "75+", "All Ages"))) %>% 
