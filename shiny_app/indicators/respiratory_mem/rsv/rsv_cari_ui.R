@@ -107,16 +107,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for RSV by age group"))),
-  
-  fluidRow(
-    pickerInput("rsv_cari_selected_age", "Select age group(s) of interest:", 
-                choices = sort(unique(rsv_cari_age$AgeGroup)),
-                selected = sort(unique(rsv_cari_age$AgeGroup))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for RSV by age group")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("rsv_cari_selected_age", "Select age group(s) of interest:",
+                                choices = sort(unique(rsv_cari_age$AgeGroup)),
+                                selected = sort(unique(rsv_cari_age$AgeGroup))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("rsv_cari_age_modal"),
                             swabposDefinitionUI("cari_rsv_age_swabpos"),
@@ -133,17 +132,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for RSV by NHS Health Board"))),
-  
-  fluidRow(
-    width = 12,
-    pickerInput("rsv_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
-                choices = sort(unique(rsv_cari_hb$HBName)),
-                selected = sort(unique(rsv_cari_hb$HBName))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for RSV by NHS Health Board")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("rsv_cari_selected_boards", "Select NHS Health Board(s) of interest:",
+                                choices = sort(unique(rsv_cari_hb$HBName)),
+                                selected = sort(unique(rsv_cari_hb$HBName))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("rsv_cari_hb_modal"),
                             swabposDefinitionUI("cari_rsv_hb_swabpos"),
