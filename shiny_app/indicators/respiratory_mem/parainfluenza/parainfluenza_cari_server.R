@@ -101,7 +101,6 @@ output$parainfluenza_cari_plot <- renderPlotly({
 output$parainfluenza_cari_age_table <- renderDataTable({
   parainfluenza_cari_age %>%
     arrange(desc(WeekEnding), AgeGroup) %>%
-    filter(AgeGroup %in% input$parainfluenza_cari_selected_age) %>%
     select(WeekEnding, AgeGroup, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     mutate(AgeGroup = factor(AgeGroup)) %>%
     rename(`Week Ending` = WeekEnding,
@@ -136,7 +135,6 @@ output$parainfluenza_cari_hb_plot <- renderPlotly({
 output$parainfluenza_cari_hb_table <- renderDataTable({
   parainfluenza_cari_hb %>%
     arrange(desc(WeekEnding), HBName) %>%
-    filter(HBName %in% input$parainfluenza_cari_selected_boards) %>%
     mutate(HBName = factor(HBName)) %>%
     select(WeekEnding, HBName, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
@@ -160,7 +158,6 @@ output$parainfluenza_cari_hb_table <- renderDataTable({
 # CARI - Overall parainfluenza swabpos table
 output$parainfluenza_cari_subtype1_table <- renderDataTable({
   parainfluenza_cari_subtype %>%
-    filter(Pathogen %in% input$parainfluenza_cari_selected_subtype1) %>%
     arrange(desc(WeekEnding), Pathogen) %>%
     mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%

@@ -62,7 +62,6 @@ output$influenza_cari_table <- renderDataTable({
 # CARI - Overall Influenza swabpos table
 output$influenza_cari_subtype1_table <- renderDataTable({
   flu_cari_subtype %>%
-    filter(Pathogen %in% input$flu_cari_selected_subtype1) %>%
     arrange(desc(WeekEnding), Pathogen) %>%
     mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%

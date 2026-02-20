@@ -177,16 +177,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Influenza by type/subtype"))),
-  
-  fluidRow(
-    pickerInput("flu_cari_selected_subtype1", "Select type/subtype(s):", 
-                choices = sort(unique(flu_cari_subtype$Pathogen)),
-                selected = sort(unique(flu_cari_subtype$Pathogen))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for Influenza by type/subtype")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("flu_cari_selected_subtype1", "Select type/subtype(s):", 
+                                choices = sort(unique(flu_cari_subtype$Pathogen)),
+                                selected = sort(unique(flu_cari_subtype$Pathogen))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("influenza_cari_subtype1_modal"),
                             swabposDefinitionUI("cari_influenza_swabpos"),

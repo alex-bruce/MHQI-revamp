@@ -83,7 +83,6 @@ output$hmpv_cari_plot <- renderPlotly({
 output$hmpv_cari_age_table <- renderDataTable({
   hmpv_cari_age %>%
     arrange(desc(WeekEnding), AgeGroup) %>%
-    filter(AgeGroup %in% input$hmpv_cari_selected_age) %>%
     select(WeekEnding, AgeGroup, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     mutate(AgeGroup = factor(AgeGroup)) %>%
     rename(`Week Ending` = WeekEnding,
@@ -118,7 +117,6 @@ output$hmpv_cari_hb_plot <- renderPlotly({
 output$hmpv_cari_hb_table <- renderDataTable({
   hmpv_cari_hb %>%
     arrange(desc(WeekEnding), HBName) %>%
-    filter(HBName %in% input$hmpv_cari_selected_boards) %>%
     mutate(HBName = factor(HBName)) %>%
     select(WeekEnding, HBName, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,

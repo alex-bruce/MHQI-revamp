@@ -102,7 +102,6 @@ output$seasonal_coronavirus_cari_age_plot <- renderPlotly({
 output$seasonal_coronavirus_cari_age_table <- renderDataTable({
   seasonal_coronavirus_cari_age %>%
     arrange(desc(WeekEnding), AgeGroup) %>%
-    filter(AgeGroup %in% input$seasonal_coronavirus_cari_selected_age) %>%
     select(WeekEnding, AgeGroup, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     mutate(AgeGroup = factor(AgeGroup)) %>%
     rename(`Week Ending` = WeekEnding,
@@ -137,7 +136,6 @@ output$seasonal_coronavirus_cari_hb_plot <- renderPlotly({
 output$seasonal_coronavirus_cari_hb_table <- renderDataTable({
   seasonal_coronavirus_cari_hb %>%
     arrange(desc(WeekEnding), HBName) %>%
-    filter(HBName %in% input$seasonal_coronavirus_cari_selected_boards) %>%
     mutate(HBName = factor(HBName)) %>%
     select(WeekEnding, HBName, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
@@ -157,7 +155,6 @@ output$seasonal_coronavirus_cari_hb_table <- renderDataTable({
 # CARI - Overall seasonal_coronavirus swabpos table
 output$seasonal_coronavirus_cari_subtype1_table <- renderDataTable({
   seasonal_coronavirus_cari_subtype %>%
-    filter(Pathogen %in% input$seasonal_coronavirus_cari_selected_subtype1) %>%
     arrange(desc(WeekEnding), Pathogen) %>%
     mutate(Pathogen = factor(Pathogen)) %>%
     select(WeekEnding, Pathogen, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%

@@ -83,7 +83,6 @@ output$mycoplasma_pneumoniae_cari_plot <- renderPlotly({
 output$mpn_cari_age_table <- renderDataTable({
   mpn_cari_age %>%
     arrange(desc(WeekEnding), AgeGroup) %>%
-    filter(AgeGroup %in% input$mpn_cari_selected_age) %>%
     select(WeekEnding, AgeGroup, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     mutate(AgeGroup = factor(AgeGroup)) %>%
     rename(`Week Ending` = WeekEnding,
@@ -118,7 +117,6 @@ output$mpn_cari_hb_plot <- renderPlotly({
 output$mpn_cari_hb_table <- renderDataTable({
   mpn_cari_hb %>%
     arrange(desc(WeekEnding), HBName) %>%
-    filter(HBName %in% input$mpn_cari_selected_boards) %>%
     mutate(HBName = factor(HBName)) %>%
     select(WeekEnding, HBName, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
