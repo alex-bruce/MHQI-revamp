@@ -26,15 +26,15 @@ tagList(
       "based on location of Wastewater Treatment Works (WWTW). "),
     p(strong("Due to the dynamic nature of the data, reported figures may be subject to change in future releases.")),
     linebreaks(1),
-    fluidRow(width = 12,
-             tagList(h2("Average trends in COVID-19 wastewater RNA by NHS Health Board"))),
+             tagList(h2("Average trends in COVID-19 wastewater RNA by NHS Health Board")),
     linebreaks(1),
-    selectInput("selected_board", "Select NHS Health Board of interest:", 
-                choices = sort(unique(HB_table_edited$health_board)),
-                selected = sort(unique(HB_table_edited$health_board))[1]),
     tabBox(width=NULL,
            type="pills",
            tabPanel("Plot",
+                    br(),
+                    selectInput("selected_board", "Select NHS Health Board of interest:", 
+                                choices = sort(unique(HB_table_edited$health_board)),
+                                selected = sort(unique(HB_table_edited$health_board))[1]),
                     tagList(linebreaks(1),
                             altTextUI("HB_modal"),
                             withNavySpinner(plotlyOutput("health_board_plot")),
@@ -50,6 +50,5 @@ tagList(
            )
     ),
     linebreaks(1)
-    
   )
 )#taglist

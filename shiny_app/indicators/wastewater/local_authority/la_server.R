@@ -76,7 +76,6 @@ COVID_Wastewater_CA_table$coverage = round(COVID_Wastewater_CA_table$coverage,1)
 
 output$council_area_table <- renderDataTable({
   filtered <- COVID_Wastewater_CA_table %>%
-    filter(council_area == input$selected_area) %>%
     mutate(coverage = coverage*100)
   filtered[-1] %>% 
     arrange(desc(End)) %>%
@@ -86,6 +85,7 @@ output$council_area_table <- renderDataTable({
     dplyr::rename('Coverage (%)' = coverage) %>% 
     make_table(order_by_firstcol = "desc",
                add_separator_cols = 4,
-               add_separator_cols_1dp = 3)
+               add_separator_cols_1dp = 3,
+               filter_cols = c(1,2))
   
 })

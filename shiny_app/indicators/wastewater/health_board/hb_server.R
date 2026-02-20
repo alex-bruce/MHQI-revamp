@@ -76,7 +76,6 @@ HB_table_edited$coverage = round_half_up(HB_table_edited$coverage,2)
 
 output$health_board_table <- renderDataTable({
   filtered <- HB_table_edited %>%
-    filter(health_board == input$selected_board) %>%
     mutate(coverage = coverage*100)
   filtered[-1] %>% 
     arrange(desc(End)) %>%
@@ -86,6 +85,7 @@ output$health_board_table <- renderDataTable({
     dplyr::rename('Coverage (%)' = coverage) %>% 
     make_table(order_by_firstcol = "desc",
                add_separator_cols = 4,
-               add_separator_cols_1dp = 3)
+               add_separator_cols_1dp = 3,
+               filter_cols = c(1,2))
   
 })

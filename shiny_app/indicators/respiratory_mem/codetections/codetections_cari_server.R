@@ -44,7 +44,6 @@ output$codetections_cari_table <- renderDataTable({
   Respiratory_Pathogens_CARI_codetections %>%
     mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years",
                                                   "15-44 years", "45-64 years", "65+ years"))) %>%
-    filter(AgeGroup %in% input$codetection_cari_selected_age) %>%
     arrange(desc(FourWeekEnding), AgeGroup) %>%
     mutate(AgeGroup = factor(AgeGroup)) %>%
     select(FourWeekEnding, AgeGroup, perc) %>%
