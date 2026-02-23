@@ -301,7 +301,8 @@ output$covid_admissions_age_table <- renderDataTable({
     add_season() %>% 
     select(week_ending, age_band, Season,
            Admissions = cov, rate = cov_rate) %>% 
-    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+           age_band = as.factor(age_band)) %>% 
     filter(Season %in% cov_adm_seasons) %>% 
     make_admissions_age_table()
 
@@ -472,7 +473,8 @@ output$cov_los_table <- renderDataTable({
     filter(Pathogen == "COVID-19") %>% 
     mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),
            AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
-           "65 to 74", "75+", "All Ages"))) %>% 
+           "65 to 74", "75+", "All Ages")),
+           Season = as.factor(Season)) %>% 
     arrange(desc(Season), AgeGroup) %>% 
     select(Season, 'Age group' = AgeGroup, 'Average Length of stay' = AverageLengthOfStay) %>%
     make_table(filter_cols = c(1,2),

@@ -83,6 +83,7 @@ output$council_area_table <- renderDataTable({
     dplyr::rename('Local Authority' = council_area) %>% 
     dplyr::rename('Average (Mgc/p/d)' = average) %>%
     dplyr::rename('Coverage (%)' = coverage) %>% 
+    mutate(`Local Authority` = as.factor(`Local Authority`)) %>%
     make_table(order_by_firstcol = "desc",
                add_separator_cols = 4,
                add_separator_cols_1dp = 3,

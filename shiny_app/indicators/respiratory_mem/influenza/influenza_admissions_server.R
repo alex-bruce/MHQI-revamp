@@ -173,7 +173,8 @@ output$influenza_admissions_age_table <- renderDataTable({
     add_season() %>% 
     select(week_ending, age_band, Season,
            Admissions = flu, rate = flu_rate) %>% 
-    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+           age_band = as.factor(age_band)) %>% 
     filter(Season %in% flu_adm_seasons) %>% 
     make_admissions_age_table()
   
