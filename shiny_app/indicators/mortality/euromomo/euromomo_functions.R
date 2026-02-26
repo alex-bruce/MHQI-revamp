@@ -1,6 +1,6 @@
 # Create MEM line chart
 create_euromomo_mem_linechart <- function(data, 
-                                          rate_dp = 2,
+                                          rate_dp = 1,
                                           seasons = NULL,
                                           value_variable = "ZScore",
                                           y_axis_title = "Z-score") {
@@ -141,7 +141,7 @@ create_euromomo_mem_linechart <- function(data,
               color = ~SeasonDelay,
               type="scatter",
               mode="lines",
-              line = list(width = 5),
+#              line = list(width = 5),
               linetype = ~SeasonDelay,
               linetypes = c("solid", "solid", "solid", "solid", "dot"),
               colors = euromomo_mem_line_colours) %>%
@@ -516,7 +516,7 @@ create_euromomo_mem_linechart <- function(data,
 
 # Create MEM heatmaps
 create_euromomo_mem_heatmap <- function(data, 
-                                        rate_dp = 2,
+                                        rate_dp = 1,
                                         include_text_annotation = F,
                                         text_annotation_dp = 1,
                                         breakdown_variable = "AgeGroup",

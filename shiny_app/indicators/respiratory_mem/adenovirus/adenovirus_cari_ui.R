@@ -106,16 +106,16 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Adenovirus by age group"))),
-  
-  fluidRow(
-    pickerInput("adenovirus_cari_selected_age", "Select age group(s) of interest:", 
-                choices = sort(unique(adenovirus_cari_age$AgeGroup)),
-                selected = sort(unique(adenovirus_cari_age$AgeGroup))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for Adenovirus by age group")),
+    
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("adenovirus_cari_selected_age", "Select age group(s) of interest:",
+                                choices = sort(unique(adenovirus_cari_age$AgeGroup)),
+                                selected = sort(unique(adenovirus_cari_age$AgeGroup))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("adenovirus_cari_age_modal"),
                             swabposDefinitionUI("cari_adenovirus_age_swabpos"),
@@ -132,17 +132,16 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Adenovirus by NHS Health Board"))),
-  
-  fluidRow(
-    width = 12,
-    pickerInput("adenovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
-                choices = sort(unique(adenovirus_cari_hb$HBName)),
-                selected = sort(unique(adenovirus_cari_hb$HBName))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for Adenovirus by NHS Health Board")),
+    
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("adenovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:",
+                                choices = sort(unique(adenovirus_cari_hb$HBName)),
+                                selected = sort(unique(adenovirus_cari_hb$HBName))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("adenovirus_cari_hb_modal"),
                             swabposDefinitionUI("cari_adenovirus_hb_swabpos"),

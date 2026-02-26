@@ -121,7 +121,9 @@ output$influenza_admissions_table <- renderDataTable({
     rename(`ISO Week` = ISOWeek,
            `Number of Admissions` = Admissions,
            `Admission Rate per 100k` = RatePer100000) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols = c(3),
+               add_separator_cols_1dp = c(4))
 })
 
 
@@ -171,7 +173,8 @@ output$influenza_admissions_age_table <- renderDataTable({
     add_season() %>% 
     select(week_ending, age_band, Season,
            Admissions = flu, rate = flu_rate) %>% 
-    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
+    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+           age_band = as.factor(age_band)) %>% 
     filter(Season %in% flu_adm_seasons) %>% 
     make_admissions_age_table()
   
@@ -343,7 +346,8 @@ output$flu_los_table <- renderDataTable({
            AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
                                                   "65 to 74", "75+", "All Ages"))) %>% 
     arrange(desc(Season), AgeGroup) %>% 
-    select(Season, 'Age group' = AgeGroup, 'Average Length of stay' = AverageLengthOfStay)
+    select(Season, 'Age group' = AgeGroup, 'Average Length of stay' = AverageLengthOfStay) %>%
+    make_table(add_separator_cols_1dp = c(3))
   
 })
 

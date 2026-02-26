@@ -169,9 +169,9 @@ make_hospital_admissions_los_plot <- function(data){
   
   tooltip_trend <- paste0("Season: ", table$Season, "<br>",
                           "Age group: ", table$AgeGroup, "<br>",
-                          "Average Length of Stay: ", round(table$AverageLengthOfStay, 2), " days<br>",
+                          "Average Length of Stay: ", round(table$AverageLengthOfStay, 1), " days<br>",
                           #,
-                          "95% CI: ", round(table$ci_lower, 2), " - ", round(table$ci_upper, 2), " days")
+                          "95% CI: ", round(table$ci_lower, 1), " - ", round(table$ci_upper, 1), " days")
   
   
   xaxis_plots[["title"]] <- 'Age group'
@@ -506,6 +506,7 @@ make_admissions_age_table <- function(data) {
            `Age Group` = age_band,
            `Number of Admissions` = Admissions,
            `Admission Rate per 100k` = rate) %>% 
-    make_table(add_separator_cols_1dp = c(4),
-               filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols = c(3),
+               add_separator_cols_1dp = c(4))
 }

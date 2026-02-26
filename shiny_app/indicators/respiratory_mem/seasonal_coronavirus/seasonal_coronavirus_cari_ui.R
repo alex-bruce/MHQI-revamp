@@ -123,16 +123,15 @@ tagList(
   ), # fluidRow
 
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for seasonal coronavirus by age group"))),
-  
-  fluidRow(
-    pickerInput("seasonal_coronavirus_cari_selected_age", "Select age group(s) of interest:", 
-                choices = sort(unique(seasonal_coronavirus_cari_age$AgeGroup)),
-                selected = sort(unique(seasonal_coronavirus_cari_age$AgeGroup))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by age group")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("seasonal_coronavirus_cari_selected_age", "Select age group(s) of interest:", 
+                                choices = sort(unique(seasonal_coronavirus_cari_age$AgeGroup)),
+                                selected = sort(unique(seasonal_coronavirus_cari_age$AgeGroup))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("seasonal_coronavirus_cari_age_modal"),
                             swabposDefinitionUI("cari_seasonal_coronavirus_age_swabpos"),
@@ -149,17 +148,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for seasonal coronavirus by NHS Health Board"))),
-  
-  fluidRow(
-    width = 12,
-    pickerInput("seasonal_coronavirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
-                choices = sort(unique(seasonal_coronavirus_cari_hb$HBName)),
-                selected = sort(unique(seasonal_coronavirus_cari_hb$HBName))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by NHS Health Board")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("seasonal_coronavirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                                choices = sort(unique(seasonal_coronavirus_cari_hb$HBName)),
+                                selected = sort(unique(seasonal_coronavirus_cari_hb$HBName))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("seasonal_coronavirus_cari_hb_modal"),
                             swabposDefinitionUI("cari_seasonal_coronavirus_hb_swabpos"),
@@ -177,16 +174,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for seasonal coronavirus by type"))),
-  
-  fluidRow(
-    pickerInput("seasonal_coronavirus_cari_selected_subtype1", "Select type(s):", 
-                choices = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen)),
-                selected = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by type")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("seasonal_coronavirus_cari_selected_subtype1", "Select type(s):", 
+                                choices = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen)),
+                                selected = sort(unique(seasonal_coronavirus_cari_subtype$Pathogen))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("seasonal_coronavirus_cari_subtype1_modal"),
                             swabposDefinitionUI("cari_seasonal_coronavirus_swabpos"),

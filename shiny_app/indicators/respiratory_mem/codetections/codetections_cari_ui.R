@@ -20,16 +20,15 @@ tagList(
   ),
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Proportion of positive samples that are co-detections by age group"))),
-  
-  fluidRow(
-    pickerInput("codetection_cari_selected_age", "Select age group(s) of interest:", 
-                choices = sort(unique(codetection_cari_age$AgeGroup)),
-                selected = sort(unique(codetection_cari_age$AgeGroup))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Proportion of positive samples that are co-detections by age group")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("codetection_cari_selected_age", "Select age group(s) of interest:", 
+                                choices = sort(unique(codetection_cari_age$AgeGroup)),
+                                selected = sort(unique(codetection_cari_age$AgeGroup))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("codetections_cari_modal"),
                             withNavySpinner(plotlyOutput("codetections_cari_plot")),

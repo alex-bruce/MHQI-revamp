@@ -39,7 +39,8 @@ output$rhinovirus_cari_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table()
+    make_table(add_separator_cols = c(2,3),
+               add_separator_cols_1dp = c(4,5,6))
 })
 
 # # CARI - Rhinovirus swabpos by age table
@@ -82,7 +83,6 @@ output$rhinovirus_cari_plot <- renderPlotly({
 output$rhinovirus_cari_age_table <- renderDataTable({
   rhinovirus_cari_age %>%
     arrange(desc(WeekEnding), AgeGroup) %>%
-    filter(AgeGroup %in% input$rhinovirus_cari_selected_age) %>%
     select(WeekEnding, AgeGroup, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     mutate(AgeGroup = factor(AgeGroup)) %>%
     rename(`Week Ending` = WeekEnding,
@@ -92,7 +92,9 @@ output$rhinovirus_cari_age_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols = c(3,4),
+               add_separator_cols_1dp = c(5,6,7))
 })
 
 # CARI - rhinovirus swabpos by age plot
@@ -115,7 +117,6 @@ output$rhinovirus_cari_hb_plot <- renderPlotly({
 output$rhinovirus_cari_hb_table <- renderDataTable({
   rhinovirus_cari_hb %>%
     arrange(desc(WeekEnding), HBName) %>%
-    filter(HBName %in% input$rhinovirus_cari_selected_boards) %>%
     mutate(HBName = factor(HBName)) %>%
     select(WeekEnding, HBName, TotalSamples, PositiveSamples, SwabPositivity, SwabPositivityLCL, SwabPositivityUCL) %>%
     rename(`Week Ending` = WeekEnding,
@@ -125,7 +126,9 @@ output$rhinovirus_cari_hb_table <- renderDataTable({
            `Test Positivity (%)` = SwabPositivity,
            `Lower Confidence Limit (%)` = SwabPositivityLCL,
            `Upper Confidence Limit (%)` = SwabPositivityUCL) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols = c(3,4),
+               add_separator_cols_1dp = c(5,6,7))
 })
 
 

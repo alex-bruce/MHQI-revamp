@@ -106,16 +106,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Rhinovirus by age group"))),
-  
-  fluidRow(
-    pickerInput("rhinovirus_cari_selected_age", "Select age group(s) of interest:", 
-                choices = sort(unique(rhinovirus_cari_age$AgeGroup)),
-                selected = sort(unique(rhinovirus_cari_age$AgeGroup))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for Rhinovirus by age group")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("rhinovirus_cari_selected_age", "Select age group(s) of interest:", 
+                                choices = sort(unique(rhinovirus_cari_age$AgeGroup)),
+                                selected = sort(unique(rhinovirus_cari_age$AgeGroup))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("rhinovirus_cari_age_modal"),
                             swabposDefinitionUI("cari_rhinovirus_age_swabpos"),
@@ -132,17 +131,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Rhinovirus by NHS Health Board"))),
-  
-  fluidRow(
-    width = 12,
-    pickerInput("rhinovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
-                choices = sort(unique(rhinovirus_cari_hb$HBName)),
-                selected = sort(unique(rhinovirus_cari_hb$HBName))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for Rhinovirus by NHS Health Board")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("rhinovirus_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                                choices = sort(unique(rhinovirus_cari_hb$HBName)),
+                                selected = sort(unique(rhinovirus_cari_hb$HBName))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("rhinovirus_cari_hb_modal"),
                             swabposDefinitionUI("cari_rhinovirus_hb_swabpos"),

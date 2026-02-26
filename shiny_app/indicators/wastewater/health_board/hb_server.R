@@ -20,8 +20,8 @@ output$health_board_plot =  renderPlotly({
       marker = list(color = "#3F3685"),
       name = input$selected_board,
       text = ~paste("Week Ending Date:", format(End, "%d %b %y"),
-                    "<br>Average (Mgc/p/d):", round_half_up(average, 2), 
-                    "<br>Coverage:", paste0(round_half_up(coverage, 2)*100, "%")),
+                    "<br>Average (Mgc/p/d):", round_half_up(average, 1), 
+                    "<br>Coverage:", paste0(round_half_up(coverage, 1)*100, "%")),
       hoverinfo = "text"
     ) %>%
     # Add the Scotland data
@@ -35,8 +35,8 @@ output$health_board_plot =  renderPlotly({
       marker = list(color = "green"),
       name = 'Scotland',
       text = ~paste("Week Ending Date:", format(End, "%d %b %y"), 
-                    "<br>Scotland Average (Mgc/p/d):", round_half_up(average, 2), 
-                    "<br>Scotland Coverage:", paste0(round_half_up(coverage, 2)*100, "%")),
+                    "<br>Scotland Average (Mgc/p/d):", round_half_up(average, 1), 
+                    "<br>Scotland Coverage:", paste0(round_half_up(coverage, 1)*100, "%")),
       hoverinfo = "text"
     ) %>%
     add_lines_and_notes(dataframe = hb_all_values,
@@ -76,14 +76,17 @@ HB_table_edited$coverage = round_half_up(HB_table_edited$coverage,2)
 
 output$health_board_table <- renderDataTable({
   filtered <- HB_table_edited %>%
-    filter(health_board == input$selected_board) %>%
-    mutate(coverage = coverage*100)
+    mutate(coverage = coverage*100,
+           health_board = as.factor(health_board)) 
   filtered[-1] %>% 
     arrange(desc(End)) %>%
     dplyr::rename('Week Ending Date' = End) %>% 
     dplyr::rename('NHS Health Board' = health_board) %>% 
     dplyr::rename('Average (Mgc/p/d)' = average) %>%
-    dplyr::rename('Coverage (%)' = coverage) %>% 
-    make_table(order_by_firstcol = "desc")
+    dplyr::rename('Coverage (%)' = coverage) %>%
+    make_table(order_by_firstcol = "desc",
+               add_separator_cols = 4,
+               add_separator_cols_1dp = 3,
+               filter_cols = c(1,2))
   
 })

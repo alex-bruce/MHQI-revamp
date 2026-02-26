@@ -119,16 +119,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Parainfluenza by age group"))),
-  
-  fluidRow(
-    pickerInput("parainfluenza_cari_selected_age", "Select age group(s) of interest:", 
-                choices = sort(unique(parainfluenza_cari_age$AgeGroup)),
-                selected = sort(unique(parainfluenza_cari_age$AgeGroup))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for Parainfluenza by age group")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("parainfluenza_cari_selected_age", "Select age group(s) of interest:", 
+                                choices = sort(unique(parainfluenza_cari_age$AgeGroup)),
+                                selected = sort(unique(parainfluenza_cari_age$AgeGroup))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("parainfluenza_cari_age_modal"),
                             swabposDefinitionUI("cari_parainfluenza_age_swabpos"),
@@ -145,17 +144,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Parainfluenza by NHS Health Board"))),
-  
-  fluidRow(
-    width = 12,
-    pickerInput("parainfluenza_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
-                choices = sort(unique(parainfluenza_cari_hb$HBName)),
-                selected = sort(unique(parainfluenza_cari_hb$HBName))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for Parainfluenza by NHS Health Board")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("parainfluenza_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                                choices = sort(unique(parainfluenza_cari_hb$HBName)),
+                                selected = sort(unique(parainfluenza_cari_hb$HBName))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("parainfluenza_cari_hb_modal"),
                             swabposDefinitionUI("cari_parainfluenza_hb_swabpos"),
@@ -173,16 +170,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Parainfluenza by subtype"))),
-  
-  fluidRow(
-    pickerInput("parainfluenza_cari_selected_subtype1", "Select subtype(s):", 
-                choices = sort(unique(parainfluenza_cari_subtype$Pathogen)),
-                selected = sort(unique(parainfluenza_cari_subtype$Pathogen))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for Parainfluenza by subtype")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("parainfluenza_cari_selected_subtype1", "Select subtype(s):", 
+                                choices = sort(unique(parainfluenza_cari_subtype$Pathogen)),
+                                selected = sort(unique(parainfluenza_cari_subtype$Pathogen))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("parainfluenza_cari_subtype1_modal"),
                             swabposDefinitionUI("cari_parainfluenza_swabpos"),

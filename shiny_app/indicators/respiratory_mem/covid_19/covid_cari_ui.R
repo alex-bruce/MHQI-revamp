@@ -105,16 +105,15 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for COVID-19 by age group"))),
-
-  fluidRow(
-    pickerInput("covid_cari_selected_age", "Select age group(s) of interest:", 
-                choices = sort(unique(covid_cari_age$AgeGroup)),
-                selected = sort(unique(covid_cari_age$AgeGroup))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for COVID-19 by age group")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("covid_cari_selected_age", "Select age group(s) of interest:",
+                                choices = sort(unique(covid_cari_age$AgeGroup)),
+                                selected = sort(unique(covid_cari_age$AgeGroup))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("covid_cari_age_modal"),
                             swabposDefinitionUI("cari_covid_age_swabpos"),
@@ -158,17 +157,15 @@ tagList(
   # ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for COVID-19 by NHS Health Board"))),
-  
-  fluidRow(
-    width = 12,
-    pickerInput("covid_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
-                choices = sort(unique(covid_cari_hb$HBName)),
-                selected = sort(unique(covid_cari_hb$HBName))[1],
-                multiple = TRUE),
+           tagList(h2("CARI - Test positivity for COVID-19 by NHS Health Board")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput("covid_cari_selected_boards", "Select NHS Health Board(s) of interest:", 
+                                choices = sort(unique(covid_cari_hb$HBName)),
+                                selected = sort(unique(covid_cari_hb$HBName))[1],
+                                multiple = TRUE),
                     tagList(linebreaks(1),
                             altTextUI("covid_cari_hb_modal"),
                             swabposDefinitionUI("cari_covid_hb_swabpos"),

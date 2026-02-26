@@ -7,8 +7,8 @@ metadataButtonServer(id="national_wastewater_metadata",
 
 table_content <- data.frame(
   "Wastewater" = "Mgc/p/d",
-  "Previous_Week_Ending" = round((COVID_Wastewater_National_table %>% mutate(Date = convert_opendata_date(Date)) %>% filter(Date == max(Date) - days(7)) %>% .$average)[1],2),
-  "Current_Week_Ending" = round(COVID_Wastewater_National_table %>% tail(1) %>% .$average,2)
+  "Previous_Week_Ending" = round((COVID_Wastewater_National_table %>% mutate(Date = convert_opendata_date(Date)) %>% filter(Date == max(Date) - days(7)) %>% .$average)[1],1),
+  "Current_Week_Ending" = round(COVID_Wastewater_National_table %>% tail(1) %>% .$average,1)
 )
 
 colnames(table_content)[2] = glue("{COVID_Wastewater_National_table %>% mutate(Date = convert_opendata_date(Date)) %>% filter(Date == max(Date) - days(7)) %>% .$Date %>% format('%d %b %y')}")
@@ -58,5 +58,6 @@ output$national_wastewater_table <- renderDataTable({
     mutate(Date = convert_opendata_date(Date)) %>%
     dplyr::rename('Seven-day average (Mgc/p/d)' = average) %>%
     arrange(desc(Date)) %>%
-    make_table(add_separator_cols_2dp = 2, order_by_firstcol = "desc",filter_cols = TRUE)
+    make_table(add_separator_cols_1dp = 2,
+               order_by_firstcol = "desc",filter_cols = TRUE)
 })
