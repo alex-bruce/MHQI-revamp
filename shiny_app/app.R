@@ -296,7 +296,7 @@ ui <- fluidPage(
                             tabPanel(title = "Other seasonal coronaviruses",
                                      value = "seasonal_coronavirus",
                                      h1("Other seasonal coronaviruses"),
-                                     p("Seasonal Coronaviruses (non COVID-19) are a group of viruses that typically cause mild to moderate",
+                                     p("Seasonal coronaviruses (non-COVID-19) are a group of viruses that typically cause mild to moderate",
                                        "upper respiratory tract infections, such as the common cold, but can cause lower-respiratory",
                                        "tract illnesses such as pneumonia and bronchitis. Seasonal coronaviruses typically circulate",
                                        "in the winter months and infection can occur in people of all ages.",

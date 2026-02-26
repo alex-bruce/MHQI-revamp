@@ -179,7 +179,7 @@ hosp_adms_intro <- Respiratory_admissions_summary %>%
          'Rate of admissions per 100,000 population (previous week)'= admissions_rate_previous_week,
          'Number of admissions (latest week)'= admissions_number_latest_week,
          'Rate of admissions per 100,000 population (latest week)'= admissions_rate_latest_week  ) %>%
-  mutate(Pathogen =  factor(Pathogen, levels = c("COVID-19", "Influenza", "RSV", "Adenovirus",  "HMPV",  "MPN", "Parainfluenza", "Rhinovirus", "Non-seasonal Coronavirus"))) %>%
+  mutate(Pathogen =  factor(Pathogen, levels = c("COVID-19", "Influenza", "RSV", "Adenovirus",  "HMPV",  "MPN", "Parainfluenza", "Rhinovirus", "Seasonal Coronavirus (non-COVID-19)"))) %>%
   arrange(Pathogen) %>%
   mutate(Pathogen=if_else(Pathogen=="RSV", "Respiratory syncytial virus", Pathogen)) %>% 
   mutate(Pathogen=if_else(Pathogen=="Non-seasonal Coronavirus", "Seasonal Coronavirus (non COVID-19)", Pathogen)) %>% 
@@ -276,7 +276,7 @@ output$hosp_adms_intro_plot <- renderPlotly({
     mutate(CaseDefinition=if_else(CaseDefinition=="Non-seasonal Coronavirus", "Seasonal Coronavirus (non COVID-19)", CaseDefinition)) %>% 
     mutate(CaseDefinition =  factor(CaseDefinition, levels = c("COVID-19", "Influenza", "Respiratory syncytial virus", "Adenovirus",  
                                                                "Human Metapneumovirus",  "Mycoplasma Pneumoniae", 
-                                                               "Parainfluenza", "Rhinovirus", "Seasonal Coronavirus (non COVID-19)"))) %>%
+                                                               "Parainfluenza", "Rhinovirus", "Seasonal Coronavirus (non-COVID-19)"))) %>%
     arrange(CaseDefinition) %>%
 
     mutate(Date = ymd(Date)) %>%
