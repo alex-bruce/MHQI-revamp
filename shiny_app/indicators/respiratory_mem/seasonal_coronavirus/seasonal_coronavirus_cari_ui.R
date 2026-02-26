@@ -123,7 +123,7 @@ tagList(
   ), # fluidRow
 
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by age group")),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by age group")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
@@ -148,7 +148,7 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by NHS Health Board")),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by NHS Health Board")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
@@ -174,7 +174,7 @@ tagList(
   ), # fluidRow
   
   fluidRow(width = 12,
-           tagList(h2("CARI - Test positivity for Seasonal Coronavirus by type")),
+           tagList(h2("CARI - Test positivity for seasonal coronavirus by type")),
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
