@@ -30,15 +30,21 @@ tagList(
                                      br(),
                                     # h3(glue("Total number of influenza cases in Scotland over the last two weeks")),
                                      # previous week total number
-                                     valueBox(value = {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == "flu") %>%
+                                     valueBox(value = tagList({Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
                                          .$CountPreviousWeek %>% format(big.mark=",")},
+                                         tags$br(),
+                                         glue("({format(round_half_up(Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>% 
+                                              .$RatePreviousWeek,1), nsmall = 1)} per 100,000)")),
                                          subtitle = glue("Week ending {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
                                                 .$DatePreviousWeek %>% format('%d %b %y')}"),
                                          color = "navy",
                                          icon = icon_no_warning_fn("calendar-week")),
                                      # this week total number
-                                     valueBox(value = {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == "flu") %>%
+                                     valueBox(value = tagList({Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
                                          .$CountThisWeek %>% format(big.mark=",")},
+                                         tags$br(),
+                                         glue("({format(round_half_up(Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>% 
+                                              .$RateThisWeek,1), nsmall = 1)} per 100,000)")),
                                          subtitle = glue("Week ending {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
                                                 .$DateThisWeek %>% format('%d %b %y')}"),
                                          color = "navy",

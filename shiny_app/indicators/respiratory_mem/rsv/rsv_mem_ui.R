@@ -6,6 +6,9 @@ rsv_cases_seasons <-
   tail(6)
 
 # create values for headline boxes
+pop_scot_total <- i_population_v2 %>%
+  filter(AgeGroup == "Total", Sex == "Total") %>%
+  .$PopNumber
 
 rsv_cases_recent_week <- Respiratory_Scot %>%
   filter(Pathogen == "Respiratory syncytial virus") %>%
@@ -19,7 +22,9 @@ rsv_cases_recent_week <- Respiratory_Scot %>%
          DateThisWeek = .$Date[2],
          CasesLastWeek = .$`NumberCasesPerWeek`[1],
          CasesThisWeek = .$`NumberCasesPerWeek`[2],
-         PercentageDifference = round((CasesThisWeek/CasesLastWeek - 1)*100, digits = 2)) %>%
+         PercentageDifference = round((CasesThisWeek/CasesLastWeek - 1)*100, digits = 2),
+         RateLastWeek = round_half_up(100000 *  .$`NumberCasesPerWeek`[1]/pop_scot_total,1),
+         RateThisWeek = round_half_up(100000 *  .$`NumberCasesPerWeek`[2]/pop_scot_total,1)) %>%
   mutate(ChangeFactor = case_when(
     PercentageDifference < 0 ~ "Decrease",
     PercentageDifference > 0 ~ "Increase",
@@ -28,7 +33,7 @@ rsv_cases_recent_week <- Respiratory_Scot %>%
                     ChangeFactor == "Increase"~ "arrow-up",
                     ChangeFactor == "No change"~"equals")
   ) %>%
-  select(DateLastWeek, DateThisWeek, CasesLastWeek, CasesThisWeek, PercentageDifference, ChangeFactor, icon) %>%
+  select(DateLastWeek, DateThisWeek, CasesLastWeek, CasesThisWeek, PercentageDifference, RateLastWeek, RateThisWeek, ChangeFactor, icon) %>%
   head(1)
 ###
 
@@ -54,12 +59,16 @@ tagList(
                                        br(),
                                       # h3(glue("Total number of RSV cases in Scotland over the last two weeks")),
                                        # previous week total number
-                                        valueBox(value = {rsv_cases_recent_week %>% .$CasesLastWeek %>% format(big.mark=",")},
+                                        valueBox(value = tagList({rsv_cases_recent_week %>% .$CasesLastWeek %>% format(big.mark=",")},
+                                                                 br(),
+                                                                 glue("({format(rsv_cases_recent_week %>% .$RateLastWeek, nsmall = 1)} per 100,000)")),
                                            subtitle = glue("Week ending {rsv_cases_recent_week %>% .$DateLastWeek%>% format('%d %b %y')}"),
                                            color = "navy",
                                            icon = icon_no_warning_fn("calendar-week")),
                                        # this week total number
-                                       valueBox(value = {rsv_cases_recent_week %>% .$CasesThisWeek %>% format(big.mark=",")},
+                                       valueBox(value = tagList({rsv_cases_recent_week %>% .$CasesThisWeek %>% format(big.mark=",")},
+                                                                tags$br(),
+                                                                glue("({format(rsv_cases_recent_week %>% .$RateThisWeek, nsmall = 1)} per 100,000)")),
                                                 subtitle = glue("Week ending {rsv_cases_recent_week %>% .$DateThisWeek%>% format('%d %b %y')}"),
                                                 color = "navy",
                                                 icon = icon_no_warning_fn("calendar-week")),

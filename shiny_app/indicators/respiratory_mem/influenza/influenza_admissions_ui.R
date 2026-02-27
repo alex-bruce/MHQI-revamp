@@ -11,8 +11,11 @@ influenza_admissions_recent_week <- Influenza_admissions %>%
          DateThisWeek = .$Date[3],
          AdmissionsTwoWeek = .$`Influenza A & B`[1],
          AdmissionsLastWeek = .$`Influenza A & B`[2],
-         AdmissionsThisWeek = .$`Influenza A & B`[3]) %>%
-  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek) %>%
+         AdmissionsThisWeek = .$`Influenza A & B`[3],
+         RateTwoWeek = .$RatePer100000[1],
+         RateLastWeek = .$RatePer100000[2],
+         RateThisWeek = .$RatePer100000[3]) %>%
+  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek, RateTwoWeek, RateLastWeek, RateThisWeek) %>%
   head(1)
 
 tagList(
@@ -32,22 +35,28 @@ tagList(
                                      br(),
 #                                     h3(glue("Total number of influenza hospital admissions in Scotland over the last two weeks")),
                                      # Two week ago total number
-                                     valueBox(value = {influenza_admissions_recent_week %>%
+                                     valueBox(value = tagList({influenza_admissions_recent_week %>%
                                      .$AdmissionsTwoWeek %>% format(big.mark=",")},
+                                     tags$br(),
+                                     glue("({format(round_half_up(influenza_admissions_recent_week %>% .$RateTwoWeek,1), nsmall = 1)} per 100,000)")),
                                      subtitle = glue("Week ending {influenza_admissions_recent_week %>%
                                                 .$DateTwoWeek %>% format('%d %b %y')}"),
                                      color = "navy",
                                      icon = icon_no_warning_fn("calendar-week")),
                                      # previous week total number
-                                     valueBox(value = {influenza_admissions_recent_week %>%
+                                     valueBox(value = tagList({influenza_admissions_recent_week %>%
                                          .$AdmissionsLastWeek %>% format(big.mark=",")},
+                                       tags$br(),
+                                       glue("({format(round_half_up(influenza_admissions_recent_week %>% .$RateLastWeek,1), nsmall = 1)} per 100,000)")),
                                          subtitle = glue("Week ending {influenza_admissions_recent_week %>%
                                                 .$DateLastWeek %>% format('%d %b %y')}"),
                                          color = "navy",
                                          icon = icon_no_warning_fn("calendar-week")),
                                      # this week total number
-                                     valueBox(value = glue("{influenza_admissions_recent_week %>%
+                                     valueBox(value = tagList(glue("{influenza_admissions_recent_week %>%
                                          .$AdmissionsThisWeek %>% format(big.mark=",")}*"),
+                                      tags$br(),
+                                      glue("({format(round_half_up(influenza_admissions_recent_week %>% .$RateThisWeek,1), nsmall = 1)} per 100,000)")),
                                          subtitle = glue("Week ending {influenza_admissions_recent_week %>%
                                                 .$DateThisWeek %>% format('%d %b %y')}"),
                                          color = "navy",
