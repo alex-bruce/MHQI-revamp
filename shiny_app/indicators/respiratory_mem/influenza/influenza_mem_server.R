@@ -27,7 +27,7 @@ output$influenza_positivity_table <- renderDataTable({
     mutate(Year = as.factor(Year),
            `ISO Week` = as.factor(`ISO Week`)) %>%
     make_table(filter_cols = c(1,2),
-               add_separator_cols = c(2,3,4),
+               add_separator_cols = c(3,4),
                add_separator_cols_1dp = c(5),
                order_by_firstcol = "desc")
 })
@@ -71,7 +71,7 @@ output$flu_positivity_age_table <- renderDataTable({
            `ISO Week` = as.factor(`ISO Week`),
            `Age Group` = as.factor(`Age Group`)) %>%
     make_table(filter_cols = c(1,2,3),
-               add_separator_cols = c(2,4,5),
+               add_separator_cols = c(4,5),
                add_separator_cols_1dp = c(6), order_by_firstcol = "desc")
 })
 
