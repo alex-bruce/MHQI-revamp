@@ -4,20 +4,7 @@ metadataButtonServer(id="respiratory_rsv_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
-RSV_admissions <- age_rate_data_all_path %>% 
-  filter(age_band == "All Ages") %>% 
-  add_season() %>% 
-  select(week_ending, rsv, rsv_rate, Season) %>% 
-  rename(Date = week_ending,
-         Admissions = rsv,
-         RatePer100000 = rsv_rate) %>% 
-  mutate(Year = year(Date),
-         ISOWeek = isoweek(Date)) %>% 
-  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
-         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
-                             ISOWeek < 40 ~ ISOWeek + 13)) 
-# Get recent seasons
-rsv_adm_seasons <- tail(sort(unique(RSV_admissions$Season)), 6)
+
 
 altTextServer("rsv_admissions_modal",
               title = "Wekly rate of RSV hospital admissions in Scotland",
@@ -117,7 +104,7 @@ altTextServer("rsv_admissions_simd_modal",
 
 # RSV admissions table
 output$rsv_admissions_table <- renderDataTable({
-  RSV_admissions %>%
+  rsv_admissions %>%
     filter(Season %in% rsv_adm_seasons) %>%
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, Admissions, RatePer100000) %>%
@@ -163,7 +150,7 @@ output$rsv_admissions_age_table <- renderDataTable({
 
 # RSV Adms plot
 output$rsv_admissions_plot <- renderPlotly({
-  RSV_admissions %>%
+  rsv_admissions %>%
 
     create_pathogen_adms_linechart()
 
@@ -299,7 +286,7 @@ output$rsv_los_title <- renderUI({h3(glue("RSV length of stay by age group in Se
 
 #recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
 
-rsv_los_recent_ISO_week <- RSV_admissions %>%
+rsv_los_recent_ISO_week <- rsv_admissions %>%
   arrange(Date) %>%
   tail(2) %>%
   head(1) %>%
