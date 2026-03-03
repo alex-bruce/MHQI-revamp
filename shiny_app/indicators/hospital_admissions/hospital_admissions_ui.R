@@ -6,6 +6,20 @@ admissions_seasons <- age_rate_data_all_path %>%
   unique() %>%
   unlist(., use.names=FALSE)
 
+cov_admissions_recent_week <- cov_admissions %>%
+  tail(3) %>%
+  mutate(DateTwoWeek = .$Date[1],
+         DateLastWeek = .$Date[2],
+         DateThisWeek = .$Date[3],
+         AdmissionsTwoWeek = .$Admissions[1],
+         AdmissionsLastWeek = .$Admissions[2],
+         AdmissionsThisWeek = .$Admissions[3],
+         RateTwoWeek = .$RatePer100000[1],
+         RateLastWeek = .$RatePer100000[2],
+         RateThisWeek = .$RatePer100000[3]) %>%
+  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek, RateTwoWeek, RateLastWeek, RateThisWeek) %>%
+  head(1)
+
 tagList(
   # fluidRow(width = 12,
   #          metadataButtonUI("hospital_admissions"),

@@ -59,7 +59,7 @@ observeEvent(input$glossary,
 ## Organise Covid data into the right format for the plot and table
 
 
-Cov_admissions <- age_rate_data_all_path %>% 
+cov_admissions <- age_rate_data_all_path %>% 
   filter(age_band == "All Ages") %>% 
   add_season() %>% 
   select(week_ending, cov, cov_rate, Season) %>% 
