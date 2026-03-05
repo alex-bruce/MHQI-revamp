@@ -1,14 +1,34 @@
+## Format RSV admissions data from age_rate_data_all_path - should no longer need RSV_admissions.csv from Output folder
+
+rsv_admissions <- age_rate_data_all_path %>% 
+  filter(age_band == "All Ages") %>% 
+  add_season() %>% 
+  select(week_ending, rsv, rsv_rate, Season) %>% 
+  rename(Date = week_ending,
+         Admissions = rsv,
+         RatePer100000 = rsv_rate) %>% 
+  mutate(Year = year(Date),
+         ISOWeek = isoweek(Date)) %>% 
+  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+                             ISOWeek < 40 ~ ISOWeek + 13)) 
+# Get recent seasons
+rsv_adm_seasons <- tail(sort(unique(rsv_admissions$Season)), 6)
+
 # Recent weeks admissions
 
-rsv_admissions_recent_week <- RSV_admissions %>%
+rsv_admissions_recent_week <- rsv_admissions %>%
   tail(3) %>%
   mutate(DateTwoWeek = .$Date[1],
          DateLastWeek = .$Date[2],
          DateThisWeek = .$Date[3],
          AdmissionsTwoWeek = .$Admissions[1],
          AdmissionsLastWeek = .$Admissions[2],
-         AdmissionsThisWeek = .$Admissions[3]) %>%
-  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek) %>%
+         AdmissionsThisWeek = .$Admissions[3],
+         RateTwoWeek = .$RatePer100000[1],
+         RateLastWeek = .$RatePer100000[2],
+         RateThisWeek = .$RatePer100000[3]) %>%
+  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek, RateTwoWeek, RateLastWeek, RateThisWeek) %>%
   head(1)
 
 tagList(
@@ -28,24 +48,30 @@ tagList(
                                      br(),
 #                                     h3(glue("Total number of RSV hospital admissions in Scotland over the last two weeks")),
                                      # two weeks ago total number
-                                     valueBox(value = {rsv_admissions_recent_week %>%
+                                     valueBox(value ={rsv_admissions_recent_week %>%
                                      .$AdmissionsTwoWeek %>% format(big.mark=",")},
-                                     subtitle = glue("Week ending {rsv_admissions_recent_week %>%
-                                                .$DateTwoWeek %>% format('%d %b %y')}"),
+                                     subtitle =  tagList(tags$strong(glue("({format(round(rsv_admissions_recent_week %>% .$RateTwoWeek,1), nsmall = 1)} per 100,000)")),
+                                     tags$br(),
+                                     glue("Week ending {rsv_admissions_recent_week %>%
+                                                .$DateTwoWeek %>% format('%d %b %y')}")),
                                      color = "navy",
                                      icon = icon_no_warning_fn("calendar-week")),
                                      # previous week total number
                                      valueBox(value = {rsv_admissions_recent_week %>%
                                          .$AdmissionsLastWeek %>% format(big.mark=",")},
-                                         subtitle = glue("Week ending {rsv_admissions_recent_week %>%
-                                                .$DateLastWeek %>% format('%d %b %y')}"),
+                                         subtitle =tagList(tags$strong(glue("({format(round(rsv_admissions_recent_week %>% .$RateLastWeek,1), nsmall = 1)} per 100,000)")),
+                                         tags$br(),
+                                         glue("Week ending {rsv_admissions_recent_week %>%
+                                                .$DateLastWeek %>% format('%d %b %y')}")),
                                          color = "navy",
                                          icon = icon_no_warning_fn("calendar-week")),
                                      # this week total number
                                      valueBox(value = glue("{rsv_admissions_recent_week %>%
                                          .$AdmissionsThisWeek %>% format(big.mark=",")}*"),
-                                         subtitle = glue("Week ending {rsv_admissions_recent_week %>%
-                                                .$DateThisWeek %>% format('%d %b %y')}"),
+                                         subtitle = tagList(tags$strong(glue("({format(round(rsv_admissions_recent_week %>% .$RateThisWeek,1), nsmall = 1)} per 100,000)")),
+                                       tags$br(),
+                                         glue("Week ending {rsv_admissions_recent_week %>%
+                                                .$DateThisWeek %>% format('%d %b %y')}")),
                                          color = "navy",
                                          icon = icon_no_warning_fn("calendar-week")),
                                      h4("* provisional figures",

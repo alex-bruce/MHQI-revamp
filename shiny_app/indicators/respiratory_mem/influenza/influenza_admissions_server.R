@@ -3,21 +3,6 @@ metadataButtonServer(id="respiratory_influenza_admissions",
                      panel="Respiratory infection activity",
                      parent = session)
 
-Influenza_admissions <- age_rate_data_all_path %>% 
-  filter(age_band == "All Ages") %>% 
-  add_season() %>% 
-  select(week_ending, flu, flu_rate, Season) %>% 
-  rename(Date = week_ending,
-         Admissions = flu,
-         RatePer100000 = flu_rate) %>% 
-  mutate(Year = year(Date),
-         ISOWeek = isoweek(Date)) %>% 
-  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
-         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
-                             ISOWeek < 40 ~ ISOWeek + 13)) 
-
-# Get recent seasons
-flu_adm_seasons <- tail(sort(unique(Influenza_admissions$Season)), 6)
 
 
 altTextServer("influenza_admissions_modal",
@@ -110,7 +95,7 @@ altTextServer("influenza_admissions_simd_modal",
 
 # Influenza admissions table
 output$influenza_admissions_table <- renderDataTable({
-  Influenza_admissions %>%
+  influenza_admissions %>%
     #filter(FluType == "Influenza A & B") %>%
     filter(Season %in% flu_adm_seasons) %>%
     arrange(desc(Date)) %>%
@@ -147,7 +132,7 @@ output$influenza_admissions_hb_table <- renderDataTable({
 
 # Influenza Adms plot
 output$influenza_admissions_plot <- renderPlotly({
-  Influenza_admissions %>%
+  influenza_admissions %>%
     #filter(FluType == "Influenza A & B") %>%
     filter(Season %in% flu_adm_seasons) %>% 
     create_pathogen_adms_linechart()
@@ -314,7 +299,7 @@ output$influenza_admissions_simd_plot <- renderPlotly({
 
 #recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
 
-flu_los_recent_ISO_week <- Influenza_admissions %>%
+flu_los_recent_ISO_week <- influenza_admissions %>%
   arrange(Date) %>%
   tail(2) %>%
   head(1) %>%
@@ -347,7 +332,8 @@ output$flu_los_table <- renderDataTable({
                                                   "65 to 74", "75+", "All Ages"))) %>% 
     arrange(desc(Season), AgeGroup) %>% 
     select(Season, 'Age group' = AgeGroup, 'Average Length of stay' = AverageLengthOfStay) %>%
-    make_table(add_separator_cols_1dp = c(3))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols_1dp = c(3))
   
 })
 

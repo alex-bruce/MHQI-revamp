@@ -4,7 +4,39 @@ cov_cases_seasons <-
   select(season) %>% 
   unique() %>% 
   tail(3)
-  
+
+# create values for headline boxes
+pop_scot_total <- i_population_v2 %>%
+  filter(AgeGroup == "Total", Sex == "Total") %>%
+  .$PopNumber
+
+cov_cases_recent_week <- Respiratory_Scot %>%
+  filter(Pathogen == "Covid-19") %>%
+  mutate(WeekEnding = convert_opendata_date(WeekEnding)) %>%
+  tail(2) %>%
+  select(-WeekBeginning) %>%
+  rename(Date = WeekEnding) %>%
+  #pivot_wider(names_from = FluType,
+  #            values_from = Admissions) %>%
+  mutate(DateLastWeek = .$Date[1],
+         DateThisWeek = .$Date[2],
+         CasesLastWeek = .$`NumberCasesPerWeek`[1],
+         CasesThisWeek = .$`NumberCasesPerWeek`[2],
+         PercentageDifference = round((CasesThisWeek/CasesLastWeek - 1)*100, digits = 2),
+         RateLastWeek = round_half_up(100000 *  .$`NumberCasesPerWeek`[1]/pop_scot_total,1),
+         RateThisWeek = round_half_up(100000 *  .$`NumberCasesPerWeek`[2]/pop_scot_total,1)) %>%
+  mutate(ChangeFactor = case_when(
+    PercentageDifference < 0 ~ "Decrease",
+    PercentageDifference > 0 ~ "Increase",
+    TRUE                     ~ "No change"),
+    icon= case_when(ChangeFactor == "Decrease"~"arrow-down",
+                    ChangeFactor == "Increase"~ "arrow-up",
+                    ChangeFactor == "No change"~"equals")
+  ) %>%
+  select(DateLastWeek, DateThisWeek, CasesLastWeek, CasesThisWeek, PercentageDifference, RateLastWeek, RateThisWeek, ChangeFactor, icon) %>%
+  head(1)
+
+###
 tagList(
   # fluidRow(width = 12,
   #          
@@ -64,6 +96,36 @@ tagList(
   #   fluidRow(
   #     width = 12, br()),
   
+  fluidRow(width = 12,
+           tabPanel(stringr::str_to_sentence("influenza"),
+                    # headline figures for the week in Scotland
+                    tagList(h2(glue("Summary of laboratory-confirmed COVID-19 cases in Scotland")),
+                            tags$div(class = "headline",
+                                     br(),
+                                     # h3(glue("Total number of Covid-19 cases in Scotland over the last two weeks")),
+                                     # previous week total number
+                                     valueBox(value = {cov_cases_recent_week %>% .$CasesLastWeek %>% format(big.mark=",")},        
+                                              subtitle = tagList(
+                                                tags$strong(glue("({format(cov_cases_recent_week %>% .$RateLastWeek, nsmall = 1)} per 100,000)")),
+                                              br(),
+                                                glue("Week ending {cov_cases_recent_week %>% .$DateLastWeek%>% format('%d %b %y')}")),
+                                              color = "navy",
+                                              icon = icon_no_warning_fn("calendar-week")),
+                                     # this week total number
+                                     valueBox(value = {cov_cases_recent_week %>% .$CasesThisWeek %>% format(big.mark=",")},
+                                              subtitle = tagList(tags$strong(glue("({format(cov_cases_recent_week %>% .$RateThisWeek, nsmall = 1)} per 100,000)")),
+                                                                      tags$br(),
+                                                                 glue("Week ending {cov_cases_recent_week %>% .$DateThisWeek%>% format('%d %b %y')}")),
+                                              color = "navy",
+                                              icon = icon_no_warning_fn("calendar-week")),
+                                     # percentage difference between the previous weeks
+                                     valueBox(value = glue("{cov_cases_recent_week%>% .$PercentageDifference}%"),
+                                              subtitle = glue("{cov_cases_recent_week %>%.$ChangeFactor %>%  str_to_sentence()} in the last week"),
+                                              color = "navy",
+                                              icon = icon_no_warning_fn({cov_cases_recent_week %>%  .$icon})),
+                                     # This text is hidden by css but helps pad the box at the bottom
+                                     h6("hidden text for padding page")
+                            )))), # headline
   
   fluidRow(width = 12,
            tagList(h2("COVID-19 percentage test positivity"),

@@ -56,24 +56,7 @@ observeEvent(input$glossary,
 
 # Hospital admissions ----
 
-## Organise Covid data into the right format for the plot and table
 
-
-Cov_admissions <- age_rate_data_all_path %>% 
-  filter(age_band == "All Ages") %>% 
-  add_season() %>% 
-  select(week_ending, cov, cov_rate, Season) %>% 
-  rename(Date = week_ending,
-         Admissions = cov,
-         RatePer100000 = cov_rate) %>% 
-  mutate(Year = year(Date),
-         ISOWeek = isoweek(Date)) %>% 
-  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
-         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
-                             ISOWeek < 40 ~ ISOWeek + 13)) %>% 
-  filter(Season %in% tail(sort(unique(Season)), 3))
-
-cov_adm_seasons <- tail(sort(unique(Cov_admissions$Season)), 3)
 
 ## Create plot descriptions
 
@@ -234,7 +217,7 @@ altTextServer("covid_adm_age_sex",
 
 # COVID admissions table
 output$hospital_admissions_table <- renderDataTable({
-  Cov_admissions %>%
+  cov_admissions %>%
     filter(Season %in% cov_adm_seasons) %>%
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, Admissions, RatePer100000) %>%
@@ -273,7 +256,7 @@ output$hospital_admissions_table <- renderDataTable({
 
 # Covid Adms plot
 output$hospital_admissions_plot <- renderPlotly({
-  Cov_admissions %>%
+  cov_admissions %>%
     
     create_pathogen_adms_linechart()
   
@@ -445,7 +428,7 @@ output$cov_los_title <- renderUI({h3(glue("COVID-19 length of stay by age group 
 #       
 #recent_ISO_week <- isoweek(floor_date(today(), "week", 1) - 8)  #Two Sundays ago - accounting for lag
 
-cov_los_recent_ISO_week <- Cov_admissions %>%
+cov_los_recent_ISO_week <- cov_admissions %>%
   arrange(Date) %>%
   tail(2) %>%
   head(1) %>%
