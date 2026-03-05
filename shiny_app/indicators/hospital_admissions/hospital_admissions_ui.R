@@ -54,28 +54,28 @@ tagList(
                                             linebreaks(1),
                                             #h3("Weekly totals from last three weeks"),
 
-                                            valueBox(value = tagList({cov_admissions_recent_week %>%
+                                            valueBox(value = {cov_admissions_recent_week %>%
                                                 .$AdmissionsTwoWeek %>% format(big.mark=",")},
+                                                subtitle = tagList(tags$strong(glue("({format(round(cov_admissions_recent_week %>% .$RateTwoWeek,1), nsmall = 1)} per 100,000)")),
                                                 tags$br(),
-                                                glue("({format(round(cov_admissions_recent_week %>% .$RateTwoWeek,1), nsmall = 1)} per 100,000)")),
-                                                subtitle = glue("Week ending {cov_admissions_recent_week %>%
-                                                .$DateTwoWeek %>% format('%d %b %y')}"),
+                                                glue("Week ending {cov_admissions_recent_week %>%
+                                                .$DateTwoWeek %>% format('%d %b %y')}")),
                                                 color = "navy",
                                                 icon = icon_no_warning_fn("calendar-week")),
-                                            valueBox(value = tagList({cov_admissions_recent_week %>%
+                                            valueBox(value = {cov_admissions_recent_week %>%
                                                 .$AdmissionsLastWeek %>% format(big.mark=",")},
+                                                subtitle = tagList(tags$strong(glue("({format(round(cov_admissions_recent_week %>% .$RateLastWeek,1), nsmall = 1)} per 100,000)")),
                                                 tags$br(),
-                                                glue("({format(round(cov_admissions_recent_week %>% .$RateLastWeek,1), nsmall = 1)} per 100,000)")),
-                                                subtitle = glue("Week ending {cov_admissions_recent_week %>%
-                                                .$DateLastWeek %>% format('%d %b %y')}"),
+                                                glue("Week ending {cov_admissions_recent_week %>%
+                                                .$DateLastWeek %>% format('%d %b %y')}")),
                                                 color = "navy",
                                                 icon = icon_no_warning_fn("calendar-week")),
-                                            valueBox(value = tagList(glue("{cov_admissions_recent_week %>%
+                                            valueBox(value = glue("{cov_admissions_recent_week %>%
                                          .$AdmissionsThisWeek %>% format(big.mark=",")}*"),
+                                                     subtitle = tagList(tags$strong(glue("({format(round(cov_admissions_recent_week %>% .$RateThisWeek,1), nsmall = 1)} per 100,000)")),
                                                                      tags$br(),
-                                                                     glue("({format(round(cov_admissions_recent_week %>% .$RateThisWeek,1), nsmall = 1)} per 100,000)")),
-                                                     subtitle = glue("Week ending {cov_admissions_recent_week %>%
-                                                .$DateThisWeek %>% format('%d %b %y')}"),
+                                                     glue("Week ending {cov_admissions_recent_week %>%
+                                                .$DateThisWeek %>% format('%d %b %y')}")),
                                                      color = "navy",
                                                      icon = icon_no_warning_fn("calendar-week")),
                                             h4("* provisional figures",

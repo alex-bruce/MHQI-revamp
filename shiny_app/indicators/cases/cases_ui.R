@@ -104,17 +104,18 @@ tagList(
                                      br(),
                                      # h3(glue("Total number of Covid-19 cases in Scotland over the last two weeks")),
                                      # previous week total number
-                                     valueBox(value = tagList({cov_cases_recent_week %>% .$CasesLastWeek %>% format(big.mark=",")},
-                                                              br(),
-                                                              glue("({format(cov_cases_recent_week %>% .$RateLastWeek, nsmall = 1)} per 100,000)")),
-                                              subtitle = glue("Week ending {cov_cases_recent_week %>% .$DateLastWeek%>% format('%d %b %y')}"),
+                                     valueBox(value = {cov_cases_recent_week %>% .$CasesLastWeek %>% format(big.mark=",")},        
+                                              subtitle = tagList(
+                                                tags$strong(glue("({format(cov_cases_recent_week %>% .$RateLastWeek, nsmall = 1)} per 100,000)")),
+                                              br(),
+                                                glue("Week ending {cov_cases_recent_week %>% .$DateLastWeek%>% format('%d %b %y')}")),
                                               color = "navy",
                                               icon = icon_no_warning_fn("calendar-week")),
                                      # this week total number
-                                     valueBox(value = tagList({cov_cases_recent_week %>% .$CasesThisWeek %>% format(big.mark=",")},
-                                                              tags$br(),
-                                                              glue("({format(cov_cases_recent_week %>% .$RateThisWeek, nsmall = 1)} per 100,000)")),
-                                              subtitle = glue("Week ending {cov_cases_recent_week %>% .$DateThisWeek%>% format('%d %b %y')}"),
+                                     valueBox(value = {cov_cases_recent_week %>% .$CasesThisWeek %>% format(big.mark=",")},
+                                              subtitle = tagList(tags$strong(glue("({format(cov_cases_recent_week %>% .$RateThisWeek, nsmall = 1)} per 100,000)")),
+                                                                      tags$br(),
+                                                                 glue("Week ending {cov_cases_recent_week %>% .$DateThisWeek%>% format('%d %b %y')}")),
                                               color = "navy",
                                               icon = icon_no_warning_fn("calendar-week")),
                                      # percentage difference between the previous weeks
