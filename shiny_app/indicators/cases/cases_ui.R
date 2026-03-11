@@ -119,7 +119,7 @@ tagList(
                                               color = "navy",
                                               icon = icon_no_warning_fn("calendar-week")),
                                      # percentage difference between the previous weeks
-                                     valueBox(value = glue("{cov_cases_recent_week%>% .$PercentageDifference}%"),
+                                     valueBox(value = glue("{round(cov_cases_recent_week%>% .$PercentageDifference, 1)}%"),
                                               subtitle = glue("{cov_cases_recent_week %>%.$ChangeFactor %>%  str_to_sentence()} in the last week"),
                                               color = "navy",
                                               icon = icon_no_warning_fn({cov_cases_recent_week %>%  .$icon})),

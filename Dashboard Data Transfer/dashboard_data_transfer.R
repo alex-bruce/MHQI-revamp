@@ -35,7 +35,7 @@ output_folder <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly C
 # Open Data output locations and dates (still to fine tune this)
 od_date <- floor_date(today(), "week", 1) + 1
 od_report_date <- format(report_date, "%Y%m%d")
-od_archive_date <-format(report_date-7)
+od_archive_date <-format(report_date)
 od_sunday<- floor_date(today(), "week", 1) -1
 od_sunday_minus_7 <- floor_date(today(), "week", 1) -8
 #od_sunday_minus_14 <- today() - 17
@@ -64,6 +64,17 @@ data_folder <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/",
 
 data_files = list.files(path=data_folder, recursive=TRUE, full.names=TRUE)
 purrr::walk(data_files, file.copy, to = input_data, recursive=TRUE, overwrite=TRUE)
+
+
+## Create next week's Weekly Data Folder
+
+new_data_folder <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/",
+                    "Weekly Data Folders/{report_date + days(7)}/Data")
+
+if (!dir.exists(paste(new_data_folder, "/Respiratory", sep=""))) {
+  dir.create(paste(new_data_folder, "/Respiratory", sep=""), recursive=TRUE) }
+if (!dir.exists(paste(new_data_folder, "/Hospital Admissions", sep=""))) {
+  dir.create(paste(new_data_folder, "/Hospital Admissions", sep=""), recursive=TRUE)}
 
 # Getting population information
 # ------------------------------
@@ -94,37 +105,6 @@ i_population$AgeGroup <- sapply(i_population$AgeGroup, function(x) str_remove_al
 
 source("Transfer Scripts/population_lookups.R")
 
-######  Open data archiving steps #######
-# run this section before the data transfer steps
-# the process moves all existing content from od_outputs folder
-# into a newly created folder within the archive sub-folder.
-# this new folder is labelled with the previous week's publication date)
-
-# Set the source directory where your files are located
-source_dir <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/"
-
-# Set the name of the new destination directory
-destination_dir <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/archived/{od_archive_date}")
-
-# Create the new destination directory for archive steps
-if (!dir.exists(destination_dir)) {
-  dir.create(destination_dir)}
-
-# List ***all*** files in the source directory
-files_to_move <- list.files(source_dir)
-
-# Loop through the files and move them to the new destination directory
-for (file_name in files_to_move) {
-  source_path <- file.path(source_dir, file_name)
-  destination_path <- file.path(destination_dir, file_name)
-# Move the file to the new destination directory
-  if (file.rename(source_path, destination_path)) {
-    cat("Moved", file_name, "to", destination_dir, "\n")
-  } else {
-    cat("Failed to move", file_name, "\n")
-    cat("Error message: ", geterrmessage(), "\n")
-  }
-}
 
 #add qf column to inputed column that meets a null criteria
 
@@ -266,13 +246,17 @@ rm(od_date, od_report_date,od_archive_date ,od_sunday,od_sunday_minus_7,
 ## NEW Open Data transfers ##
 #############################
 
-# Set the name of the new destination directory
-new_od_dir <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/new/")
 
-# Create the new destination directory for archive steps
-if (!dir.exists(new_od_dir)) {
-  dir.create(new_od_dir)
-}
+## The section below is commented out for now, as this week's data will now be archived at the end of the dashboard 
+## process, and next week's 'new' OD folder will be subsequently be created
+
+# # Set the name of the new destination directory
+# new_od_dir <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/new/")
+# 
+# # Create the new destination directory for archive steps
+# if (!dir.exists(new_od_dir)) {
+#   dir.create(new_od_dir)
+# }
 
 # Read in Date reference file
 date_reference<-readRDS(paste0("/conf/C19_Test_and_Protect/Analyst Space/Nipuni (Analyst Space)/",
@@ -329,6 +313,42 @@ source("Transfer Scripts/new_od_wastewater_outputs.R")
 #################################### *********** ###############################
 
 
+######  Open data archiving steps #######
+# run this section to move this week's content from od_outputs folder
+# into a newly created folder within the archive sub-folder.
+# this new folder is labelled with the current week's publication date
+
+# Set the source directory where your files are located
+source_dir <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/"
+
+# Set the name of the new destination directory
+destination_dir <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/archived/{od_archive_date}")
+
+# Create the new destination directory for archive steps
+if (!dir.exists(destination_dir)) {
+  dir.create(destination_dir)}
+
+# List ***all*** files in the source directory
+files_to_move <- list.files(source_dir)
+
+# Loop through the files and move them to the new destination directory
+for (file_name in files_to_move) {
+  source_path <- file.path(source_dir, file_name)
+  destination_path <- file.path(destination_dir, file_name)
+  # Move the file to the new destination directory
+  if (file.rename(source_path, destination_path)) {
+    cat("Moved", file_name, "to", destination_dir, "\n")
+  } else {
+    cat("Failed to move", file_name, "\n")
+    cat("Error message: ", geterrmessage(), "\n")
+  }
+}
 
 
+# Create a 'new' folder for next week's open data files
+new_od_dir <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/new/")
 
+# Create the new destination directory
+if (!dir.exists(new_od_dir)) {
+  dir.create(new_od_dir)
+}
