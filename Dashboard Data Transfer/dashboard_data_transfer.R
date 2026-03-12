@@ -71,10 +71,28 @@ purrr::walk(data_files, file.copy, to = input_data, recursive=TRUE, overwrite=TR
 new_data_folder <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/",
                     "Weekly Data Folders/{report_date + days(7)}/Data")
 
-if (!dir.exists(paste(new_data_folder, "/Respiratory", sep=""))) {
-  dir.create(paste(new_data_folder, "/Respiratory", sep=""), recursive=TRUE) }
-if (!dir.exists(paste(new_data_folder, "/Hospital Admissions", sep=""))) {
-  dir.create(paste(new_data_folder, "/Hospital Admissions", sep=""), recursive=TRUE)}
+# Define the main directory and subdirectories
+
+sub_dirs <- c("Respiratory", "Hospital Admissions", "new")
+
+# Create the main directory if it doesn't exist
+if (!dir.exists(new_data_folder)) {
+  dir.create(new_data_folder, recursive=TRUE)
+}
+
+# Create each subdirectory inside the main directory
+for (sub in sub_dirs) {
+  dir_path <- file.path(new_data_folder, sub)
+  
+  # Create subdirectory if it doesn't exist
+  if (!dir.exists(dir_path)) {
+    dir.create(dir_path, recursive = TRUE)
+    message("Created: ", dir_path)
+  } else {
+    message("Already exists: ", dir_path)
+  }
+}
+
 
 # Getting population information
 # ------------------------------
