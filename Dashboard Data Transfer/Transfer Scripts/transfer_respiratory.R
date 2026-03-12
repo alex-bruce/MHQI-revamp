@@ -320,7 +320,7 @@ g_resp_summary_totals <- g_resp_data %>%
                 DatePreviousWeek = Date_PreviousWeek,
                 DateThisWeek = Date_ThisWeek) %>%
   mutate(Difference = CountThisWeek-CountPreviousWeek,
-         PercentageDifference = round((Difference/CountPreviousWeek)*100, 0),
+         PercentageDifference = round((Difference/CountPreviousWeek)*100, 1),
          ChangeFactor = case_when(PercentageDifference < 0 ~ "decrease",
                                   PercentageDifference > 0 ~ "increase",
                                   PercentageDifference == 0 ~ "no change")) %>%
