@@ -77,10 +77,10 @@ altTextServer("euromomo_mem_age_modal",
 output$euromomo_mem_table <- renderDataTable({
   Respiratory_Euromomo %>%
     filter(AgeGroup == "All Ages") %>%
-    filter(Season %in% euromomo_seasons) %>%
+    #filter(Season %in% euromomo_seasons) %>%
     mutate(ReportingDelay = ifelse(ActivityLevelDelay == "Reporting delay",
                                 "Yes", "")) %>%
-    arrange(desc(WeekEnding)) %>%
+    arrange(desc(Year), desc(ISOWeek)) %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
       ActivityLevel == "Extraordinary" ~ "Very High",
@@ -94,6 +94,7 @@ output$euromomo_mem_table <- renderDataTable({
     select(Season, ISOWeek, ZScore, ActivityLevel, ReportingDelay) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
+           ReportingDelay=factor(ReportingDelay),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     rename(`ISO Week` = ISOWeek,
            `Z-score` = ZScore,
@@ -109,7 +110,7 @@ output$euromomo_mem_age_table <- renderDataTable({
     filter(Season %in% euromomo_seasons[(length(euromomo_seasons)-1):length(euromomo_seasons)]) %>%
     mutate(ReportingDelay = ifelse(ActivityLevelDelay == "Reporting delay",
                                 "Yes", "")) %>%
-    arrange(desc(WeekEnding)) %>%
+    arrange(desc(Year), desc(ISOWeek)) %>%
     mutate(ActivityLevel = case_when(
       ActivityLevel == "Moderate" ~ "Medium",
       ActivityLevel == "Extraordinary" ~ "Very High",
@@ -123,6 +124,7 @@ output$euromomo_mem_age_table <- renderDataTable({
     select(Season, ISOWeek, AgeGroup, ZScore, ActivityLevel, ReportingDelay) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
+           ReportingDelay=factor(ReportingDelay),
            AgeGroup = factor(AgeGroup, levels = euromomo_mem_age_groups_full),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     rename(`ISO Week` = ISOWeek,

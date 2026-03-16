@@ -3,7 +3,7 @@
 seasonal_coronavirus_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>%
   filter(Pathogen == 'Seasonal Coronavirus (non-COVID-19)') %>%
   tail(2) %>%
-  select(-WeekBeginning) %>%
+  #select(-WeekBeginning) %>%
   rename(Date = WeekEnding) %>%
   mutate(DateLastWeek = .$Date[1],
          DateThisWeek = .$Date[2],
@@ -42,7 +42,7 @@ seasonal_coronavirus_cari_age <- Respiratory_Pathogens_CARI_Age %>%
 
 seasonal_coronavirus_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
   filter(substr(Pathogen,1,20) %in% "Seasonal Coronavirus") %>%
-  mutate(WeekBeginning = as.Date(WeekBeginning),
+  mutate(#WeekBeginning = as.Date(WeekBeginning),
          WeekEnding = as.Date(WeekEnding)) %>%
   mutate(Pathogen = case_when(
     Pathogen == "Seasonal Coronavirus (non-COVID-19)" ~ "Seasonal coronavirus (non-COVID-19)",

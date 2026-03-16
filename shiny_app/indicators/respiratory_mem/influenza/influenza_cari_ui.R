@@ -3,7 +3,7 @@
 influenza_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>% 
   filter(Pathogen == 'Influenza') %>%
   tail(2) %>%
-  select(-WeekBeginning) %>%
+  #select(-WeekBeginning) %>%
   rename(Date = WeekEnding) %>%
   mutate(DateLastWeek = .$Date[1],
          DateThisWeek = .$Date[2],
@@ -43,7 +43,7 @@ influenza_cari_age <- Respiratory_Pathogens_CARI_Age %>%
 
 flu_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
   filter(substr(Pathogen,1,9) %in% "Influenza") %>%
-  mutate(WeekBeginning = as.Date(WeekBeginning),
+  mutate(#WeekBeginning = as.Date(WeekBeginning),
          WeekEnding = as.Date(WeekEnding)) %>%
   mutate(Pathogen = case_when(
     Pathogen == "Influenza" ~ "Type A and B",
