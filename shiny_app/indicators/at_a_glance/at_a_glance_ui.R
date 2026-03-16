@@ -1,6 +1,6 @@
 
 cari_at_a_glance <- Respiratory_Pathogens_CARI_Scot %>%
-  mutate(WeekBeginning = as.Date(WeekBeginning),
+  mutate(#WeekBeginning = as.Date(WeekBeginning),
          WeekEnding = as.Date(WeekEnding)) %>%
   filter(Pathogen %in% c("Adenovirus", "COVID-19", "Human Metapneumovirus", "Influenza",
                          "Mycoplasma Pneumoniae", "Overall Test Positivity", "Parainfluenza Virus",

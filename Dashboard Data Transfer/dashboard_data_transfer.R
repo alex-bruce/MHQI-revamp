@@ -15,6 +15,7 @@ pacman::p_load(dplyr, magrittr, glue, openxlsx, lubridate, ISOweek,
 Sys.umask("006")
 
 # for use to mask hb admission and occupancy data
+## LIKELY NOT NEEDED AFTER ADMISSIONS CHANGES - CHECK AND REMOVE ##
 summer_2025 <- as.Date("2025-05-18")
 #oct_2025 <- "2025-10-05"
 
@@ -170,13 +171,13 @@ source("Transfer Scripts/transfer_admissions.R")
 #source("Transfer Scripts/transfer_wastewater.R")
 
 # Covid WW National
-source("Transfer Scripts/transfer_covid_wastewater_national.R")
+#source("Transfer Scripts/transfer_covid_wastewater_national.R")
 # Covid WW HB
-source("Transfer Scripts/transfer_covid_wastewater_hb.R")
+#source("Transfer Scripts/transfer_covid_wastewater_hb.R")
 # Covid WW LA
-source("Transfer Scripts/transfer_covid_wastewater_ca.R")
+#source("Transfer Scripts/transfer_covid_wastewater_ca.R")
 # Covid WW IND
-source("Transfer Scripts/transfer_covid_wastewater_ind.R")
+#source("Transfer Scripts/transfer_covid_wastewater_ind.R")
 
 #### Occupancy - Board submissions
 #source("Transfer Scripts/transfer_occupancy.R")
@@ -195,7 +196,7 @@ source("Transfer Scripts/transfer_respiratory.R")
 
 
 #### Respiratory - Euromomo
-source("Transfer Scripts/transfer_respiratory_euromomo.R")
+#source("Transfer Scripts/transfer_respiratory_euromomo.R")
 
 #### Respiratory NHS24 - MEM
 source("Transfer Scripts/transfer_respiratory_nhs24_mem.R")
@@ -216,10 +217,14 @@ source("Transfer Scripts/transfer_flu_admissions.R")
 source("Transfer Scripts/transfer_rsv_admissions.R")
 
 #### CARI
-source("Transfer Scripts/transfer_respiratory_cari.R")
+#source("Transfer Scripts/transfer_respiratory_cari.R")
 
 #### Test Positivity
 source("Transfer Scripts/transfer_respiratory_test_positivity.R")
+
+## TEMPORARY TRANSFER OF ALREADY UPDATED FILES TO OUTPUT FOLDER,
+### WHILE OTHER PROCESSES CONTINUE TO BE UPDATED
+source("Transfer Scripts/transfer_new_files_temp.R")
 
 ## Open Data transfers ##
 
@@ -317,12 +322,12 @@ source("Transfer Scripts/new_od_tests_outputs.R")
 source("Transfer Scripts/new_od_occupancy_outputs.R")
 
 ##CARI----
-source("Transfer Scripts/new_od_cari_outputs.R")
+#source("Transfer Scripts/new_od_cari_outputs.R")
 
 ##*Below files are directly from previous OD outputs saved in od_outputs folder----
 
 ##WASTEWATER----
-source("Transfer Scripts/new_od_wastewater_outputs.R")
+#source("Transfer Scripts/new_od_wastewater_outputs.R")
 
 ##CARE Home----
 #source("Transfer Scripts/new_od_care_home_outputs.R")

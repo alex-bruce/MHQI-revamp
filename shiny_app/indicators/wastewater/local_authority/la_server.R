@@ -76,8 +76,10 @@ COVID_Wastewater_CA_table$coverage = round(COVID_Wastewater_CA_table$coverage,1)
 
 output$council_area_table <- renderDataTable({
   filtered <- COVID_Wastewater_CA_table %>%
-    mutate(coverage = coverage*100)
-  filtered[-1] %>% 
+    mutate(coverage = coverage*100,
+           Season = as.factor(Season)) %>% 
+    select(-c(Start, ISOyear))
+  filtered %>% 
     arrange(desc(End)) %>%
     dplyr::rename('Week Ending Date' = End) %>% 
     dplyr::rename('Local Authority' = council_area) %>% 
@@ -85,8 +87,8 @@ output$council_area_table <- renderDataTable({
     dplyr::rename('Coverage (%)' = coverage) %>% 
     mutate(`Local Authority` = as.factor(`Local Authority`)) %>%
     make_table(order_by_firstcol = "desc",
-               add_separator_cols = 4,
-               add_separator_cols_1dp = 3,
-               filter_cols = c(1,2))
+               add_separator_cols = 5,
+               add_separator_cols_1dp = 4,
+               filter_cols = c(1,2, 3))
   
 })

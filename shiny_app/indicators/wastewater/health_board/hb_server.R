@@ -76,9 +76,11 @@ HB_table_edited$coverage = round_half_up(HB_table_edited$coverage,2)
 
 output$health_board_table <- renderDataTable({
   filtered <- HB_table_edited %>%
-    mutate(coverage = coverage*100,
-           health_board = as.factor(health_board)) 
-  filtered[-1] %>% 
+    mutate(coverage = round(coverage*100),
+           health_board = as.factor(health_board),
+           Season = as.factor(Season)) %>% 
+    select(-c(Start, ISOyear))
+  filtered %>% 
     arrange(desc(End)) %>%
     dplyr::rename('Week Ending Date' = End) %>% 
     dplyr::rename('NHS Health Board' = health_board) %>% 
@@ -86,7 +88,7 @@ output$health_board_table <- renderDataTable({
     dplyr::rename('Coverage (%)' = coverage) %>%
     make_table(order_by_firstcol = "desc",
                add_separator_cols = 4,
-               add_separator_cols_1dp = 3,
-               filter_cols = c(1,2))
+               add_separator_cols_1dp = 4,
+               filter_cols = c(1,3))
   
 })

@@ -3,7 +3,7 @@
 parainfluenza_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>% 
   filter(Pathogen == 'Parainfluenza Virus') %>%
   tail(2) %>%
-  select(-WeekBeginning) %>%
+  #select(-WeekBeginning) %>%
   rename(Date = WeekEnding) %>%
   mutate(DateLastWeek = .$Date[1],
          DateThisWeek = .$Date[2],
@@ -42,7 +42,7 @@ parainfluenza_cari_age <- Respiratory_Pathogens_CARI_Age %>%
 
 parainfluenza_cari_subtype <- Respiratory_Pathogens_CARI_Scot %>%
   filter(substr(Pathogen,1,19) %in% "Parainfluenza Virus") %>%
-  mutate(WeekBeginning = as.Date(WeekBeginning),
+  mutate(#WeekBeginning = as.Date(WeekBeginning),
          WeekEnding = as.Date(WeekEnding)) %>%
   mutate(Pathogen = case_when(
     Pathogen == "Parainfluenza Virus" ~ "HPIV",

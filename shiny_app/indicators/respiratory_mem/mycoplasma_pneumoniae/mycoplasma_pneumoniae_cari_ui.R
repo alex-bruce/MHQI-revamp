@@ -3,7 +3,7 @@
 mycoplasma_pneumoniae_cari_recent_week <- Respiratory_Pathogens_CARI_Scot %>% 
   filter(Pathogen == 'Mycoplasma Pneumoniae') %>%
   tail(2) %>%
-  select(-WeekBeginning) %>%
+  #select(-WeekBeginning) %>%
   rename(Date = WeekEnding) %>%
   mutate(DateLastWeek = .$Date[1],
          DateThisWeek = .$Date[2],

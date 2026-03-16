@@ -57,7 +57,9 @@ output$national_wastewater_table <- renderDataTable({
   COVID_Wastewater_National_table %>%
     mutate(Date = convert_opendata_date(Date)) %>%
     dplyr::rename('Seven-day average (Mgc/p/d)' = average) %>%
+    select(-ISOyear) %>% 
+    mutate(Season=as.factor(Season)) %>% 
     arrange(desc(Date)) %>%
-    make_table(add_separator_cols_1dp = 2,
+    make_table(add_separator_cols_1dp = 3,
                order_by_firstcol = "desc",filter_cols = TRUE)
 })
