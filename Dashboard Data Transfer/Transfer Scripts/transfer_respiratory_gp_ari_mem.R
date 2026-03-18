@@ -3,21 +3,21 @@
 
 ##### GPARI MEM
 
-# HB recoding
-healthboards <- c("AA" = "S08000015",
-                  "BR" = "S08000016",
-                  "DG" = "S08000017",
-                  "FF" = "S08000029",
-                  "FV" = "S08000019",
-                  "GC" = "S08000031",
-                  "GR" = "S08000020",
-                  "HG" = "S08000022",
-                  "LN" = "S08000032",
-                  "LO" = "S08000024",
-                  "OR" = "S08000025",
-                  "SH" = "S08000026",
-                  "TY" = "S08000030",
-                  "WI" = "S08000028")
+# # HB recoding
+# healthboards <- c("AA" = "S08000015",
+#                   "BR" = "S08000016",
+#                   "DG" = "S08000017",
+#                   "FF" = "S08000029",
+#                   "FV" = "S08000019",
+#                   "GC" = "S08000031",
+#                   "GR" = "S08000020",
+#                   "HG" = "S08000022",
+#                   "LN" = "S08000032",
+#                   "LO" = "S08000024",
+#                   "OR" = "S08000025",
+#                   "SH" = "S08000026",
+#                   "TY" = "S08000030",
+#                   "WI" = "S08000028")
 
 
 get_resp_year <- function(w, s){
@@ -28,7 +28,7 @@ get_resp_year <- function(w, s){
 }
 
 filenames1 <- c("GPARI")
-filenames2 <- c("scotland", "agegp", "hb")
+filenames2 <- c("scotland", "agegp")#, "hb")
 
 ## Getting respiratory data
 for (filename1 in filenames1){
@@ -134,14 +134,14 @@ for (filename1 in filenames1){
 # Order datasets
 respiratory_GPARI_MEM_scotland <- respiratory_GPARI_MEM_scotland %>%
   arrange(WeekBeginning)
-respiratory_GPARI_MEM_hb <- respiratory_GPARI_MEM_hb %>%
- arrange(WeekBeginning, HBName)
+# respiratory_GPARI_MEM_hb <- respiratory_GPARI_MEM_hb %>%
+#  arrange(WeekBeginning, HBName)
 respiratory_GPARI_MEM_agegp <- respiratory_GPARI_MEM_agegp %>%
   arrange(WeekBeginning, AgeGroup)
 
 # Output
 write_csv(respiratory_GPARI_MEM_scotland, glue(output_folder, "Respiratory_GPARI_MEM_Scot.csv"))
-write_csv(respiratory_GPARI_MEM_hb, glue(output_folder, "Respiratory_GPARI_MEM_HB.csv"))
+#write_csv(respiratory_GPARI_MEM_hb, glue(output_folder, "Respiratory_GPARI_MEM_HB.csv"))
 write_csv(respiratory_GPARI_MEM_agegp, glue(output_folder, "Respiratory_GPARI_MEM_Age.csv"))
 
 

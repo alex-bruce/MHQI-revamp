@@ -345,6 +345,7 @@ source("Transfer Scripts/new_od_occupancy_outputs.R")
 source_dir <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/"
 
 # Set the name of the new destination directory
+od_archive_date <-format(report_date)
 destination_dir <- glue("/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/archived/{od_archive_date}")
 
 # Create the new destination directory for archive steps
