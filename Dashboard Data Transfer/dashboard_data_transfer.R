@@ -149,7 +149,7 @@ source("Transfer Scripts/transfer_cases.R")
 # source("Transfer Scripts/transfer_icu.R")
 
 ##### Hosp Adms
-source("Transfer Scripts/transfer_admissions.R")
+#source("Transfer Scripts/transfer_admissions.R")
 
 ##### Length of Stay
  source("Transfer Scripts/transfer_los.R")
@@ -211,10 +211,10 @@ source("Transfer Scripts/transfer_respiratory_gp_ari_mem.R")
 source("Transfer Scripts/transfer_respiratory_admissions.R")
 
 #### Influenza Hospital Admissions
-source("Transfer Scripts/transfer_flu_admissions.R")
+#source("Transfer Scripts/transfer_flu_admissions.R")
 
 #### RSV Hospital Admissions
-source("Transfer Scripts/transfer_rsv_admissions.R")
+#source("Transfer Scripts/transfer_rsv_admissions.R")
 
 #### CARI
 #source("Transfer Scripts/transfer_respiratory_cari.R")
@@ -245,7 +245,7 @@ source("Transfer Scripts/transfer_ethnicity_open_data.R")
 
 ####  Open data weekly covid hospital admissions & occupancy for open data
 ####  PLUS Open data weekly Respiratory flu and RSV hospital admissions
-source("Transfer Scripts/transfer_admissions_occupancy_HB_od.R")
+#source("Transfer Scripts/transfer_admissions_occupancy_HB_od.R")
 
 #remove open data values
 rm(od_date, od_report_date,od_archive_date ,od_sunday,od_sunday_minus_7,

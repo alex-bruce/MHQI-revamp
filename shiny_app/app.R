@@ -462,7 +462,7 @@ server <- function(input, output, session) {
 
   # Get content for individual pages
   source(file.path("indicators/introduction/introduction_server.R"), local = TRUE)$value
-  source(file.path("indicators/summary/summary_server.R"), local = TRUE)$value
+  #source(file.path("indicators/summary/summary_server.R"), local = TRUE)$value
   source(file.path("indicators/at_a_glance/at_a_glance_server.R"), local = TRUE)$value
   source(file.path("indicators/cases/cases_server.R"), local = TRUE)$value
   source(file.path("indicators/hospital_admissions/hospital_admissions_server.R"), local = TRUE)$value
