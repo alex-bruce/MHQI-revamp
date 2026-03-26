@@ -130,40 +130,42 @@ g_respiratory_hb_admissions <- g_respiratory_hb_admissions %>%
 
 write.csv(g_respiratory_hb_admissions, glue(output_folder, "admissions_hb_all_path.csv"), row.names = FALSE)
 
-three_sunday_dates <- data.frame(week_ending=seq(as.Date("2018-10-07"), as.Date(od_date-1), "week")) %>%
-  # mutate(WeekEnding= format(strptime(WeekEnding, format = "%Y-%m-%d")) ) %>%
-  slice_tail(n = 3)
+rm(i_respiratory_hb_admissions, g_respiratory_hb_admissions)#, g_respiratory_hb_admissions_3wks)
 
-HealthBoardName= data.frame(health_board_of_treatment=c("NHS Ayrshire and Arran", 
-                                                        "NHS Borders",
-                                                        "NHS Dumfries and Galloway","NHS Fife",
-                                                        "NHS Forth Valley","NHS Grampian",
-                                                        "NHS Greater Glasgow and Clyde",
-                                                        "NHS Highland",
-                                                        "NHS Lanarkshire",
-                                                        "NHS Lothian",
-                                                        "NHS Orkney",
-                                                        "NHS Shetland",
-                                                        "NHS Tayside",
-                                                        "NHS Western Isles",
-                                                        "Golden Jubilee National Hospital"))
 
-pathogens = data.frame(admission_type = c("cov", "flu", "rsv",  "rhino", "coron", "para", "adeno", "hmpv", "mpn"))
+# three_sunday_dates <- data.frame(week_ending=seq(as.Date("2018-10-07"), as.Date(od_date-1), "week")) %>%
+#   # mutate(WeekEnding= format(strptime(WeekEnding, format = "%Y-%m-%d")) ) %>%
+#   slice_tail(n = 3)
+# 
+# HealthBoardName= data.frame(health_board_of_treatment=c("NHS Ayrshire and Arran", 
+#                                                         "NHS Borders",
+#                                                         "NHS Dumfries and Galloway","NHS Fife",
+#                                                         "NHS Forth Valley","NHS Grampian",
+#                                                         "NHS Greater Glasgow and Clyde",
+#                                                         "NHS Highland",
+#                                                         "NHS Lanarkshire",
+#                                                         "NHS Lothian",
+#                                                         "NHS Orkney",
+#                                                         "NHS Shetland",
+#                                                         "NHS Tayside",
+#                                                         "NHS Western Isles",
+#                                                         "Golden Jubilee National Hospital"))
+# 
+# pathogens = data.frame(admission_type = c("cov", "flu", "rsv",  "rhino", "coron", "para", "adeno", "hmpv", "mpn"))
 
-hb_last_three_weeks <- expand.grid(health_board_of_treatment=unique(HealthBoardName$health_board_of_treatment),
-                                   week_ending=unique(three_sunday_dates$week_ending),
-                                   admission_type = unique(pathogens$admission_type),
-                                   KEEP.OUT.ATTRS = FALSE,
-                                   stringsAsFactors = FALSE)
+# hb_last_three_weeks <- expand.grid(health_board_of_treatment=unique(HealthBoardName$health_board_of_treatment),
+#                                    week_ending=unique(three_sunday_dates$week_ending),
+#                                    admission_type = unique(pathogens$admission_type),
+#                                    KEEP.OUT.ATTRS = FALSE,
+#                                    stringsAsFactors = FALSE)
+# 
+# g_respiratory_hb_admissions_3wks <- hb_last_three_weeks %>%
+#   left_join(g_respiratory_hb_admissions, by=c("health_board_of_treatment","week_ending", "admission_type")) %>% 
+#   select(-c("NRS_population_estimate", "n")) %>% 
+#   replace_na(list(n = 0, rate = 0))
+# 
+# write.csv(g_respiratory_hb_admissions_3wks, glue(output_folder, "admissions_hb_all_path_3wks.csv"), row.names = FALSE)
 
-g_respiratory_hb_admissions_3wks <- hb_last_three_weeks %>%
-  left_join(g_respiratory_hb_admissions, by=c("health_board_of_treatment","week_ending", "admission_type")) %>% 
-  select(-c("NRS_population_estimate", "n")) %>% 
-  replace_na(list(n = 0, rate = 0))
-
-write.csv(g_respiratory_hb_admissions_3wks, glue(output_folder, "admissions_hb_all_path_3wks.csv"), row.names = FALSE)
-
-rm(i_respiratory_hb_admissions, g_respiratory_hb_admissions, g_respiratory_hb_admissions_3wks)
 
 #### RSV healthboard admissions
 #i_rsv_hb_admissions <- read_csv_with_options(match_base_filename(glue(input_data, "admissions_rsv_hb.csv")))

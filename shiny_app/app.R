@@ -15,7 +15,7 @@ source(file.path("modules/metadata_button/metadata_button_ui.R"), local = TRUE)$
 source(file.path("modules/summary_button/summary_button_ui.R"), local = TRUE)$value
 source(file.path("modules/jump_to_tab_button/jump_to_tab_button_ui.R"), local = TRUE)$value
 source(file.path("modules/alt_text/alt_text_modals_ui.R"), local = TRUE)$value
-source(file.path("modules/respiratory/respiratory_module_ui.R"), local = TRUE)$value
+#source(file.path("modules/respiratory/respiratory_module_ui.R"), local = TRUE)$value
 source(file.path("modules/definitions/definitions_ui.R"), local = TRUE)$value
 
 # UI
@@ -443,19 +443,19 @@ server <- function(input, output, session) {
   source(file.path("modules/alt_text/alt_text_modals_server.R"), local = TRUE)$value
   source(file.path("modules/summary_button/summary_button_server.R"), local = TRUE)$value
   source(file.path("modules/jump_to_tab_button/jump_to_tab_button_server.R"), local = TRUE)$value
-  source(file.path("modules/respiratory/respiratory_module_server.R"), local = TRUE)$value
+  #source(file.path("modules/respiratory/respiratory_module_server.R"), local = TRUE)$value
 
   # Get functions
   source(file.path("functions/core_functions.R"), local = TRUE)$value
   source(file.path("functions/plot_functions.R"), local = TRUE)$value
   source(file.path("indicators/introduction/introduction_functions.R"), local = TRUE)$value
-  source(file.path("indicators/summary/summary_functions.R"), local = TRUE)$value
+  #source(file.path("indicators/summary/summary_functions.R"), local = TRUE)$value
   source(file.path("indicators/cases/cases_functions.R"), local = TRUE)$value
   source(file.path("indicators/hospital_admissions/hospital_admissions_functions.R"), local = TRUE)$value
   source(file.path("indicators/hospital_occupancy/hospital_occupancy_functions.R"), local = TRUE)$value
   source(file.path("indicators/respiratory/respiratory_functions.R"), local = TRUE)$value
   source(file.path("indicators/metadata/metadata_functions.R"), local = TRUE)$value
-  source(file.path("indicators/download/download_functions.R"), local = TRUE)$value
+  #source(file.path("indicators/download/download_functions.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/respiratory_mem_functions.R"), local = TRUE)$value
   source(file.path("indicators/mortality/euromomo/euromomo_functions.R"), local = TRUE)$value
   source(file.path("indicators/wastewater/wastewater_functions.R"), local = TRUE)$value
@@ -467,7 +467,7 @@ server <- function(input, output, session) {
   source(file.path("indicators/cases/cases_server.R"), local = TRUE)$value
   source(file.path("indicators/hospital_admissions/hospital_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/hospital_occupancy/hospital_occupancy_server.R"), local = TRUE)$value
-  source(file.path("indicators/respiratory/respiratory_server.R"), local = TRUE)$value
+  #source(file.path("indicators/respiratory/respiratory_server.R"), local = TRUE)$value
   source(file.path("indicators/metadata/metadata_server.R"), local = TRUE)$value
   source(file.path("indicators/download/download_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/covid_19/covid_cari_server.R"), local = TRUE)$value
@@ -492,7 +492,7 @@ server <- function(input, output, session) {
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/rhinovirus/rhinovirus_cari_server.R"), local = TRUE)$value
-  source(file.path("indicators/respiratory_mem/other_pathogens/other_pathogens_mem_server.R"), local = TRUE)$value
+  #source(file.path("indicators/respiratory_mem/other_pathogens/other_pathogens_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_mem_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_admissions_server.R"), local = TRUE)$value
   source(file.path("indicators/respiratory_mem/mycoplasma_pneumoniae/mycoplasma_pneumoniae_cari_server.R"), local = TRUE)$value

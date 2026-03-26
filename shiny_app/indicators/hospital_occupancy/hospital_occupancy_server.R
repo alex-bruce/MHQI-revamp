@@ -50,23 +50,23 @@ altTextServer("icu_occupancy_modal",
               )
 )
 
-
-# Figures for last three weeks
-covid_occupancy_recent_week <- occupancy_covid %>%
-  arrange(WeekEnding) %>% 
-  mutate(pathogen = "COVID-19") %>% 
-  tail(3) %>%
-  #select(-Rate_per_100000) %>%
-  pivot_wider(names_from = pathogen,
-              values_from = SevenDayAverage) %>%
-  mutate(DateTwoWeek = .$WeekEnding[1],
-         DateLastWeek = .$WeekEnding[2],
-         DateThisWeek = .$WeekEnding[3],
-         OccupancyTwoWeek = .$`COVID-19`[1],
-         OccupancyLastWeek = .$`COVID-19`[2],
-         OccupancyThisWeek = .$`COVID-19`[3]) %>%
-  select(DateTwoWeek, DateLastWeek, DateThisWeek, OccupancyTwoWeek, OccupancyLastWeek, OccupancyThisWeek) %>%
-  head(1)
+# 
+# # Figures for last three weeks
+# covid_occupancy_recent_week <- occupancy_covid %>%
+#   arrange(WeekEnding) %>% 
+#   mutate(pathogen = "COVID-19") %>% 
+#   tail(3) %>%
+#   #select(-Rate_per_100000) %>%
+#   pivot_wider(names_from = pathogen,
+#               values_from = SevenDayAverage) %>%
+#   mutate(DateTwoWeek = .$WeekEnding[1],
+#          DateLastWeek = .$WeekEnding[2],
+#          DateThisWeek = .$WeekEnding[3],
+#          OccupancyTwoWeek = .$`COVID-19`[1],
+#          OccupancyLastWeek = .$`COVID-19`[2],
+#          OccupancyThisWeek = .$`COVID-19`[3]) %>%
+#   select(DateTwoWeek, DateLastWeek, DateThisWeek, OccupancyTwoWeek, OccupancyLastWeek, OccupancyThisWeek) %>%
+#   head(1)
 
 
 

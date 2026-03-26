@@ -16,7 +16,7 @@ if (!is.null(project_directory)){ setwd(project_directory) }
 dir.create(here::here("shiny_app", "data"))
 
 output_folder <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/"
-data_dictionary_folder <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Data Dictionaries/"
+#data_dictionary_folder <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Data Dictionaries/"
 shiny_data_folder <- "shiny_app/data/"
 
 
@@ -40,9 +40,9 @@ copy_to_shiny_data <- function(csv, startloc){
 files =  list.files(path=output_folder, pattern = ".csv")
 purrr::walk(files, copy_to_shiny_data, startloc = output_folder)
 
-# Now get all data dictionaries
-dictionary_files = list.files(path=data_dictionary_folder)
-purrr::walk(dictionary_files, copy_to_shiny_data, startloc = data_dictionary_folder)
+# # Now get all data dictionaries
+# dictionary_files = list.files(path=data_dictionary_folder)
+# purrr::walk(dictionary_files, copy_to_shiny_data, startloc = data_dictionary_folder)
 
 
 

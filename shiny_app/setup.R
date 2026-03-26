@@ -91,9 +91,9 @@ if (config::get()$online){
 #                                                          sumcol = "TotalInfections",
 #                                                          datecol="AdmissionDate")
 
-icu_headlines <- get_threeweek_admissions_figures(df = ICU,
-                                                  sumcol = "NewCovidAdmissionsPerDay",
-                                                  datecol="DateFirstICUAdmission")
+# icu_headlines <- get_threeweek_admissions_figures(df = ICU,
+#                                                   sumcol = "NewCovidAdmissionsPerDay",
+#                                                   datecol="DateFirstICUAdmission")
 
 # Admissions
 admissions_headlines <- all_pathogen_admissions %>%
@@ -104,11 +104,11 @@ admissions_headlines <- all_pathogen_admissions %>%
 #                                                        datecol = "Date")
 #imk addition (orig retained), Use weekly hospital hb files
 #filter to scotland, then create list
-occupancy_headlines <- Occupancy_Weekly_Hospital_HB %>% 
-  filter(HealthBoardQF== "d") 
-
-occupancy_headlines <- get_threeweek_occupancy_figures(df = occupancy_headlines,
-                                                       datecol = "WeekEnding_od")
+# occupancy_headlines <- Occupancy_Weekly_Hospital_HB %>% 
+#   filter(HealthBoardQF== "d") 
+# 
+# occupancy_headlines <- get_threeweek_occupancy_figures(df = occupancy_headlines,
+#                                                        datecol = "WeekEnding_od")
 ##
 
 #adm_hb_dates <- c(Admissions_HB %>% tail(1) %>% .$WeekEnding, Admissions_HB %>% tail(1) %>% .$WeekEnding%>% {.-7}, Admissions_HB %>% tail(1) %>% .$WeekEnding%>% {.-14})

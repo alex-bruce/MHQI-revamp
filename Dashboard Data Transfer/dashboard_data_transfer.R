@@ -127,11 +127,11 @@ source("Transfer Scripts/population_lookups.R")
 
 #add qf column to inputed column that meets a null criteria
 
-od_qualifiers <- function(data, col_name, symbol) {
-  needs_symbol = data[[col_name]] == "" | is.na(data[[col_name]])
-  data %>%
-    mutate("{col_name}QF" := if_else(needs_symbol, symbol, ""))
-}
+# od_qualifiers <- function(data, col_name, symbol) {
+#   needs_symbol = data[[col_name]] == "" | is.na(data[[col_name]])
+#   data %>%
+#     mutate("{col_name}QF" := if_else(needs_symbol, symbol, ""))
+# }
 
 
 #####################
@@ -229,16 +229,16 @@ source("Transfer Scripts/transfer_new_files_temp.R")
 ## Open Data transfers ##
 
 #### Open data test and cases by HB or CA
-source("Transfer Scripts/transfer_geography_open_data.R")
+#source("Transfer Scripts/transfer_geography_open_data.R")
 
 #### Open Data age sex cases
-source("Transfer Scripts/transfer_weekly_agesex_cases_od.R")
+#source("Transfer Scripts/transfer_weekly_agesex_cases_od.R")
 
 #### Open data simd cases data
-source("Transfer Scripts/transfer_weekly_simd_cases_od.R")
+#source("Transfer Scripts/transfer_weekly_simd_cases_od.R")
 
 #### Open data ethnicity open
-source("Transfer Scripts/transfer_ethnicity_open_data.R")
+#source("Transfer Scripts/transfer_ethnicity_open_data.R")
 
 #### Open data care home times series
 #source("Transfer Scripts/transfer_carehome_timeseries_od.R")

@@ -98,21 +98,21 @@ output$covid_positivity_age_plot <- renderPlotly({
 
 
 
-altTextServer("ons_cases_modal",
-              title = "Estimated COVID-19 infection rate",
-              content = tags$ul(tags$li("This is a plot of the estimated COVID-19 infection rate in the population",
-                                        "from the Office for National Statistics."),
-                                tags$li("The x axis shows week ending, starting from 06 November 2020."),
-                                tags$li("The y axis shows the official positivity estimate, as a percentage",
-                                        "of the population in Scotland. "),
-                                tags$li("There is one trace which includes error bars denoting confidence intervals."),
-                                tags$li("The positivity estimate peaked at 1 in 11 for week ending 20 Mar 2022."),
-                                tags$li("The latest positivity estimate in week ending",
-                                        glue("{ONS %>% tail(1) %>% .$EndDate %>% convert_opendata_date() %>% format('%d %b %y')}"),
-                                        glue("is {ONS %>% tail(1) %>% .$EstimatedRatio}")
-                                )
-              )
-)
+# altTextServer("ons_cases_modal",
+#               title = "Estimated COVID-19 infection rate",
+#               content = tags$ul(tags$li("This is a plot of the estimated COVID-19 infection rate in the population",
+#                                         "from the Office for National Statistics."),
+#                                 tags$li("The x axis shows week ending, starting from 06 November 2020."),
+#                                 tags$li("The y axis shows the official positivity estimate, as a percentage",
+#                                         "of the population in Scotland. "),
+#                                 tags$li("There is one trace which includes error bars denoting confidence intervals."),
+#                                 tags$li("The positivity estimate peaked at 1 in 11 for week ending 20 Mar 2022."),
+#                                 tags$li("The latest positivity estimate in week ending",
+#                                         glue("{ONS %>% tail(1) %>% .$EndDate %>% convert_opendata_date() %>% format('%d %b %y')}"),
+#                                         glue("is {ONS %>% tail(1) %>% .$EstimatedRatio}")
+#                                 )
+#               )
+# )
 
 
 
@@ -153,11 +153,11 @@ altTextServer("ons_cases_modal",
 #})
 
 
-output$ons_cases_plot <- renderPlotly({
-  ONS %>%
-    make_ons_cases_plot()
-
-})
+# output$ons_cases_plot <- renderPlotly({
+#   ONS %>%
+#     make_ons_cases_plot()
+# 
+# })
 
 output$covid_line_plot <- renderPlotly({
 
