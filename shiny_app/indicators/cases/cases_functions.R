@@ -103,55 +103,55 @@ make_weekly_reported_cases_plot <- function(data){
 
 
 
-make_ons_cases_plot <- function(data){
-
-
-  data %<>%
-    filter(Nation == "Scotland") %>%
-    mutate(EndDate = convert_opendata_date(EndDate),
-           ErrorBarHeight = UpperCIOfficialEstimate - LowerCIOfficialEstimate,
-           ErrorBarLowerHeight = OfficialPositivityEstimate - LowerCIOfficialEstimate)
-
-  yaxis_plots[["title"]] <- "Official positivity estimate (%)"
-  xaxis_plots[["title"]] <- "Week ending"
-
-
-  #xaxis_plots[["rangeslider"]] <- list(type = "date")
-  yaxis_plots[["fixedrange"]] <- FALSE
-  yaxis_plots[["ticksuffix"]] <- "%"
-
-  p <- plot_ly(data, x = ~EndDate,
-               textposition = "none",
-               text = ~paste0("<b>Week ending</b>: ", format(EndDate, "%d %b %y"), "\n",
-                              "<b>Official positivity estimate</b>: ", round_half_up(OfficialPositivityEstimate,1), "%\n",
-                              "<b>Estimated prevalence</b>: ", EstimatedRatio, "\n",
-                              "<b>Estimated cases</b>: ", format(EstimatedCases, big.mark=",")),
-               hovertemplate = "%{text}",
-               height = 500)%>%
-
-    add_lines(y = ~OfficialPositivityEstimate,
-              line = list(color = phs_colours("phs-blue-30")),
-              name = 'Official positivity estimate',
-              error_y = ~list(array = ErrorBarHeight/2,
-                              arrayminus = ErrorBarLowerHeight,
-                              symmetric = FALSE,
-                              width = 0.5,
-                              color = "navy"),
-              marker = list(color = "navy",
-                            size = 5)) %>%
-
-    layout(margin = list(b = 80, t = 5),
-           yaxis = yaxis_plots, xaxis = xaxis_plots,
-           legend = list(x = 100, y = 0.5),
-           paper_bgcolor = phs_colours("phs-liberty-10"),
-           plot_bgcolor = phs_colours("phs-liberty-10")) %>%
-
-    config(displaylogo = FALSE, displayModeBar = TRUE,
-           modeBarButtonsToRemove = bttn_remove)
-
-  return(p)
-
-}
+# make_ons_cases_plot <- function(data){
+# 
+# 
+#   data %<>%
+#     filter(Nation == "Scotland") %>%
+#     mutate(EndDate = convert_opendata_date(EndDate),
+#            ErrorBarHeight = UpperCIOfficialEstimate - LowerCIOfficialEstimate,
+#            ErrorBarLowerHeight = OfficialPositivityEstimate - LowerCIOfficialEstimate)
+# 
+#   yaxis_plots[["title"]] <- "Official positivity estimate (%)"
+#   xaxis_plots[["title"]] <- "Week ending"
+# 
+# 
+#   #xaxis_plots[["rangeslider"]] <- list(type = "date")
+#   yaxis_plots[["fixedrange"]] <- FALSE
+#   yaxis_plots[["ticksuffix"]] <- "%"
+# 
+#   p <- plot_ly(data, x = ~EndDate,
+#                textposition = "none",
+#                text = ~paste0("<b>Week ending</b>: ", format(EndDate, "%d %b %y"), "\n",
+#                               "<b>Official positivity estimate</b>: ", round_half_up(OfficialPositivityEstimate,1), "%\n",
+#                               "<b>Estimated prevalence</b>: ", EstimatedRatio, "\n",
+#                               "<b>Estimated cases</b>: ", format(EstimatedCases, big.mark=",")),
+#                hovertemplate = "%{text}",
+#                height = 500)%>%
+# 
+#     add_lines(y = ~OfficialPositivityEstimate,
+#               line = list(color = phs_colours("phs-blue-30")),
+#               name = 'Official positivity estimate',
+#               error_y = ~list(array = ErrorBarHeight/2,
+#                               arrayminus = ErrorBarLowerHeight,
+#                               symmetric = FALSE,
+#                               width = 0.5,
+#                               color = "navy"),
+#               marker = list(color = "navy",
+#                             size = 5)) %>%
+# 
+#     layout(margin = list(b = 80, t = 5),
+#            yaxis = yaxis_plots, xaxis = xaxis_plots,
+#            legend = list(x = 100, y = 0.5),
+#            paper_bgcolor = phs_colours("phs-liberty-10"),
+#            plot_bgcolor = phs_colours("phs-liberty-10")) %>%
+# 
+#     config(displaylogo = FALSE, displayModeBar = TRUE,
+#            modeBarButtonsToRemove = bttn_remove)
+# 
+#   return(p)
+# 
+# }
 
 # make_r_number_plot <- function(data){
 #

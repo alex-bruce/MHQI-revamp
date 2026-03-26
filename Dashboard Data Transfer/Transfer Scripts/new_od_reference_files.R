@@ -96,7 +96,7 @@ ref_pop_la<-rbind(ref_pop_la_a,LA_absent_year_pop) %>%
   
 
 
-rm(ISOyears,no_pop_estimate_years,no_pop_years,
+rm(ISOyears,no_pop_estimate_years,#no_pop_years,
    last_pop_estimate,ref_pop_simd_a,pop_estimate_for_absent_years,
    year_season_start,ref_pop_la_a,LA_absent_year_pop,La_last_year_pop,
    no_LA_pop_years)

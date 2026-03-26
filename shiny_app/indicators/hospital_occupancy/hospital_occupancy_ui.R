@@ -1,17 +1,17 @@
 # Figures for last three weeks
-covid_occupancy_recent_week <- occupancy_covid %>%
-  arrange(WeekEnding) %>% 
-  mutate(pathogen = "COVID-19") %>% 
+covid_occupancy_recent_week <- occupancy_rapid %>%
+  arrange(week_ending) %>% 
+  filter(pathogen == "COVID-19") %>% 
   tail(3) %>%
   #select(-Rate_per_100000) %>%
-  pivot_wider(names_from = pathogen,
-              values_from = SevenDayAverage) %>%
-  mutate(DateTwoWeek = .$WeekEnding[1],
-         DateLastWeek = .$WeekEnding[2],
-         DateThisWeek = .$WeekEnding[3],
-         OccupancyTwoWeek = .$`COVID-19`[1],
-         OccupancyLastWeek = .$`COVID-19`[2],
-         OccupancyThisWeek = .$`COVID-19`[3]) %>%
+  # pivot_wider(names_from = pathogen,
+  #             values_from = sevenday_ave_inpatients) %>%
+  mutate(DateTwoWeek = .$week_ending[1],
+         DateLastWeek = .$week_ending[2],
+         DateThisWeek = .$week_ending[3],
+         OccupancyTwoWeek = .$sevenday_ave_inpatients[1],
+         OccupancyLastWeek = .$sevenday_ave_inpatients[2],
+         OccupancyThisWeek = .$sevenday_ave_inpatients[3]) %>%
   select(DateTwoWeek, DateLastWeek, DateThisWeek, OccupancyTwoWeek, OccupancyLastWeek, OccupancyThisWeek) %>%
   head(1)
 

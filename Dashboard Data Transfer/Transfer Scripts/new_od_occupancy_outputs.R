@@ -87,35 +87,35 @@ write_csv(occupancy_covid19_rsv_flu_hb,
                  od_report_date ,".csv")) 
 
 
-##2b.Weekly(COVID19 only) by the boards (ARCHIVE) ----
-occupancy_covid19_hb_a<-
-  read_csv(paste0(
-    file_paths$Data$Dashboard_output_folder,
-    "Occupancy_Weekly_Hospital_HB.csv"))
-
-occupancy_covid19_hb<-
-  occupancy_covid19_hb_a%>% 
-  rename(HBName=HealthBoardName) %>% 
-  merge(df_template_hb_admissions %>% 
-          filter(Pathogen=="COVID-19" &
-                   WeekEnding>=min(occupancy_covid19_hb_a$WeekEnding)),
-        by=c("WeekEnding","HBName")) %>% 
-  mutate(HBQF=if_else(is.na(HealthBoardQF),"",HealthBoardQF),
-         HospitalOccupancyQF=if_else(is.na(HospitalOccupancyQF),"",HospitalOccupancyQF),
-         SevenDayAverageQF=if_else(is.na(SevenDayAverageQF),"",SevenDayAverageQF)) %>% 
-  select(Season, ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
-         HBName,HBcode,HBQF,HospitalOccupancy,HospitalOccupancyQF,
-         SevenDayAverage,SevenDayAverageQF) %>% 
-  mutate(WeekBeginning=str_remove_all(WeekBeginning,"-"),
-         WeekEnding=str_remove_all(WeekEnding,"-"))
-
-
-###write csv----
-message("Writing Occupancy_weekly_COVID19_by_HB file")
-write_csv(occupancy_covid19_hb,
-          paste0(file_paths$Outputs$Output_folder,
-                 "Occupancy_weekly_COVID19_by_HB_",
-                 od_report_date ,"(ARCHIVE).csv")) 
+# ##2b.Weekly(COVID19 only) by the boards (ARCHIVE) ----
+# occupancy_covid19_hb_a<-
+#   read_csv(paste0(
+#     file_paths$Data$Dashboard_output_folder,
+#     "Occupancy_Weekly_Hospital_HB.csv"))
+# 
+# occupancy_covid19_hb<-
+#   occupancy_covid19_hb_a%>% 
+#   rename(HBName=HealthBoardName) %>% 
+#   merge(df_template_hb_admissions %>% 
+#           filter(Pathogen=="COVID-19" &
+#                    WeekEnding>=min(occupancy_covid19_hb_a$WeekEnding)),
+#         by=c("WeekEnding","HBName")) %>% 
+#   mutate(HBQF=if_else(is.na(HealthBoardQF),"",HealthBoardQF),
+#          HospitalOccupancyQF=if_else(is.na(HospitalOccupancyQF),"",HospitalOccupancyQF),
+#          SevenDayAverageQF=if_else(is.na(SevenDayAverageQF),"",SevenDayAverageQF)) %>% 
+#   select(Season, ISOyear,ISOweek,WeekBeginning,WeekEnding,Pathogen,
+#          HBName,HBcode,HBQF,HospitalOccupancy,HospitalOccupancyQF,
+#          SevenDayAverage,SevenDayAverageQF) %>% 
+#   mutate(WeekBeginning=str_remove_all(WeekBeginning,"-"),
+#          WeekEnding=str_remove_all(WeekEnding,"-"))
+# 
+# 
+# ###write csv----
+# message("Writing Occupancy_weekly_COVID19_by_HB file")
+# write_csv(occupancy_covid19_hb,
+#           paste0(file_paths$Outputs$Output_folder,
+#                  "Occupancy_weekly_COVID19_by_HB_",
+#                  od_report_date ,"(ARCHIVE).csv")) 
 
 # ##2b.RAPID daily----
 # 
@@ -153,7 +153,7 @@ write_csv(occupancy_covid19_hb,
 
 ######## END #########-
 
-rm(occupancy_covid19_hb,occupancy_covid19_hb_a,
+rm(#occupancy_covid19_hb,occupancy_covid19_hb_a,
    #occupancy_live_covid19_hb,
    #occupancy_live_covid19_hb_a,
    occupancy_rapid_rsv_flu_covid19_scotland)

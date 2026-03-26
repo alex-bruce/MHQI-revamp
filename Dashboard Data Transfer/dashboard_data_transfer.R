@@ -127,11 +127,11 @@ source("Transfer Scripts/population_lookups.R")
 
 #add qf column to inputed column that meets a null criteria
 
-od_qualifiers <- function(data, col_name, symbol) {
-  needs_symbol = data[[col_name]] == "" | is.na(data[[col_name]])
-  data %>%
-    mutate("{col_name}QF" := if_else(needs_symbol, symbol, ""))
-}
+# od_qualifiers <- function(data, col_name, symbol) {
+#   needs_symbol = data[[col_name]] == "" | is.na(data[[col_name]])
+#   data %>%
+#     mutate("{col_name}QF" := if_else(needs_symbol, symbol, ""))
+# }
 
 
 #####################
@@ -149,7 +149,7 @@ source("Transfer Scripts/transfer_cases.R")
 # source("Transfer Scripts/transfer_icu.R")
 
 ##### Hosp Adms
-source("Transfer Scripts/transfer_admissions.R")
+#source("Transfer Scripts/transfer_admissions.R")
 
 ##### Length of Stay
  source("Transfer Scripts/transfer_los.R")
@@ -211,10 +211,10 @@ source("Transfer Scripts/transfer_respiratory_gp_ari_mem.R")
 source("Transfer Scripts/transfer_respiratory_admissions.R")
 
 #### Influenza Hospital Admissions
-source("Transfer Scripts/transfer_flu_admissions.R")
+#source("Transfer Scripts/transfer_flu_admissions.R")
 
 #### RSV Hospital Admissions
-source("Transfer Scripts/transfer_rsv_admissions.R")
+#source("Transfer Scripts/transfer_rsv_admissions.R")
 
 #### CARI
 #source("Transfer Scripts/transfer_respiratory_cari.R")
@@ -229,23 +229,23 @@ source("Transfer Scripts/transfer_new_files_temp.R")
 ## Open Data transfers ##
 
 #### Open data test and cases by HB or CA
-source("Transfer Scripts/transfer_geography_open_data.R")
+#source("Transfer Scripts/transfer_geography_open_data.R")
 
 #### Open Data age sex cases
-source("Transfer Scripts/transfer_weekly_agesex_cases_od.R")
+#source("Transfer Scripts/transfer_weekly_agesex_cases_od.R")
 
 #### Open data simd cases data
-source("Transfer Scripts/transfer_weekly_simd_cases_od.R")
+#source("Transfer Scripts/transfer_weekly_simd_cases_od.R")
 
 #### Open data ethnicity open
-source("Transfer Scripts/transfer_ethnicity_open_data.R")
+#source("Transfer Scripts/transfer_ethnicity_open_data.R")
 
 #### Open data care home times series
 #source("Transfer Scripts/transfer_carehome_timeseries_od.R")
 
 ####  Open data weekly covid hospital admissions & occupancy for open data
 ####  PLUS Open data weekly Respiratory flu and RSV hospital admissions
-source("Transfer Scripts/transfer_admissions_occupancy_HB_od.R")
+#source("Transfer Scripts/transfer_admissions_occupancy_HB_od.R")
 
 #remove open data values
 rm(od_date, od_report_date,od_archive_date ,od_sunday,od_sunday_minus_7,
