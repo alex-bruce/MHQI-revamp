@@ -127,16 +127,16 @@ g_adm_agebd %<>%
 
 write.csv(g_adm_agebd, glue(output_folder, "Admissions_AgeBD.csv"), row.names = FALSE)
 
-# Open data Output
-g_adm_agebd_od<-g_adm_agebd %>%
-  mutate(Country="S92000003") %>%
-  select(WeekEnding=WeekOfAdmission,Country, AgeGroup, AgeGroupQF,
-         Admissions=TotalInfections,
-         AdmissionsQF=TotalInfectionsQF)
+# # Open data Output
+# g_adm_agebd_od<-g_adm_agebd %>%
+#   mutate(Country="S92000003") %>%
+#   select(WeekEnding=WeekOfAdmission,Country, AgeGroup, AgeGroupQF,
+#          Admissions=TotalInfections,
+#          AdmissionsQF=TotalInfectionsQF)
+# 
+# write_csv(g_adm_agebd_od, glue(od_folder, "weekly_admissions_ageBD_{od_report_date}.csv"),na = "")
 
-write_csv(g_adm_agebd_od, glue(od_folder, "weekly_admissions_ageBD_{od_report_date}.csv"),na = "")
-
-rm(g_adm_agebd, totals, g_adm_agebd_od)
+rm(g_adm_agebd, totals)#, g_adm_agebd_od)
 
 #-----------------------------#
 #### c) Admissions_AgeSIMD ####

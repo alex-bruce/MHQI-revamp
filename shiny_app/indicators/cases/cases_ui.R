@@ -10,11 +10,11 @@ pop_scot_total <- i_population_v2 %>%
   filter(AgeGroup == "Total", Sex == "Total") %>%
   .$PopNumber
 
-cov_cases_recent_week <- Respiratory_Scot %>%
-  filter(Pathogen == "Covid-19") %>%
+
+cov_cases_recent_week <- Cases_Weekly %>%
   mutate(WeekEnding = convert_opendata_date(WeekEnding)) %>%
   tail(2) %>%
-  select(-WeekBeginning) %>%
+  select(-Cumulative) %>%
   rename(Date = WeekEnding) %>%
   #pivot_wider(names_from = FluType,
   #            values_from = Admissions) %>%

@@ -10,12 +10,18 @@ pop_scot_total <- i_population_v2 %>%
   filter(AgeGroup == "Total", Sex == "Total") %>%
   .$PopNumber
 
-rsv_cases_recent_week <- Respiratory_Scot %>%
-  filter(Pathogen == "Respiratory syncytial virus") %>%
-  mutate(WeekEnding = convert_opendata_date(WeekEnding)) %>%
+rsv_cases_recent_week <- Respiratory_AllData %>%
+  filter(Organism == "Respiratory syncytial virus") %>%
+  filter(Measure == "Scotland") %>%
+  arrange(Date) %>% 
+  select(-Pathogen) %>% 
+  rename(Pathogen = Organism,
+         NumberCasesPerWeek = Count) %>%
+  select(Date, Pathogen, NumberCasesPerWeek) %>% 
+  #mutate(WeekEnding = convert_opendata_date(WeekEnding)) %>%
   tail(2) %>%
-  select(-WeekBeginning) %>%
-  rename(Date = WeekEnding) %>%
+  #select(-WeekBeginning) %>%
+  #rename(Date = WeekEnding) %>%
   #pivot_wider(names_from = FluType,
   #            values_from = Admissions) %>%
   mutate(DateLastWeek = .$Date[1],
