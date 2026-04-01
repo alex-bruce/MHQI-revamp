@@ -218,8 +218,8 @@ activity_levels <- c("Baseline", "Low", "Medium", "High", "Very high")
 # Colours for thresholds
 activity_level_colours <- c("#FDE725FF", "#5DC863FF", "#21908CFF", "#3B528BFF", "#440154FF")
 
-# Activity levels   for euromomo
-euromomo_activity_levels <- c("Baseline", "Low", "Medium", "High", "Very High", "Reporting delay")
+# Activity levels   for euromomo - not used, uses the generic levels above
+#euromomo_activity_levels <- c("Baseline", "Low", "Medium", "High", "Very High", "Reporting delay")
 
 # Colours for thresholds for euromomo
 euromomo_activity_level_colours <- c("#FDE725FF", "#5DC863FF", "#21908CFF", "#3B528BFF", "#440154FF", "#a6a6a6")
