@@ -34,7 +34,8 @@ output$duodetections_cari_table <- renderDataTable({
 # CARI - Overall Rhinovirus swabpos plot
 output$duodetections_cari_plot <- renderPlotly({
   Respiratory_Pathogens_CARI_duodetections %>%
-    create_cari_duodetection_chart()
+    filter(Season==input$cari_season) %>% 
+    create_cari_duodetection_chart_stacked()
 
 })
 
