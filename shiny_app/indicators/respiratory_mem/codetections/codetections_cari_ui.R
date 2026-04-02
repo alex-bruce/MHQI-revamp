@@ -5,13 +5,6 @@ codetection_cari_age <- Respiratory_Pathogens_CARI_codetections %>%
                                                 "15-44 years", "45-64 years", "65+ years")))
 
 
-## Temporary code to add 'Season' to the data - Mark will add this in the process
-Respiratory_Pathogens_CARI_duodetections <- Respiratory_Pathogens_CARI_duodetections %>% 
-  rename(week_ending = WeekEnding) %>% 
-  add_season()  %>% 
-  rename(WeekEnding = week_ending) %>% 
-  mutate(ISOWeekNo = as.numeric(ISOWeekNo))
-
 
 cari_seasons <- sort(unique(Respiratory_Pathogens_CARI_duodetections$Season))
 

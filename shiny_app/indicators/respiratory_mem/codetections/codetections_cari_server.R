@@ -35,6 +35,7 @@ output$duodetections_cari_table <- renderDataTable({
 output$duodetections_cari_plot <- renderPlotly({
   Respiratory_Pathogens_CARI_duodetections %>%
     filter(Season==input$cari_season) %>% 
+    mutate(ISOWeekNo = as.numeric(ISOWeekNo)) %>% 
     create_cari_duodetection_chart_stacked()
 
 })
