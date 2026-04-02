@@ -129,11 +129,11 @@ output$seasonal_coronavirus_mem_table <- renderDataTable({
     filter(Season %in% seasonal_coronavirus_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, RatePer100000, ActivityLevel) %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
@@ -151,11 +151,11 @@ output$seasonal_coronavirus_mem_hb_table <- renderDataTable({
     filter(Season %in% seasonal_coronavirus_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            HBName = factor(HBName),
@@ -175,11 +175,11 @@ output$seasonal_coronavirus_mem_age_table <- renderDataTable({
     filter(Season %in% seasonal_coronavirus_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            AgeGroup = factor(AgeGroup, levels = mem_age_groups_full),
@@ -197,11 +197,11 @@ output$seasonal_coronavirus_mem_age_table <- renderDataTable({
 output$seasonal_coronavirus_mem_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Scot %>%
     filter(Pathogen == "Coronavirus") %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     create_mem_linechart()
 
 })
@@ -210,11 +210,11 @@ output$seasonal_coronavirus_mem_plot <- renderPlotly({
 output$seasonal_coronavirus_mem_hb_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_HB %>%
     filter(Pathogen == "Coronavirus") %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "HBCode")
 
@@ -225,11 +225,11 @@ output$seasonal_coronavirus_mem_hb_plot <- renderPlotly({
 output$seasonal_coronavirus_mem_age_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "Coronavirus") %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "AgeGroup")
 

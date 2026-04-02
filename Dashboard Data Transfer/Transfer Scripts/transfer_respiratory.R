@@ -437,21 +437,21 @@ case_rates_age_sex_template <- create_template(agegp_sex_agg, c("date", "agegp",
 #   arrange(WeekBeginning, WeekEnding, Pathogen)
 
 # # Weekly case rates by pathogen in Scotland
-# case_rates_scotland <- cases_scotland_template %>%
-#   full_join(scotland_agg) %>%
-#   mutate(rate = ifelse(is.na(rate), 0, rate)) %>%
-#   mutate(WeekEnding = as.Date(date),
-#          WeekBeginning = as.Date(date) - 6,
-#          RatePer100000 = rate,
-#          HB = "S92000003",
-#          HBQF = "d",
-#          HBName = "Scotland",
-#          Pathogen = organism) %>%
-#   mutate(WeekEnding = gsub("-", "", as.character(WeekEnding)),
-#          WeekBeginning = gsub("-", "", as.character(WeekBeginning))) %>%
-#   mutate(WeekEnding = as.numeric(as.character(WeekEnding)),
-#          WeekBeginning = as.numeric(as.character(WeekBeginning))) %>%
-#   select(WeekBeginning, WeekEnding, HB, HBQF, HBName, Pathogen, RatePer100000)
+case_rates_scotland <- cases_scotland_template %>%
+  full_join(scotland_agg) %>%
+  mutate(rate = ifelse(is.na(rate), 0, rate)) %>%
+  mutate(WeekEnding = as.Date(date),
+         WeekBeginning = as.Date(date) - 6,
+         RatePer100000 = rate,
+         HB = "S92000003",
+         HBQF = "d",
+         HBName = "Scotland",
+         Pathogen = organism) %>%
+  mutate(WeekEnding = gsub("-", "", as.character(WeekEnding)),
+         WeekBeginning = gsub("-", "", as.character(WeekBeginning))) %>%
+  mutate(WeekEnding = as.numeric(as.character(WeekEnding)),
+         WeekBeginning = as.numeric(as.character(WeekBeginning))) %>%
+  select(WeekBeginning, WeekEnding, HB, HBQF, HBName, Pathogen, RatePer100000)
 
 # Weekly case rates by pathogen and HB
 case_rates_hb <- case_rates_hb_template %>%
@@ -804,8 +804,10 @@ rm(scotland_agg, hb_agg, sex_agg, agegp_agg, agegp_sex_agg, scotland_non_flu_tot
    scotland_flu_total,  agegp_flu_total, sex_flu_total, agegp_sex_flu_total,
    hb_flu_total)
 rm(g_resp_data, g_resp_summary, g_resp_summary_totals)
-rm(cases_scotland, case_rates_scotland, case_rates_hb, case_rates_age,
-   case_rates_sex, case_rates_age_sex)
+rm(#cases_scotland, 
+  case_rates_scotland, case_rates_hb, #case_rates_age,
+   #case_rates_sex, case_rates_age_sex
+  )
 rm(cases_scotland_template, case_rates_hb_template, case_rates_sex_template,
    case_rates_age_template, case_rates_age_sex_template)
 rm(case_rates_scotland_mem, case_rates_hb_mem, case_rates_age_mem)

@@ -248,271 +248,453 @@ create_mem_linechart <- function(data,
 
 
 # Create MEM heatmaps
-create_mem_heatmap <- function(data = df,
-                               rate_dp = 1,
-                               include_text_annotation = F,
-                               text_annotation_dp = 1,
-                               breakdown_variable = "HBName",
-                               heatmap_seasons = NULL,
-                               value_variable = "RatePer100000") {
+
+
+
+## Helper function for heatmap_plots
+
+make_season_plot <- function(
+    df_season,
+    data_breakdown,
+    breakdown_hover_label,
+    include_text_annotation,
+    rate_dp,
+    text_annotation_dp,
+    x_visibility = TRUE
+) {
   
-  # Rename HB/Age variable
-  # Rename value variable
+  act_levels <- sort(unique(df_season$ActivityLevel))
+  activity_cols <- activity_level_colours[as.numeric(act_levels)]
+  
+  df_season <- df_season %>%
+    mutate(
+      Breakdown = factor(Breakdown),
+      ActivityLevel = factor(ActivityLevel, levels = act_levels),
+      Value = round_half_up(Value, rate_dp)
+    )
+  
+  p <- plot_ly(
+    data = df_season,
+    x = ~Weekord,
+    y = ~as.numeric(Breakdown),
+    z = ~as.numeric(ActivityLevel),
+    colors = activity_cols,
+    type = "heatmap",
+    alpha = 0.5,
+    showscale = FALSE,
+    hovertext = ~ paste0(
+      "Season: ", Season, "<br>",
+      "Week number: ", ISOWeek, "<br>",
+      breakdown_hover_label, Breakdown_hover, "<br>",
+      "Rate: ", Value, "<br>",
+      "Activity level: ", ActivityLevel
+    ),
+    hoverinfo = "text"
+  ) %>% 
+    layout(
+      paper_bgcolor = phs_colours("phs-liberty-10"),
+      plot_bgcolor = phs_colours("phs-liberty-10"),
+      margin = list(b = 100, t = 5),
+      xaxis = list(
+        title = "",
+        ticktext = mem_isoweeks[c(TRUE, FALSE)],
+        tickvals = mem_week_order[c(TRUE, FALSE)],
+        tickmode = "array",
+        dtick = 1,
+        showgrid = FALSE,
+        visible = x_visibility
+      ),
+      yaxis = list(
+        title = "",  # ✅ y‑axis label removed entirely
+        autorange = "reversed",
+        ticktext = data_breakdown,
+        tickvals = seq_along(data_breakdown),
+        dtick = 1,
+        showgrid = FALSE,
+        showline = FALSE
+      ),
+      shapes = apply(expand.grid(x = c(0.5:51.5, (length(data_breakdown)-0.5):(length(data_breakdown)+0.5)), y = c(1.5:(length(data_breakdown)-0.5), 0.5:(length(data_breakdown)-0.5))), 1, function(x) add_cell_border(x[1], x[1]+1, x[2], x[2]+1,
+                                                                                                                                                                                                                        border_col = phs_colours("phs-liberty-10")))
+      
+    ) %>%
+    layout(
+      annotations = list(
+        x = 53,
+        y = length(data_breakdown) / 2,
+        text = unique(df_season$Season),
+        showarrow = FALSE,
+        textangle = 90,
+        font = list(size = 14)
+      )
+    )
+  
+  if (include_text_annotation) {
+    p <- p %>%
+      add_annotations(
+        x = df_season$Weekord,
+        y = as.numeric(df_season$Breakdown),
+        text = round_half_up(df_season$Value, text_annotation_dp),
+        showarrow = FALSE,
+        font = list(size = 6, color = "white")
+      )
+  }
+  
+  return(p)
+}
+
+
+create_mem_heatmap <- function(
+    data = df,
+    rate_dp = 1,
+    include_text_annotation = FALSE,
+    text_annotation_dp = 1,
+    breakdown_variable = "HBName",
+    heatmap_seasons = NULL,
+    value_variable = "RatePer100000"
+) {
+  
   data <- data %>%
-    rename(Breakdown = breakdown_variable,
-           Value = value_variable)
+    rename(Breakdown = all_of(breakdown_variable),
+           Value = all_of(value_variable))
   
-  # If seasons not supplied, use two most recent seasons
-  if(is.null(heatmap_seasons)){
+  # Pick seasons
+  if (is.null(heatmap_seasons)) {
     heatmap_seasons <- data %>%
-      select(Season) %>%
+      distinct(Season) %>%
       arrange(Season) %>%
-      distinct() %>%
+      pull(Season) %>%
       tail(2)
-    heatmap_seasons <- heatmap_seasons$Season
   }
   
-  # If Age, reverse order
-  if(breakdown_variable == "AgeGroup"){
+  # Breakdown handling
+  if (breakdown_variable == "AgeGroup") {
     data <- data %>%
-      mutate(Breakdown = gsub(" years", "", Breakdown)) %>%
-      mutate(Breakdown = factor(Breakdown, levels = rev(mem_age_groups))) %>%
-      mutate(Breakdown_hover = Breakdown)
-    breakdown_hover <- "Age group: "
-  } else{
-    if(breakdown_variable == "HBName"){
-      data <- data %>%
-        mutate(Breakdown_hover = Breakdown)
-    } else{
-      data <- data %>%
-        mutate(Breakdown_hover = HBName)
-    }
-    breakdown_hover <- "NHS Health Board: "
+      mutate(
+        Breakdown = gsub(" years", "", Breakdown),
+        Breakdown = factor(Breakdown, levels = rev(mem_age_groups)),
+        Breakdown_hover = Breakdown
+      )
+    breakdown_hover_label <- "Age group: "
+  } else {
+    data <- data %>%
+      mutate(
+        Breakdown_hover = ifelse(breakdown_variable == "HBName",
+                                 Breakdown, HBName)
+      )
+    breakdown_hover_label <- "NHS Health Board: "
   }
   
-  # Breakdown of data
   data_breakdown <- unique(sort(data$Breakdown))
   
-  # Data for previous season
-  data_prev_season <- data %>%
-    filter(Season == heatmap_seasons[1]) %>%
-    mutate(Breakdown = factor(Breakdown)) %>%
-    mutate(Value = round_half_up(Value, rate_dp))
+  # Create plots using external helper
+  prev_plot <- make_season_plot(
+    df_season = data %>% filter(Season == heatmap_seasons[1]),
+    data_breakdown = data_breakdown,
+    breakdown_hover_label = breakdown_hover_label,
+    include_text_annotation = include_text_annotation,
+    rate_dp = rate_dp,
+    text_annotation_dp = text_annotation_dp,
+    x_visibility = FALSE
+  )
   
-  # Ensure the correct colours are selected for activity levels in the data
-  act_levels_prev_season <- unique(sort(data_prev_season$ActivityLevel))
-  act_levels_prev_season_numeric <- as.numeric(act_levels_prev_season)
-  activity_level_colours_prev_season <- activity_level_colours[act_levels_prev_season_numeric]
+  curr_plot <- make_season_plot(
+    df_season = data %>% filter(Season == heatmap_seasons[2]),
+    data_breakdown = data_breakdown,
+    breakdown_hover_label = breakdown_hover_label,
+    include_text_annotation = include_text_annotation,
+    rate_dp = rate_dp,
+    text_annotation_dp = text_annotation_dp
+  )
   
-  # Update factor levels
-  data_prev_season <- data_prev_season %>%
-    mutate(ActivityLevel = factor(ActivityLevel, levels = act_levels_prev_season))
+  # Attach static legend
+  legend_y <- ifelse(breakdown_variable %in% c("HBCode", "HBName"), -0.5, -0.7)
   
-  # Create a heat map using Plotly
-  heatmap_prev_season <- plot_ly(
-    data = data_prev_season,
-    x = ~Weekord,
-    y = ~as.numeric(Breakdown),
-    z = ~as.numeric(ActivityLevel),
-    colors = activity_level_colours_prev_season,
-    alpha = 0.5,
-    showscale = FALSE,
-    type = "heatmap",
-    hovertext = ~ paste0("Season: ", unique(data_prev_season$Season), "<br>",
-                         "Week number: ", ISOWeek, "<br>",
-                         breakdown_hover, Breakdown_hover, "<br>",
-                         "Rate: ", Value, "<br>",
-                         "Activity level: ", ActivityLevel),
-    hoverinfo = "text"
-  ) %>%
+  curr_plot <- curr_plot %>%
     layout(
-      paper_bgcolor = phs_colours("phs-liberty-10"),
-      plot_bgcolor = phs_colours("phs-liberty-10"),
-      margin = list(b = 100, t = 5),
-      title = "",
-      xaxis = list(title = list(text = "Week number",
-                                standoff = 10L),
-                   ticktext = mem_isoweeks[c(TRUE, FALSE)],
-                   tickvals = mem_week_order[c(TRUE, FALSE)],
-                   tickmode = "array",
-                   showgrid = F,
-                   visible = F,
-                   dtick = 1),
-      yaxis = list(title = "", autorange = "reversed",
-                   ticktext = data_breakdown,
-                   tickvals = c(1:length(data_breakdown)),
-                   tickmode = "array",
-                   dtick = 1,
-                   showgrid = F),
-      shapes = apply(expand.grid(x = c(0.5:51.5, (length(data_breakdown)-0.5):(length(data_breakdown)+0.5)), y = c(1.5:(length(data_breakdown)-0.5), 0.5:(length(data_breakdown)-0.5))), 1, function(x) add_cell_border(x[1], x[1]+1, x[2], x[2]+1,
-                                                                                                                                                                                                                        border_col = phs_colours("phs-liberty-10")))
-    ) %>%
-    layout(
-      annotations = list(
-        x = 53,
-        y = length(data_breakdown)/2,
-        text = ~Season,
-        showarrow = F,
-        textangle = 90,
-        font = list(size = 14),
-        height = 14,
-        xanchor = "center",
-        yanchor = "middle"
+      images = list(
+        list(
+          source = raster2uri(mem_legend),
+          xref = "paper", yref = "paper",
+          x = 0.5, y = legend_y,
+          sizex = 0.4, sizey = 0.3,
+          xanchor = "center", yanchor = "bottom"
+        )
       )
     )
   
-  if(include_text_annotation){
-    
-    heatmap_prev_season <- heatmap_prev_season %>%
-      layout(
-        annotations = list(
-          x = ~Weekord,
-          y = ~as.numeric(Breakdown),
-          text = ~round_half_up(Value, text_annotation_dp),
-          font = list(size = 6, color = "white"),
-          showarrow = FALSE
-        )
-      )
-    
-  }
-  
-  # Data for current season
-  data_curr_season <- data %>%
-    filter(Season == heatmap_seasons[2]) %>%
-    mutate(Breakdown = factor(Breakdown)) %>%
-    mutate(Value = round_half_up(Value, rate_dp))
-  
-  # Ensure the correct colours are selected for activity levels in the data
-  act_levels_curr_season <- unique(sort(data_curr_season$ActivityLevel))
-  act_levels_curr_season_numeric <- as.numeric(act_levels_curr_season)
-  activity_level_colours_curr_season <- activity_level_colours[act_levels_curr_season_numeric]
-  
-  # Update factor levels
-  data_curr_season <- data_curr_season %>%
-    mutate(ActivityLevel = factor(ActivityLevel, levels = act_levels_curr_season))
-  
-  # Create a heat map using Plotly
-  heatmap_curr_season <- plot_ly(
-    data = data_curr_season,
-    x = ~Weekord,
-    y = ~as.numeric(Breakdown),
-    z = ~as.numeric(ActivityLevel),
-    colors = activity_level_colours_curr_season,
-    alpha = 0.5,
-    showscale = FALSE,
-    type = "heatmap",
-    hovertext = ~ paste0("Season: ", unique(data_curr_season$Season), "<br>",
-                         "Week number: ", ISOWeek, "<br>",
-                         breakdown_hover, Breakdown_hover, "<br>",
-                         "Rate: ", Value, "<br>",
-                         "Activity level: ", ActivityLevel),
-    hoverinfo = "text"
-  ) %>%
-    layout(
-      paper_bgcolor = phs_colours("phs-liberty-10"),
-      plot_bgcolor = phs_colours("phs-liberty-10"),
-      margin = list(b = 100, t = 5),
-      title = "",
-      xaxis = list(title = list(text = "Week number",
-                                standoff = 10L),
-                   ticktext = mem_isoweeks[c(TRUE, FALSE)],
-                   tickvals = mem_week_order[c(TRUE, FALSE)],
-                   tickmode = "array",
-                   dtick = 1,
-                   showgrid = F),
-      yaxis = list(showline = FALSE,
-                   showaxisticks = F,
-                   title = "",
-                   autorange = "reversed",
-                   ticktext = data_breakdown,
-                   dtick = 1,
-                   tickvals = c(1:length(data_breakdown)),
-                   showgrid = F),
-      shapes = apply(expand.grid(x = c(0.5:51.5, (length(data_breakdown)-0.5):(length(data_breakdown)+0.5)), y = c(1.5:(length(data_breakdown)-0.5), 0.5:(length(data_breakdown)-0.5))), 1, function(x) add_cell_border(x[1], x[1]+1, x[2], x[2]+1,
-                                                                                                                                                                                                                        border_col = phs_colours("phs-liberty-10")))
-    ) %>%
-    layout(
-      annotations = list(
-        x = 53,
-        y = length(data_breakdown)/2,
-        text = ~Season,
-        showarrow = F,
-        textangle = 90,
-        font = list(size = 14),
-        height = 14,
-        xanchor = "center",
-        yanchor = "middle"
-      )
-    )
-  
-  if(include_text_annotation){
-    
-    heatmap_curr_season <- heatmap_curr_season %>%
-      layout(
-        annotations = list(
-          x = ~Weekord,
-          y = ~as.numeric(Breakdown),
-          text = ~round_half_up(Value, text_annotation_dp),
-          font = list(size = 6, color = "white"),
-          showarrow = FALSE
-        )
-      )
-    
-  }
-  
-  # Add static legend
-  if(breakdown_variable %in% c("HBCode", "HBName")){
-    
-    heatmap_curr_season <- heatmap_curr_season %>%
-      layout(
-        images = list(
-          list(
-            source =  raster2uri(mem_legend),
-            xref = "paper",
-            yref = "paper",
-            x = 0.5,
-            y = -0.5,
-            sizex = 0.4,
-            sizey = 0.3,
-            xanchor="center",
-            yanchor="bottom"
-          )
-        ))
-    
-  } else{
-    
-    # Add static legend
-    heatmap_curr_season <- heatmap_curr_season %>%
-      layout(
-        images = list(
-          list(
-            source =  raster2uri(mem_legend),
-            xref = "paper",
-            yref = "paper",
-            x = 0.5,
-            y = -0.7,
-            sizex = 0.4,
-            sizey = 0.3,
-            xanchor="center",
-            yanchor="bottom"
-          )
-        ))
-    
-  }
-  
-# Arrange the heatmaps in a subplot (one above the other)
-  subplot_heatmap <- subplot(
-    heatmap_prev_season, heatmap_curr_season,
-    nrows = 2,
-    titleX = TRUE,
-    titleY = TRUE # Display the Y-axis title for the subplot
-  ) %>%
-    config(displaylogo = FALSE, displayModeBar = TRUE,
+  # Combine into subplot
+  subplot(prev_plot, curr_plot, nrows = 2) %>%
+    config(displaylogo = FALSE,
+           displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
-  
-  return(subplot_heatmap)
-  
 }
+
+
+# create_mem_heatmap <- function(data = df,
+#                                rate_dp = 1,
+#                                include_text_annotation = F,
+#                                text_annotation_dp = 1,
+#                                breakdown_variable = "HBName",
+#                                heatmap_seasons = NULL,
+#                                value_variable = "RatePer100000") {
+#   
+#   # Rename HB/Age variable
+#   # Rename value variable
+#   data <- data %>%
+#     rename(Breakdown = breakdown_variable,
+#            Value = value_variable)
+#   
+#   # If seasons not supplied, use two most recent seasons
+#   if(is.null(heatmap_seasons)){
+#     heatmap_seasons <- data %>%
+#       select(Season) %>%
+#       arrange(Season) %>%
+#       distinct() %>%
+#       tail(2)
+#     heatmap_seasons <- heatmap_seasons$Season
+#   }
+#   
+#   # If Age, reverse order
+#   if(breakdown_variable == "AgeGroup"){
+#     data <- data %>%
+#       mutate(Breakdown = gsub(" years", "", Breakdown)) %>%
+#       mutate(Breakdown = factor(Breakdown, levels = rev(mem_age_groups))) %>%
+#       mutate(Breakdown_hover = Breakdown)
+#     breakdown_hover <- "Age group: "
+#   } else{
+#     if(breakdown_variable == "HBName"){
+#       data <- data %>%
+#         mutate(Breakdown_hover = Breakdown)
+#     } else{
+#       data <- data %>%
+#         mutate(Breakdown_hover = HBName)
+#     }
+#     breakdown_hover <- "NHS Health Board: "
+#   }
+#   
+#   # Breakdown of data
+#   data_breakdown <- unique(sort(data$Breakdown))
+#   
+#   # Data for previous season
+#   data_prev_season <- data %>%
+#     filter(Season == heatmap_seasons[1]) %>%
+#     mutate(Breakdown = factor(Breakdown)) %>%
+#     mutate(Value = round_half_up(Value, rate_dp))
+#   
+#   # Ensure the correct colours are selected for activity levels in the data
+#   act_levels_prev_season <- unique(sort(data_prev_season$ActivityLevel))
+#   act_levels_prev_season_numeric <- as.numeric(act_levels_prev_season)
+#   activity_level_colours_prev_season <- activity_level_colours[act_levels_prev_season_numeric]
+#   
+#   # Update factor levels
+#   data_prev_season <- data_prev_season %>%
+#     mutate(ActivityLevel = factor(ActivityLevel, levels = act_levels_prev_season))
+#   
+#   # Create a heat map using Plotly
+#   heatmap_prev_season <- plot_ly(
+#     data = data_prev_season,
+#     x = ~Weekord,
+#     y = ~as.numeric(Breakdown),
+#     z = ~as.numeric(ActivityLevel),
+#     colors = activity_level_colours_prev_season,
+#     alpha = 0.5,
+#     showscale = FALSE,
+#     type = "heatmap",
+#     hovertext = ~ paste0("Season: ", unique(data_prev_season$Season), "<br>",
+#                          "Week number: ", ISOWeek, "<br>",
+#                          breakdown_hover, Breakdown_hover, "<br>",
+#                          "Rate: ", Value, "<br>",
+#                          "Activity level: ", ActivityLevel),
+#     hoverinfo = "text"
+#   ) %>%
+#     layout(
+#       paper_bgcolor = phs_colours("phs-liberty-10"),
+#       plot_bgcolor = phs_colours("phs-liberty-10"),
+#       margin = list(b = 100, t = 5),
+#       title = "",
+#       xaxis = list(title = list(text = "Week number",
+#                                 standoff = 10L),
+#                    ticktext = mem_isoweeks[c(TRUE, FALSE)],
+#                    tickvals = mem_week_order[c(TRUE, FALSE)],
+#                    tickmode = "array",
+#                    showgrid = F,
+#                    visible = F,
+#                    dtick = 1),
+#       yaxis = list(title = "", autorange = "reversed",
+#                    ticktext = data_breakdown,
+#                    tickvals = c(1:length(data_breakdown)),
+#                    tickmode = "array",
+#                    dtick = 1,
+#                    showgrid = F),
+#       shapes = apply(expand.grid(x = c(0.5:51.5, (length(data_breakdown)-0.5):(length(data_breakdown)+0.5)), y = c(1.5:(length(data_breakdown)-0.5), 0.5:(length(data_breakdown)-0.5))), 1, function(x) add_cell_border(x[1], x[1]+1, x[2], x[2]+1,
+#                                                                                                                                                                                                                         border_col = phs_colours("phs-liberty-10")))
+#     ) %>%
+#     layout(
+#       annotations = list(
+#         x = 53,
+#         y = length(data_breakdown)/2,
+#         text = ~Season,
+#         showarrow = F,
+#         textangle = 90,
+#         font = list(size = 14),
+#         height = 14,
+#         xanchor = "center",
+#         yanchor = "middle"
+#       )
+#     )
+#   
+#   if(include_text_annotation){
+#     
+#     heatmap_prev_season <- heatmap_prev_season %>%
+#       layout(
+#         annotations = list(
+#           x = ~Weekord,
+#           y = ~as.numeric(Breakdown),
+#           text = ~round_half_up(Value, text_annotation_dp),
+#           font = list(size = 6, color = "white"),
+#           showarrow = FALSE
+#         )
+#       )
+#     
+#   }
+#   
+#   # Data for current season
+#   data_curr_season <- data %>%
+#     filter(Season == heatmap_seasons[2]) %>%
+#     mutate(Breakdown = factor(Breakdown)) %>%
+#     mutate(Value = round_half_up(Value, rate_dp))
+#   
+#   # Ensure the correct colours are selected for activity levels in the data
+#   act_levels_curr_season <- unique(sort(data_curr_season$ActivityLevel))
+#   act_levels_curr_season_numeric <- as.numeric(act_levels_curr_season)
+#   activity_level_colours_curr_season <- activity_level_colours[act_levels_curr_season_numeric]
+#   
+#   # Update factor levels
+#   data_curr_season <- data_curr_season %>%
+#     mutate(ActivityLevel = factor(ActivityLevel, levels = act_levels_curr_season))
+#   
+#   # Create a heat map using Plotly
+#   heatmap_curr_season <- plot_ly(
+#     data = data_curr_season,
+#     x = ~Weekord,
+#     y = ~as.numeric(Breakdown),
+#     z = ~as.numeric(ActivityLevel),
+#     colors = activity_level_colours_curr_season,
+#     alpha = 0.5,
+#     showscale = FALSE,
+#     type = "heatmap",
+#     hovertext = ~ paste0("Season: ", unique(data_curr_season$Season), "<br>",
+#                          "Week number: ", ISOWeek, "<br>",
+#                          breakdown_hover, Breakdown_hover, "<br>",
+#                          "Rate: ", Value, "<br>",
+#                          "Activity level: ", ActivityLevel),
+#     hoverinfo = "text"
+#   ) %>%
+#     layout(
+#       paper_bgcolor = phs_colours("phs-liberty-10"),
+#       plot_bgcolor = phs_colours("phs-liberty-10"),
+#       margin = list(b = 100, t = 5),
+#       title = "",
+#       xaxis = list(title = list(text = "Week number",
+#                                 standoff = 10L),
+#                    ticktext = mem_isoweeks[c(TRUE, FALSE)],
+#                    tickvals = mem_week_order[c(TRUE, FALSE)],
+#                    tickmode = "array",
+#                    dtick = 1,
+#                    showgrid = F),
+#       yaxis = list(showline = FALSE,
+#                    showaxisticks = F,
+#                    title = "",
+#                    autorange = "reversed",
+#                    ticktext = data_breakdown,
+#                    dtick = 1,
+#                    tickvals = c(1:length(data_breakdown)),
+#                    showgrid = F),
+#       shapes = apply(expand.grid(x = c(0.5:51.5, (length(data_breakdown)-0.5):(length(data_breakdown)+0.5)), y = c(1.5:(length(data_breakdown)-0.5), 0.5:(length(data_breakdown)-0.5))), 1, function(x) add_cell_border(x[1], x[1]+1, x[2], x[2]+1,
+#                                                                                                                                                                                                                         border_col = phs_colours("phs-liberty-10")))
+#     ) %>%
+#     layout(
+#       annotations = list(
+#         x = 53,
+#         y = length(data_breakdown)/2,
+#         text = ~Season,
+#         showarrow = F,
+#         textangle = 90,
+#         font = list(size = 14),
+#         height = 14,
+#         xanchor = "center",
+#         yanchor = "middle"
+#       )
+#     )
+#   
+#   if(include_text_annotation){
+#     
+#     heatmap_curr_season <- heatmap_curr_season %>%
+#       layout(
+#         annotations = list(
+#           x = ~Weekord,
+#           y = ~as.numeric(Breakdown),
+#           text = ~round_half_up(Value, text_annotation_dp),
+#           font = list(size = 6, color = "white"),
+#           showarrow = FALSE
+#         )
+#       )
+#     
+#   }
+#   
+#   # Add static legend
+#   if(breakdown_variable %in% c("HBCode", "HBName")){
+#     
+#     heatmap_curr_season <- heatmap_curr_season %>%
+#       layout(
+#         images = list(
+#           list(
+#             source =  raster2uri(mem_legend),
+#             xref = "paper",
+#             yref = "paper",
+#             x = 0.5,
+#             y = -0.5,
+#             sizex = 0.4,
+#             sizey = 0.3,
+#             xanchor="center",
+#             yanchor="bottom"
+#           )
+#         ))
+#     
+#   } else{
+#     
+#     # Add static legend
+#     heatmap_curr_season <- heatmap_curr_season %>%
+#       layout(
+#         images = list(
+#           list(
+#             source =  raster2uri(mem_legend),
+#             xref = "paper",
+#             yref = "paper",
+#             x = 0.5,
+#             y = -0.7,
+#             sizex = 0.4,
+#             sizey = 0.3,
+#             xanchor="center",
+#             yanchor="bottom"
+#           )
+#         ))
+#     
+#   }
+#   
+# # Arrange the heatmaps in a subplot (one above the other)
+#   subplot_heatmap <- subplot(
+#     heatmap_prev_season, heatmap_curr_season,
+#     nrows = 2,
+#     titleX = TRUE,
+#     titleY = TRUE # Display the Y-axis title for the subplot
+#   ) %>%
+#     config(displaylogo = FALSE, displayModeBar = TRUE,
+#            modeBarButtonsToRemove = bttn_remove)
+#   
+#   return(subplot_heatmap)
+#   
+# }
 
 # Create Flu Adms line chart
 create_flu_adms_linechart <- function(data,

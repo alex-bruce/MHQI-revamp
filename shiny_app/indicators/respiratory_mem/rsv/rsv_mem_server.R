@@ -213,11 +213,11 @@ output$rsv_mem_table <- renderDataTable({
     filter(Season %in% rsv_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, RatePer100000, ActivityLevel) %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
@@ -235,11 +235,11 @@ output$rsv_mem_hb_table <- renderDataTable({
     filter(Season %in% rsv_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            HBName = factor(HBName),
@@ -259,11 +259,11 @@ output$rsv_mem_age_table <- renderDataTable({
     filter(Season %in% rsv_seasons) %>%
     arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
            AgeGroup = factor(AgeGroup, levels = mem_age_groups_full),
@@ -281,11 +281,11 @@ output$rsv_mem_age_table <- renderDataTable({
 output$rsv_mem_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Scot %>%
     filter(Pathogen == "Respiratory Syncytial Virus") %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     create_mem_linechart()
 
 })
@@ -294,11 +294,11 @@ output$rsv_mem_plot <- renderPlotly({
 output$rsv_mem_hb_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_HB %>%
     filter(Pathogen == "Respiratory Syncytial Virus") %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "HBName")
 
@@ -309,11 +309,11 @@ output$rsv_mem_hb_plot <- renderPlotly({
 output$rsv_mem_age_plot <- renderPlotly({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "Respiratory Syncytial Virus") %>%
-    mutate(ActivityLevel = case_when(
-      ActivityLevel == "Moderate" ~ "Medium",
-      ActivityLevel == "Extraordinary" ~ "Very High",
-      TRUE ~ ActivityLevel
-    )) %>%
+    # mutate(ActivityLevel = case_when(
+    #   ActivityLevel == "Moderate" ~ "Medium",
+    #   ActivityLevel == "Extraordinary" ~ "Very High",
+    #   TRUE ~ ActivityLevel
+    # )) %>%
     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     create_mem_heatmap(breakdown_variable = "AgeGroup")
 
