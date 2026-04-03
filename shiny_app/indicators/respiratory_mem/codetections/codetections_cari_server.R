@@ -6,7 +6,7 @@ metadataButtonServer(id="respiratory_codetections_cari",
 altTextServer("duodetections_cari_modal",
               title = "CARI - Relative frequency (%) of each pathogen in all samples with two-pathogen co-detections",
               content = tags$ul(tags$li("This is a plot showing how often each individual pathogen is identified (expressed as a percentage of all pathogens identified) in all samples with two-pathogen co-detections in the Community Acute Respiratory Infection (CARI) surveillance programme."),
-                                tags$li("The x axis is the week ending date, starting 09 October 2022."),
+                                tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
                                 tags$li("The y axis is the percentage of all pathogens identified.")))
 
 altTextServer("codetections_cari_modal",
@@ -20,14 +20,16 @@ altTextServer("codetections_cari_modal",
 output$duodetections_cari_table <- renderDataTable({
   Respiratory_Pathogens_CARI_duodetections %>%
     arrange(desc(WeekEnding), desc(pathogen)) %>%
-    select(WeekEnding, pathogen, perc) %>%
+    select(Season, ISOWeekNo, pathogen, perc) %>%
     mutate(pathogen = as.character(pathogen)) %>%
-    mutate(pathogen = factor(pathogen)) %>%
+    mutate(Season = factor(Season),
+           ISOWeekNo = factor(ISOWeekNo),
+           pathogen = factor(pathogen)) %>%
     mutate(perc = round_half_up(perc,1)) %>%
-    rename(`Week Ending` = WeekEnding,
+    rename(`ISO Week` = ISOWeekNo,
            `Pathogen` = pathogen,
            `Percentage (%)` = perc) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2,3))
 })
 
 

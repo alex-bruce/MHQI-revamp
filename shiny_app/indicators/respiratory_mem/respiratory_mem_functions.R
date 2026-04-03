@@ -1856,7 +1856,8 @@ create_cari_duodetection_chart_stacked <- function(data){
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   yaxis_plots[["range"]] <- c(0,100)
-  xaxis_plots[["range"]] <- list(-0.5, 52.5)
+  #xaxis_plots[["range"]] <- list(-0.5, 52.5)
+  xaxis_plots[["range"]] <- list(-0.5, 51.5)
   
   
   # put weeks in correct order for season
@@ -1875,7 +1876,7 @@ create_cari_duodetection_chart_stacked <- function(data){
     "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"
   )
   
-  factor_levels <- rev(unique(data$pathogen))
+  factor_levels <- unique(data$pathogen)
   
   data <- data %>%
     mutate(pathogen = factor(pathogen, levels = factor_levels)) %>%
@@ -1898,7 +1899,7 @@ create_cari_duodetection_chart_stacked <- function(data){
         marker = list(color = duodetection_colours[path]),
         hovertemplate = 
           paste0(
-            "Week ending: %{x|%d %b %y}",
+            ifelse(path == "Adenovirus", "Week number: %{x}", ""),
             "<br>Pathogen: ", path,
             "<br>Percentage: %{y:.1f}%",
             "<extra></extra>"
@@ -1917,7 +1918,11 @@ create_cari_duodetection_chart_stacked <- function(data){
       paper_bgcolor = phs_colours("phs-liberty-10"),
       plot_bgcolor = phs_colours("phs-liberty-10"),
       hovermode = "x"
-    )
+    ) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
   
   return(p)
 }
