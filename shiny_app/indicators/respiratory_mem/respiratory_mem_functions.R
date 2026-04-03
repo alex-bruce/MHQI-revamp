@@ -2029,20 +2029,21 @@ create_cari_subtype_barchart <- function(data){
   
 }
 
-
-
-create_cari_duodetection_chart <- function(data){
-  
-  #data <- Respiratory_Pathogens_CARI_duodetections
+create_cari_duodetection_chart_stacked <- function(data){
   
   yaxis_plots[["title"]] <- "Percentage (%)"
-  xaxis_plots[["title"]] <- "Week ending"
+  xaxis_plots[["title"]] <- "ISO Week"
   
-  #xaxis_plots[["rangeslider"]] <- list(type = "date")
   xaxis_plots[["range"]] <- c(min(data$WeekEnding), max(data$WeekEnding))
   yaxis_plots[["fixedrange"]] <- FALSE
   yaxis_plots[["ticksuffix"]] <- "%"
   yaxis_plots[["range"]] <- c(0,100)
+  #xaxis_plots[["range"]] <- list(-0.5, 52.5)
+  xaxis_plots[["range"]] <- list(-0.5, 51.5)
+  
+  
+  # put weeks in correct order for season
+  week_order <- c(seq(40, 52, 1), seq(1, 39, 1))
   
   duodetection_colours <- c(
     "Adenovirus" = "#12436D",
@@ -2057,78 +2058,158 @@ create_cari_duodetection_chart <- function(data){
     "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"
   )
   
-  data <- data %>%
-    group_by(WeekEnding) %>%
-    mutate(Bottom = lag(cumsum(perc), default = 0),
-           Top = Bottom + perc) %>%
-    ungroup() %>%
-    mutate(Mid = Bottom+((Top-Bottom)/2))
-  
-  factor_levels <- rev(unique(data$pathogen))
+  factor_levels <- unique(data$pathogen)
   
   data <- data %>%
     mutate(pathogen = factor(pathogen, levels = factor_levels)) %>%
-    arrange(WeekEnding, pathogen)
+    arrange(WeekEnding, pathogen) %>% 
+    mutate(ISOWeekNo = factor(ISOWeekNo, levels=week_order))
   
-  # data <- data %>%
-  #   mutate(Mid = ifelse(Mid == Top, 0, Mid))
-  
-  # Create the plot object
   p <- plot_ly()
   
-  # Loop through each pathogen
-  for(path in rev(unique(data$pathogen))) {
-    
-    #print(path)
+  for(path in factor_levels){
     
     data_sub <- data %>% filter(pathogen == path)
     
-    x_vals <- c(data_sub$WeekEnding, rev(data_sub$WeekEnding))
-    y_vals <- c(data_sub$Top, rev(data_sub$Bottom))
-    
-    text_vals <- paste0("Week ending:", format(data_sub$WeekEnding, "%d %b %y"),
-                        "<br>Pathogen:", data_sub$pathogen,
-                        "<br>Percentage:", round(data_sub$perc, 1), "%")
-    text_vals <- c(text_vals, rev(text_vals))
-    
-    p <- p %>%       
-      # Invisible markers for better hover
+    p <- p %>%
       add_trace(
         data = data_sub,
-        x = ~WeekEnding,
-        y = ~Mid,
-        type = 'scatter',
-        mode = 'markers',
-        marker = list(size = 1, color = duodetection_colours[path], opacity = 0),
-        text = ~paste0(pathogen, ": ", round(perc, 1), "%"),
-        hovertemplate = "%{text}<extra></extra>",
-        showlegend = FALSE
-      ) %>%
-      add_trace(data = data_sub,
-                x = x_vals,
-                y = y_vals,
-                type = 'scatter',
-                mode = 'lines',
-                fill = 'toself',
-                fillcolor = duodetection_colours[path],
-                line = list(width = 0,
-                            color = phs_colours("phs-liberty-10")),
-                text = text_vals,
-                hoverinfo = 'none',
-                name = path) %>%
-      layout(margin = list(b = 100, t = 5),
-             yaxis = yaxis_plots,
-             xaxis = xaxis_plots,
-             legend = list(x = 100, y = 0.5, traceorder = 'reversed'),
-             paper_bgcolor = phs_colours("phs-liberty-10"),
-             plot_bgcolor = phs_colours("phs-liberty-10"),
-             hovermode = 'x')
+        x = ~ISOWeekNo,
+        y = ~perc,
+        type = "bar",
+        name = path,
+        marker = list(color = duodetection_colours[path]),
+        hovertemplate = 
+          paste0(
+            ifelse(path == "Adenovirus", "Week number: %{x}", ""),
+            "<br>Pathogen: ", path,
+            "<br>Percentage: %{y:.1f}%",
+            "<extra></extra>"
+          )
+        
+      )
   }
-
-    return(p)
   
+  p <- p %>%
+    layout(
+      barmode = "stack",
+      margin = list(b = 100, t = 5),
+      xaxis = xaxis_plots,
+      yaxis = yaxis_plots,
+      legend = list(x = 100, y = 0.5, traceorder = "reversed"),
+      paper_bgcolor = phs_colours("phs-liberty-10"),
+      plot_bgcolor = phs_colours("phs-liberty-10"),
+      hovermode = "x"
+    ) %>%
+    
+    config(displaylogo = FALSE, displayModeBar = TRUE,
+           modeBarButtonsToRemove = bttn_remove)
+  
+  
+  return(p)
 }
 
+
+# 
+# 
+# create_cari_duodetection_chart <- function(data){
+#   
+#   #data <- Respiratory_Pathogens_CARI_duodetections
+#   
+#   yaxis_plots[["title"]] <- "Percentage (%)"
+#   xaxis_plots[["title"]] <- "Week ending"
+#   
+#   #xaxis_plots[["rangeslider"]] <- list(type = "date")
+#   xaxis_plots[["range"]] <- c(min(data$WeekEnding), max(data$WeekEnding))
+#   yaxis_plots[["fixedrange"]] <- FALSE
+#   yaxis_plots[["ticksuffix"]] <- "%"
+#   yaxis_plots[["range"]] <- c(0,100)
+#   
+#   duodetection_colours <- c(
+#     "Adenovirus" = "#12436D",
+#     "COVID-19" = "#F46A25",
+#     "Human Metapneumovirus" = "#B4DEDB",
+#     "Influenza A" = "#801650",
+#     "Influenza B" = "#CCA2B9",
+#     "Mycoplasma Pneumoniae" = "#3F085C",
+#     "Parainfluenza" = "#A285D1",
+#     "Respiratory Syncytial Virus" = "#28A197",
+#     "Rhinovirus" = "#A8CCE8",
+#     "Seasonal Coronavirus (non-COVID-19)" = "#3E8ECC"
+#   )
+#   
+#   data <- data %>%
+#     group_by(WeekEnding) %>%
+#     mutate(Bottom = lag(cumsum(perc), default = 0),
+#            Top = Bottom + perc) %>%
+#     ungroup() %>%
+#     mutate(Mid = Bottom+((Top-Bottom)/2))
+#   
+#   factor_levels <- rev(unique(data$pathogen))
+#   
+#   data <- data %>%
+#     mutate(pathogen = factor(pathogen, levels = factor_levels)) %>%
+#     arrange(WeekEnding, pathogen)
+#   
+#   # data <- data %>%
+#   #   mutate(Mid = ifelse(Mid == Top, 0, Mid))
+#   
+#   # Create the plot object
+#   p <- plot_ly()
+#   
+#   # Loop through each pathogen
+#   for(path in rev(unique(data$pathogen))) {
+#     
+#     #print(path)
+#     
+#     data_sub <- data %>% filter(pathogen == path)
+#     
+#     x_vals <- c(data_sub$WeekEnding, rev(data_sub$WeekEnding))
+#     y_vals <- c(data_sub$Top, rev(data_sub$Bottom))
+#     
+#     text_vals <- paste0("Week ending:", format(data_sub$WeekEnding, "%d %b %y"),
+#                         "<br>Pathogen:", data_sub$pathogen,
+#                         "<br>Percentage:", round(data_sub$perc, 1), "%")
+#     text_vals <- c(text_vals, rev(text_vals))
+#     
+#     p <- p %>%       
+#       # Invisible markers for better hover
+#       add_trace(
+#         data = data_sub,
+#         x = ~WeekEnding,
+#         y = ~Mid,
+#         type = 'scatter',
+#         mode = 'markers',
+#         marker = list(size = 1, color = duodetection_colours[path], opacity = 0),
+#         text = ~paste0(pathogen, ": ", round(perc, 1), "%"),
+#         hovertemplate = "%{text}<extra></extra>",
+#         showlegend = FALSE
+#       ) %>%
+#       add_trace(data = data_sub,
+#                 x = x_vals,
+#                 y = y_vals,
+#                 type = 'scatter',
+#                 mode = 'lines',
+#                 fill = 'toself',
+#                 fillcolor = duodetection_colours[path],
+#                 line = list(width = 0,
+#                             color = phs_colours("phs-liberty-10")),
+#                 text = text_vals,
+#                 hoverinfo = 'none',
+#                 name = path) %>%
+#       layout(margin = list(b = 100, t = 5),
+#              yaxis = yaxis_plots,
+#              xaxis = xaxis_plots,
+#              legend = list(x = 100, y = 0.5, traceorder = 'reversed'),
+#              paper_bgcolor = phs_colours("phs-liberty-10"),
+#              plot_bgcolor = phs_colours("phs-liberty-10"),
+#              hovermode = 'x')
+#   }
+# 
+#     return(p)
+#   
+# }
+# 
 
 
 

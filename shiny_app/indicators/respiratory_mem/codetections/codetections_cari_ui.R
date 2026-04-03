@@ -4,6 +4,11 @@ codetection_cari_age <- Respiratory_Pathogens_CARI_codetections %>%
   mutate(AgeGroup = factor(AgeGroup, levels = c("All ages", "0-4 years", "5-14 years", 
                                                 "15-44 years", "45-64 years", "65+ years")))
 
+
+
+cari_seasons <- sort(unique(Respiratory_Pathogens_CARI_duodetections$Season))
+
+
 tagList(
   
   fluidRow(width = 12,
@@ -51,6 +56,11 @@ tagList(
     tabBox(width = NULL,
            type = "pills",
            tabPanel("Plot",
+                    br(),
+                    pickerInput(inputId = "cari_season",
+                                label = "Select season",
+                                choices = {cari_seasons %>% tail(6) },
+                                selected = {cari_seasons %>% tail(1)}),
                     tagList(linebreaks(1),
                             altTextUI("duodetections_cari_modal"),
                             withNavySpinner(plotlyOutput("duodetections_cari_plot")),
