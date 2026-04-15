@@ -805,7 +805,7 @@ rm(scotland_agg, hb_agg, sex_agg, agegp_agg, agegp_sex_agg, scotland_non_flu_tot
    hb_flu_total)
 rm(g_resp_data, g_resp_summary, g_resp_summary_totals)
 rm(#cases_scotland, 
-  case_rates_scotland, case_rates_hb, #case_rates_age,
+  case_rates_scotland, case_rates_hb #case_rates_age,
    #case_rates_sex, case_rates_age_sex
   )
 rm(cases_scotland_template, case_rates_hb_template, case_rates_sex_template,
