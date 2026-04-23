@@ -13,6 +13,8 @@ observeEvent(input$jump_to_mortality, {updateTabsetPanel(session, "intabset", se
 observeEvent(input$jump_to_metadata, {updateTabsetPanel(session, "intabset", selected = "metadata")})
 observeEvent(input$jump_to_download, {updateTabsetPanel(session, "intabset", selected = "download")})
 
+## To be used while dashboard is updating 4-weekly. Can remove final bold sentence below after we revert to weekly publication on 8/10/26
+next_dashboard_date <- (floor_date(as.Date(Deployment_Date, format = "%d %B %Y") + weeks(4), "week", 7) + days(4)) %>% format("%d %B")
 
 output$introduction_about <- renderUI({
 
@@ -32,6 +34,12 @@ output$introduction_about <- renderUI({
             #"seasonal pattern with most cases/admissions occurring between October and April/May."
             ), 
           p(glue("This dashboard was last updated on {Deployment_Date} to include data up to {data_recent_date}.")),
+         # br(),
+         ##Note below to be removed after 8/10/26
+          strong(glue("Public Health Scotland (PHS) continue to consider timely ways to provide the public with official statistics. 
+                 Between 23 April and 8 October 2026, PHS are reducing the frequency of the Viral respiratory diseases in 
+                 Scotland dashboard to four-weekly. The dashboard will next be updated on {next_dashboard_date}.")),
+          br(),
           br(),
 
           fluidRow(
