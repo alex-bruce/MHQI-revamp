@@ -199,7 +199,7 @@ source("Transfer Scripts/transfer_respiratory.R")
 #source("Transfer Scripts/transfer_respiratory_euromomo.R")
 
 #### Respiratory NHS24 - MEM
-source("Transfer Scripts/transfer_respiratory_nhs24_mem.R")
+#source("Transfer Scripts/transfer_respiratory_nhs24_mem.R")
 
 #### Respiratory GP ILI - MEM
 #source("Transfer Scripts/transfer_respiratory_gp_ili_mem.R")
