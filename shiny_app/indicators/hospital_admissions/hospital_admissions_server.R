@@ -280,18 +280,6 @@ output$hospital_admissions_plot <- renderPlotly({
 
 # COVID-19 admissions by age table
 output$covid_admissions_age_table <- renderDataTable({
-  age_rate_data_all_path %>%
-    add_season() %>% 
-    select(week_ending, age_band, Season,
-           Admissions = cov, rate = cov_rate) %>% 
-    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
-           age_band = as.factor(age_band)) %>% 
-    #filter(Season %in% cov_adm_seasons) %>% 
-    make_admissions_age_table()
-
-})
-
-output$covid_admissions_age_table <- renderDataTable({
   admissions_age_TEST %>%
     filter(Pathogen=="COVID-19") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
