@@ -119,16 +119,16 @@ output$rsv_admissions_table <- renderDataTable({
 
 # RSV HB admissions table
 output$rsv_admissions_hb_table <- renderDataTable({
-  admissions_hb_all_path %>%
-    filter(admission_type == "rsv") %>%
-    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
-    filter(Season %in% rsv_adm_seasons) %>%
-    arrange(desc(week_ending), health_board_of_treatment) %>%
-    mutate(health_board_of_treatment = factor(health_board_of_treatment)) %>%
-    select('Week ending' = week_ending, 
-           'NHS Health Board' = health_board_of_treatment,
-           'Number of hospital admissions' = n,
-           'Rate of hospital admissions per 100,000 population' = rate) %>%
+  admissions_hb_new_TEST %>%
+    filter(Pathogen == "RSV") %>%
+    filter(HBName != "Golden Jubilee National Hospital") %>% 
+    #filter(Season >= "2023/2024") %>%
+    arrange(desc(WeekEnding), HBName) %>%
+    mutate(HBName = factor(HBName)) %>%
+    select('Week ending' = WeekEnding, 
+           'NHS Health Board' = HBName,
+           'Number of hospital admissions' = NumberAdmissionsPerWeek,
+           'Rate of hospital admissions per 100,000 population' = RateAdmissionsPerWeek) %>%
     make_table(add_separator_cols_1dp = c(4),
                add_separator_cols = c(3),
                filter_cols = c(1,2))
@@ -137,13 +137,14 @@ output$rsv_admissions_hb_table <- renderDataTable({
 
 # RSV admissions by age table
 output$rsv_admissions_age_table <- renderDataTable({
-  age_rate_data_all_path %>%
-    add_season() %>% 
-    select(week_ending, age_band, Season,
-           Admissions = rsv, rate = rsv_rate) %>% 
-    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
-           age_band = as.factor(age_band)) %>% 
-    filter(Season %in% rsv_adm_seasons) %>% 
+  admissions_age_TEST %>%
+    filter(Pathogen=="RSV") %>% 
+    select(week_ending = WeekEnding, age_band = AgeGroup, Season,
+           Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
+    mutate(age_band = factor(age_band, levels = c("<1", "1-4", "5-14",
+                                                  "15-44", "45-64", "65-74",  "75+", "Total"),
+                             labels = c("<1", "1 to 4", "5 to 14",
+                                        "15 to 44", "45 to 64", "65 to 74",  "75+", "All ages"))) %>% 
     make_admissions_age_table()
   
 })
@@ -158,20 +159,15 @@ output$rsv_admissions_plot <- renderPlotly({
 
 # RSV Adms by age plot
 output$rsv_admissions_age_plot <- renderPlotly({
-  age_rate_data_all_path %>%
-    add_season() %>%    
-    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
-    filter(Season %in% rsv_adm_seasons) %>% 
-    #mutate(week_ending = dmy(week_ending)) %>%
-    #filter(age_band != "All Ages") %>% 
-    select(week_ending, age_band,
-           rate = rsv_rate, Season) %>%
+  admissions_age_TEST %>%
+    filter(Pathogen=="RSV") %>% 
+    select(week_ending = WeekEnding, age_band = AgeGroup,
+           rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%
     mutate(age_band = factor(age_band, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
-                                                  "65-74", "75+", "All Ages"))) %>% 
+                                                  "65-74", "75+", "Total"))) %>% 
     arrange(week_ending, age_band) %>%
-    mutate(week = isoweek(week_ending)) %>% 
     filter(Season == input$adm_season_rsv_age) %>%
-    #filter(Season == "2024/2025") %>% 
+    #filter(Season == "2024/25") %>% 
     create_pathogen_adms_age_linechart()
   
 })
@@ -189,12 +185,12 @@ observeEvent(input$respiratory_season,
 
 # RSV Adms by HB plot
 output$rsv_admissions_hb_plot <- renderPlotly({
-  admissions_hb_all_path %>%
-    filter(admission_type == "rsv") %>% 
-    filter(health_board_of_treatment != "Golden Jubilee National Hospital") %>% 
+  admissions_hb_new_TEST %>%
+    filter(Pathogen == "RSV") %>% 
+    filter(HBName != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$rsv_adms_selected_seasons) %>%
-    select(Season, week, week_ending, health_board_of_treatment, rate) %>%
-    arrange(week_ending, health_board_of_treatment) %>%
+    select(ISOweek, WeekEnding, HBName, RateAdmissionsPerWeek) %>%
+    arrange(WeekEnding, HBName) %>%
     create_pathogen_adms_hb_linechart()
   
 })
@@ -207,16 +203,16 @@ observeEvent(input$btn_modal_simd, { showModal(simd_modal) })
 
 # Table
 output$rsv_admissions_simd_table <- renderDataTable({
-  admissions_simd_Cov_flu_RSV %>% 
+  admissions_simd_new_TEST %>% 
     filter(Pathogen == "RSV") %>%
     arrange(desc(WeekEnding)) %>%
-    mutate(WeekEnding = convert_opendata_date(WeekEnding),
-           SIMD = factor(SIMD),
-           ProvisionalFlag = factor(recode(ProvisionalFlag, "1" = "p", "0" = ""))) %>%
-    select(WeekEnding, SIMD, NumberOfAdmissions, RateOfAdmissions, ProvisionalFlag) %>%
+    mutate(SIMD = factor(SIMD)) %>% 
+    mutate(ProvisionalFlag = case_when(WeekEnding == max(WeekEnding) ~ "p",
+                                       T ~ "")) %>%
+    select(WeekEnding, SIMD, NumberAdmissionsPerWeek, RateAdmissionsPerWeek, ProvisionalFlag) %>%
     dplyr::rename(`Week ending` = WeekEnding,
-                  `Number of admissions` = NumberOfAdmissions,
-                  `Admission Rate per 100k` = RateOfAdmissions,
+                  `Number of admissions` = NumberAdmissionsPerWeek,
+                  `Admission Rate per 100k` = RateAdmissionsPerWeek,
                   `Is data provisional (p)?` = ProvisionalFlag) %>%
     make_table(add_separator_cols = c(3),
                filter_cols = c(2,5))
@@ -226,12 +222,10 @@ output$rsv_admissions_simd_table <- renderDataTable({
 
 # Plot
 output$rsv_admissions_simd_plot <- renderPlotly({
-  admissions_simd_Cov_flu_RSV %>% 
+  admissions_simd_new_TEST %>% 
     filter(Pathogen == "RSV") %>%
-    mutate(week_ending = ymd(WeekEnding)) %>% 
-    add_season() %>%    
-    mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>% 
-    mutate(week = isoweek(week_ending)) %>% 
+    rename(week_ending = WeekEnding,
+           week = ISOweek) %>% 
     filter(Season == input$adm_season_rsv_simd) %>%
     make_hospital_admissions_simd_plot()
   

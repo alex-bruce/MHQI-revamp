@@ -1,18 +1,30 @@
 ## Organise adenovirus admissions data into the right format for the plot and table
 
 
-adeno_admissions <- age_rate_data_all_path %>% 
-  filter(age_band == "All Ages") %>% 
-  add_season() %>% 
-  select(week_ending, adeno, adeno_rate, Season) %>% 
-  rename(Date = week_ending,
-         Admissions = adeno,
-         RatePer100000 = adeno_rate) %>% 
-  mutate(Year = year(Date),
-         ISOWeek = isoweek(Date)) %>% 
-  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
-         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
-                             ISOWeek < 40 ~ ISOWeek + 13))
+# adeno_admissions <- age_rate_data_all_path %>% 
+#   filter(age_band == "All Ages") %>% 
+#   add_season() %>% 
+#   select(week_ending, adeno, adeno_rate, Season) %>% 
+#   rename(Date = week_ending,
+#          Admissions = adeno,
+#          RatePer100000 = adeno_rate) %>% 
+#   mutate(Year = year(Date),
+#          ISOWeek = isoweek(Date)) %>% 
+#   mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
+#          Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
+#                              ISOWeek < 40 ~ ISOWeek + 13))
+
+adeno_admissions <- admissions_scotland_TEST %>% 
+  filter(Pathogen == "Adenovirus") %>% 
+  mutate(ISOweek = as.numeric(ISOweek)) %>% 
+  mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
+                             ISOweek < 40 ~ ISOweek + 13)) %>% 
+  rename(Date = WeekEnding,
+         Admissions = NumberAdmissionsPerWeek,
+         RatePer100000 = RateAdmissionsPerWeek,
+         Year = ISOyear,
+         ISOWeek = ISOweek)
+
 
 adeno_adm_seasons <- tail(sort(unique(adeno_admissions$Season)), 6)
 

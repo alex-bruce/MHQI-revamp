@@ -25,6 +25,7 @@ library(png)
 library(tidyr)
 library(readxl)
 
+
 # Load core functions ----
 source("functions/core_functions.R")
 
@@ -95,10 +96,10 @@ if (config::get()$online){
 #                                                   sumcol = "NewCovidAdmissionsPerDay",
 #                                                   datecol="DateFirstICUAdmission")
 
-# Admissions
-admissions_headlines <- all_pathogen_admissions %>%
-  select(Date, cov) %>%
-  tail(3)
+# # Admissions
+# admissions_headlines <- all_pathogen_admissions %>%
+#   select(Date, cov) %>%
+#   tail(3)
 
 # occupancy_headlines <- get_threeweek_occupancy_figures(df = Occupancy_Hospital,
 #                                                        datecol = "Date")
@@ -275,6 +276,22 @@ add_season <- function(input_data) {
                                        as.numeric(str_sub(week, end = 4)), sep="")),
                               TRUE ~ (paste(as.numeric(str_sub(week, end = 4)),
                                             "-", as.numeric(str_sub(week, end = 4)) + 1, sep=""))))
+}
+
+
+
+# Function for admissions value boxes (used in UI so needs to be called earlier than respiratory_mem_functions.R)
+
+make_admissions_value_boxes <- function(data) {
+  as_tibble(list(DateTwoWeek = data$WeekEnding[1],
+                 DateLastWeek = data$WeekEnding[2],
+                 DateThisWeek = data$WeekEnding[3],
+                 AdmissionsTwoWeek = data$NumberAdmissionsPerWeek[1],
+                 AdmissionsLastWeek = data$NumberAdmissionsPerWeek[2],
+                 AdmissionsThisWeek = data$NumberAdmissionsPerWeek[3],
+                 RateTwoWeek = data$RateAdmissionsPerWeek[1],
+                 RateLastWeek = data$RateAdmissionsPerWeek[2], 
+                 RateThisWeek = data$RateAdmissionsPerWeek[3])) #%>%
 }
 
 # Read in shapefile

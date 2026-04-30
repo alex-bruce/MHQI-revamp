@@ -1,16 +1,9 @@
 # Recent weeks admissions
 
-para_admissions_recent_week <- all_pathogen_admissions %>%
- # mutate(Date = dmy(Date)) %>%
+para_admissions_recent_week <- admissions_scotland_TEST %>%
+  filter(Pathogen=="Parainfluenza (Any Type)") %>% 
   tail(3) %>%
-  mutate(DateTwoWeek = .$Date[1],
-         DateLastWeek = .$Date[2],
-         DateThisWeek = .$Date[3],
-         AdmissionsTwoWeek = .$para[1],
-         AdmissionsLastWeek = .$para[2],
-         AdmissionsThisWeek = .$para[3]) %>%
-  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek) %>%
-  head(1)
+  make_admissions_value_boxes()
 
 
 tagList(

@@ -1,16 +1,9 @@
 # Recent weeks admissions
 
-mpn_admissions_recent_week <- all_pathogen_admissions %>%
- # mutate(Date = dmy(Date)) %>%
+mpn_admissions_recent_week <- admissions_scotland_TEST %>%
+  filter(Pathogen=="Mycoplasma pneumoniae") %>% 
   tail(3) %>%
-  mutate(DateTwoWeek = .$Date[1],
-         DateLastWeek = .$Date[2],
-         DateThisWeek = .$Date[3],
-         AdmissionsTwoWeek = .$mpn[1],
-         AdmissionsLastWeek = .$mpn[2],
-         AdmissionsThisWeek = .$mpn[3]) %>%
-  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek) %>%
-  head(1)
+  make_admissions_value_boxes()
 
 
 tagList(

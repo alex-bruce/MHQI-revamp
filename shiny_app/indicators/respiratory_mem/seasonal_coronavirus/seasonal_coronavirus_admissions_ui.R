@@ -1,16 +1,9 @@
 # Recent weeks admissions
 
-coron_admissions_recent_week <- all_pathogen_admissions %>%
-#  mutate(Date = dmy(Date)) %>%
+coron_admissions_recent_week <- admissions_scotland_TEST %>%
+  filter(Pathogen=="Seasonal coronavirus") %>% 
   tail(3) %>%
-  mutate(DateTwoWeek = .$Date[1],
-         DateLastWeek = .$Date[2],
-         DateThisWeek = .$Date[3],
-         AdmissionsTwoWeek = .$coron[1],
-         AdmissionsLastWeek = .$coron[2],
-         AdmissionsThisWeek = .$coron[3]) %>%
-  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek) %>%
-  head(1)
+  make_admissions_value_boxes()
 
 
 tagList(

@@ -1,16 +1,9 @@
 # Recent weeks admissions
 
-hmpv_admissions_recent_week <- all_pathogen_admissions %>%
- # mutate(Date = dmy(Date)) %>%
+hmpv_admissions_recent_week <- admissions_scotland_TEST %>%
+  filter(Pathogen=="HMPV") %>% 
   tail(3) %>%
-  mutate(DateTwoWeek = .$Date[1],
-         DateLastWeek = .$Date[2],
-         DateThisWeek = .$Date[3],
-         AdmissionsTwoWeek = .$hmpv[1],
-         AdmissionsLastWeek = .$hmpv[2],
-         AdmissionsThisWeek = .$hmpv[3]) %>%
-  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek) %>%
-  head(1)
+  make_admissions_value_boxes()
 
 
 tagList(

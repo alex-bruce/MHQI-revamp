@@ -1,16 +1,11 @@
 # Recent weeks admissions
+# admissions_scotland_TEST$WeekEnding <- ymd(admissions_scotland_TEST$WeekEnding)
 
-adenovirus_admissions_recent_week <- all_pathogen_admissions %>%
- # mutate(Date = dmy(Date)) %>%
+adenovirus_admissions_recent_week <- admissions_scotland_TEST %>%
+  filter(Pathogen=="Adenovirus") %>% 
   tail(3) %>%
-  mutate(DateTwoWeek = .$Date[1],
-         DateLastWeek = .$Date[2],
-         DateThisWeek = .$Date[3],
-         AdmissionsTwoWeek = .$adeno[1],
-         AdmissionsLastWeek = .$adeno[2],
-         AdmissionsThisWeek = .$adeno[3]) %>%
-  select(DateTwoWeek, DateLastWeek, DateThisWeek, AdmissionsTwoWeek, AdmissionsLastWeek, AdmissionsThisWeek) %>%
-  head(1)
+  make_admissions_value_boxes()
+
 
 # adenovirus_admissions = all_pathogen_admissions %>% 
 #   select(Date, Year, ISOWeek, Weekord, Season,
