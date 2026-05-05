@@ -152,7 +152,7 @@ source("Transfer Scripts/transfer_cases.R")
 #source("Transfer Scripts/transfer_admissions.R")
 
 ##### Length of Stay
- source("Transfer Scripts/transfer_los.R")
+#source("Transfer Scripts/transfer_los.R")
 
 ##### Vaccine Wastage
 # source("Transfer Scripts/transfer_vacc_wastage.R")
@@ -183,10 +183,10 @@ source("Transfer Scripts/transfer_cases.R")
 #source("Transfer Scripts/transfer_occupancy.R")
 
 #### Occupancy - RAPID methdd
-source("Transfer Scripts/transfer_occupancy_rapid.R")
+#source("Transfer Scripts/transfer_occupancy_rapid.R")
 
 #### Occupancy - UKHSA file
-source("Transfer Scripts/transfer_ukhsa_occupancy.R")
+#source("Transfer Scripts/transfer_ukhsa_occupancy.R")
 
 #### Respiratory
 source("Transfer Scripts/transfer_respiratory.R")
@@ -208,7 +208,7 @@ source("Transfer Scripts/transfer_respiratory.R")
 #source("Transfer Scripts/transfer_respiratory_gp_ari_mem.R")
 
 #### All respiratory pathogen admissions
-source("Transfer Scripts/transfer_respiratory_admissions.R")
+#source("Transfer Scripts/transfer_respiratory_admissions.R")
 
 #### Influenza Hospital Admissions
 #source("Transfer Scripts/transfer_flu_admissions.R")
@@ -310,9 +310,9 @@ source("Transfer Scripts/new_od_cases_raw_data.R")
 source("Transfer Scripts/new_od_cases_outputs.R")
 
 ##ADMISSIONS----
-source("Transfer Scripts/new_od_admissions_raw_data.R")
-source("Transfer Scripts/new_od_admissions_outputs.R")
-source("Transfer Scripts/new_od_los_outputs.R")
+# source("Transfer Scripts/new_od_admissions_raw_data.R")
+# source("Transfer Scripts/new_od_admissions_outputs.R")
+# source("Transfer Scripts/new_od_los_outputs.R")
 
 ##TESTS----
 source("Transfer Scripts/new_od_tests_raw_data.R")

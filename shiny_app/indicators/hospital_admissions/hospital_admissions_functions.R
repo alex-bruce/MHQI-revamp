@@ -115,8 +115,6 @@
 # Weekly Admissions by SIMD plot
 make_hospital_admissions_simd_plot <- function(data){
 
-  #data <- Admissions_SimdTrend
-
   # put weeks in correct order for season
   week_order <- c(seq(40, 52, 1), seq(1, 39, 1))
   
@@ -138,7 +136,7 @@ make_hospital_admissions_simd_plot <- function(data){
   yaxis_plots[["fixedrange"]] <- FALSE
 
   p <- plot_ly(data) %>%
-    add_trace(x = ~WeekNumber, y = ~RateOfAdmissions, split = ~SIMD, text=~SIMD,
+    add_trace(x = ~WeekNumber, y = ~RateAdmissionsPerWeek, split = ~SIMD, text=~SIMD,
               type="scatter", mode="lines",
               color=~SIMD,
               colors=phs_colours(c("phs-rust", "phs-liberty-30", "phs-liberty-30",

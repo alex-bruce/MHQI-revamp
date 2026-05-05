@@ -1,27 +1,21 @@
 
-admissions_seasons <- age_rate_data_all_path %>%
-  add_season() %>%
-  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9))) %>%
+admissions_seasons <- admissions_scotland %>%
   select(Season) %>%
   unique() %>%
   unlist(., use.names=FALSE)
 
 ## Organise Covid data into the right format for the plot and table
 
-
-cov_admissions <- age_rate_data_all_path %>% 
-  filter(age_band == "All Ages") %>% 
-  add_season() %>% 
-  select(week_ending, cov, cov_rate, Season) %>% 
-  rename(Date = week_ending,
-         Admissions = cov,
-         RatePer100000 = cov_rate) %>% 
-  mutate(Year = year(Date),
-         ISOWeek = isoweek(Date)) %>% 
-  mutate(Season = paste0(substr(Season, 1, 4), "/", substr(Season, 6, 9)),
-         Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
-                             ISOWeek < 40 ~ ISOWeek + 13)) %>% 
-  filter(Season %in% tail(sort(unique(Season)), 3))
+cov_admissions <- admissions_scotland %>% 
+  filter(Pathogen == "COVID-19") %>% 
+  mutate(ISOweek = as.numeric(ISOweek)) %>% 
+  mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
+                      ISOweek < 40 ~ ISOweek + 13)) %>% 
+  rename(Date = WeekEnding,
+         Admissions = NumberAdmissionsPerWeek,
+         RatePer100000 = RateAdmissionsPerWeek,
+         Year = ISOyear,
+         ISOWeek = ISOweek)
 
 cov_adm_seasons <- tail(sort(unique(cov_admissions$Season)), 3)
 
@@ -157,8 +151,8 @@ tagList(
                                              pickerInput(
                                                inputId = "hospital_adms_selected_seasons", 
                                                label = "Select season", 
-                                               choices = tail(sort(unique(admissions_hb_all_path$Season)), 3),
-                                               selected = tail(sort(unique(admissions_hb_all_path$Season)), 1)  # current season
+                                               choices = tail(sort(unique(admissions_hb_new$Season)), 3),
+                                               selected = tail(sort(unique(admissions_hb_new$Season)), 1)  # current season
                                                ),
                                              tagList(linebreaks(1),
                                                      altTextUI("hospital_admissions_hb_modal"),
