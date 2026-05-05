@@ -1,6 +1,6 @@
 # Recent weeks admissions
 
-mpn_admissions_recent_week <- admissions_scotland_TEST %>%
+mpn_admissions_recent_week <- admissions_scotland %>%
   filter(Pathogen=="Mycoplasma pneumoniae") %>% 
   tail(3) %>%
   make_admissions_value_boxes()

@@ -1,6 +1,6 @@
 # Recent weeks admissions
 
-hmpv_admissions_recent_week <- admissions_scotland_TEST %>%
+hmpv_admissions_recent_week <- admissions_scotland %>%
   filter(Pathogen=="HMPV") %>% 
   tail(3) %>%
   make_admissions_value_boxes()

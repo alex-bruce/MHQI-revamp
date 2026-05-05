@@ -1,6 +1,6 @@
 ## Organise parainfluenza admissions data into the right format for the plot and table
 
-para_admissions <- admissions_scotland_TEST %>% 
+para_admissions <- admissions_scotland %>% 
   filter(Pathogen == "Parainfluenza (Any Type)") %>% 
   mutate(ISOweek = as.numeric(ISOweek)) %>% 
   mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
@@ -57,7 +57,7 @@ output$para_admissions_table <- renderDataTable({
 
 # parainfluenza admissions by age table
 output$para_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Parainfluenza (Any Type)") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -81,7 +81,7 @@ output$para_admissions_plot <- renderPlotly({
 
 # parainfluenza Adms by age plot
 output$para_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Parainfluenza (Any Type)") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%

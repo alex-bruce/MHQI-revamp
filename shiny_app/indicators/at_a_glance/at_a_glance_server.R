@@ -19,7 +19,7 @@ previous_week_cases_title %<>%
   format("%d %b %y")
 
 # admissions labels- (matches Respiratory_admissions_summary data set)
-latest_week_admissions_title <- admissions_scotland_TEST %>%
+latest_week_admissions_title <- admissions_scotland %>%
   tail(1) %>%
   select(WeekEnding)
 
@@ -29,7 +29,7 @@ latest_week_admissions_title$WeekEnding<- format(latest_week_admissions_title$We
 # make it a value
 latest_week_admissions_title <- latest_week_admissions_title$Date
 
-previous_week_admissions_title <- admissions_scotland_TEST %>%
+previous_week_admissions_title <- admissions_scotland %>%
   filter(Pathogen=='RSV') %>%
   tail(2) %>%
   filter(WeekEnding== min(WeekEnding)) %>%
@@ -65,13 +65,13 @@ previous_week_admissions_title <- previous_week_admissions_title$WeekEnding
 # # makle it a value
 #    previous_week_occupancy_title<- previous_week_occupancy_title$Date
 
-latest_week_occupancy_title <- occupancy_rapid_new_TEST %>%
+latest_week_occupancy_title <- occupancy_rapid_new %>%
   tail(1) %>%
   select(WeekEnding) %>%
   mutate(WeekEnding = format(WeekEnding, "%d %b %y")) %>%
   .$WeekEnding
 
-previous_week_occupancy_title <- occupancy_rapid_new_TEST %>%
+previous_week_occupancy_title <- occupancy_rapid_new %>%
   tail(4) %>%
   select(WeekEnding) %>%
   filter(WeekEnding == min(WeekEnding)) %>%
@@ -164,7 +164,7 @@ colnames(cases_intro)[3] <- paste("Rate per 100,000 population (", as.character(
 # join into one table
 # rename and add week titles for the dashboard
 
-hosp_adms_intro <- admissions_scotland_TEST %>%
+hosp_adms_intro <- admissions_scotland %>%
   filter(!Pathogen %in% c("Influenza A", "Influenza B")) %>%
   tail(18) %>%
   mutate(flag = ifelse(WeekEnding==max(WeekEnding), "latest_week", "previous_week")) %>%
@@ -214,7 +214,7 @@ colnames(hosp_adms_intro)[3] <- paste("Rate of admissions per 100,000 population
 # colnames(covid_inpatients_intro)[3] <- paste("Seven day average number (", as.character(latest_week_occupancy_title),")")
 # colnames(covid_inpatients_intro)[2] <- paste("Seven day average number (", as.character(previous_week_occupancy_title),")")
 
-inpatients_intro <- occupancy_rapid_new_TEST %>%
+inpatients_intro <- occupancy_rapid_new %>%
   tail(6) %>%
   mutate(flag= if_else(WeekEnding == max(WeekEnding),"Latest Week", "Previous Week")) %>% #add flags
   select(Pathogen, flag, SevenDayAverageInpatients) %>%
@@ -267,7 +267,7 @@ altTextServer("cari_summary_modal",
 
 ### Plot -----
 output$hosp_adms_intro_plot <- renderPlotly({
-  admissions_scotland_TEST %>%
+  admissions_scotland %>%
     mutate(Pathogen=if_else(Pathogen=="RSV", "Respiratory syncytial virus", Pathogen)) %>% 
     mutate(Pathogen=if_else(Pathogen=="HMPV", "Human Metapneumovirus", Pathogen)) %>% 
     mutate(Pathogen=if_else(Pathogen=="Parainfluenza (Any Type)", "Parainfluenza", Pathogen)) %>% 

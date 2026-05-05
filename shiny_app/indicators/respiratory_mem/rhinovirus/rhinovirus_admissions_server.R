@@ -1,6 +1,6 @@
 ## Organise rhinovirus admissions data into the right format for the plot and table
 
-rhino_admissions <- admissions_scotland_TEST %>% 
+rhino_admissions <- admissions_scotland %>% 
   filter(Pathogen == "Rhinovirus") %>% 
   mutate(ISOweek = as.numeric(ISOweek)) %>% 
   mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
@@ -56,7 +56,7 @@ output$rhino_admissions_table <- renderDataTable({
 
 # rhinovirus admissions by age table
 output$rhino_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Rhinovirus") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -80,7 +80,7 @@ output$rhino_admissions_plot <- renderPlotly({
 
 # rhinovirus Adms by age plot
 output$rhino_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Rhinovirus") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%

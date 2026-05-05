@@ -1,6 +1,6 @@
 # Recent weeks admissions
 
-coron_admissions_recent_week <- admissions_scotland_TEST %>%
+coron_admissions_recent_week <- admissions_scotland %>%
   filter(Pathogen=="Seasonal coronavirus") %>% 
   tail(3) %>%
   make_admissions_value_boxes()

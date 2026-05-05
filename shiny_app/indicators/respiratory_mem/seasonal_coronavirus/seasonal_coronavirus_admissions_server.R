@@ -14,7 +14,7 @@
 #          Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
 #                              ISOWeek < 40 ~ ISOWeek + 13))
 
-coron_admissions <- admissions_scotland_TEST %>% 
+coron_admissions <- admissions_scotland %>% 
   filter(Pathogen == "Seasonal coronavirus") %>% 
   mutate(ISOweek = as.numeric(ISOweek)) %>% 
   mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
@@ -70,7 +70,7 @@ output$seasonal_coronavirus_admissions_table <- renderDataTable({
 
 # seasonal_coronavirus admissions by age table
 output$seasonal_coronavirus_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Seasonal coronavirus") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -94,7 +94,7 @@ output$seasonal_coronavirus_admissions_plot <- renderPlotly({
 
 # seasonal_coronavirus Adms by age plot
 output$seasonal_coronavirus_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Seasonal coronavirus") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%

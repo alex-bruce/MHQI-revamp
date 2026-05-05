@@ -1,4 +1,4 @@
-influenza_occupancy_recent_week <- occupancy_rapid_new_TEST %>%
+influenza_occupancy_recent_week <- occupancy_rapid_new %>%
   filter(Pathogen == "Influenza (All)") %>%
   tail(3) %>%
   #select(-Rate_per_100000) %>%
@@ -89,8 +89,8 @@ fluidRow(
                   pickerInput(
                     inputId = "influenza_occupancy_selected_seasons", 
                     label = "Select season", 
-                    choices = tail(sort(unique(occupancy_rapid_hb_new_TEST$Season)), 3),
-                    selected = tail(sort(unique(occupancy_rapid_hb_new_TEST$Season)), 1)  # current season
+                    choices = tail(sort(unique(occupancy_rapid_hb_new$Season)), 3),
+                    selected = tail(sort(unique(occupancy_rapid_hb_new$Season)), 1)  # current season
                   ),
                   tagList(linebreaks(1),
                           altTextUI("influenza_occupancy_hb_modal"),

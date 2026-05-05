@@ -3,7 +3,7 @@
 ### HOSPITAL ADMISSIONS ### ----
 ###########################
 #admissions labels- (matches Respiratory_admissions_summary data set)
-latest_week_admissions_title <- admissions_scotland_TEST %>%
+latest_week_admissions_title <- admissions_scotland %>%
   tail(1) %>%
   select(WeekEnding)
 
@@ -13,7 +13,7 @@ latest_week_admissions_title$WeekEnding<- format(latest_week_admissions_title$We
 # # make it a value
 latest_week_admissions_title <- latest_week_admissions_title$WeekEnding
  
-previous_week_admissions_title <- admissions_scotland_TEST %>%
+previous_week_admissions_title <- admissions_scotland %>%
   filter(Pathogen=='RSV') %>%
   tail(2) %>%
   filter(WeekEnding== min(WeekEnding)) %>%
@@ -25,7 +25,7 @@ previous_week_admissions_title$WeekEnding <- format(previous_week_admissions_tit
 # # make it a value
 previous_week_admissions_title <- previous_week_admissions_title$WeekEnding
  
-previous_2week_admissions_title <- admissions_scotland_TEST %>%
+previous_2week_admissions_title <- admissions_scotland %>%
   filter(Pathogen=='RSV') %>%
   tail(3) %>%
   filter(WeekEnding== min(WeekEnding)) %>%
@@ -280,7 +280,7 @@ output$hospital_admissions_plot <- renderPlotly({
 
 # COVID-19 admissions by age table
 output$covid_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="COVID-19") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -313,7 +313,7 @@ output$covid_admissions_age_table <- renderDataTable({
 # })
 
 output$covid_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="COVID-19") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%
@@ -330,7 +330,7 @@ output$covid_admissions_age_plot <- renderPlotly({
 
 # COVID-19 HB admissions table
 output$hospital_admissions_hb_table <- renderDataTable({
-  admissions_hb_new_TEST %>%
+  admissions_hb_new %>%
     filter(Pathogen == "COVID-19") %>%
     filter(HBName != "Golden Jubilee National Hospital") %>% 
     #filter(Season >= "2023/2024") %>%
@@ -347,7 +347,7 @@ output$hospital_admissions_hb_table <- renderDataTable({
 
 # COVID-19 Adms by HB plot
 output$hospital_admissions_hb_plot <- renderPlotly({
-  admissions_hb_new_TEST %>%
+  admissions_hb_new %>%
     filter(Pathogen == "COVID-19") %>% 
     filter(HBName != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$hospital_adms_selected_seasons) %>%
@@ -380,7 +380,7 @@ observeEvent(input$btn_modal_simd, { showModal(simd_modal) })
 
 # Table
 output$hospital_admissions_simd_table <- renderDataTable({
-  admissions_simd_new_TEST %>% 
+  admissions_simd_new %>% 
     filter(Pathogen == "COVID-19") %>%
     arrange(desc(WeekEnding)) %>%
     mutate(SIMD = factor(SIMD)) %>% 
@@ -399,7 +399,7 @@ output$hospital_admissions_simd_table <- renderDataTable({
 
 # Plot
 output$hospital_admissions_simd_plot <- renderPlotly({
-  admissions_simd_new_TEST %>% 
+  admissions_simd_new %>% 
     filter(Pathogen == "COVID-19") %>%
     rename(week_ending = WeekEnding,
            week = ISOweek) %>% 
@@ -449,7 +449,7 @@ output$cov_los_text <- renderText({
 
 # Plot
 output$cov_los_plot <- renderPlotly({
-  avg_cov_los_plot <- Average_Length_of_Stay_TEST %>% 
+  avg_cov_los_plot <- Average_Length_of_Stay %>% 
     mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
                                                              "65 to 74", "75+", "All Ages"))) %>% 
     filter(Pathogen == "COVID-19",
@@ -460,7 +460,7 @@ output$cov_los_plot <- renderPlotly({
 
 # Table
 output$cov_los_table <- renderDataTable({
-  avg_cov_los_table <- Average_Length_of_Stay_TEST %>% 
+  avg_cov_los_table <- Average_Length_of_Stay %>% 
     filter(Pathogen == "COVID-19") %>% 
     mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),
            AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  

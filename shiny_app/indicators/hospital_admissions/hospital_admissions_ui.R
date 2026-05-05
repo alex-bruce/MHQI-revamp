@@ -1,12 +1,12 @@
 
-admissions_seasons <- admissions_scotland_TEST %>%
+admissions_seasons <- admissions_scotland %>%
   select(Season) %>%
   unique() %>%
   unlist(., use.names=FALSE)
 
 ## Organise Covid data into the right format for the plot and table
 
-cov_admissions <- admissions_scotland_TEST %>% 
+cov_admissions <- admissions_scotland %>% 
   filter(Pathogen == "COVID-19") %>% 
   mutate(ISOweek = as.numeric(ISOweek)) %>% 
   mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
@@ -151,8 +151,8 @@ tagList(
                                              pickerInput(
                                                inputId = "hospital_adms_selected_seasons", 
                                                label = "Select season", 
-                                               choices = tail(sort(unique(admissions_hb_new_TEST$Season)), 3),
-                                               selected = tail(sort(unique(admissions_hb_new_TEST$Season)), 1)  # current season
+                                               choices = tail(sort(unique(admissions_hb_new$Season)), 3),
+                                               selected = tail(sort(unique(admissions_hb_new$Season)), 1)  # current season
                                                ),
                                              tagList(linebreaks(1),
                                                      altTextUI("hospital_admissions_hb_modal"),

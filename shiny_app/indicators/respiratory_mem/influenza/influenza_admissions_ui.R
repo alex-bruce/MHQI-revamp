@@ -13,7 +13,7 @@
 #          Weekord = case_when(ISOWeek >= 40 ~ ISOWeek - 39,
 #                              ISOWeek < 40 ~ ISOWeek + 13)) 
 
-influenza_admissions <- admissions_scotland_TEST %>% 
+influenza_admissions <- admissions_scotland %>% 
   filter(Pathogen == "Influenza (All)") %>% 
   mutate(ISOweek = as.numeric(ISOweek)) %>% 
   mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
@@ -30,7 +30,7 @@ flu_adm_seasons <- tail(sort(unique(influenza_admissions$Season)), 6)
 
 # Recent weeks admissions
 
-influenza_admissions_recent_week <- admissions_scotland_TEST %>%
+influenza_admissions_recent_week <- admissions_scotland %>%
   filter(Pathogen=="Influenza (All)") %>% 
   tail(3) %>%
   make_admissions_value_boxes()
@@ -154,8 +154,8 @@ fluidRow(
                    pickerInput(
                       inputId = "influenza_adms_selected_seasons", 
                       label = "Select season", 
-                      choices = tail(sort(unique(admissions_hb_new_TEST$Season)), 6),
-                      selected = tail(sort(unique(admissions_hb_new_TEST$Season)), 1)  # current season
+                      choices = tail(sort(unique(admissions_hb_new$Season)), 6),
+                      selected = tail(sort(unique(admissions_hb_new$Season)), 1)  # current season
                       ),
                     
                   tagList(linebreaks(1),

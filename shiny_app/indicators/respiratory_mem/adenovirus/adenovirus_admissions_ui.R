@@ -1,7 +1,6 @@
 # Recent weeks admissions
-# admissions_scotland_TEST$WeekEnding <- ymd(admissions_scotland_TEST$WeekEnding)
 
-adenovirus_admissions_recent_week <- admissions_scotland_TEST %>%
+adenovirus_admissions_recent_week <- admissions_scotland %>%
   filter(Pathogen=="Adenovirus") %>% 
   tail(3) %>%
   make_admissions_value_boxes()

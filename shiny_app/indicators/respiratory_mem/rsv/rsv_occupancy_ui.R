@@ -1,4 +1,4 @@
-rsv_occupancy_recent_week <- occupancy_rapid_new_TEST %>%
+rsv_occupancy_recent_week <- occupancy_rapid_new %>%
   filter(Pathogen == "RSV") %>%
   tail(3) %>%
   #select(-Rate_per_100000) %>%
@@ -89,8 +89,8 @@ fluidRow(
                   pickerInput(
                     inputId = "rsv_occupancy_selected_seasons", 
                     label = "Select season", 
-                    choices = tail(sort(unique(occupancy_rapid_hb_new_TEST$Season)), 3),
-                    selected = tail(sort(unique(occupancy_rapid_hb_new_TEST$Season)), 1)  # current season
+                    choices = tail(sort(unique(occupancy_rapid_hb_new$Season)), 3),
+                    selected = tail(sort(unique(occupancy_rapid_hb_new$Season)), 1)  # current season
                   ),
                   tagList(linebreaks(1),
                           altTextUI("rsv_occupancy_hb_modal"),

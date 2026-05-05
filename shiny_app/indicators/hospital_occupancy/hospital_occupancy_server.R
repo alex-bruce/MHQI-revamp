@@ -74,7 +74,7 @@ altTextServer("icu_occupancy_modal",
 # the Occupancy_Weekly_Hospital_HB has two dates, an numeric 'open data' version, formatted as a number, 
 # and a date-formatted WeekEnding
 output$hospital_occupancy_table <- renderDataTable({
-  occupancy_rapid_new_TEST %>%
+  occupancy_rapid_new %>%
     filter(Pathogen == "COVID-19") %>% 
     arrange(desc(WeekEnding)) %>% 
     mutate(ISOweek = factor(ISOweek),
@@ -94,7 +94,7 @@ output$hospital_occupancy_table <- renderDataTable({
 })
 
 output$hospital_occupancy_hb_table <- renderDataTable({
-  occupancy_rapid_hb_new_TEST %>%
+  occupancy_rapid_hb_new %>%
     filter(Pathogen == "COVID-19") %>% 
     arrange(desc(WeekEnding)) %>% 
     mutate(ISOweek = factor(ISOweek),
@@ -153,14 +153,14 @@ output$hospital_occupancy_hb_table <- renderDataTable({
 # })
 
 output$hospital_occupancy_plot <- renderPlotly({
-  occupancy_rapid_new_TEST %>%
+  occupancy_rapid_new %>%
     filter(Pathogen == "COVID-19") %>%
     create_pathogen_occupancy_linechart()
   
 })
 
 output$hospital_occupancy_hb_plot <- renderPlotly({
-  occupancy_rapid_hb_new_TEST %>%
+  occupancy_rapid_hb_new %>%
     filter(Pathogen == "COVID-19") %>%
     filter(Season %in% input$hospital_occupancy_selected_seasons) %>%
     create_pathogen_occupancy_hb_linechart()

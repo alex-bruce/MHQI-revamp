@@ -1,7 +1,7 @@
 ## Organise adenovirus admissions data into the right format for the plot and table
 
 
-adeno_admissions <- admissions_scotland_TEST %>% 
+adeno_admissions <- admissions_scotland %>% 
   filter(Pathogen == "Adenovirus") %>% 
   mutate(ISOweek = as.numeric(ISOweek)) %>% 
   mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
@@ -60,7 +60,7 @@ output$adenovirus_admissions_table <- renderDataTable({
 
 # Adenovirus admissions by age table
 output$adenovirus_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Adenovirus") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -92,7 +92,7 @@ output$adenovirus_admissions_plot <- renderPlotly({
 
 # Adenovirus Adms by age plot
 output$adenovirus_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Adenovirus") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%

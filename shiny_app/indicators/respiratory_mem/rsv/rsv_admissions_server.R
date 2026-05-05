@@ -119,7 +119,7 @@ output$rsv_admissions_table <- renderDataTable({
 
 # RSV HB admissions table
 output$rsv_admissions_hb_table <- renderDataTable({
-  admissions_hb_new_TEST %>%
+  admissions_hb_new %>%
     filter(Pathogen == "RSV") %>%
     filter(HBName != "Golden Jubilee National Hospital") %>% 
     #filter(Season >= "2023/2024") %>%
@@ -137,7 +137,7 @@ output$rsv_admissions_hb_table <- renderDataTable({
 
 # RSV admissions by age table
 output$rsv_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="RSV") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -159,7 +159,7 @@ output$rsv_admissions_plot <- renderPlotly({
 
 # RSV Adms by age plot
 output$rsv_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="RSV") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%
@@ -185,7 +185,7 @@ observeEvent(input$respiratory_season,
 
 # RSV Adms by HB plot
 output$rsv_admissions_hb_plot <- renderPlotly({
-  admissions_hb_new_TEST %>%
+  admissions_hb_new %>%
     filter(Pathogen == "RSV") %>% 
     filter(HBName != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$rsv_adms_selected_seasons) %>%
@@ -203,7 +203,7 @@ observeEvent(input$btn_modal_simd, { showModal(simd_modal) })
 
 # Table
 output$rsv_admissions_simd_table <- renderDataTable({
-  admissions_simd_new_TEST %>% 
+  admissions_simd_new %>% 
     filter(Pathogen == "RSV") %>%
     arrange(desc(WeekEnding)) %>%
     mutate(SIMD = factor(SIMD)) %>% 
@@ -222,7 +222,7 @@ output$rsv_admissions_simd_table <- renderDataTable({
 
 # Plot
 output$rsv_admissions_simd_plot <- renderPlotly({
-  admissions_simd_new_TEST %>% 
+  admissions_simd_new %>% 
     filter(Pathogen == "RSV") %>%
     rename(week_ending = WeekEnding,
            week = ISOweek) %>% 
@@ -293,7 +293,7 @@ output$rsv_los_text <- renderText({
 
 # Plot
 output$rsv_los_plot <- renderPlotly({
-  avg_rsv_los_plot <- Average_Length_of_Stay_TEST %>% 
+  avg_rsv_los_plot <- Average_Length_of_Stay %>% 
     mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
                                                   "65 to 74", "75+", "All Ages"))) %>% 
     filter(Pathogen == "RSV",
@@ -304,7 +304,7 @@ output$rsv_los_plot <- renderPlotly({
 
 # Table
 output$rsv_los_table <- renderDataTable({
-  avg_rsv_los_table <- Average_Length_of_Stay_TEST %>% 
+  avg_rsv_los_table <- Average_Length_of_Stay %>% 
     filter(Pathogen == "RSV") %>% #,
     #           Season == input$los_season_rsv) %>% 
     mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),

@@ -114,7 +114,7 @@ output$influenza_admissions_table <- renderDataTable({
 
 # Influenza HB admissions table
 output$influenza_admissions_hb_table <- renderDataTable({
-  admissions_hb_new_TEST %>%
+  admissions_hb_new %>%
     filter(Pathogen == "Influenza (All)") %>%
     filter(HBName != "Golden Jubilee National Hospital") %>% 
     #filter(Season >= "2023/2024") %>%
@@ -141,7 +141,7 @@ output$influenza_admissions_plot <- renderPlotly({
 
 # Influenza Adms by HB plot
 output$influenza_admissions_hb_plot <- renderPlotly({
-  admissions_hb_new_TEST %>%
+  admissions_hb_new %>%
     filter(Pathogen == "Influenza (All)") %>% 
     filter(HBName != "Golden Jubilee National Hospital") %>% 
     filter(Season %in% input$influenza_adms_selected_seasons) %>%
@@ -154,7 +154,7 @@ output$influenza_admissions_hb_plot <- renderPlotly({
 
 # Influenza admissions by age table
 output$influenza_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Influenza (All)") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -169,7 +169,7 @@ output$influenza_admissions_age_table <- renderDataTable({
 
 # Influenza Adms by age plot
 output$influenza_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Influenza (All)") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%
@@ -218,7 +218,7 @@ observeEvent(input$btn_modal_simd, { showModal(simd_modal) })
 
 # Table
 output$influenza_admissions_simd_table <- renderDataTable({
-  admissions_simd_new_TEST %>% 
+  admissions_simd_new %>% 
     filter(Pathogen == "Influenza (All)") %>%
     arrange(desc(WeekEnding)) %>%
     mutate(SIMD = factor(SIMD)) %>% 
@@ -237,7 +237,7 @@ output$influenza_admissions_simd_table <- renderDataTable({
 
 # Plot
 output$influenza_admissions_simd_plot <- renderPlotly({
-  admissions_simd_new_TEST %>% 
+  admissions_simd_new %>% 
     filter(Pathogen == "Influenza (All)") %>%
     rename(week_ending = WeekEnding,
            week = ISOweek) %>% 
@@ -307,7 +307,7 @@ output$flu_los_text <- renderText({
 
 # Plot
 output$flu_los_plot <- renderPlotly({
-  avg_flu_los_plot <- Average_Length_of_Stay_TEST %>% 
+  avg_flu_los_plot <- Average_Length_of_Stay %>% 
     mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
                                                   "65 to 74", "75+", "All Ages"))) %>% 
     filter(Pathogen == "Influenza",
@@ -318,7 +318,7 @@ output$flu_los_plot <- renderPlotly({
 
 # Table
 output$flu_los_table <- renderDataTable({
-  avg_flu_los_table <- Average_Length_of_Stay_TEST %>% 
+  avg_flu_los_table <- Average_Length_of_Stay %>% 
     filter(Pathogen == "Influenza") %>% #,
     #           Season == input$los_season_flu) %>% 
     mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),

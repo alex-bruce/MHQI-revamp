@@ -1,6 +1,6 @@
 # Recent weeks admissions
 
-para_admissions_recent_week <- admissions_scotland_TEST %>%
+para_admissions_recent_week <- admissions_scotland %>%
   filter(Pathogen=="Parainfluenza (Any Type)") %>% 
   tail(3) %>%
   make_admissions_value_boxes()

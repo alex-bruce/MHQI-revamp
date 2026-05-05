@@ -1,7 +1,7 @@
 ## Organise HMPV admissions data into the right format for the plot and table
 
 
-hmpv_admissions <- admissions_scotland_TEST %>% 
+hmpv_admissions <- admissions_scotland %>% 
   filter(Pathogen == "HMPV") %>% 
   mutate(ISOweek = as.numeric(ISOweek)) %>% 
   mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
@@ -70,7 +70,7 @@ output$hmpv_admissions_table <- renderDataTable({
 
 # HMPV admissions by age table
 output$hmpv_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="HMPV") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -101,7 +101,7 @@ output$hmpv_admissions_plot <- renderPlotly({
 
 # MPN Adms by age plot
 output$hmpv_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="HMPV") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%

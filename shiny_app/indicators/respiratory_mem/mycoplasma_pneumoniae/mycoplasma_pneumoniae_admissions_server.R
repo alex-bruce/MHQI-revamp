@@ -1,7 +1,7 @@
 ## Organise Mycoplasma pneumoniae admissions data into the right format for the plot and table
 
 
-mpn_admissions <- admissions_scotland_TEST %>% 
+mpn_admissions <- admissions_scotland %>% 
   filter(Pathogen == "Mycoplasma pneumoniae") %>% 
   mutate(ISOweek = as.numeric(ISOweek)) %>% 
   mutate(Weekord = case_when(ISOweek >= 40 ~ ISOweek - 39,
@@ -59,7 +59,7 @@ output$mpn_admissions_table <- renderDataTable({
 
 # MPN admissions by age table
 output$mpn_admissions_age_table <- renderDataTable({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Mycoplasma pneumoniae") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup, Season,
            Admissions = NumberAdmissionsPerWeek, rate = RateAdmissionsPerWeek) %>% 
@@ -83,7 +83,7 @@ output$mpn_admissions_plot <- renderPlotly({
 
 # MPN Adms by age plot
 output$mpn_admissions_age_plot <- renderPlotly({
-  admissions_age_TEST %>%
+  admissions_age %>%
     filter(Pathogen=="Mycoplasma pneumoniae") %>% 
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%

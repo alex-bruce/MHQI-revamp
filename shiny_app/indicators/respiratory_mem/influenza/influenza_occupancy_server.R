@@ -31,7 +31,7 @@ altTextServer("influenza_occupancy_hb_modal",
 
 # make data table with all the hospital occupancy data in it
 output$influenza_occupancy_table <- renderDataTable({
-  occupancy_rapid_new_TEST %>%
+  occupancy_rapid_new %>%
     filter(Pathogen == "Influenza (All)") %>% 
     arrange(desc(WeekEnding)) %>% 
     mutate(ISOweek = factor(ISOweek),
@@ -51,7 +51,7 @@ output$influenza_occupancy_table <- renderDataTable({
 })
 
 output$influenza_occupancy_hb_table <- renderDataTable({
-  occupancy_rapid_hb_new_TEST %>%
+  occupancy_rapid_hb_new %>%
     filter(Pathogen == "Influenza (All)") %>% 
     arrange(desc(WeekEnding)) %>% 
     mutate(ISOweek = factor(ISOweek),
@@ -75,14 +75,14 @@ output$influenza_occupancy_hb_table <- renderDataTable({
 
 
 output$influenza_occupancy_plot <- renderPlotly({
-  occupancy_rapid_new_TEST %>%
+  occupancy_rapid_new %>%
     filter(Pathogen == "Influenza (All)") %>%
     create_pathogen_occupancy_linechart()
   
 })
 
 output$influenza_occupancy_hb_plot <- renderPlotly({
-  occupancy_rapid_hb_new_TEST %>%
+  occupancy_rapid_hb_new %>%
     filter(Pathogen == "Influenza (All)") %>%
     filter(Season %in% input$influenza_occupancy_selected_seasons) %>%
     create_pathogen_occupancy_hb_linechart()
