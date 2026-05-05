@@ -293,7 +293,7 @@ output$rsv_los_text <- renderText({
 
 # Plot
 output$rsv_los_plot <- renderPlotly({
-  avg_rsv_los_plot <- Average_Length_of_Stay %>% 
+  avg_rsv_los_plot <- Average_Length_of_Stay_TEST %>% 
     mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
                                                   "65 to 74", "75+", "All Ages"))) %>% 
     filter(Pathogen == "RSV",
@@ -304,7 +304,7 @@ output$rsv_los_plot <- renderPlotly({
 
 # Table
 output$rsv_los_table <- renderDataTable({
-  avg_rsv_los_table <- Average_Length_of_Stay %>% 
+  avg_rsv_los_table <- Average_Length_of_Stay_TEST %>% 
     filter(Pathogen == "RSV") %>% #,
     #           Season == input$los_season_rsv) %>% 
     mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),

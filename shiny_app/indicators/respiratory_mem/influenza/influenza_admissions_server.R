@@ -307,7 +307,7 @@ output$flu_los_text <- renderText({
 
 # Plot
 output$flu_los_plot <- renderPlotly({
-  avg_flu_los_plot <- Average_Length_of_Stay %>% 
+  avg_flu_los_plot <- Average_Length_of_Stay_TEST %>% 
     mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1 to 4", "5 to 14", "15 to 44", "45 to 64",  
                                                   "65 to 74", "75+", "All Ages"))) %>% 
     filter(Pathogen == "Influenza",
@@ -318,7 +318,7 @@ output$flu_los_plot <- renderPlotly({
 
 # Table
 output$flu_los_table <- renderDataTable({
-  avg_flu_los_table <- Average_Length_of_Stay %>% 
+  avg_flu_los_table <- Average_Length_of_Stay_TEST %>% 
     filter(Pathogen == "Influenza") %>% #,
     #           Season == input$los_season_flu) %>% 
     mutate(AverageLengthOfStay = round(AverageLengthOfStay,2),
