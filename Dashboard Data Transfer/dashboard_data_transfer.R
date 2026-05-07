@@ -319,7 +319,7 @@ source("Transfer Scripts/new_od_tests_raw_data.R")
 source("Transfer Scripts/new_od_tests_outputs.R")
 
 ##OCCUPANCY----
-source("Transfer Scripts/new_od_occupancy_outputs.R")
+#source("Transfer Scripts/new_od_occupancy_outputs.R")
 
 ##CARI----
 #source("Transfer Scripts/new_od_cari_outputs.R")
