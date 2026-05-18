@@ -39,7 +39,6 @@ od_report_date <- format(report_date, "%Y%m%d")
 od_archive_date <-format(report_date)
 od_sunday<- floor_date(today(), "week", 1) -1
 od_sunday_minus_7 <- floor_date(today(), "week", 1) -8
-#od_sunday_minus_14 <- today() - 17
 od_sunday_minus_14 <-  floor_date(today(), "week", 1) -15
 
 
@@ -49,7 +48,7 @@ od_folder<- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid 
 od_archive_folder<- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/od_outputs/archived/{report_date}"
 
 #UKHSA folder file path
-ukhsa_adm<-"/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/ukhsa_admissions/"
+# ukhsa_adm<-"/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/ukhsa_admissions/"
 
   # Getting useful functions
 #source("data_transfer_functions.R")
