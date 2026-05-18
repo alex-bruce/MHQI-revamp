@@ -222,44 +222,6 @@ output$rsv_admissions_simd_plot <- renderPlotly({
   
 })
 
-#---------------------##
-### RSV adm pyramid ####
-#----------------------#
-# 
-# output$rsv_adm_pyr_title <- renderUI({h3(glue("Acute RSV hospital admissions by age and sex in Scotland; ",
-#                                               input$rsv_age_sex_adm_season))})
-# 
-# 
-# # pyramid plot that shows the breakdown by age and sex
-# output$rsv_adm_age_sex_pyramid_plot = renderPlotly({
-#   Admissions_AgeSex_Season %>%
-#     filter(Pathogen == "rsv",
-#            Sex %in% c("M", "F"),
-#            Season == input$rsv_age_sex_adm_season) %>%
-#     make_age_sex_adm_pyramid_plot # hospital_admissions_functions
-#   
-# })
-# 
-# 
-# output$rsv_adm_age_sex_pyramid_table = renderDataTable({
-#   
-#   rsv_adm_age_sex_pyramid_table <- Admissions_AgeSex_Season %>%
-#     filter(Pathogen  == "rsv",
-#            Season == input$rsv_age_sex_adm_season) %>%
-#     select(Season, AgeGroup, Sex, Rate) %>%
-#     mutate(Season = factor(Season)) %>%
-#     arrange(desc(Season), AgeGroup, Sex) %>%
-#     dplyr::rename("Season" = "Season",
-#                   "Age group" = "AgeGroup",
-#                   "Rate per 100,000" = "Rate") %>%
-#     mutate(Sex = factor(Sex, levels = c("All", "F", "M")),
-#            `Age group` = factor(`Age group`, levels =
-#                                   c("All","Under 18","18-64","65-74","75+"))) %>%
-#     arrange(desc(`Season`), `Age group`, Sex) %>%
-#     make_table(add_separator_cols_1dp = c(4),
-#                filter_cols = c(1,2,3))
-#   
-# })
 
 #--------------------------#
 ### LENGTH OF STAY ### ----
