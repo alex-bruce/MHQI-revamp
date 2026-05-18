@@ -183,17 +183,6 @@ output$influenza_admissions_age_plot <- renderPlotly({
 })
 
 
-# observeEvent(input$respiratory_season,
-#              {
-#                updatePickerInput(session, inputId = "respiratory_date",
-#                                  choices = {Respiratory_AllData %>% filter(Season == input$respiratory_season) %>%
-#                                      .$Date %>% unique() %>% as.Date() %>% format("%d %b %y")},
-#                                  selected = {Respiratory_AllData %>% filter(Season == input$respiratory_season) %>%
-#                                      .$Date %>% max() %>% as.Date() %>% format("%d %b %y")})
-# 
-#              }
-# )
-
 # # HB Table
 # output$flu_admissions_hb_table <- renderDataTable({
 #   Flu_Admissions_HB_3wks %>%
@@ -248,43 +237,6 @@ output$influenza_admissions_simd_plot <- renderPlotly({
 
 
 
-#-----------------------#
-#### Flu adm pyramid ####
-#-----------------------#
-# 
-# output$flu_adm_pyr_title <- renderUI({h3(glue("Acute influenza hospital admissions by age and sex in Scotland; ",
-#                                               input$flu_age_sex_adm_season))})
-# 
-# # pyramid plot that shows the breakdown by age and sex
-# output$flu_adm_age_sex_pyramid_plot = renderPlotly({
-#   Admissions_AgeSex_Season %>%
-#     filter(Pathogen == "flu",
-#            Sex %in% c("M", "F"),
-#            Season == input$flu_age_sex_adm_season) %>%
-#     make_age_sex_adm_pyramid_plot # hospital_admissions_functions  
-# })
-# 
-# 
-# output$flu_adm_age_sex_pyramid_table = renderDataTable({
-#   
-#   flu_adm_age_sex_pyramid_table <- Admissions_AgeSex_Season %>%
-#     filter(Pathogen == "flu",
-#            Season == input$flu_age_sex_adm_season) %>%
-#     select(Season, AgeGroup, Sex, Rate) %>%
-#     mutate(Season = factor(Season)) %>%
-#     arrange(desc(Season), AgeGroup, Sex) %>%
-#     dplyr::rename("Season" = "Season",
-#                   "Age group" = "AgeGroup",
-#                   "Rate per 100,000" = "Rate") %>%
-#     mutate(Sex = factor(Sex, levels = c("All", "F", "M")),
-#            `Age group` = factor(`Age group`, levels =
-#                                   c("All","Under 18","18-64","65-74","75+"))) %>%
-#     arrange(desc(`Season`), `Age group`, Sex) %>%
-#     make_table(add_separator_cols_1dp = c(4),
-#                filter_cols = c(1,2,3))
-#   
-# })
-# 
 # ### LENGTH OF STAY ### ----
 # 
 # # los plot reactive title

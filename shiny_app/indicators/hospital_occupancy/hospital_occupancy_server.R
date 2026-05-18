@@ -50,24 +50,6 @@ altTextServer("icu_occupancy_modal",
               )
 )
 
-# 
-# # Figures for last three weeks
-# covid_occupancy_recent_week <- occupancy_covid %>%
-#   arrange(WeekEnding) %>% 
-#   mutate(pathogen = "COVID-19") %>% 
-#   tail(3) %>%
-#   #select(-Rate_per_100000) %>%
-#   pivot_wider(names_from = pathogen,
-#               values_from = SevenDayAverage) %>%
-#   mutate(DateTwoWeek = .$WeekEnding[1],
-#          DateLastWeek = .$WeekEnding[2],
-#          DateThisWeek = .$WeekEnding[3],
-#          OccupancyTwoWeek = .$`COVID-19`[1],
-#          OccupancyLastWeek = .$`COVID-19`[2],
-#          OccupancyThisWeek = .$`COVID-19`[3]) %>%
-#   select(DateTwoWeek, DateLastWeek, DateThisWeek, OccupancyTwoWeek, OccupancyLastWeek, OccupancyThisWeek) %>%
-#   head(1)
-
 
 
 # make data table with all the hospital occupancy data in it
@@ -114,43 +96,7 @@ output$hospital_occupancy_hb_table <- renderDataTable({
   
 })
 
-# make data table with all the hospital occupancy health board data in it
-# HB Table (uses weekly values)
-# output$hospital_occupancy_hb_table <- renderDataTable({
-#   Occupancy_Weekly_Hospital_HB %>%
-#     select(WeekEnding, HealthBoard=HealthBoardName, SevenDayAverage) %>%
-#     filter(WeekEnding %in% adm_hb_dates) %>%
-#     #mutate(Date = format(Date, format = "%d %b %y")) %>%
-#     pivot_wider(names_from = WeekEnding,
-#                 values_from = SevenDayAverage) %>%
-#     mutate(HealthBoard = factor(HealthBoard,
-#                                 levels = c("NHS Ayrshire and Arran", "NHS Borders", "NHS Dumfries and Galloway", "NHS Fife", "NHS Forth Valley", "NHS Grampian",
-#                                            "NHS Greater Glasgow and Clyde", "NHS Highland", "NHS Lanarkshire", "NHS Lothian", "NHS Orkney", "NHS Shetland",
-#                                            "NHS Tayside", "NHS Western Isles", "Golden Jubilee National Hospital", "Scotland"))) %>%
-#     arrange(HealthBoard) %>%
-#     dplyr::rename(`Health Board of treatment` = HealthBoard) %>%
-#     make_summary_table(maxrows = 16)
-# })
 
-# make data table with all the ICU occupancy data in it
-# output$ICU_occupancy_table <- renderDataTable({
-#   Occupancy_ICU %>%
-#     mutate(Date = convert_opendata_date(Date),
-#            ICULengthOfStay = factor(ICULengthOfStay)) %>%
-#     filter(Date <= floor_date(today(), "week")) %>%
-#     dplyr::rename(`ICU occupancy` = ICUOccupancy,
-#     `ICU length of stay` = ICULengthOfStay,
-#     `7 day average` = SevenDayAverage) %>%
-#     select(Date, `ICU length of stay`, `ICU occupancy`, `7 day average`) %>%
-#     arrange(desc(Date)) %>%
-#     make_table(.,
-#                 add_separator_cols=NULL, # Column indices to add thousand separators to
-#                 add_percentage_cols = NULL, # with % symbol and 2dp
-#                 maxrows=10,
-#                 order_by_firstcol="desc",
-#                 filter_cols = 2)
-# 
-# })
 
 output$hospital_occupancy_plot <- renderPlotly({
   occupancy_rapid_new %>%
@@ -166,14 +112,5 @@ output$hospital_occupancy_hb_plot <- renderPlotly({
     create_pathogen_occupancy_hb_linechart()
 
 })
-
-# output$icu_occupancy_plot <- renderPlotly({
-# 
-#   make_occupancy_plots(Occupancy_ICU, occupancy = "icu")
-# 
-# })
-
-
-
 
 
