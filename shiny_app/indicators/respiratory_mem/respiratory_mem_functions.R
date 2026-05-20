@@ -378,8 +378,7 @@ create_mem_heatmap <- function(
   } else {
     data <- data %>%
       mutate(
-        Breakdown_hover = ifelse(breakdown_variable == "HBName",
-                                 Breakdown, HBName)
+        Breakdown_hover = Breakdown
       )
     breakdown_hover_label <- "NHS Health Board: "
   }
