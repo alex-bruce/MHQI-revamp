@@ -27,7 +27,7 @@ latest_week_admissions_title <- admissions_scotland %>%
 latest_week_admissions_title$WeekEnding<- format(latest_week_admissions_title$WeekEnding, "%d %b %y")
 
 # make it a value
-latest_week_admissions_title <- latest_week_admissions_title$Date
+latest_week_admissions_title <- latest_week_admissions_title$WeekEnding
 
 previous_week_admissions_title <- admissions_scotland %>%
   filter(Pathogen=='RSV') %>%
