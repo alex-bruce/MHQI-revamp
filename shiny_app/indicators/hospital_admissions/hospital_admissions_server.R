@@ -37,14 +37,6 @@ previous_2week_admissions_title$WeekEnding <- format(previous_2week_admissions_t
 # # make it a value
 previous_2week_admissions_title <- previous_2week_admissions_title$WeekEnding
 
-metadataButtonServer(id="hospital_admissions",
-                     panel="COVID-19 hospital admissions",
-                     parent = session)
-
-jumpToTabButtonServer(id="hospital_admissions_from_summary",
-                      location="hospital_admissions",
-                      parent = session)
-
 observeEvent(input$glossary,
              {
                updateTabsetPanel(session = session, "intabset", selected = "metadata")
