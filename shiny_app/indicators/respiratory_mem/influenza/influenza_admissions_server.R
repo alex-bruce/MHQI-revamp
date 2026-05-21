@@ -28,21 +28,6 @@ altTextServer("influenza_admissions_hb_modal",
                                 ))
 
 
-altTextServer("flu_adm_age_sex",
-              title = glue("Acute influenza admissions by age and sex in Scotland"),
-              content = tags$ul(
-                tags$li(glue("This is a pyramid plot of rate per 100,000 people of acute influenza hospital admissions in Scotland by age and sex.")),
-                tags$li("The information is displayed for a selected  winter respiratory season.",
-                        "Respiratory seasons start at ISO week 40 and finish at ISO week 39."),
-                tags$li("Weekly rate data for age and sex on a weekly basis are available in ",
-                        "the PHS Open Data platform ",
-                        tags$a(href="https://www.opendata.nhs.scot/dataset/viral-respiratory-diseases-including-influenza-and-covid-19-data-in-scotland",
-                               "Viral Respiratory Diseases (Including Influenza and COVID-19) Data in Scotland page (external website).",
-                               target="_blank")),
-                tags$li("The y axis shows the age group. The left side of the y axis corresponds to females (F) and the right side to males (M)."),
-                tags$li("For the x axis the plot shows rate per 100,000 people.")
-              )
-)
 
 
 altTextServer("flu_los_modal",
