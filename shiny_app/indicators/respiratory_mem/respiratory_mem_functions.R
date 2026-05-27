@@ -82,10 +82,12 @@ create_mem_linechart <- function(data,
             textposition = "none",
             text = tooltip_trend,
             hoverinfo = "text",
-            color = ~Season,
+            color = I("black"),
+            linetype=~factor(Season, levels = sort(unique(Season), decreasing = TRUE)),
             type="scatter",
-            mode="lines",
-            colors = mem_line_colours) %>%
+            mode="lines"#,
+            #colors = "#000000"
+            ) %>%
     layout(yaxis = yaxis_plots,
            xaxis = xaxis_plots,
            margin = list(b = 100, t = 5),
@@ -187,6 +189,11 @@ create_mem_linechart <- function(data,
                 text = tooltip_trend,
                 hoverinfo = "text")
   }
+  
+  
+  mem_linechart <- mem_linechart %>%
+    style(line = list(width = 4), traces = which(seasons == min(seasons)))
+  
   
   return(mem_linechart)
   
