@@ -168,7 +168,8 @@ create_mem_linechart <- function(data,
         )
       ),
       legend = list(y = 0.5,
-                    yanchor = 'middle')) %>%
+                    yanchor = 'middle',
+                    traceorder='reversed')) %>%
     
     config(displaylogo = FALSE, displayModeBar = TRUE,
            modeBarButtonsToRemove = bttn_remove)
