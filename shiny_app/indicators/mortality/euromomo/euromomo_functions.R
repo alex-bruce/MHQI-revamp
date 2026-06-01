@@ -105,13 +105,16 @@ create_euromomo_mem_linechart <- function(data,
               textposition = "none",
               text = tooltip_trend, 
               hoverinfo = "text",
-              color = ~SeasonDelay,
+              color = I("black"),
+              linetype=~factor(SeasonDelay, levels = sort(unique(SeasonDelay), decreasing = TRUE)),
+              linetypes = c("dot", "solid", "dash", "dashdot", "longdash"),
               type="scatter",
-              mode="lines",
+              mode="lines"#,
 #              line = list(width = 5),
-              linetype = ~SeasonDelay,
-              linetypes = c("solid", "solid", "solid", "solid", "dot"),
-              colors = euromomo_mem_line_colours) %>%
+              #linetype = ~SeasonDelay,
+              #linetypes = c("solid", "solid", "solid", "solid", "dot")#,
+              #colors = euromomo_mem_line_colours
+) %>%
       layout(yaxis = yaxis_plots,
              xaxis = xaxis_plots,
              margin = list(b = 100, t = 5),
@@ -192,7 +195,8 @@ create_euromomo_mem_linechart <- function(data,
           )
         ),
         legend = list(y = 0.5,
-                      yanchor = 'middle')) %>%
+                      yanchor = 'middle',
+                      traceorder='reversed')) %>%
       
       config(displaylogo = FALSE, displayModeBar = TRUE,
              modeBarButtonsToRemove = bttn_remove)
@@ -206,8 +210,8 @@ create_euromomo_mem_linechart <- function(data,
                   x = ~ISOWeek,
                   y = ~Value,
                   showlegend = F,
-                  color = ~SeasonDelay,
-                  colors = "#12436D",
+                  color = I("black"),
+                  #colors = "#12436D",
                   type = "scatter",
                   mode = 'markers',
                   textposition = "none",
@@ -229,13 +233,15 @@ create_euromomo_mem_linechart <- function(data,
               #text = tooltip_trend[-length(tooltip_trend)],
               text = tooltip_trend,
               hoverinfo = "text",
-              color = ~SeasonDelay,
+              color = I("black"),
               type="scatter",
               mode="lines",
               line = list(width = 5),
-              linetype = ~SeasonDelay,
-              linetypes = c("solid", "solid", "solid", "dot", "dot"),
-              colors = c("#3F085C","#F46A25", "#801650", "#801650", "#12436D")) %>%
+              linetype=~factor(SeasonDelay, levels = sort(unique(SeasonDelay), decreasing = TRUE)),
+              linetypes = c("dot", "dot", "dash", "dashdot", "longdash")
+              #linetypes = c("solid", "solid", "solid", "dot", "dot"),
+              #colors = c("#3F085C","#F46A25", "#801650", "#801650", "#12436D")
+              ) %>%
       layout(yaxis = yaxis_plots,
              xaxis = xaxis_plots,
              margin = list(b = 100, t = 5),
@@ -328,8 +334,8 @@ create_euromomo_mem_linechart <- function(data,
                   x = ~ISOWeek,
                   y = ~Value,
                   showlegend = F,
-                  color = ~SeasonDelay,
-                  colors = "#12436D",
+                  color = I("black"),
+                  #colors = "#12436D",
                   type = "scatter",
                   mode = 'markers',
                   textposition = "none",
@@ -350,13 +356,17 @@ create_euromomo_mem_linechart <- function(data,
               #text = tooltip_trend[-length(tooltip_trend)],
               text = tooltip_trend,
               hoverinfo = "text",
-              color = ~SeasonDelay,
+              color = I("black"),
               type="scatter",
               mode="lines",
               line = list(width = 5),
-              linetype = ~SeasonDelay,
-              linetypes = c("solid", "solid", "solid", "dot"),
-              colors = c("#3F085C","#F46A25", "#801650", "#12436D")) %>%
+              linetype=~factor(SeasonDelay, levels = sort(unique(SeasonDelay), decreasing = TRUE)),
+              linetypes = c("dot", "dash", "dashdot", "longdash")
+              #linetypes = c("solid", "solid", "solid", "dot"
+              )    %>%
+    #,
+              #colors = c("#3F085C","#F46A25", "#801650", "#12436D")
+   # ) 
       layout(yaxis = yaxis_plots,
              xaxis = xaxis_plots,
              margin = list(b = 100, t = 5),
@@ -444,6 +454,10 @@ create_euromomo_mem_linechart <- function(data,
     
   }
   
+  # mem_linechart <- mem_linechart %>%
+  #   style(line = list(width = 4,
+  #                     traces = seasons = min(seasons)))
+
   return(mem_linechart)
   
 }
