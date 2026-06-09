@@ -1,677 +1,561 @@
-# # Create MEM line chart
-
-prepare_mem_data <- function(data, value_variable, rate_dp, seasons) {
-  
-  latest_week <- tail(data, 1)$ISOWeek %>% as.character()
-  
-  new_row <- if (latest_week != 42) {
-    data %>%
-      tail(4) %>%
-      head(1) %>%
-      mutate(ActivityLevelDelay = "Reporting delay", new_row = "Yes")
-  } else {
-    data %>% tail(0) %>% mutate(new_row = "")
-  }
-  
-  data <- bind_rows(data, new_row) %>%
-    arrange(Season, Weekord) %>%
-    rename(Value = value_variable) %>%
-    mutate(Value = round_half_up(Value, rate_dp))
-  
-  if (is.null(seasons)) {
-    seasons <- data %>%
-      distinct(Season) %>%
-      arrange(Season) %>%
-      tail(4) %>%
-      pull(Season)
-  }
-  
-  data <- data %>%
-    filter(ISOWeek != 53, Season %in% seasons) %>%
-    mutate(
-      ISOWeek = factor(as.character(ISOWeek), levels = mem_isoweeks),
-      ReportingDelay = ifelse(ActivityLevelDelay == "Reporting delay" & is.na(new_row),
-                              " (reporting delay) ", ""),
-      SeasonDelay = ifelse(ActivityLevelDelay == "Reporting delay",
-                           paste0(Season, " (Reporting delay)"), Season),
-      
-      # ✅ FIX: tooltip stored in dataset (prevents length mismatch)
-      tooltip = paste0(
-        "Season: ", Season,
-        "<br>Week number: ", ISOWeek,
-        "<br>Z-score: ", Value, ReportingDelay,
-        "<br>Activity level: ", ActivityLevel, ReportingDelay
-      )
-    )
-  
-  list(data = data, seasons = seasons, latest_week = latest_week)
-}
-
-
-build_mem_plot <- function(data, linetypes_vec,
-                           thick_width = 4, thin_width = 1) {
-  
-  top2 <- data %>%
-    distinct(SeasonDelay) %>%
-    arrange(desc(SeasonDelay)) %>%
-    slice(1:2) %>%
-    pull(SeasonDelay)
-  
-  base_levels <- sort(unique(data$SeasonDelay), decreasing = TRUE)
-  
-  plot_ly() %>%
-    
-    # ✅ Thick lines (top 2)
-    add_trace(
-      data = data %>% filter(SeasonDelay %in% top2),
-      x = ~ISOWeek,
-      y = ~Value,
-      type = "scatter",
-      mode = "lines",
-      color = I("black"),
-      linetype = ~factor(SeasonDelay, levels = base_levels),
-      linetypes = linetypes_vec,
-      line = list(width = thick_width),
-      text = ~tooltip,
-      hoverinfo = "text",
-      showlegend = TRUE
-    ) %>%
-    
-    # ✅ Thin lines (others)
-    add_trace(
-      data = data %>% filter(!SeasonDelay %in% top2),
-      x = ~ISOWeek,
-      y = ~Value,
-      type = "scatter",
-      mode = "lines",
-      color = I("black"),
-      linetype = ~factor(SeasonDelay, levels = base_levels),
-      linetypes = linetypes_vec,
-      line = list(width = thin_width),
-      text = ~tooltip,
-      hoverinfo = "text",
-      showlegend = TRUE
-    )
-}
-
-
-apply_mem_layout <- function(p, xaxis_plots, yaxis_plots,
-                             baseline_max, low_max, moderate_max,
-                             high_max, extraordinary_max) {
-  
-  p %>%
-    layout(
-      yaxis = yaxis_plots,
-      xaxis = xaxis_plots,
-      margin = list(b = 100, t = 5),
-      paper_bgcolor = phs_colours("phs-liberty-10"),
-      plot_bgcolor = phs_colours("phs-liberty-10"),
-      shapes = list(
-        list(type = "rect", fillcolor = activity_level_colours[1], opacity = 0.5,
-             x0 = 0, x1 = 52, y0 = 0, y1 = baseline_max,
-             line = list(color = "transparent"),
-             xref = "x", yref = "y",
-             layer = "below"),
-        
-        list(type = "rect", fillcolor = activity_level_colours[2], opacity = 0.5,
-             x0 = 0, x1 = 52, y0 = baseline_max, y1 = low_max,
-             line = list(color = "transparent"),
-             xref = "x", yref = "y",
-             layer = "below"),
-        
-        list(type = "rect", fillcolor = activity_level_colours[3], opacity = 0.5,
-             x0 = 0, x1 = 52, y0 = low_max, y1 = moderate_max,
-             line = list(color = "transparent"),
-             xref = "x", yref = "y",
-             layer = "below"),
-        
-        list(type = "rect", fillcolor = activity_level_colours[4], opacity = 0.5,
-             x0 = 0, x1 = 52, y0 = moderate_max, y1 = high_max,
-             line = list(color = "transparent"),
-             xref = "x", yref = "y",
-             layer = "below"),
-        
-        list(type = "rect", fillcolor = activity_level_colours[5], opacity = 0.5,
-             x0 = 0, x1 = 52, y0 = high_max, y1 = extraordinary_max,
-             line = list(color = "transparent"),
-             xref = "x", yref = "y",
-             layer = "below")
-      )
-      )
-}
-
-
-get_linetypes <- function(latest_week) {
-  if (latest_week %in% c("40", "41")) {
-    c("dot", "dot", "dash", "dashdot", "longdash")
-  } else if (latest_week == "42") {
-    c("dot", "dash", "dashdot", "longdash")
-  } else {
-    c("dot", "solid", "dash", "dashdot", "longdash")
-  }
-}
-
-create_euromomo_mem_linechart <- function(data,
+# Create MEM line chart
+create_euromomo_mem_linechart <- function(data, 
                                           rate_dp = 1,
                                           seasons = NULL,
                                           value_variable = "ZScore",
                                           y_axis_title = "Z-score") {
   
-  prep <- prepare_mem_data(data, value_variable, rate_dp, seasons)
-  data <- prep$data
-  latest_week <- prep$latest_week
+  # Latest reporting week
+  latest_week <- data %>%
+    tail(1) %>%
+    .$ISOWeek %>%
+    as.character()
   
-  xaxis_plots <- list(title = "Week number", dtick = 2, range = c(0, 52), showgrid = FALSE)
-  yaxis_plots <- list(title = y_axis_title, fixedrange = FALSE, showgrid = FALSE)
+  # Add in a new row so that dashed line works (not needed in week 42)
+  if(latest_week != 42){
+    new_row <- data %>%
+      tail(4) %>%
+      head(1) %>%
+      mutate(ActivityLevelDelay = "Reporting delay",
+             new_row = "Yes")
+  } else{
+    new_row <- data %>%
+      tail(0) %>%
+      mutate(new_row = "")
+  }
   
+  # Combine
+  data <- bind_rows(data, new_row) %>%
+    arrange(Season, Weekord)
+  
+  # Rename value variable
+  data <- data %>%
+    rename(Value = value_variable) %>%
+    mutate(Value = round_half_up(Value, rate_dp))
+  
+  if(is.null(seasons)){
+    seasons <- data %>%
+      select(Season) %>%
+      arrange(Season) %>%
+      distinct() %>%
+      tail(4)
+    seasons <- seasons$Season
+  }
+  
+  # Wrangle data
+  data = data %>%
+    filter(ISOWeek != 53) %>%
+    filter(Season %in% seasons) %>%
+    select(Season, ISOWeek, Weekord, Value, ActivityLevel, ActivityLevelDelay, LowThreshold, 
+           MediumThreshold, HighThreshold, ExtraordinaryThreshold, new_row) %>%
+    arrange(Season, Weekord) %>%
+    mutate(ISOWeek = as.character(ISOWeek),
+           ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
+  
+  # Add in reporting delay marker
+  data = data %>%
+    mutate(ReportingDelay = ifelse(ActivityLevelDelay == "Reporting delay" & is.na(new_row),
+                                   " (reporting delay) ", ""))
+  
+  xaxis_plots[["title"]] <- "Week number"
+  xaxis_plots[["dtick"]] <- 2
+  xaxis_plots[["range"]] <- c(0,52)
+  
+  #xaxis_plots[["rangeslider"]] <- list(type = "date")
+  yaxis_plots[["fixedrange"]] <- FALSE
+  yaxis_plots[["title"]] <- y_axis_title
+  
+  xaxis_plots[["showgrid"]] <- FALSE
+  yaxis_plots[["showgrid"]] <- FALSE
+  
+  # Get thresholds
   baseline_max <- unique(data$LowThreshold)
   low_max <- unique(data$MediumThreshold)
   moderate_max <- unique(data$HighThreshold)
   high_max <- unique(data$ExtraordinaryThreshold)
-  extraordinary_max <- max(pretty(c(data$Value, high_max)), na.rm = TRUE)
+  extraordinary_max <- max(pretty(c(data$Value, high_max)), na.rm = T)
   
-  mem_linechart <- build_mem_plot(
-    data,
-    linetypes_vec = get_linetypes(latest_week)
-  )
+  #Text for tooltip
+  tooltip_trend <- c(paste0("Season: ", data$Season,
+                            "<br>", "Week number: ", data$ISOWeek,
+                            "<br>", "Z-score: ", data$Value, data$ReportingDelay,
+                            "<br>", "Activity level: ", data$ActivityLevel, data$ReportingDelay))
   
-  mem_linechart <- apply_mem_layout(
-    mem_linechart,
-    xaxis_plots,
-    yaxis_plots,
-    baseline_max,
-    low_max,
-    moderate_max,
-    high_max,
-    extraordinary_max
-  )
+  # Update for reporting delay
+  data = data %>%
+    mutate(SeasonDelay = ifelse(ActivityLevelDelay == "Reporting delay",
+                                paste0(Season, " (Reporting delay)"), Season))
   
-  mem_linechart <- mem_linechart %>%
-    layout(
-      images = list(list(
-        source = raster2uri(mem_legend),
-        xref = "paper",
-        yref = "paper",
-        x = 0.5,
-        y = -0.35,
-        sizex = 0.4,
-        sizey = 0.3,
-        xanchor = "center",
-        yanchor = "bottom"
-      )),
-      legend = list(y = 0.5, yanchor = "middle", traceorder = "reversed")
-    ) %>%
-    config(displaylogo = FALSE, displayModeBar = TRUE,
-           modeBarButtonsToRemove = bttn_remove)
+  
+  season_delay_levels <- data %>%
+    arrange(Season, Weekord) %>%
+    pull(SeasonDelay) %>%
+    unique()
+  
+  #thick_levels <- tail(season_delay_levels, 2)
+  delayed_seasons <- grep("Reporting delay", season_delay_levels)
+  thick_levels <- season_delay_levels[unique(sort(c(delayed_seasons, delayed_seasons-1)))]
+  
+  # Current season data only
+  data_curr_season <- data %>%
+    filter(Season %in% seasons[length(seasons)])
+  
+  week_template <- data.frame(seq(1:52))
+  names(week_template) <- "ISOWeek"
+  week_template <- week_template %>%
+    mutate(ISOWeek = factor(ISOWeek, levels = c(40:52,1:39)))
+  
+  # If latest week isn't week 40 or 41
+  if(!latest_week %in% c("40", "41", "42")){
+    
+    # Create plot
+    
+    # Base plot (thin lines)
+    mem_linechart <- plot_ly(
+      data = data %>% filter(!SeasonDelay %in% thick_levels),
+      x = ~ISOWeek,
+      y = ~Value,
+      textposition = "none",
+      text = ~paste0(
+        "Season: ", Season,
+        "<br>Week number: ", ISOWeek,
+        "<br>Z-score: ", Value, ReportingDelay,
+        "<br>Activity level: ", ActivityLevel, ReportingDelay
+      ),
+      hoverinfo = "text",
+      color = I("black"),
+      type = "scatter",
+      mode = "lines",
+      linetype = ~SeasonDelay,
+      linetypes = rev(c("dot", "solid", "dash", "dashdot", "longdash")),
+      line = list(width = 1)   # thin
+    )
+    
+    # Add thicker traces for last two levels
+    mem_linechart <- mem_linechart %>%
+      add_trace(
+        data = data %>% filter(SeasonDelay %in% thick_levels),
+        x = ~ISOWeek,
+        y = ~Value,
+        textposition = "none",
+        text = ~paste0(
+          "Season: ", Season,
+          "<br>Week number: ", ISOWeek,
+          "<br>Z-score: ", Value, ReportingDelay,
+          "<br>Activity level: ", ActivityLevel, ReportingDelay
+        ),
+        hoverinfo = "text",
+        color = I("black"),
+        type = "scatter",
+        mode = "lines",
+        linetype = ~SeasonDelay,
+        linetypes = rev(c("dot", "solid", "dash", "dashdot", "longdash")),
+        line = list(width = 4)   # thicker lines
+      ) %>%
+      layout(yaxis = yaxis_plots,
+             xaxis = xaxis_plots,
+             margin = list(b = 100, t = 5),
+             paper_bgcolor = phs_colours("phs-liberty-10"),
+             plot_bgcolor = phs_colours("phs-liberty-10"),
+             shapes = list(
+               list(type = "rect",
+                    fillcolor = activity_level_colours[1],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = 0,
+                    y1 = baseline_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[2],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = baseline_max,#+0.00001,
+                    y1 = low_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[3],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = low_max,#+0.00001,
+                    y1 = moderate_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[4],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = moderate_max,#+0.00001,
+                    y1 = high_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[5],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = high_max,#+0.00001,
+                    y1 = extraordinary_max,
+                    yref = "y",
+                    layer = "below")
+             ))
+    
+    # Add static legend
+    mem_linechart <- mem_linechart %>%
+      layout(
+        images = list(  
+          list(  
+            source =  raster2uri(mem_legend),  
+            xref = "paper",  
+            yref = "paper",  
+            x = 0.5,  
+            y = -0.35,  
+            sizex = 0.4,  
+            sizey = 0.3,  
+            xanchor="center",  
+            yanchor="bottom" 
+          )
+        ),
+        legend = list(y = 0.5,
+                      yanchor = 'middle')) %>%
+      
+      config(displaylogo = FALSE, displayModeBar = TRUE,
+             modeBarButtonsToRemove = bttn_remove)
+    
+    # If latest week is 43
+    if(latest_week == "43"){
+      
+      mem_linechart <- mem_linechart %>%
+        add_trace(data = data %>% filter(Season == seasons[length(seasons)] & 
+                                           ISOWeek == "40" & is.na(new_row)),
+                  x = ~ISOWeek,
+                  y = ~Value,
+                  showlegend = F,
+                  color = I("black"),
+                  #color = ~SeasonDelay,
+                  #colors = "#12436D",
+                  type = "scatter",
+                  mode = 'markers',
+                  textposition = "none",
+                  text = ~paste0(
+                    "Season: ", Season,
+                    "<br>Week number: ", ISOWeek,
+                    "<br>Z-score: ", Value, ReportingDelay,
+                    "<br>Activity level: ", ActivityLevel, ReportingDelay
+                  ),
+                  #text = tooltip_trend[length(tooltip_trend)-4],
+                  hoverinfo = "text")
+      
+    }
+  }
+  
+  # If latest week is week 40
+  if(latest_week %in% c("40", "41")){
+    
+    
+    # Create plot
+    mem_linechart <- plot_ly(
+      data = data %>% filter(!SeasonDelay %in% thick_levels),
+      x = ~ISOWeek,
+      y = ~Value,
+      textposition = "none",
+      text = ~paste0(
+        "Season: ", Season,
+        "<br>Week number: ", ISOWeek,
+        "<br>Z-score: ", Value, ReportingDelay,
+        "<br>Activity level: ", ActivityLevel, ReportingDelay
+      ),
+      hoverinfo = "text",
+      color = I("black"),
+      type = "scatter",
+      mode = "lines",
+      linetype = ~SeasonDelay,
+      linetypes = rev(c("dot", "dot", "solid", "dash", "dashdot")),#, "longdash")),
+      line = list(width = 1)   # thin
+    )
+    
+    # Add thicker traces for last two levels
+    mem_linechart <- mem_linechart %>%
+      add_trace(
+        data = data %>% filter(SeasonDelay %in% thick_levels),
+        x = ~ISOWeek,
+        y = ~Value,
+        textposition = "none",
+        text = ~paste0(
+          "Season: ", Season,
+          "<br>Week number: ", ISOWeek,
+          "<br>Z-score: ", Value, ReportingDelay,
+          "<br>Activity level: ", ActivityLevel, ReportingDelay
+        ),
+        hoverinfo = "text",
+        color = I("black"),
+        type = "scatter",
+        mode = "lines",
+        linetype = ~SeasonDelay,
+        linetypes = rev(c("dot", "dot", "dash", "dashdot", "longdash")),
+        line = list(width = 4)   # thicker lines
+      ) %>%
+      layout(yaxis = yaxis_plots,
+             xaxis = xaxis_plots,
+             margin = list(b = 100, t = 5),
+             paper_bgcolor = phs_colours("phs-liberty-10"),
+             plot_bgcolor = phs_colours("phs-liberty-10"),
+             shapes = list(
+               list(type = "rect",
+                    fillcolor = activity_level_colours[1],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = 0,
+                    y1 = baseline_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[2],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = baseline_max,#+0.00001,
+                    y1 = low_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[3],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = low_max,#+0.00001,
+                    y1 = moderate_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[4],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = moderate_max,#+0.00001,
+                    y1 = high_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[5],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = high_max,#+0.00001,
+                    y1 = extraordinary_max,
+                    yref = "y",
+                    layer = "below")
+             ))
+    
+    # Add static legend
+    mem_linechart <- mem_linechart %>%
+      layout(
+        images = list(  
+          list(  
+            source =  raster2uri(mem_legend),  
+            xref = "paper",  
+            yref = "paper",  
+            x = 0.5,  
+            y = -0.35,  
+            sizex = 0.4,  
+            sizey = 0.3,  
+            xanchor="center",  
+            yanchor="bottom" 
+          )
+        ),
+        legend = list(y = 0.5,
+                      yanchor = 'middle')) %>%
+      
+      config(displaylogo = FALSE, displayModeBar = TRUE,
+             modeBarButtonsToRemove = bttn_remove)
+    
+    if(latest_week == "40"){
+      
+      mem_linechart <- mem_linechart %>%
+        add_trace(data = data_curr_season,
+                  x = ~ISOWeek,
+                  y = ~Value,
+                  showlegend = F,
+                  color = I("black"),
+                  #color = ~SeasonDelay,
+                  #colors = "#12436D",
+                  type = "scatter",
+                  mode = 'markers',
+                  textposition = "none",
+                  text = ~paste0(
+                    "Season: ", Season,
+                    "<br>Week number: ", ISOWeek,
+                    "<br>Z-score: ", Value, ReportingDelay,
+                    "<br>Activity level: ", ActivityLevel, ReportingDelay
+                  ),
+                  hoverinfo = "text")
+    }
+    
+  }
+  
+  # If latest week is week 42
+  if(latest_week == "42"){
+    
+    # Create plot
+    mem_linechart <- plot_ly(
+      data = data %>% filter(!SeasonDelay %in% thick_levels),
+      x = ~ISOWeek,
+      y = ~Value,
+      textposition = "none",
+      text = ~paste0(
+        "Season: ", Season,
+        "<br>Week number: ", ISOWeek,
+        "<br>Z-score: ", Value, ReportingDelay,
+        "<br>Activity level: ", ActivityLevel, ReportingDelay
+      ),
+      hoverinfo = "text",
+      color = I("black"),
+      type = "scatter",
+      mode = "lines",
+      linetype = ~SeasonDelay,
+      linetypes = rev(c("dot", "solid", "dash", "dashdot")),#, "longdash")),
+      line = list(width = 1)   # thin
+    )
+    
+    # Add thicker traces for last two levels
+    mem_linechart <- mem_linechart %>%
+      add_trace(
+        data = data %>% filter(SeasonDelay %in% thick_levels),
+        x = ~ISOWeek,
+        y = ~Value,
+        textposition = "none",
+        text = ~paste0(
+          "Season: ", Season,
+          "<br>Week number: ", ISOWeek,
+          "<br>Z-score: ", Value, ReportingDelay,
+          "<br>Activity level: ", ActivityLevel, ReportingDelay
+        ),
+        hoverinfo = "text",
+        color = I("black"),
+        type = "scatter",
+        mode = "lines",
+        linetype = ~SeasonDelay,
+        linetypes = rev(c("dot", "dash", "dashdot", "longdash")),
+        line = list(width = 4)   # thicker lines
+      ) %>%
+      layout(yaxis = yaxis_plots,
+             xaxis = xaxis_plots,
+             margin = list(b = 100, t = 5),
+             paper_bgcolor = phs_colours("phs-liberty-10"),
+             plot_bgcolor = phs_colours("phs-liberty-10"),
+             shapes = list(
+               list(type = "rect",
+                    fillcolor = activity_level_colours[1],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = 0,
+                    y1 = baseline_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[2],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = baseline_max,#+0.00001,
+                    y1 = low_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[3],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = low_max,#+0.00001,
+                    y1 = moderate_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[4],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = moderate_max,#+0.00001,
+                    y1 = high_max,
+                    yref = "y",
+                    layer = "below"),
+               list(type = "rect",
+                    fillcolor = activity_level_colours[5],
+                    line = list(color = "transparent"),
+                    opacity = 0.5,
+                    x0 = 0,
+                    x1 = 52,
+                    xref = "x",
+                    y0 = high_max,#+0.00001,
+                    y1 = extraordinary_max,
+                    yref = "y",
+                    layer = "below")
+             ))
+    
+    # Add static legend
+    mem_linechart <- mem_linechart %>%
+      layout(
+        images = list(  
+          list(  
+            source =  raster2uri(mem_legend),  
+            xref = "paper",  
+            yref = "paper",  
+            x = 0.5,  
+            y = -0.3,  
+            sizex = 0.4,  
+            sizey = 0.3,  
+            xanchor="center",  
+            yanchor="bottom" 
+          )
+        ),
+        legend = list(y = 0.5,
+                      yanchor = 'middle')) %>%
+      
+      config(displaylogo = FALSE, displayModeBar = TRUE,
+             modeBarButtonsToRemove = bttn_remove)
+    
+  }
+  
   
   return(mem_linechart)
+  
 }
 
-
-
-
-# create_euromomo_mem_linechart <- function(data, 
-#                                           rate_dp = 1,
-#                                           seasons = NULL,
-#                                           value_variable = "ZScore",
-#                                           y_axis_title = "Z-score") {
-#   
-#   # Latest reporting week
-#   latest_week <- data %>%
-#     tail(1) %>%
-#     .$ISOWeek %>%
-#     as.character()
-#   
-#   # Add in a new row so that dashed line works (not needed in week 42)
-#   if(latest_week != 42){
-#     new_row <- data %>%
-#       tail(4) %>%
-#       head(1) %>%
-#       mutate(ActivityLevelDelay = "Reporting delay",
-#              new_row = "Yes")
-#   } else{
-#     new_row <- data %>%
-#       tail(0) %>%
-#       mutate(new_row = "")
-#   }
-#   
-#   # Combine
-#   data <- bind_rows(data, new_row) %>%
-#     arrange(Season, Weekord)
-#   
-#   # Rename value variable
-#   data <- data %>%
-#     rename(Value = value_variable) %>%
-#     mutate(Value = round_half_up(Value, rate_dp))
-#   
-#   if(is.null(seasons)){
-#     seasons <- data %>%
-#       select(Season) %>%
-#       arrange(Season) %>%
-#       distinct() %>%
-#       tail(4)
-#     seasons <- seasons$Season
-#   }
-#   
-#   # Wrangle data
-#   data = data %>%
-#     filter(ISOWeek != 53) %>%
-#     filter(Season %in% seasons) %>%
-#     select(Season, ISOWeek, Weekord, Value, ActivityLevel, ActivityLevelDelay, LowThreshold, 
-#            MediumThreshold, HighThreshold, ExtraordinaryThreshold, new_row) %>%
-#     arrange(Season, Weekord) %>%
-#     mutate(ISOWeek = as.character(ISOWeek),
-#            ISOWeek = factor(ISOWeek, levels = mem_isoweeks))
-#   
-#   # Add in reporting delay marker
-#   data = data %>%
-#     mutate(ReportingDelay = ifelse(ActivityLevelDelay == "Reporting delay" & is.na(new_row),
-#                                    " (reporting delay) ", ""))
-#   
-#   xaxis_plots[["title"]] <- "Week number"
-#   xaxis_plots[["dtick"]] <- 2
-#   xaxis_plots[["range"]] <- c(0,52)
-#   
-#   #xaxis_plots[["rangeslider"]] <- list(type = "date")
-#   yaxis_plots[["fixedrange"]] <- FALSE
-#   yaxis_plots[["title"]] <- y_axis_title
-#   
-#   xaxis_plots[["showgrid"]] <- FALSE
-#   yaxis_plots[["showgrid"]] <- FALSE
-#   
-#   # Get thresholds
-#   baseline_max <- unique(data$LowThreshold)
-#   low_max <- unique(data$MediumThreshold)
-#   moderate_max <- unique(data$HighThreshold)
-#   high_max <- unique(data$ExtraordinaryThreshold)
-#   extraordinary_max <- max(pretty(c(data$Value, high_max)), na.rm = T)
-#   
-#   #Text for tooltip
-#   tooltip_trend <- c(paste0("Season: ", data$Season,
-#                             "<br>", "Week number: ", data$ISOWeek,
-#                             "<br>", "Z-score: ", data$Value, data$ReportingDelay,
-#                             "<br>", "Activity level: ", data$ActivityLevel, data$ReportingDelay))
-#   
-#   # Update for reporting delay
-#   data = data %>%
-#     mutate(SeasonDelay = ifelse(ActivityLevelDelay == "Reporting delay",
-#                                 paste0(Season, " (Reporting delay)"), Season))
-#   
-#   # Current season data only
-#   data_curr_season <- data %>%
-#     filter(Season %in% seasons[length(seasons)])
-#   
-#   week_template <- data.frame(seq(1:52))
-#   names(week_template) <- "ISOWeek"
-#   week_template <- week_template %>%
-#     mutate(ISOWeek = factor(ISOWeek, levels = c(40:52,1:39)))
-#   
-#   # If latest week isn't week 40 or 41
-#   if(!latest_week %in% c("40", "41", "42")){
-#     
-#     # Create plot
-#     mem_linechart = data %>%
-#       plot_ly(x = ~ISOWeek,
-#               y = ~Value,
-#               textposition = "none",
-#               text = tooltip_trend, 
-#               hoverinfo = "text",
-#               color = I("black"),
-#               linetype=~factor(SeasonDelay, levels = sort(unique(SeasonDelay), decreasing = TRUE)),
-#               linetypes = c("dot", "solid", "dash", "dashdot", "longdash"),
-#               type="scatter",
-#               mode="lines"#,
-# #              line = list(width = 5),
-#               #linetype = ~SeasonDelay,
-#               #linetypes = c("solid", "solid", "solid", "solid", "dot")#,
-#               #colors = euromomo_mem_line_colours
-# ) %>%
-#       layout(yaxis = yaxis_plots,
-#              xaxis = xaxis_plots,
-#              margin = list(b = 100, t = 5),
-#              paper_bgcolor = phs_colours("phs-liberty-10"),
-#              plot_bgcolor = phs_colours("phs-liberty-10"),
-#              shapes = list(
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[1],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = 0,
-#                     y1 = baseline_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[2],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = baseline_max,#+0.00001,
-#                     y1 = low_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[3],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = low_max,#+0.00001,
-#                     y1 = moderate_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[4],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = moderate_max,#+0.00001,
-#                     y1 = high_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[5],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = high_max,#+0.00001,
-#                     y1 = extraordinary_max,
-#                     yref = "y",
-#                     layer = "below")
-#              ))
-#     
-#     # Add static legend
-#     mem_linechart <- mem_linechart %>%
-#       layout(
-#         images = list(  
-#           list(  
-#             source =  raster2uri(mem_legend),  
-#             xref = "paper",  
-#             yref = "paper",  
-#             x = 0.5,  
-#             y = -0.35,  
-#             sizex = 0.4,  
-#             sizey = 0.3,  
-#             xanchor="center",  
-#             yanchor="bottom" 
-#           )
-#         ),
-#         legend = list(y = 0.5,
-#                       yanchor = 'middle',
-#                       traceorder='reversed')) %>%
-#       
-#       config(displaylogo = FALSE, displayModeBar = TRUE,
-#              modeBarButtonsToRemove = bttn_remove)
-#     
-#     # If latest week is 43
-#     if(latest_week == "43"){
-#       
-#       mem_linechart <- mem_linechart %>%
-#         add_trace(data = data %>% filter(Season == seasons[length(seasons)] & 
-#                                            ISOWeek == "40" & is.na(new_row)),
-#                   x = ~ISOWeek,
-#                   y = ~Value,
-#                   showlegend = F,
-#                   color = I("black"),
-#                   #colors = "#12436D",
-#                   type = "scatter",
-#                   mode = 'markers',
-#                   textposition = "none",
-#                   text = tooltip_trend[length(tooltip_trend)-4],
-#                   hoverinfo = "text")
-#       
-#     }
-#   }
-#   
-#   # If latest week is week 40
-#   if(latest_week %in% c("40", "41")){
-#     
-#     
-#     # Create plot
-#     mem_linechart = data %>%
-#       plot_ly(x = ~ISOWeek,
-#               y = ~Value,
-#               textposition = "none",
-#               #text = tooltip_trend[-length(tooltip_trend)],
-#               text = tooltip_trend,
-#               hoverinfo = "text",
-#               color = I("black"),
-#               type="scatter",
-#               mode="lines",
-#               line = list(width = 5),
-#               linetype=~factor(SeasonDelay, levels = sort(unique(SeasonDelay), decreasing = TRUE)),
-#               linetypes = c("dot", "dot", "dash", "dashdot", "longdash")
-#               #linetypes = c("solid", "solid", "solid", "dot", "dot"),
-#               #colors = c("#3F085C","#F46A25", "#801650", "#801650", "#12436D")
-#               ) %>%
-#       layout(yaxis = yaxis_plots,
-#              xaxis = xaxis_plots,
-#              margin = list(b = 100, t = 5),
-#              paper_bgcolor = phs_colours("phs-liberty-10"),
-#              plot_bgcolor = phs_colours("phs-liberty-10"),
-#              shapes = list(
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[1],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = 0,
-#                     y1 = baseline_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[2],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = baseline_max,#+0.00001,
-#                     y1 = low_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[3],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = low_max,#+0.00001,
-#                     y1 = moderate_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[4],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = moderate_max,#+0.00001,
-#                     y1 = high_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[5],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = high_max,#+0.00001,
-#                     y1 = extraordinary_max,
-#                     yref = "y",
-#                     layer = "below")
-#              ))
-#     
-#     # Add static legend
-#     mem_linechart <- mem_linechart %>%
-#       layout(
-#         images = list(  
-#           list(  
-#             source =  raster2uri(mem_legend),  
-#             xref = "paper",  
-#             yref = "paper",  
-#             x = 0.5,  
-#             y = -0.35,  
-#             sizex = 0.4,  
-#             sizey = 0.3,  
-#             xanchor="center",  
-#             yanchor="bottom" 
-#           )
-#         ),
-#         legend = list(y = 0.5,
-#                       yanchor = 'middle')) %>%
-#       
-#       config(displaylogo = FALSE, displayModeBar = TRUE,
-#              modeBarButtonsToRemove = bttn_remove)
-#     
-#     if(latest_week == "40"){
-#       
-#       mem_linechart <- mem_linechart %>%
-#         add_trace(data = data_curr_season,
-#                   x = ~ISOWeek,
-#                   y = ~Value,
-#                   showlegend = F,
-#                   color = I("black"),
-#                   #colors = "#12436D",
-#                   type = "scatter",
-#                   mode = 'markers',
-#                   textposition = "none",
-#                   text = tooltip_trend,
-#                   hoverinfo = "text")
-#     }
-#     
-#   }
-#   
-#   # If latest week is week 42
-#   if(latest_week == "42"){
-#     
-#     # Create plot
-#     mem_linechart = data %>%
-#       plot_ly(x = ~ISOWeek,
-#               y = ~Value,
-#               textposition = "none",
-#               #text = tooltip_trend[-length(tooltip_trend)],
-#               text = tooltip_trend,
-#               hoverinfo = "text",
-#               color = I("black"),
-#               type="scatter",
-#               mode="lines",
-#               line = list(width = 5),
-#               linetype=~factor(SeasonDelay, levels = sort(unique(SeasonDelay), decreasing = TRUE)),
-#               linetypes = c("dot", "dash", "dashdot", "longdash")
-#               #linetypes = c("solid", "solid", "solid", "dot"
-#               )    %>%
-#     #,
-#               #colors = c("#3F085C","#F46A25", "#801650", "#12436D")
-#    # ) 
-#       layout(yaxis = yaxis_plots,
-#              xaxis = xaxis_plots,
-#              margin = list(b = 100, t = 5),
-#              paper_bgcolor = phs_colours("phs-liberty-10"),
-#              plot_bgcolor = phs_colours("phs-liberty-10"),
-#              shapes = list(
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[1],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = 0,
-#                     y1 = baseline_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[2],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = baseline_max,#+0.00001,
-#                     y1 = low_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[3],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = low_max,#+0.00001,
-#                     y1 = moderate_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[4],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = moderate_max,#+0.00001,
-#                     y1 = high_max,
-#                     yref = "y",
-#                     layer = "below"),
-#                list(type = "rect",
-#                     fillcolor = activity_level_colours[5],
-#                     line = list(color = "transparent"),
-#                     opacity = 0.5,
-#                     x0 = 0,
-#                     x1 = 52,
-#                     xref = "x",
-#                     y0 = high_max,#+0.00001,
-#                     y1 = extraordinary_max,
-#                     yref = "y",
-#                     layer = "below")
-#              ))
-#     
-#     # Add static legend
-#     mem_linechart <- mem_linechart %>%
-#       layout(
-#         images = list(  
-#           list(  
-#             source =  raster2uri(mem_legend),  
-#             xref = "paper",  
-#             yref = "paper",  
-#             x = 0.5,  
-#             y = -0.3,  
-#             sizex = 0.4,  
-#             sizey = 0.3,  
-#             xanchor="center",  
-#             yanchor="bottom" 
-#           )
-#         ),
-#         legend = list(y = 0.5,
-#                       yanchor = 'middle')) %>%
-#       
-#       config(displaylogo = FALSE, displayModeBar = TRUE,
-#              modeBarButtonsToRemove = bttn_remove)
-#     
-#   }
-#   
-#   # mem_linechart <- mem_linechart %>%
-#   #   style(line = list(width = 4,
-#   #                     traces = seasons = min(seasons)))
-# 
-#   return(mem_linechart)
-#   
-# }
 
 
 # Create MEM heatmaps

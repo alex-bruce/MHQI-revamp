@@ -118,7 +118,6 @@ output$euromomo_mem_age_table <- renderDataTable({
 output$euromomo_mem_plot <- renderPlotly({
   Respiratory_Euromomo %>%
     filter(AgeGroup == "All Ages") %>%
-    #filter(Year < 2025 | (Year == 2025 & ISOWeek <= 48)) %>% 
     create_euromomo_mem_linechart()
   
 })
