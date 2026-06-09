@@ -102,7 +102,7 @@ make_respiratory_trend_over_time_plot <- function(data, y_axis_title) {
 
     } else {
     #flu
-    colours <- c(phs_colours(c("phs-purple","phs-magenta","phs-green" , "phs-blue-80"  )), "black")
+    colours <- c("#CCA2B9","#801650","#FBC3A8" , "#94AABD", "black")
     legend_title_name <- "Subtype"
     }
 
@@ -235,7 +235,7 @@ make_age_sex_pyramid_plot <- function(data, title = NULL) {
                            "<b>Rate per 100,000 population</b>: ", format(abs(Rate), big.mark=",")),
             hoverinfo = "text",
             #hovertemplate = "%{text}",
-            colors = phs_colours(c("phs-purple", "phs-magenta"))) %>%
+            colors = c("#12436D", "#28A197")) %>%
     layout(
       xaxis = list(
         tickvals = xaxis_breaks,
