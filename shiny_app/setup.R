@@ -89,12 +89,27 @@ if (config::get()$online){
 ######
 
 # Respiratory factor
-resp_order <- c("Influenza - Type A (any subtype)",
-                "Influenza - Type A(H1N1)pdm09",
-                "Influenza - Type A(H3)",
-                "Influenza - Type A (not subtyped)",
-                "Influenza - Type B",
-                "Influenza - Type A or B",
+# resp_order <- c("Influenza - Type A (any subtype)",
+#                 "Influenza - Type A(H1N1)pdm09",
+#                 "Influenza - Type A(H3)",
+#                 "Influenza - Type A (not subtyped)",
+#                 "Influenza - Type B",
+#                 "Influenza - Type A or B",
+#                 "Adenovirus",
+#                 "Human metapneumovirus",
+#                 "Mycoplasma pneumoniae",
+#                 "Parainfluenza virus",
+#                 "Respiratory syncytial virus",
+#                 "Rhinovirus",
+#                 "Seasonal coronavirus (Non-SARS-CoV-2)",
+#                 "Total")
+
+resp_order <- c("Type A (any subtype)",
+                "Type A(H1N1)pdm09",
+                "Type A(H3)",
+                "Type A (not subtyped)",
+                "Type B",
+                "Type A or B",
                 "Adenovirus",
                 "Human metapneumovirus",
                 "Mycoplasma pneumoniae",
@@ -105,6 +120,14 @@ resp_order <- c("Influenza - Type A (any subtype)",
                 "Total")
 
 Respiratory_AllData %<>%
+  mutate(Organism = recode(Organism, 
+         "Influenza - Type A (any subtype)" = "Type A (any subtype)",
+         "Influenza - Type A(H1N1)pdm09" = "Type A(H1N1)pdm09",
+         "Influenza - Type A(H3)" = "Type A(H3)",
+         "Influenza - Type A (not subtyped)" = "Type A (not subtyped)",
+         "Influenza - Type B" = "Type B",
+         "Influenza - Type A or B" = "Type A or B"
+         )) %>% 
   mutate(
          AgeGroup = factor(AgeGroup,
                            levels = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")

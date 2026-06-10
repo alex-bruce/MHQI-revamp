@@ -91,28 +91,18 @@ select_y_axis <- function(data, yaxis) {
 # this plot makes a plot showing the rate/number of cases for each by each subtype
 make_respiratory_trend_over_time_plot <- function(data, y_axis_title) {
 
-  # Checking whether flu or non flu
-  if("Adenovirus" %in% data$Organism){
-    # nonflu
-    colours <- c(phs_colours(c("phs-blue", "phs-rust", "phs-magenta",
-                               "phs-green", "phs-teal", "phs-purple")), "black")
-    linestyles <- c("dashdot", "longdashdot", "dash", "longdash", "solid", "dot", "solid")
 
-    legend_title_name <- "Pathogen"
-
-    } else {
-    #flu
-    colours <- c("#CCA2B9","#801650","#FBC3A8" , "#94AABD", "black")
+    colours <- c("#CCA2B9","#801650","#FBC3A8" , "#94AABD")#, "black")
     legend_title_name <- "Subtype"
-    }
+
 
       # Define custom order for "Organism" levels (makes legend same order as dropdowns in other charts)
 
   subtype_order <- c(
-    "Influenza - Type B", "Influenza - Type A (not subtyped)","Influenza - Type A(H3)",
-    "Influenza - Type A(H1N1)pdm09",
-    "Influenza - Type A (any subtype)"
-    )
+    "Type B", "Type A (not subtyped)","Type A(H3)",
+    "Type A(H1N1)pdm09")#,
+    # "Influenza - Type A (any subtype)"
+    # )
 
   # Reorder the levels of "Organism" in descending order
   data$Organism <- factor(data$Organism, levels = subtype_order)
