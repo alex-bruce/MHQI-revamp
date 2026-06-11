@@ -178,8 +178,9 @@ make_respiratory_trend_by_season_plot_function <- function(data, y_axis_title) {
             type="scatter",
             mode="lines",
 #            linetypes = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot", "solid"),
-            colors = phs_colours(c('phs-purple', 'phs-magenta', 'phs-teal', 'phs-rust',
-                                   'phs-blue', 'phs-green', 'phs-graphite'))) %>%
+            colors=rev(season_colours[1:length(unique(data$Season))])) %>% 
+    # phs_colours(c('phs-purple', 'phs-magenta', 'phs-teal', 'phs-rust',
+    #                                'phs-blue', 'phs-green', 'phs-graphite'))) %>%
     layout(yaxis = yaxis_plots,
            xaxis = xaxis_plots,
            paper_bgcolor = phs_colours("phs-liberty-10"),
