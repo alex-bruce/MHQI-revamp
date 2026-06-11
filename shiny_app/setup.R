@@ -89,20 +89,6 @@ if (config::get()$online){
 ######
 
 # Respiratory factor
-# resp_order <- c("Influenza - Type A (any subtype)",
-#                 "Influenza - Type A(H1N1)pdm09",
-#                 "Influenza - Type A(H3)",
-#                 "Influenza - Type A (not subtyped)",
-#                 "Influenza - Type B",
-#                 "Influenza - Type A or B",
-#                 "Adenovirus",
-#                 "Human metapneumovirus",
-#                 "Mycoplasma pneumoniae",
-#                 "Parainfluenza virus",
-#                 "Respiratory syncytial virus",
-#                 "Rhinovirus",
-#                 "Seasonal coronavirus (Non-SARS-CoV-2)",
-#                 "Total")
 
 resp_order <- c("Type A (any subtype)",
                 "Type A(H1N1)pdm09",
@@ -199,18 +185,6 @@ mem_line_colours <- rev(c("#12436D", "#801650", "#F46A25","#3F085C",
 cases_agegpp_colours <- c("#A8CCE8", "#12436D", "#28A197", "#801650", 
                        "#F46A25", "#A285D1", "#3F085C", "#3D3D3D")
 
-# Colours for lines on summary admissions line chart
-# flu_hosp_adms_colours <- c(phs_colours("phs-purple"), phs_colours("phs-green"),
-#                             phs_colours("phs-magenta"), phs_colours("phs-teal"), phs_colours("phs-graphite"),
-#                             phs_colours("phs-blue"))
-# 
-# rsv_hosp_adms_colours <- c(phs_colours("phs-purple"), phs_colours("phs-green"),
-#                            phs_colours("phs-magenta"), phs_colours("phs-teal"), phs_colours("phs-graphite"),
-#                            phs_colours("phs-blue"))
-
-# Colours for lines on line chart
-#euromomo_mem_line_colours <- c("#004785","#00a2e5", "#376C31", "#FF0000", "#FF0000")
-# euromomo_mem_line_colours <- c("#3F085C","#F46A25", "#801650", "#12436D", "#12436D")
 
 # Isoweeks from week 40 to 39
 mem_isoweeks <- c(40:52, 1:39)
@@ -237,19 +211,6 @@ data_recent_date <- floor_date(as.Date(Deployment_Date, format = "%d %B %Y"), "w
 admissions_age %<>% mutate(AgeGroup = factor(AgeGroup, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
                                                                   "65-74", "75+", "Total"),
                                              labels=mem_age_groups_full)) 
-
-# ## Function to add seasons into tables (used in admissions script)
-# 
-# add_season <- function(input_data) {
-#   input_data %>%
-#     mutate(week_start = week_ending - 6,
-#            week = ISOweek::ISOweek(week_ending),
-#            Season = case_when(str_sub(week, start = -2) < 40 ~
-#                                 (paste(as.numeric(str_sub(week, end = 4)) -1 , "-",
-#                                        as.numeric(str_sub(week, end = 4)), sep="")),
-#                               TRUE ~ (paste(as.numeric(str_sub(week, end = 4)),
-#                                             "-", as.numeric(str_sub(week, end = 4)) + 1, sep=""))))
-# }
 
 
 
