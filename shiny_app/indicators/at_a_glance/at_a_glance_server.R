@@ -105,7 +105,7 @@ covid_cases_intro <- Cases_Weekly %>%
 flu_cases_intro <- Respiratory_AllData %>%
   arrange(Date) %>% 
   filter(FluOrNonFlu == "flu") %>%
-  filter(Organism == "Influenza - Type A or B") %>%
+  filter(Organism == "Type A or B") %>%
   filter(BreakDown == "Scotland") %>%
   tail(2) %>%
   group_by(Date) %>%
