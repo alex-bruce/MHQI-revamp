@@ -131,12 +131,13 @@ output$hospital_admissions_table <- renderDataTable({
     arrange(desc(Date)) %>%
     select(Season, ISOWeek, Admissions, RatePer100000) %>%
     mutate(Season = factor(Season),
-           RatePer100000 = round(RatePer100000, 1),
+           #RatePer100000 = round(RatePer100000, 1),
            ISOWeek = factor(ISOWeek)) %>%
     rename(`ISO Week` = ISOWeek,
            `Number of Admissions` = Admissions,
            `Admission Rate per 100k` = RatePer100000) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(filter_cols = c(1,2),
+               add_separator_cols_1dp = 4)
 })
 
 
@@ -240,7 +241,8 @@ output$hospital_admissions_simd_table <- renderDataTable({
                   `Number of admissions` = NumberAdmissionsPerWeek,
                   `Admission Rate per 100k` = RateAdmissionsPerWeek,
                   `Is data provisional (p)?` = ProvisionalFlag) %>%
-    make_table(add_separator_cols = c(3),
+    make_table(add_separator_cols_1dp = c(4),
+               add_separator_cols = c(3),
                filter_cols = c(2,5))
 })
 

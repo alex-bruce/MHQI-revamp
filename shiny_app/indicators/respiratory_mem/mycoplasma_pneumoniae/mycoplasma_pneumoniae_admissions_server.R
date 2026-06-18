@@ -47,7 +47,8 @@ output$mpn_admissions_table <- renderDataTable({
     rename(`ISO Week` = ISOWeek,
            `Number of Admissions` = Admissions,
            `Admission Rate per 100k` = RatePer100000) %>%
-    make_table(filter_cols = c(1,2))
+    make_table(add_separator_cols_1dp = c(4),
+               filter_cols = c(1,2))
 })
 
 
