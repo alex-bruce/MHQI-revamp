@@ -40,8 +40,8 @@ make_hospital_admissions_simd_plot <- function(data){
               color=~SIMD,
               colors=c("#12436D", "lightgrey", "lightgrey", "lightgrey", "#28A197"),
               linetype = ~SIMD,
-#              linetypes = c("solid", "solid", "solid", "solid", "solid"),
-              linetypes = c("dash", "solid", "solid", "solid", "dot"),
+              linetypes = c("solid", "solid", "solid", "solid", "solid"),
+#              linetypes = c("dash", "solid", "solid", "solid", "dot"),
               hovertemplate = paste0('<b>Week number</b>: %{x}<br>',
                                      '<b>SIMD quintile</b>: %{text}<br>',
                                      '<b>Admission rate per 100k</b>: %{y}')
