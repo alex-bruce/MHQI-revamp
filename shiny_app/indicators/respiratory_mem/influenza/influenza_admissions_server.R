@@ -168,7 +168,8 @@ output$influenza_admissions_simd_table <- renderDataTable({
                   `Number of admissions` = NumberAdmissionsPerWeek,
                   `Admission Rate per 100k` = RateAdmissionsPerWeek,
                   `Is data provisional (p)?` = ProvisionalFlag) %>%
-    make_table(add_separator_cols = c(3),
+    make_table(add_separator_cols_1dp = c(4),
+               add_separator_cols = c(3),
                filter_cols = c(2,5))
 })
 

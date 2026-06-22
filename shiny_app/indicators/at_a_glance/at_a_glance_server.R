@@ -230,14 +230,14 @@ colnames(inpatients_intro)[2] <- paste("Seven day average number (", as.characte
 # Cases table
 output$cases_intro_table <- renderDataTable({
   cases_intro %>%
-   make_summary_table()
+   make_summary_table(add_separator_cols_1dp = c(3,5))
 
 })
 
 # Hospital admissions table
 output$hosp_adms_intro_table <- renderDataTable({
   hosp_adms_intro %>%
-    make_summary_table()
+    make_summary_table(add_separator_cols_1dp = c(3,5))
 
 })
 
