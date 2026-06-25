@@ -165,10 +165,10 @@ tagList(
                               fluidRow(
                                 column(4, pickerInput("flu_respiratory_season",
                                                       label = "Select a season",
-                                                      choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
-                                                          .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(6)},
-                                                      selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
-                                                          .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(1)})
+                                                      choices = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                          .$Season %>% unique() %>%  tail(6)},
+                                                      selected = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                          .$Season %>% unique() %>%  tail(1)})
                                 )
                               ),
                               altTextUI("influenza_age_sex"),

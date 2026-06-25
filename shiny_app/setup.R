@@ -127,6 +127,20 @@ resp_sum_order <- c(resp_order,
                    unique(Respiratory_Summary$Breakdown)[!(
                     unique(Respiratory_Summary$Breakdown) %in% resp_order)])
 
+## MEM file format updates
+
+Respiratory_Pathogens_Test_Positivity_by_Age %<>% 
+  arrange(year, ISOweek, pathogen, agegrp)
+
+Respiratory_Pathogens_MEM_Age %<>%
+  mutate(AgeGroup = factor(AgeGroup, 
+                levels = c("< 1 year", "1-4 years",
+                           "5-14 years", "15-44 years",
+                           "45-64 years", "65-74 years",
+                           "75+ years", "All ages"))) %>% 
+  arrange(desc(WeekEnding), AgeGroup)
+  
+
 # Duplicate of Respiratory_Summary where Breakdown col is a factor - needed for the
 # headline dropdown. Can't reassign to Respiratory_Summary for some reason
 # TODO: fix this!
@@ -148,7 +162,7 @@ prev_week_iso <- lubridate::isoweek(Respiratory_Summary_Totals$DatePreviousWeek[
 #### Respiratory MEM ####
 
 # season values
-all_seasons <- unique(Respiratory_AllData$Season)
+all_seasons <- unique(Respiratory_Pathogens_MEM_Scot$Season)
 recent_six_seasons <- tail(all_seasons,6)
 admission_seasons <- unique(Average_Length_of_Stay$Season)
 
@@ -193,9 +207,9 @@ mem_week_order <- c(1:52)
 
 # Age groups
 mem_age_groups <- c("< 1", "1-4", "5-14", "15-44", "45-64", "65-74",
-                    "75+", "All Ages")
+                    "75+", "All ages")
 mem_age_groups_full <- c("< 1 year", "1-4 years", "5-14 years", "15-44 years",
-                         "45-64 years", "65-74 years", "75+ years", "All Ages")
+                         "45-64 years", "65-74 years", "75+ years", "All ages")
 
 # Age groups
 euromomo_mem_age_groups <- c("0-4", "5-14", "15-64", "65+", "All Ages")

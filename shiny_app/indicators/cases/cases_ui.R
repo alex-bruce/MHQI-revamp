@@ -186,12 +186,12 @@ tagList(
                               fluidRow(
                                 column(4, pickerInput("covid_respiratory_season",
                                                       label = "Select a season",
-                                                      choices = {covid_cases_agesex_season %>% 
-                                                          filter(season >= "2023/2024") %>%
-                                                          .$season %>% unique()},
-                                                      selected = {covid_cases_agesex_season %>% 
-                                                          filter(season >= "2023/2024") %>%
-                                                          .$season %>% unique()})
+                                                      choices = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                          filter(Season >= "2023/24") %>%
+                                                          .$Season %>% unique()},
+                                                      selected = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                          filter(Season >= "2023/24") %>%
+                                                          .$Season %>% unique()})
                                 )
                               ),
                               altTextUI("covid_age_sex"),

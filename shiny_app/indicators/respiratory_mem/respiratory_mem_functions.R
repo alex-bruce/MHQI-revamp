@@ -325,6 +325,7 @@ create_mem_heatmap <- function(
     data <- data %>%
       mutate(
         Breakdown = gsub(" years", "", Breakdown),
+        Breakdown = gsub(" year", "", Breakdown),
         Breakdown = factor(Breakdown, levels = rev(mem_age_groups)),
         Breakdown_hover = Breakdown
       )

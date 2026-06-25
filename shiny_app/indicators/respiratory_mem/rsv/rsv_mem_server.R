@@ -61,10 +61,11 @@ output$rsv_positivity_age_table <- renderDataTable({
                   `Positive Samples` = positive_count,
                   `Test Positivity (%)` = positivity_percentage) %>%
     select(`Year`, `ISO Week`, `Age Group`, `Total Samples`, `Positive Samples`, `Test Positivity (%)`) %>%
-    arrange(desc(`Year`), desc(`ISO Week`)) %>%
     mutate(Year = as.factor(Year),
            `ISO Week` = as.factor(`ISO Week`),
-           `Age Group` = as.factor(`Age Group`)) %>%
+           `Age Group` = factor(`Age Group`, levels = c("< 1 year", "1-4 years", "5-14 years",
+                                                        "15-44 years", "45-64 years", "65-74 years",  "75+ years", "All ages", "Unknown"))) %>%
+    arrange(desc(`Year`), desc(`ISO Week`), `Age Group`) %>%
     make_table(filter_cols = c(1,2,3),
                add_separator_cols = c(4,5),
                add_separator_cols_1dp = c(6),
@@ -227,16 +228,9 @@ output$rsv_mem_age_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "Respiratory Syncytial Virus") %>%
     filter(Season %in% rsv_seasons) %>%
-    arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
-           AgeGroup = factor(AgeGroup, 
-                             levels = c("< 1 years", "1-4 years",
-                                        "5-14 years", "15-44 years",
-                                        "45-64 years", "65-74 years",
-                                        "75+ years", "All Ages"),
-                             labels = mem_age_groups_full),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     rename(`ISO Week` = ISOWeek,
            `Age Group`= AgeGroup,
@@ -244,6 +238,7 @@ output$rsv_mem_age_table <- renderDataTable({
            `Activity Level` = ActivityLevel) %>%
     make_table(add_separator_cols_1dp = c(4),
                filter_cols = c(1,2,3,5))
+  
 })
 
 
@@ -292,13 +287,13 @@ altTextServer("rsv_age_sex",
 
 # pyramid plot that shows the breakdown by age and sex
 output$rsv_age_sex_pyramid_plot = renderPlotly({
-  Respiratory_AllData %>%
-    filter(Pathogen == "RSV Season Total") %>%
-    filter(Season %in% recent_six_seasons) %>%
-    mutate(Season = gsub("/", "/20", Season)) %>%
-    mutate(Rate = round_half_up(Rate,1)) %>%
-    filter(scotland_by_age_sex_season_flag == 1,
+  Resp_Pathogens_Age_Sex_Season %>% 
+    filter(Pathogen == "Respiratory Syncytial Virus",
            Season == input$rsv_respiratory_season) %>%
+    mutate(RatePer100000 = round_half_up(RatePer100000,1)) %>%
+    mutate(Sex = substr(Sex,1,1)) %>%
+    mutate(AgeGroup = gsub(" years", "", AgeGroup),
+           AgeGroup = gsub(" year", "", AgeGroup)) %>%
     make_age_sex_pyramid_plot()#respiratory functions
   
 })
@@ -306,32 +301,22 @@ output$rsv_age_sex_pyramid_plot = renderPlotly({
 # Flu by age/sex/age and sex
 output$rsv_age_sex_pyramid_table = renderDataTable({
   
-  flu_age_sex_pyramid_table <- Respiratory_AllData %>%
-    filter(Pathogen == "RSV Season Total") %>%
-    filter(Season %in% recent_six_seasons) %>%
-    mutate(Season = gsub("/", "/20", Season)) %>%
-    filter(scotland_by_age_sex_season_flag == 1) %>%
-    select(Season, AgeGroup, Sex, Rate) %>%
-    mutate(Season = factor(Season)) %>%
-    mutate(Rate = round_half_up(Rate,1)) %>%
+  Resp_Pathogens_Age_Sex_Season %>% 
+    filter(Pathogen == "Respiratory Syncytial Virus",
+           Season %in% recent_six_seasons) %>%
     arrange(desc(Season), AgeGroup, Sex) %>%
-    dplyr::rename("Season" = "Season",
-                  "Age Group" = "AgeGroup",
-                  "Rate per 100,000 population" = "Rate") %>%
-    mutate(Sex = case_when(
-      Sex == "F" ~ "Female",
-      Sex == "M" ~ "Male",
-      TRUE ~ NA_character_
-    )) %>%
-    mutate(`Age Group` = paste0(`Age Group`, " years")) %>%
+    dplyr::rename("Age Group" = "AgeGroup",
+                  "Rate per 100,000 population" = "RatePer100000") %>%
     mutate(Sex = factor(Sex, levels = c("Female", "Male")),
            `Age Group` = factor(`Age Group`, levels =
-                                  c("<1 years", "1-4 years", "5-14 years",
+                                  c("< 1 year", "1-4 years", "5-14 years",
                                     "15-44 years", "45-64 years", "65-74 years", 
                                     "75+ years"))) %>%
     arrange(desc(`Season`), `Age Group`, Sex) %>%
+    select(Season, `Age Group`, Sex, `Rate per 100,000 population`) %>%
     make_table(add_separator_cols_1dp = c(4),
                filter_cols = c(1,2,3))
+  
   
 })
 

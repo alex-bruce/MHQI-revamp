@@ -99,10 +99,11 @@ create_positivity_age_chart <- function(data){
   plot_data <- data %>%  
     mutate(WeekNumber = ISOweek,
            WeekNumber = factor(WeekNumber, levels = week_order), 
-           agegrp = factor(agegrp, levels = c("Under 1", "1-4", "5-14",
-                                                  "15-44", "45-64", "65-74",  "Over 75", "All ages"),
-                             labels = c("Under 1", "1 to 4", "5 to 14",
-                                        "15 to 44", "45 to 64", "65 to 74",  "Over 75", "All ages"))) #%>%
+           agegrp = factor(agegrp, levels = c("< 1 year", "1-4 years", "5-14 years",
+                                                  "15-44 years", "45-64 years", "65-74 years",  "75+ years", "All ages")#,
+                             # labels = c("Under 1", "1 to 4", "5 to 14",
+                             #            "15 to 44", "45 to 64", "65 to 74",  "Over 75", "All ages")
+                             )) #%>%
   #filter(Season == "2025-2026")
   
   

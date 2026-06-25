@@ -197,25 +197,25 @@ make_respiratory_trend_by_season_plot_function <- function(data, y_axis_title) {
 # creates a plot looking at age/sex breakdowns in scotland
 make_age_sex_pyramid_plot <- function(data, title = NULL) {
   data %<>%
-    mutate(Rate = case_when(
-      Sex == "F" ~ -Rate,
-      TRUE ~ Rate)) %>%
+    mutate(RatePer100000 = case_when(
+      Sex == "F" ~ -RatePer100000,
+      TRUE ~ RatePer100000)) %>%
     mutate_if(is.numeric, ~replace_na(., 0)) %>%
-    mutate(AgeGroup = factor(AgeGroup, levels = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+"))) %>%
+    mutate(AgeGroup = factor(AgeGroup, levels = c("< 1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+"))) %>%
     mutate(Sex = case_when(
       Sex == "F" ~ "Female",
       Sex == "M" ~ "Male",
       TRUE ~ NA_character_
     ))
 
-  xaxis_breaks <- pretty(c(-max(data$Rate), 0, max(data$Rate)))
-  yaxis_ticks <- list("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")
+  xaxis_breaks <- pretty(c(-max(data$RatePer100000), 0, max(data$RatePer100000)))
+  yaxis_ticks <- list("< 1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")
   yaxis_ticks <- list(categoryorder = "array",
-                      categoryarray = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+"))
+                      categoryarray = c("< 1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+"))
 
 
   fig = data %>%
-    plot_ly(x= ~Rate,
+    plot_ly(x= ~RatePer100000,
             y= ~AgeGroup,
             color = ~Sex,
             type = 'bar',
@@ -223,7 +223,7 @@ make_age_sex_pyramid_plot <- function(data, title = NULL) {
             text = ~paste0("<b>Season</b>: ", Season, "\n",
                            "<b>Sex</b>: ", Sex, "\n",
                            "<b>Age Group</b>: ", AgeGroup, "\n",
-                           "<b>Rate per 100,000 population</b>: ", format(abs(Rate), big.mark=",")),
+                           "<b>Rate per 100,000 population</b>: ", format(abs(RatePer100000), big.mark=",")),
             hoverinfo = "text",
             #hovertemplate = "%{text}",
             colors = c("#12436D", "#28A197")) %>%
@@ -234,7 +234,7 @@ make_age_sex_pyramid_plot <- function(data, title = NULL) {
         title = "Rate per 100,000 population",
         showline = TRUE,
         linecolor = 'black',
-        range = c(-max(data$Rate), max(data$Rate))
+        range = c(-max(data$RatePer100000), max(data$RatePer100000))
       ),
       yaxis = list(yaxis_ticks,
                    title = "Age Group"),
