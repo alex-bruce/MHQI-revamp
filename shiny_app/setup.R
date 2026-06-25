@@ -88,44 +88,17 @@ if (config::get()$online){
 
 ######
 
-# Respiratory factor
+## Recode flu subtypes
 
-resp_order <- c("Type A (any subtype)",
-                "Type A(H1N1)pdm09",
-                "Type A(H3)",
-                "Type A (not subtyped)",
-                "Type B",
-                "Type A or B",
-                "Adenovirus",
-                "Human metapneumovirus",
-                "Mycoplasma pneumoniae",
-                "Parainfluenza virus",
-                "Respiratory syncytial virus",
-                "Rhinovirus",
-                "Seasonal coronavirus (Non-SARS-CoV-2)",
-                "Total")
+Flu_Subtype_Cases %<>% 
+  mutate(Pathogen = recode(Pathogen,
+                           "Influenza (A or B)" = "Type A or B",
+                           "Influenza A (Any Subtype)" = "Type A (any subtype)",
+                           "Influenza A (Subtype Not Known)" = "Type A (not subtyped)",
+                           "Influenza A(H1N1)pdm09" = "Type A(H1N1)pdm09",
+                           "Influenza A(H3)" = "Type A(H3)",
+                           "Influenza B" = "Type B")) 
 
-Respiratory_AllData %<>%
-  mutate(Organism = recode(Organism, 
-         "Influenza - Type A (any subtype)" = "Type A (any subtype)",
-         "Influenza - Type A(H1N1)pdm09" = "Type A(H1N1)pdm09",
-         "Influenza - Type A(H3)" = "Type A(H3)",
-         "Influenza - Type A (not subtyped)" = "Type A (not subtyped)",
-         "Influenza - Type B" = "Type B",
-         "Influenza - Type A or B" = "Type A or B"
-         )) %>% 
-  mutate(
-         AgeGroup = factor(AgeGroup,
-                           levels = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")
-                           ),
-         Organism = factor(Organism,
-                           levels = resp_order
-          )
-         )
-
-resp_sum_order <- c(resp_order,
-                   unique(Respiratory_Summary$Breakdown)[!(
-                    unique(Respiratory_Summary$Breakdown) %in% resp_order)])
 
 ## MEM file format updates
 
@@ -139,24 +112,10 @@ Respiratory_Pathogens_MEM_Age %<>%
                            "45-64 years", "65-74 years",
                            "75+ years", "All ages"))) %>% 
   arrange(desc(WeekEnding), AgeGroup)
-  
 
-# Duplicate of Respiratory_Summary where Breakdown col is a factor - needed for the
-# headline dropdown. Can't reassign to Respiratory_Summary for some reason
-# TODO: fix this!
-Respiratory_Summary_Factor <- Respiratory_Summary %>%
-  mutate(Breakdown = factor(Breakdown,levels = resp_sum_order)) %>% arrange(Breakdown)
-
-# respiratory headline figures
-flu_icon_headline <- Respiratory_Summary_Totals %>%
-  mutate(icon = case_when(PercentageDifference > 0 ~ "arrow-up",
-                          PercentageDifference < 0 ~ "arrow-down",
-                          PercentageDifference == 0 ~ "equals"))
 
 # respiratory isoweeks
-this_week_iso <- lubridate::isoweek(Respiratory_Summary_Totals$DateThisWeek[1])
-prev_week_iso <- lubridate::isoweek(Respiratory_Summary_Totals$DatePreviousWeek[1])
-
+this_week_iso <- lubridate::isoweek(Resp_cases_recent_weeks$DateThisWeek[1])
 
 
 #### Respiratory MEM ####
