@@ -119,40 +119,33 @@ output$seasonal_coronavirus_mem_table <- renderDataTable({
                filter_cols = c(1,2,4))
 })
 
-# seasonal coronavirus MEM by HB table
-output$seasonal_coronavirus_mem_hb_table <- renderDataTable({
-  Respiratory_Pathogens_MEM_HB %>%
-    filter(Pathogen == "Coronavirus") %>%
-    filter(Season %in% seasonal_coronavirus_seasons) %>%
-    arrange(desc(WeekEnding)) %>%
-    select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
-    mutate(Season = factor(Season),
-           ISOWeek = factor(ISOWeek),
-           HBName = factor(HBName),
-           ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
-    rename(`ISO Week` = ISOWeek,
-           `NHS Health Board`= HBName,
-           `Rate per 100,000` = RatePer100000,
-           `Activity Level` = ActivityLevel) %>%
-    make_table(add_separator_cols_1dp = c(4),
-               filter_cols = c(1,2,3,5))
-})
+# # seasonal coronavirus MEM by HB table
+# output$seasonal_coronavirus_mem_hb_table <- renderDataTable({
+#   Respiratory_Pathogens_MEM_HB %>%
+#     filter(Pathogen == "Coronavirus") %>%
+#     filter(Season %in% seasonal_coronavirus_seasons) %>%
+#     arrange(desc(WeekEnding)) %>%
+#     select(Season, ISOWeek, HBName, RatePer100000, ActivityLevel) %>%
+#     mutate(Season = factor(Season),
+#            ISOWeek = factor(ISOWeek),
+#            HBName = factor(HBName),
+#            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
+#     rename(`ISO Week` = ISOWeek,
+#            `NHS Health Board`= HBName,
+#            `Rate per 100,000` = RatePer100000,
+#            `Activity Level` = ActivityLevel) %>%
+#     make_table(add_separator_cols_1dp = c(4),
+#                filter_cols = c(1,2,3,5))
+# })
 
 # seasonal coronavirus MEM by Age table
 output$seasonal_coronavirus_mem_age_table <- renderDataTable({
   Respiratory_Pathogens_MEM_Age %>%
     filter(Pathogen == "Coronavirus") %>%
     filter(Season %in% seasonal_coronavirus_seasons) %>%
-    arrange(desc(WeekEnding)) %>%
     select(Season, ISOWeek, AgeGroup, RatePer100000, ActivityLevel) %>%
     mutate(Season = factor(Season),
            ISOWeek = factor(ISOWeek),
-           AgeGroup = factor(AgeGroup, 
-                             levels = c("< 1 years", "1-4 years",
-                                        "5-14 years", "15-44 years",
-                                        "45-64 years", "65-74 years",
-                                        "75+ years", "All Ages"),
-                             labels = mem_age_groups_full),
            ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
     rename(`ISO Week` = ISOWeek,
            `Age Group`= AgeGroup,
@@ -160,6 +153,7 @@ output$seasonal_coronavirus_mem_age_table <- renderDataTable({
            `Activity Level` = ActivityLevel) %>%
     make_table(add_separator_cols_1dp = c(4),
                filter_cols = c(1,2,3,5))
+  
 })
 
 
@@ -171,14 +165,14 @@ output$seasonal_coronavirus_mem_plot <- renderPlotly({
 
 })
 
-# seasonal coronavirus MEM by HB plot
-output$seasonal_coronavirus_mem_hb_plot <- renderPlotly({
-  Respiratory_Pathogens_MEM_HB %>%
-    filter(Pathogen == "Coronavirus") %>%
-    mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
-    create_mem_heatmap(breakdown_variable = "HBCode")
-
-})
+# # seasonal coronavirus MEM by HB plot
+# output$seasonal_coronavirus_mem_hb_plot <- renderPlotly({
+#   Respiratory_Pathogens_MEM_HB %>%
+#     filter(Pathogen == "Coronavirus") %>%
+#     mutate(ActivityLevel = factor(ActivityLevel, levels = activity_levels)) %>%
+#     create_mem_heatmap(breakdown_variable = "HBCode")
+# 
+# })
 
 
 # seasonal coronavirus MEM by Age plot

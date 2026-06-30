@@ -2,8 +2,8 @@
 
 # Data preparation for app
 
-# This script loads data from Clinical_Prioritisation/data/processed_data
-# and saves out .rds files needed for running the dashboard to the shiny_app/data folder
+# This script converts the dashboardinput files to .rds files, and mvoes them to the shiny_app/data folder in
+# the analyst's analyst space to enable them to run the dashboard
 
 rm(list = ls())
 gc()
@@ -15,8 +15,7 @@ if (!is.null(project_directory)){ setwd(project_directory) }
 # Create output directory
 dir.create(here::here("shiny_app", "data"))
 
-output_folder <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Output/"
-#data_dictionary_folder <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Data Dictionaries/"
+dash_input_folder <- "/conf/C19_Test_and_Protect/Test & Protect - Warehouse/Weekly Covid Dashboard/Dashboard_Inputs/"
 shiny_data_folder <- "shiny_app/data/"
 
 
@@ -37,12 +36,9 @@ copy_to_shiny_data <- function(csv, startloc){
 }
 
 # Copy all csv files in processed_data to shiny_data as rds files
-files =  list.files(path=output_folder, pattern = ".csv")
-purrr::walk(files, copy_to_shiny_data, startloc = output_folder)
+files =  list.files(path=dash_input_folder, pattern = ".csv")
+purrr::walk(files, copy_to_shiny_data, startloc = dash_input_folder)
 
-# # Now get all data dictionaries
-# dictionary_files = list.files(path=data_dictionary_folder)
-# purrr::walk(dictionary_files, copy_to_shiny_data, startloc = data_dictionary_folder)
 
 
 

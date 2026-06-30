@@ -5,43 +5,37 @@ flu_cases_seasons <-
   unique() %>% 
   tail(6)
 
+flu_cases_recent_week <- Resp_cases_recent_weeks %>% 
+  filter(Pathogen == "Influenza") %>% 
+  select(-Pathogen)
+
 tagList(
   fluidRow(width = 12,
            tabPanel(stringr::str_to_sentence("influenza"),
                     # headline figures for the week in Scotland
 
                     tagList(h2(glue("Summary of laboratory-confirmed influenza cases in Scotland")),
-
                             tags$div(class = "headline",
                                      br(),
                                      # previous week total number
-                                     valueBox(value = {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
-                                         .$CountPreviousWeek %>% format(big.mark=",")},
-                                         subtitle = tagList(tags$strong(glue("({format(round_half_up(Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>% 
-                                              .$RatePreviousWeek,1), nsmall = 1)} per 100,000)")),
-                                         tags$br(),
-                                              glue("Week ending {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
-                                                .$DatePreviousWeek %>% format('%d %b %y')}")),
-                                         color = "navy",
-                                         icon = icon_no_warning_fn("calendar-week")),
-                                     # this week total number
-                                     valueBox(value = {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
-                                         .$CountThisWeek %>% format(big.mark=",")},
-                                         subtitle = tagList(tags$strong(glue("({format(round_half_up(Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>% 
-                                              .$RateThisWeek,1), nsmall = 1)} per 100,000)")),
-                                         tags$br(),
-                                              glue("Week ending {Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
-                                                .$DateThisWeek %>% format('%d %b %y')}")),
-                                         color = "navy",
-                                         icon = icon_no_warning_fn("calendar-week")),
-                                     # percentage difference between the previous weeks
-                                     valueBox(value = glue("{Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
-                                                  .$PercentageDifference}%"),
-                                              subtitle = glue("{Respiratory_Summary_Totals %>% filter(FluOrNonFlu == 'flu') %>%
-                                                     .$ChangeFactor %>% str_to_sentence()} in the last week"),
+                                     valueBox(value = {flu_cases_recent_week %>% .$CasesLastWeek %>% format(big.mark=",")},               
+                                              subtitle = tagList(tags$strong(glue("({format(flu_cases_recent_week %>% .$RateLastWeek, nsmall = 1)} per 100,000)")),
+                                                                 br(),
+                                                                 glue("Week ending {flu_cases_recent_week %>% .$DateLastWeek%>% format('%d %b %y')}")),
                                               color = "navy",
-                                              icon = icon_no_warning_fn({flu_icon_headline %>% filter(FluOrNonFlu == 'flu') %>%
-                                                  .$icon})),
+                                              icon = icon_no_warning_fn("calendar-week")),
+                                     # this week total number
+                                     valueBox(value = {flu_cases_recent_week %>% .$CasesThisWeek %>% format(big.mark=",")},
+                                              subtitle = tagList(tags$strong(glue("({format(flu_cases_recent_week %>% .$RateThisWeek, nsmall = 1)} per 100,000)")),
+                                                                 tags$br(),
+                                                                 glue("Week ending {flu_cases_recent_week %>% .$DateThisWeek%>% format('%d %b %y')}")),
+                                              color = "navy",
+                                              icon = icon_no_warning_fn("calendar-week")),
+                                     # percentage difference between the previous weeks
+                                     valueBox(value = glue("{round(flu_cases_recent_week%>% .$PercentageDifference, 1)}%"),
+                                              subtitle = glue("{flu_cases_recent_week %>%.$ChangeFactor %>%  str_to_sentence()} in the last week"),
+                                              color = "navy",
+                                              icon = icon_no_warning_fn({flu_cases_recent_week %>%  .$icon})),
                                      # This text is hidden by css but helps pad the box at the bottom
                                      h6("hidden text for padding page")
                             )))), # headline
@@ -165,10 +159,10 @@ tagList(
                               fluidRow(
                                 column(4, pickerInput("flu_respiratory_season",
                                                       label = "Select a season",
-                                                      choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
-                                                          .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(6)},
-                                                      selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "flu") %>%
-                                                          .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(1)})
+                                                      choices = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                          .$Season %>% unique() %>%  tail(6)},
+                                                      selected = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                          .$Season %>% unique() %>%  tail(1)})
                                 )
                               ),
                               altTextUI("influenza_age_sex"),

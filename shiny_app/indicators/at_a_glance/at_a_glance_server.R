@@ -1,19 +1,18 @@
 ### Setup data -----
 #cases labels-(matches covid-cases data set)
 
-latest_week_cases_title <- Cases_Weekly %>%
+latest_week_cases_title <- Resp_cases_recent_weeks %>%
   tail(1) %>%
-  select(WeekEnding) %>%
-  convert_opendata_date()
+  select(DateThisWeek) %>% 
+  pull()
 
 latest_week_cases_title %<>%
     format("%d %b %y")
 
-previous_week_cases_title <- Cases_Weekly %>%
-  tail(2) %>%
-  filter(WeekEnding== min(WeekEnding)) %>%
-  select(WeekEnding) %>%
-  convert_opendata_date()
+previous_week_cases_title <- Resp_cases_recent_weeks %>%
+  tail(1) %>%
+  select(DateLastWeek) %>% 
+  pull()
 
 previous_week_cases_title %<>%
   format("%d %b %y")
@@ -41,30 +40,8 @@ previous_week_admissions_title <- admissions_scotland %>%
 # make it a value
 previous_week_admissions_title <- previous_week_admissions_title$WeekEnding
 
-# occupancy labels- (uses weekly covid HB occupancy i.e. same dataframe that produces the table)
 
-# latest_week_occupancy_title<- Occupancy_Weekly_Hospital_HB %>%
-#      filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
-#      tail(1) %>%
-#      select(Date=WeekEnding)
-# # Convert to the correct format
-# latest_week_occupancy_title$Date<- format(latest_week_occupancy_title$Date, "%d %b %y")
-# 
-# # Convert to the correct format
-# latest_week_occupancy_title<-latest_week_occupancy_title$Date
-# 
-# previous_week_occupancy_title<- Occupancy_Weekly_Hospital_HB %>%
-#      filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
-#      tail(2) %>%
-#      select(Date=WeekEnding) %>%
-#      filter(Date== min(Date))
-# 
-# # Convert to the correct format
-#    previous_week_occupancy_title$Date<- format(previous_week_occupancy_title$Date, "%d %b %y")
-# 
-# # makle it a value
-#    previous_week_occupancy_title<- previous_week_occupancy_title$Date
-
+## Occupancy labels
 latest_week_occupancy_title <- occupancy_rapid_new %>%
   tail(1) %>%
   select(WeekEnding) %>%
@@ -78,77 +55,22 @@ previous_week_occupancy_title <- occupancy_rapid_new %>%
   mutate(WeekEnding = format(WeekEnding, "%d %b %y")) %>%
   .$WeekEnding
 
-# create value to produce population rate values
-pop_scot_total <- i_population_v2 %>%
-  filter(AgeGroup == "Total", Sex == "Total") %>%
-  .$PopNumber
-
 
 ### Cases
 
-# create intermediate data frames for covid,flu and non-flu pathogens
-# limit  each data frame to the last 2 weeks and add a flag latest week /previous week
-# pivot the tables by dates
-# Order the pathogens in a consistent manner
-# join into one table
-# rename and add week titles for the dashboard
-
-covid_cases_intro <- Cases_Weekly %>%
-  tail(2) %>% # retain last 2 weeks
-  rename(cases_number =NumberCasesPerWeek) %>%
-  mutate(cases_rate = round_half_up(100000 * cases_number / pop_scot_total,1)) %>%
-  mutate(flag = ifelse(WeekEnding ==max(WeekEnding), "latest_week", "previous_week")) %>%
-  select(-Cumulative, -WeekEnding) %>%
-  pivot_wider(names_from = flag, values_from = cases_number:cases_rate) %>%
-  mutate(Pathogen = "COVID-19")
-
-flu_cases_intro <- Respiratory_AllData %>%
-  arrange(Date) %>% 
-  filter(FluOrNonFlu == "flu") %>%
-  filter(Organism == "Type A or B") %>%
-  filter(BreakDown == "Scotland") %>%
-  tail(2) %>%
-  group_by(Date) %>%
-  summarise(cases_number = sum(Count)) %>%
-  ungroup() %>%
-  mutate(cases_rate = round_half_up(100000 * cases_number / pop_scot_total,1)) %>%
-  mutate(flag = ifelse(Date==max(Date), "latest_week", "previous_week")) %>%
-  select(-Date) %>%
-  pivot_wider(names_from = flag, values_from = cases_number:cases_rate) %>%
-  mutate(Pathogen = "Influenza")
-
-nonflu_cases_intro <- Respiratory_AllData %>%
-  arrange(Date) %>% 
-  filter(FluOrNonFlu == "nonflu") %>%
-  filter(Organism != "Total") %>%
-  filter(BreakDown == "Scotland") %>%
-     tail(14) %>% # 7 pathogens, last 2 weeks
-  group_by(Date, Organism) %>%
-  summarise(cases_number = sum(Count)) %>%# simplify the dataframe
-  ungroup() %>%
-  mutate(flag = ifelse(Date==max(Date), "latest_week", "previous_week")) %>% # add flag
-  select(-Date) %>%
-  mutate(cases_rate = round_half_up(100000 * cases_number / pop_scot_total,1)) %>%
-  pivot_wider(names_from = flag, values_from = cases_number:cases_rate) %>%
-  select(-c(flag_latest_week, flag_previous_week)) %>%
-  rename(Pathogen = Organism) %>%
-  mutate(Pathogen = recode(Pathogen, "Seasonal coronavirus (Non-SARS-CoV-2)"="Seasonal Coronavirus (non-COVID-19)")) %>%
-  mutate(Pathogen =  factor(Pathogen, levels = c("Respiratory syncytial virus", "Adenovirus", "Human metapneumovirus",
+cases_intro <- Resp_cases_recent_weeks %>% 
+  select(Pathogen, CasesLastWeek, RateLastWeek, CasesThisWeek, RateThisWeek) %>% 
+  mutate(Pathogen = recode(Pathogen, 
+                           "Coronavirus"="Seasonal Coronavirus (non-COVID-19)",
+                           "Covid-19" = "COVID-19",
+                           "Human Metapneumovirus" = "Human metapneumovirus",
+                           "Parainfluenza Virus" = "Parainfluenza virus",
+                           "Respiratory Syncytial Virus" = "Respiratory syncytial virus")) %>%
+  mutate(Pathogen =  factor(Pathogen, levels = c("COVID-19", "Influenza", "Respiratory syncytial virus", "Adenovirus", 
+                                                 "Human metapneumovirus",
                                                  "Mycoplasma pneumoniae", "Parainfluenza virus", "Rhinovirus",
                                                  "Seasonal Coronavirus (non-COVID-19)"))) %>%
   arrange(Pathogen)
-
-# combine the three intermediate dataframes
-cases_intro <- covid_cases_intro %>%
-  bind_rows(flu_cases_intro) %>%
-  bind_rows(nonflu_cases_intro) %>%
-  select(Pathogen,
-         'Number of cases (previous week)'= cases_number_previous_week,
-         'Rate per 100,000 population (previous week)'= cases_rate_previous_week,
-         'Number of cases (latest week)'= cases_number_latest_week,
-         'Rate per 100,000 population (latest week)'= cases_rate_latest_week
-         )
-
 
 colnames(cases_intro)[4] <- paste("Number of cases (", as.character(latest_week_cases_title),")")
 colnames(cases_intro)[5] <- paste("Rate per 100,000 population (", as.character(latest_week_cases_title),")")
@@ -169,7 +91,6 @@ hosp_adms_intro <- admissions_scotland %>%
   tail(18) %>%
   mutate(flag = ifelse(WeekEnding==max(WeekEnding), "latest_week", "previous_week")) %>%
   select(-WeekEnding) %>%
-  #mutate(admissions_rate = round_half_up(100000 * Admissions / pop_scot_total,1)) %>%
   select(flag, Pathogen, admissions_number = NumberAdmissionsPerWeek,
          admissions_rate=RateAdmissionsPerWeek) %>%
    pivot_wider(names_from = flag, values_from = admissions_number:admissions_rate) %>%
@@ -195,24 +116,6 @@ colnames(hosp_adms_intro)[2] <- paste("Number of admissions (", as.character(pre
 colnames(hosp_adms_intro)[3] <- paste("Rate of admissions per 100,000 population (", as.character(previous_week_admissions_title),")")
 
 ###Inpatients
-# only one data frame at the moment for Covid inpatients
-# limit data frame to the last 2 weeks and add a flag latest week /previous week
-# pivot the tables by flags
-# Order the pathogens in a consistent manner
-# join into one table
-# rename and add week titles for the dashboard
-
-# covid_inpatients_intro <- Occupancy_Weekly_Hospital_HB %>%
-#   filter(HealthBoardQF== "d") %>%#use weekly value, filter to Scotland
-#   tail(2) %>% #last 2 weeks
-#   mutate(flag= if_else(WeekEnding_od==max(WeekEnding_od),"Latest Week", "Previous Week")) %>% #add flags
-#   select(flag, SevenDayAverage) %>%
-#   pivot_wider(names_from = flag, values_from = SevenDayAverage) %>%
-#   mutate(Pathogen = "COVID-19") %>%
-#   select(Pathogen, `Previous Week`, `Latest Week`)
-# 
-# colnames(covid_inpatients_intro)[3] <- paste("Seven day average number (", as.character(latest_week_occupancy_title),")")
-# colnames(covid_inpatients_intro)[2] <- paste("Seven day average number (", as.character(previous_week_occupancy_title),")")
 
 inpatients_intro <- occupancy_rapid_new %>%
   tail(6) %>%

@@ -88,67 +88,43 @@ if (config::get()$online){
 
 ######
 
-# Respiratory factor
+## Recode flu subtypes
 
-resp_order <- c("Type A (any subtype)",
-                "Type A(H1N1)pdm09",
-                "Type A(H3)",
-                "Type A (not subtyped)",
-                "Type B",
-                "Type A or B",
-                "Adenovirus",
-                "Human metapneumovirus",
-                "Mycoplasma pneumoniae",
-                "Parainfluenza virus",
-                "Respiratory syncytial virus",
-                "Rhinovirus",
-                "Seasonal coronavirus (Non-SARS-CoV-2)",
-                "Total")
+Flu_Subtype_Cases %<>% 
+  mutate(Pathogen = recode(Pathogen,
+                           "Influenza (A or B)" = "Type A or B",
+                           "Influenza A (Any Subtype)" = "Type A (any subtype)",
+                           "Influenza A (Subtype Not Known)" = "Type A (not subtyped)",
+                           "Influenza A(H1N1)pdm09" = "Type A(H1N1)pdm09",
+                           "Influenza A(H3)" = "Type A(H3)",
+                           "Influenza B" = "Type B")) 
 
-Respiratory_AllData %<>%
-  mutate(Organism = recode(Organism, 
-         "Influenza - Type A (any subtype)" = "Type A (any subtype)",
-         "Influenza - Type A(H1N1)pdm09" = "Type A(H1N1)pdm09",
-         "Influenza - Type A(H3)" = "Type A(H3)",
-         "Influenza - Type A (not subtyped)" = "Type A (not subtyped)",
-         "Influenza - Type B" = "Type B",
-         "Influenza - Type A or B" = "Type A or B"
-         )) %>% 
-  mutate(
-         AgeGroup = factor(AgeGroup,
-                           levels = c("<1", "1-4", "5-14", "15-44", "45-64", "65-74", "75+")
-                           ),
-         Organism = factor(Organism,
-                           levels = resp_order
-          )
-         )
 
-resp_sum_order <- c(resp_order,
-                   unique(Respiratory_Summary$Breakdown)[!(
-                    unique(Respiratory_Summary$Breakdown) %in% resp_order)])
+## MEM file format updates
 
-# Duplicate of Respiratory_Summary where Breakdown col is a factor - needed for the
-# headline dropdown. Can't reassign to Respiratory_Summary for some reason
-# TODO: fix this!
-Respiratory_Summary_Factor <- Respiratory_Summary %>%
-  mutate(Breakdown = factor(Breakdown,levels = resp_sum_order)) %>% arrange(Breakdown)
+Respiratory_Pathogens_Test_Positivity_by_Age %<>% 
+  arrange(year, ISOweek, pathogen, agegrp)
 
-# respiratory headline figures
-flu_icon_headline <- Respiratory_Summary_Totals %>%
-  mutate(icon = case_when(PercentageDifference > 0 ~ "arrow-up",
-                          PercentageDifference < 0 ~ "arrow-down",
-                          PercentageDifference == 0 ~ "equals"))
+Respiratory_Pathogens_MEM_Age %<>%
+  mutate(AgeGroup = factor(AgeGroup, 
+                levels = c("< 1 year", "1-4 years",
+                           "5-14 years", "15-44 years",
+                           "45-64 years", "65-74 years",
+                           "75+ years", "All ages"))) %>% 
+  arrange(desc(WeekEnding), AgeGroup)
+
+## Admissions by age file format
+
+
 
 # respiratory isoweeks
-this_week_iso <- lubridate::isoweek(Respiratory_Summary_Totals$DateThisWeek[1])
-prev_week_iso <- lubridate::isoweek(Respiratory_Summary_Totals$DatePreviousWeek[1])
-
+this_week_iso <- lubridate::isoweek(Resp_cases_recent_weeks$DateThisWeek[1])
 
 
 #### Respiratory MEM ####
 
 # season values
-all_seasons <- unique(Respiratory_AllData$Season)
+all_seasons <- unique(Respiratory_Pathogens_MEM_Scot$Season)
 recent_six_seasons <- tail(all_seasons,6)
 admission_seasons <- unique(Average_Length_of_Stay$Season)
 
@@ -193,9 +169,9 @@ mem_week_order <- c(1:52)
 
 # Age groups
 mem_age_groups <- c("< 1", "1-4", "5-14", "15-44", "45-64", "65-74",
-                    "75+", "All Ages")
+                    "75+", "All ages")
 mem_age_groups_full <- c("< 1 year", "1-4 years", "5-14 years", "15-44 years",
-                         "45-64 years", "65-74 years", "75+ years", "All Ages")
+                         "45-64 years", "65-74 years", "75+ years", "All ages")
 
 # Age groups
 euromomo_mem_age_groups <- c("0-4", "5-14", "15-64", "65+", "All Ages")
@@ -208,7 +184,8 @@ data_recent_date <- floor_date(as.Date(Deployment_Date, format = "%d %B %Y"), "w
 
 # Relabel age groups for admissions
 
-admissions_age %<>% mutate(AgeGroup = factor(AgeGroup, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
+admissions_age %<>% mutate(#ISOweek = as.numeric(ISOweek),
+                           AgeGroup = factor(AgeGroup, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
                                                                   "65-74", "75+", "Total"),
                                              labels=mem_age_groups_full)) 
 

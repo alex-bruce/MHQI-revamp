@@ -5,34 +5,11 @@ cov_cases_seasons <-
   unique() %>% 
   tail(3)
 
-# create values for headline boxes
-pop_scot_total <- i_population_v2 %>%
-  filter(AgeGroup == "Total", Sex == "Total") %>%
-  .$PopNumber
 
+cov_cases_recent_week <- Resp_cases_recent_weeks %>% 
+  filter(Pathogen == "Covid-19") %>% 
+  select(-Pathogen)
 
-cov_cases_recent_week <- Cases_Weekly %>%
-  mutate(WeekEnding = convert_opendata_date(WeekEnding)) %>%
-  tail(2) %>%
-  select(-Cumulative) %>%
-  rename(Date = WeekEnding) %>%
-  mutate(DateLastWeek = .$Date[1],
-         DateThisWeek = .$Date[2],
-         CasesLastWeek = .$`NumberCasesPerWeek`[1],
-         CasesThisWeek = .$`NumberCasesPerWeek`[2],
-         PercentageDifference = round((CasesThisWeek/CasesLastWeek - 1)*100, digits = 2),
-         RateLastWeek = round_half_up(100000 *  .$`NumberCasesPerWeek`[1]/pop_scot_total,1),
-         RateThisWeek = round_half_up(100000 *  .$`NumberCasesPerWeek`[2]/pop_scot_total,1)) %>%
-  mutate(ChangeFactor = case_when(
-    PercentageDifference < 0 ~ "Decrease",
-    PercentageDifference > 0 ~ "Increase",
-    TRUE                     ~ "No change"),
-    icon= case_when(ChangeFactor == "Decrease"~"arrow-down",
-                    ChangeFactor == "Increase"~ "arrow-up",
-                    ChangeFactor == "No change"~"equals")
-  ) %>%
-  select(DateLastWeek, DateThisWeek, CasesLastWeek, CasesThisWeek, PercentageDifference, RateLastWeek, RateThisWeek, ChangeFactor, icon) %>%
-  head(1)
 
 ###
 tagList(
@@ -186,12 +163,12 @@ tagList(
                               fluidRow(
                                 column(4, pickerInput("covid_respiratory_season",
                                                       label = "Select a season",
-                                                      choices = {covid_cases_agesex_season %>% 
-                                                          filter(season >= "2023/2024") %>%
-                                                          .$season %>% unique()},
-                                                      selected = {covid_cases_agesex_season %>% 
-                                                          filter(season >= "2023/2024") %>%
-                                                          .$season %>% unique()})
+                                                      choices = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                          filter(Season >= "2023/24") %>%
+                                                          .$Season %>% unique()},
+                                                      selected = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                          filter(Season >= "2023/24") %>%
+                                                          .$Season %>% unique()})
                                 )
                               ),
                               altTextUI("covid_age_sex"),

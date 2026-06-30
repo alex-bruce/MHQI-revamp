@@ -5,38 +5,12 @@ rsv_cases_seasons <-
   unique() %>% 
   tail(6)
 
-# create values for headline boxes
-pop_scot_total <- i_population_v2 %>%
-  filter(AgeGroup == "Total", Sex == "Total") %>%
-  .$PopNumber
 
-rsv_cases_recent_week <- Respiratory_AllData %>%
-  filter(Organism == "Respiratory syncytial virus") %>%
-  filter(Measure == "Scotland") %>%
-  arrange(Date) %>% 
-  select(-Pathogen) %>% 
-  rename(Pathogen = Organism,
-         NumberCasesPerWeek = Count) %>%
-  select(Date, Pathogen, NumberCasesPerWeek) %>% 
-  tail(2) %>%
-  mutate(DateLastWeek = .$Date[1],
-         DateThisWeek = .$Date[2],
-         CasesLastWeek = .$`NumberCasesPerWeek`[1],
-         CasesThisWeek = .$`NumberCasesPerWeek`[2],
-         PercentageDifference = round((CasesThisWeek/CasesLastWeek - 1)*100, digits = 2),
-         RateLastWeek = round_half_up(100000 *  .$`NumberCasesPerWeek`[1]/pop_scot_total,1),
-         RateThisWeek = round_half_up(100000 *  .$`NumberCasesPerWeek`[2]/pop_scot_total,1)) %>%
-  mutate(ChangeFactor = case_when(
-    PercentageDifference < 0 ~ "Decrease",
-    PercentageDifference > 0 ~ "Increase",
-    TRUE                     ~ "No change"),
-    icon= case_when(ChangeFactor == "Decrease"~"arrow-down",
-                    ChangeFactor == "Increase"~ "arrow-up",
-                    ChangeFactor == "No change"~"equals")
-  ) %>%
-  select(DateLastWeek, DateThisWeek, CasesLastWeek, CasesThisWeek, PercentageDifference, RateLastWeek, RateThisWeek, ChangeFactor, icon) %>%
-  head(1)
-###
+rsv_cases_recent_week <- Resp_cases_recent_weeks %>% 
+  filter(Pathogen == "Respiratory Syncytial Virus") %>% 
+  select(-Pathogen)
+
+
 
 tagList(
 
@@ -190,10 +164,10 @@ fluidRow(
                             fluidRow(
                               column(4, pickerInput("rsv_respiratory_season",
                                                     label = "Select a season",
-                                                    choices = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
-                                                        .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(6)},
-                                                    selected = {Respiratory_AllData %>% filter(FluOrNonFlu == "nonflu") %>%
-                                                        .$Season %>% unique() %>% gsub("/", "/20", .) %>% tail(1)})
+                                                    choices = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                        .$Season %>% unique() %>%  tail(6)},
+                                                    selected = {Resp_Pathogens_Age_Sex_Season %>% 
+                                                        .$Season %>% unique() %>%  tail(1)})
                               )
                             ),
                             altTextUI("rsv_age_sex"),
