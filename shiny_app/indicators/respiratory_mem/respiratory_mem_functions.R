@@ -505,7 +505,7 @@ create_pathogen_adms_age_linechart <- function(data){
   
   ## Add as two separate traces to enable 'All ages' to be shown as the default trace
   p <- plot_ly(plot_data) %>%
-    add_trace(data = plot_data[plot_data$age_band!="All Ages",],
+    add_trace(data = plot_data[plot_data$age_band!="All ages",],
               x = ~WeekNumber, y = ~rate, split = ~age_band, 
               type="scatter", mode="lines",
               color=~age_band,
@@ -513,17 +513,17 @@ create_pathogen_adms_age_linechart <- function(data){
               # colors=phs_colours(c("phs-blue", "phs-rust", "phs-green",
               #                      "phs-purple", "phs-blue-50", "phs-magenta", "phs-teal")),
               textposition = "none",
-              text = tooltip_trend[plot_data$age_band!="All Ages"],
+              text = tooltip_trend[plot_data$age_band!="All ages"],
               hoverinfo = "text",
               visible = "legendonly"
     ) %>%
-    add_trace(data = plot_data[plot_data$age_band=="All Ages",],
+    add_trace(data = plot_data[plot_data$age_band=="All ages",],
               x = ~WeekNumber, y = ~rate, split = ~age_band, 
               type="scatter", mode="lines",
               color=~age_band,
               colors=phs_colours(c("phs-graphite-50")),
               textposition = "none",
-              text = tooltip_trend[plot_data$age_band=="All Ages"],
+              text = tooltip_trend[plot_data$age_band=="All ages"],
               hoverinfo = "text"
     ) %>%
     layout(margin = list(b = 100, t = 5),
@@ -539,7 +539,7 @@ create_pathogen_adms_age_linechart <- function(data){
   if(length(unique(plot_data$week_ending)) == 1){
     
     p <- p %>%
-      add_trace(data = plot_data[plot_data$age_band!="All Ages",],
+      add_trace(data = plot_data[plot_data$age_band!="All ages",],
                 x = ~WeekNumber,
                 y = ~rate,
                 showlegend = F,
@@ -548,10 +548,10 @@ create_pathogen_adms_age_linechart <- function(data){
                 type = "scatter",
                 mode = 'markers',
                 textposition = "none",
-                text = tooltip_trend[plot_data$age_band!="All Ages"],
+                text = tooltip_trend[plot_data$age_band!="All ages"],
                 hoverinfo = "text",
                 visible = "legendonly") %>% 
-      add_trace(data = plot_data[plot_data$age_band=="All Ages",],
+      add_trace(data = plot_data[plot_data$age_band=="All ages",],
                 x = ~WeekNumber,
                 y = ~rate,
                 showlegend = F,
@@ -560,7 +560,7 @@ create_pathogen_adms_age_linechart <- function(data){
                 type = "scatter",
                 mode = 'markers',
                 textposition = "none",
-                text = tooltip_trend[plot_data$age_band=="All Ages"],
+                text = tooltip_trend[plot_data$age_band=="All ages"],
                 hoverinfo = "text")     }
   
   return(p)

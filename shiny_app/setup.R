@@ -113,6 +113,9 @@ Respiratory_Pathogens_MEM_Age %<>%
                            "75+ years", "All ages"))) %>% 
   arrange(desc(WeekEnding), AgeGroup)
 
+## Admissions by age file format
+
+
 
 # respiratory isoweeks
 this_week_iso <- lubridate::isoweek(Resp_cases_recent_weeks$DateThisWeek[1])
@@ -181,7 +184,8 @@ data_recent_date <- floor_date(as.Date(Deployment_Date, format = "%d %B %Y"), "w
 
 # Relabel age groups for admissions
 
-admissions_age %<>% mutate(AgeGroup = factor(AgeGroup, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
+admissions_age %<>% mutate(#ISOweek = as.numeric(ISOweek),
+                           AgeGroup = factor(AgeGroup, levels = c("<1",  "1-4", "5-14", "15-44", "45-64",
                                                                   "65-74", "75+", "Total"),
                                              labels=mem_age_groups_full)) 
 

@@ -89,35 +89,6 @@ output$covid_positivity_age_plot <- renderPlotly({
 })
 
 
-output$covid_line_plot <- renderPlotly({
-
-  covid_cases_weekly %>%
-    create_covid_line_chart()
-})
-
-# COVID Rates per 100,000 table
-output$covid_cases_table <- renderDataTable({
-  covid_cases_weekly %>%
-    arrange(desc(WeekEnding)) %>%
-    select(Season, ISOWeek, RatePer100000) %>%
-    mutate(Season = factor(Season),
-           ISOWeek = factor(ISOWeek)) %>%
-    rename(`ISO Week` = ISOWeek,
-           `Rate per 100,000` = RatePer100000) %>%
-    make_table(add_separator_cols_1dp = c(3),
-               filter_cols = c(1,2))
-})
-
-altTextServer("reported_cases_per_100k",
-title = "COVID-19 incidence rate per 100,000 population in Scotland",
-content = tags$ul(tags$li("This is a plot showing the rate of laboratory-confirmed COVID-19 infection per 100,000 population in Scotland."),
- tags$li("The x axis shows the ISO week of sample, from week 40 to week 39. Week 40 is typically the start of October and when the winter respiratory season starts."),
- tags$li("The y axis shows the rate of laboratory-confirmed COVID-19 infection per 100,000 population."),
- tags$li("There is a trace for the three most recent seasons: 2023/2024, 2024/2025 and 2025/26.")
-  )
-)
-
-
 ###########
 ### MEM ###
 ###########

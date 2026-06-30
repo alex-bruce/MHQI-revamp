@@ -171,6 +171,7 @@ output$covid_admissions_age_plot <- renderPlotly({
     select(week_ending = WeekEnding, age_band = AgeGroup,
            rate = RateAdmissionsPerWeek, Season, week=ISOweek) %>%
     arrange(week_ending, age_band) %>%
+#    filter(Season == "2024/25") %>%
     filter(Season == input$adm_season_cov_age) %>%
     create_pathogen_adms_age_linechart()
   
