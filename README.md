@@ -30,11 +30,9 @@
 
 ### Data transfer layout
 
-* `Dashboard Data Transfer` contains the data transfer code. This is for transferring data from mixed inputs to open data format ready for use in the app.
+* `Dashboard Data Transfer` contains the data transfer code. This is for transferring data from the Weekly Data Folder to the Dashboard Inputs folder ready for use in the app.
 
 * `dashboard_data_transfer.R` is the script for doing the transfer
-
-* `Transfer Scripts` contains individual scripts called from `dashboard_data_transfer.R`
 
 
 ### App code layout
