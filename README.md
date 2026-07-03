@@ -1,7 +1,7 @@
-# COVID-19 and Respiratory Surveillance in Scotland
+# This is a repo to restructure the PHS Mental Health Quality Indicators app
 
-* This is a Public Health Scotland R shiny app available to the public at [https://scotland.shinyapps.io/phs-respiratory-covid-19/](https://scotland.shinyapps.io/phs-respiratory-covid-19/)
-* The data underlying the app can be found on the [PHS open data website (external link)](https://www.opendata.nhs.scot/)
+* This is a repo to adapt the Public Health Scotland COVID-19 and Respiratory Surveillance app code for use in a restructured Mental Health Quality Indicators app.
+* The original COVID-19 and Respiratory Surveillance R shiny app is available at [https://scotland.shinyapps.io/phs-respiratory-covid-19/](https://scotland.shinyapps.io/phs-respiratory-covid-19/)
 
 ## Additional files needed to run the R shiny app
 
